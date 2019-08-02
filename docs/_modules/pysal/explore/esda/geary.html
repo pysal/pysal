@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.explore.esda.geary &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../../../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../../installation.html">Installation</a></li>
+                <li><a href="../../../../api.html">API</a></li>
+                <li><a href="../../../../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for pysal.explore.esda.geary</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Geary&#39;s C statistic for spatial autocorrelation</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Serge Rey &lt;sjsrey@gmail.com&gt; &quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
+<span class="kn">from</span> <span class="nn">pysal.lib</span> <span class="k">import</span> <span class="n">weights</span>
+<span class="kn">from</span> <span class="nn">.tabular</span> <span class="k">import</span> <span class="n">_univariate_handler</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Geary&#39;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="Geary"><a class="viewcode-back" href="../../../../generated/pysal.explore.esda.Geary.html#pysal.explore.esda.Geary">[docs]</a><span class="k">class</span> <span class="nc">Geary</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Global Geary C Autocorrelation statistic</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y              : array</span>
+<span class="sd">                     (n, 1) attribute vector</span>
+<span class="sd">    w              : W</span>
+<span class="sd">                     spatial weights</span>
+<span class="sd">    transformation : {&#39;R&#39;, &#39;B&#39;, &#39;D&#39;, &#39;U&#39;, &#39;V&#39;}</span>
+<span class="sd">                     weights transformation, default is row-standardized.</span>
+<span class="sd">                     Other options include &quot;B&quot;: binary, &quot;D&quot;:</span>
+<span class="sd">                     doubly-standardized, &quot;U&quot;: untransformed (general</span>
+<span class="sd">                     weights), &quot;V&quot;: variance-stabilizing.</span>
+<span class="sd">    permutations   : int</span>
+<span class="sd">                     number of random permutations for calculation of</span>
+<span class="sd">                     pseudo-p_values</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y              : array</span>
+<span class="sd">                     original variable</span>
+<span class="sd">    w              : W</span>
+<span class="sd">                     spatial weights</span>
+<span class="sd">    permutations   : int</span>
+<span class="sd">                     number of permutations</span>
+<span class="sd">    C              : float</span>
+<span class="sd">                     value of statistic</span>
+<span class="sd">    EC             : float</span>
+<span class="sd">                     expected value</span>
+<span class="sd">    VC             : float</span>
+<span class="sd">                     variance of G under normality assumption</span>
+<span class="sd">    z_norm         : float</span>
+<span class="sd">                     z-statistic for C under normality assumption</span>
+<span class="sd">    z_rand         : float</span>
+<span class="sd">                     z-statistic for C under randomization assumption</span>
+<span class="sd">    p_norm         : float</span>
+<span class="sd">                     p-value under normality assumption (one-tailed)</span>
+<span class="sd">    p_rand         : float</span>
+<span class="sd">                     p-value under randomization assumption (one-tailed)</span>
+<span class="sd">    sim            : array</span>
+<span class="sd">                     (if permutations!=0)</span>
+<span class="sd">                     vector of I values for permutated samples</span>
+<span class="sd">    p_sim          : float</span>
+<span class="sd">                     (if permutations!=0)</span>
+<span class="sd">                     p-value based on permutations (one-tailed)</span>
+<span class="sd">                     null: sptial randomness</span>
+<span class="sd">                     alternative: the observed C is extreme</span>
+<span class="sd">                     it is either extremely high or extremely low</span>
+<span class="sd">    EC_sim         : float</span>
+<span class="sd">                     (if permutations!=0)</span>
+<span class="sd">                     average value of C from permutations</span>
+<span class="sd">    VC_sim         : float</span>
+<span class="sd">                     (if permutations!=0)</span>
+<span class="sd">                     variance of C from permutations</span>
+<span class="sd">    seC_sim        : float</span>
+<span class="sd">                     (if permutations!=0)</span>
+<span class="sd">                     standard deviation of C under permutations.</span>
+<span class="sd">    z_sim          : float</span>
+<span class="sd">                     (if permutations!=0)</span>
+<span class="sd">                     standardized C based on permutations</span>
+<span class="sd">    p_z_sim        : float</span>
+<span class="sd">                     (if permutations!=0)</span>
+<span class="sd">                     p-value based on standard normal approximation from</span>
+<span class="sd">                     permutations (one-tailed)</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import pysal.lib</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.explore.esda.geary import Geary</span>
+<span class="sd">    &gt;&gt;&gt; w = pysal.lib.io.open(pysal.lib.examples.get_path(&quot;book.gal&quot;)).read()</span>
+<span class="sd">    &gt;&gt;&gt; f = pysal.lib.io.open(pysal.lib.examples.get_path(&quot;book.txt&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; y = np.array(f.by_col[&#39;y&#39;])</span>
+<span class="sd">    &gt;&gt;&gt; c = Geary(y,w,permutations=0)</span>
+<span class="sd">    &gt;&gt;&gt; round(c.C,7)</span>
+<span class="sd">    0.3330108</span>
+<span class="sd">    &gt;&gt;&gt; round(c.p_norm,7)</span>
+<span class="sd">    9.2e-05</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Technical details and derivations can be found in :cite:`cliff81`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Geary.__init__"><a class="viewcode-back" href="../../../../generated/pysal.explore.esda.Geary.html#pysal.explore.esda.Geary.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">transformation</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">permutations</span><span class="o">=</span><span class="mi">999</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">weights</span><span class="o">.</span><span class="n">W</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;w must be a pysal weights object, got </span><span class="si">{}</span><span class="s1">&#39;</span>
+                            <span class="s1">&#39; instead&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">w</span><span class="p">)))</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">transformation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">w</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">permutations</span> <span class="o">=</span> <span class="n">permutations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__moments</span><span class="p">()</span>
+        <span class="n">xn</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xn</span> <span class="o">=</span> <span class="n">xn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y2</span> <span class="o">=</span> <span class="n">y</span> <span class="o">*</span> <span class="n">y</span>
+        <span class="n">yd</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">y</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">yss</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">yd</span> <span class="o">*</span> <span class="n">yd</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">den</span> <span class="o">=</span> <span class="n">yss</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="o">.</span><span class="n">s0</span> <span class="o">*</span> <span class="mf">2.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__calc</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">de</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">-</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">EC</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z_norm</span> <span class="o">=</span> <span class="n">de</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">seC_norm</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z_rand</span> <span class="o">=</span> <span class="n">de</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">seC_rand</span>
+        <span class="k">if</span> <span class="n">de</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">p_norm</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">z_norm</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">p_rand</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">z_rand</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">p_norm</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">z_norm</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">p_rand</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">z_rand</span><span class="p">)</span>
+
+
+        <span class="k">if</span> <span class="n">permutations</span><span class="p">:</span>
+            <span class="n">sim</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__calc</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+                   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">permutations</span><span class="p">)]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sim</span> <span class="o">=</span> <span class="n">sim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span>
+            <span class="n">above</span> <span class="o">=</span> <span class="n">sim</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span>
+            <span class="n">larger</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">above</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">permutations</span> <span class="o">-</span> <span class="n">larger</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">larger</span><span class="p">:</span>
+                <span class="n">larger</span> <span class="o">=</span> <span class="n">permutations</span> <span class="o">-</span> <span class="n">larger</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">p_sim</span> <span class="o">=</span> <span class="p">(</span><span class="n">larger</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">permutations</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">EC_sim</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span> <span class="o">/</span> <span class="n">permutations</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">seC_sim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">VC_sim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seC_sim</span> <span class="o">**</span> <span class="mi">2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">z_sim</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">EC_sim</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">seC_sim</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">p_z_sim</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">z_sim</span><span class="p">))</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_statistic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; a standardized accessor for pysal.explore.esda statistics&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span>
+
+    <span class="k">def</span> <span class="nf">__moments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span>
+        <span class="n">s0</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">s0</span>
+        <span class="n">s1</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">s1</span>
+        <span class="n">s2</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">s2</span>
+        <span class="n">s02</span> <span class="o">=</span> <span class="n">s0</span> <span class="o">*</span> <span class="n">s0</span>
+        <span class="n">yd</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">y</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">yd4</span> <span class="o">=</span> <span class="n">yd</span><span class="o">**</span><span class="mi">4</span>
+        <span class="n">yd2</span> <span class="o">=</span> <span class="n">yd</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">n2</span> <span class="o">=</span> <span class="n">n</span> <span class="o">*</span> <span class="n">n</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="p">(</span><span class="n">yd4</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="n">yd2</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">/</span><span class="n">n</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">s1</span> <span class="o">*</span> <span class="p">(</span><span class="n">n2</span> <span class="o">-</span> <span class="mi">3</span><span class="o">*</span><span class="n">n</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">-</span> <span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">k</span><span class="p">)</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">s2</span> <span class="o">*</span> <span class="p">(</span><span class="n">n2</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="n">n</span> <span class="o">-</span> <span class="mi">6</span> <span class="o">-</span> <span class="p">(</span><span class="n">n2</span> <span class="o">-</span> <span class="n">n</span> <span class="o">+</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">k</span> <span class="p">))</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">s02</span> <span class="o">*</span> <span class="p">(</span><span class="n">n2</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">-</span> <span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">k</span><span class="p">)</span>
+        <span class="n">vc_rand</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span><span class="o">-</span><span class="n">B</span><span class="o">+</span><span class="n">C</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span><span class="o">*</span><span class="n">s02</span><span class="p">)</span>
+        <span class="n">vc_norm</span> <span class="o">=</span> <span class="p">((</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">s02</span><span class="p">))</span> <span class="o">*</span>
+                   <span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">s1</span> <span class="o">+</span> <span class="n">s2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">s02</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">VC_rand</span> <span class="o">=</span> <span class="n">vc_rand</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">VC_norm</span> <span class="o">=</span> <span class="n">vc_norm</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seC_rand</span> <span class="o">=</span> <span class="n">vc_rand</span> <span class="o">**</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seC_norm</span> <span class="o">=</span> <span class="n">vc_norm</span> <span class="o">**</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__calc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="n">ys</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">y2</span> <span class="o">=</span> <span class="n">y</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">i0</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="o">.</span><span class="n">id_order</span><span class="p">):</span>
+            <span class="n">neighbors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="o">.</span><span class="n">neighbor_offsets</span><span class="p">[</span><span class="n">i0</span><span class="p">]</span>
+            <span class="n">wijs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">i0</span><span class="p">]</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">neighbors</span><span class="p">,</span> <span class="n">wijs</span><span class="p">))</span>
+            <span class="n">ys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">wij</span> <span class="o">*</span> <span class="p">(</span><span class="n">y2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">y2</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+                         <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">wij</span> <span class="ow">in</span> <span class="n">z</span><span class="p">])</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ys</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">den</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">by_col</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pvalue</span><span class="o">=</span><span class="s1">&#39;sim&#39;</span><span class="p">,</span> <span class="n">outvals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">stat_kws</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to compute a Geary statistic on a dataframe</span>
+
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">        df          :   pandas.DataFrame</span>
+<span class="sd">                        a pandas dataframe with a geometry column</span>
+<span class="sd">        cols        :   string or list of string</span>
+<span class="sd">                        name or list of names of columns to use to compute the statistic</span>
+<span class="sd">        w           :   pysal weights object</span>
+<span class="sd">                        a weights object aligned with the dataframe. If not provided, this</span>
+<span class="sd">                        is searched for in the dataframe&#39;s metadata</span>
+<span class="sd">        inplace     :   bool</span>
+<span class="sd">                        a boolean denoting whether to operate on the dataframe inplace or to</span>
+<span class="sd">                        return a series contaning the results of the computation. If</span>
+<span class="sd">                        operating inplace, with default configurations,</span>
+<span class="sd">                        the derived columns will be named like &#39;column_geary&#39; and &#39;column_p_sim&#39;</span>
+<span class="sd">        pvalue      :   string</span>
+<span class="sd">                        a string denoting which pvalue should be returned. Refer to the</span>
+<span class="sd">                        the Geary statistic&#39;s documentation for available p-values</span>
+<span class="sd">        outvals     :   list of strings</span>
+<span class="sd">                        list of arbitrary attributes to return as columns from the</span>
+<span class="sd">                        Geary statistic</span>
+<span class="sd">        **stat_kws  :   keyword arguments</span>
+<span class="sd">                        options to pass to the underlying statistic. For this, see the</span>
+<span class="sd">                        documentation for the Geary statistic.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        If inplace, None, and operation is conducted on dataframe in memory. Otherwise,</span>
+<span class="sd">        returns a copy of the dataframe with the relevant columns attached.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Technical details and derivations can be found in :cite:`cliff81`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">_univariate_handler</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="n">inplace</span><span class="p">,</span> <span class="n">pvalue</span><span class="o">=</span><span class="n">pvalue</span><span class="p">,</span>
+                                   <span class="n">outvals</span><span class="o">=</span><span class="n">outvals</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="bp">cls</span><span class="p">,</span>
+                                   <span class="n">swapname</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="o">**</span><span class="n">stat_kws</span><span class="p">)</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

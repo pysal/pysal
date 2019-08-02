@@ -1,0 +1,29 @@
+pysal.viz.mapclassify.JenksCaspallForced
+========================================
+
+.. currentmodule:: pysal.viz.mapclassify
+
+.. autoclass:: JenksCaspallForced
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~JenksCaspallForced.__init__
+      ~JenksCaspallForced.find_bin
+      ~JenksCaspallForced.get_adcm
+      ~JenksCaspallForced.get_gadf
+      ~JenksCaspallForced.get_tss
+      ~JenksCaspallForced.make
+      ~JenksCaspallForced.plot
+      ~JenksCaspallForced.update
+   
+   
+
+   
+   
+   

@@ -1,0 +1,6 @@
+pysal.lib.cg.voronoi\_frames
+============================
+
+.. currentmodule:: pysal.lib.cg
+
+.. autofunction:: voronoi_frames

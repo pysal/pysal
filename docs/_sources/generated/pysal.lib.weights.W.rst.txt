@@ -1,0 +1,72 @@
+pysal.lib.weights.W
+===================
+
+.. currentmodule:: pysal.lib.weights
+
+.. autoclass:: W
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~W.__init__
+      ~W.asymmetry
+      ~W.from_WSP
+      ~W.from_adjlist
+      ~W.from_file
+      ~W.from_networkx
+      ~W.from_shapefile
+      ~W.full
+      ~W.get_transform
+      ~W.plot
+      ~W.remap_ids
+      ~W.set_shapefile
+      ~W.set_transform
+      ~W.symmetrize
+      ~W.to_WSP
+      ~W.to_adjlist
+      ~W.to_networkx
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~W.asymmetries
+      ~W.cardinalities
+      ~W.component_labels
+      ~W.diagW2
+      ~W.diagWtW
+      ~W.diagWtW_WW
+      ~W.histogram
+      ~W.id2i
+      ~W.id_order
+      ~W.id_order_set
+      ~W.islands
+      ~W.max_neighbors
+      ~W.mean_neighbors
+      ~W.min_neighbors
+      ~W.n
+      ~W.n_components
+      ~W.neighbor_offsets
+      ~W.nonzero
+      ~W.pct_nonzero
+      ~W.s0
+      ~W.s1
+      ~W.s2
+      ~W.s2array
+      ~W.sd
+      ~W.sparse
+      ~W.transform
+      ~W.trcW2
+      ~W.trcWtW
+      ~W.trcWtW_WW
+   
+   

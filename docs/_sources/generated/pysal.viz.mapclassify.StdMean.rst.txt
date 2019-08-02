@@ -1,0 +1,29 @@
+pysal.viz.mapclassify.StdMean
+=============================
+
+.. currentmodule:: pysal.viz.mapclassify
+
+.. autoclass:: StdMean
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~StdMean.__init__
+      ~StdMean.find_bin
+      ~StdMean.get_adcm
+      ~StdMean.get_gadf
+      ~StdMean.get_tss
+      ~StdMean.make
+      ~StdMean.plot
+      ~StdMean.update
+   
+   
+
+   
+   
+   

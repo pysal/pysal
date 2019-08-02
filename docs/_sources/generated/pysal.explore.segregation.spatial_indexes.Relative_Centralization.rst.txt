@@ -1,0 +1,22 @@
+pysal.explore.segregation.spatial\_indexes.Relative\_Centralization
+===================================================================
+
+.. currentmodule:: pysal.explore.segregation.spatial_indexes
+
+.. autoclass:: Relative_Centralization
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Relative_Centralization.__init__
+   
+   
+
+   
+   
+   

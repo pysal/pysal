@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.explore.pointpats.Lenv &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pysal.explore.pointpats.Window" href="pysal.explore.pointpats.Window.html" />
+    <link rel="prev" title="pysal.explore.pointpats.Kenv" href="pysal.explore.pointpats.Kenv.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../installation.html">Installation</a></li>
+                <li><a href="../api.html">API</a></li>
+                <li><a href="../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">pysal.explore.pointpats.Lenv</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="pysal-explore-pointpats-lenv">
+<h1>pysal.explore.pointpats.Lenv<a class="headerlink" href="#pysal-explore-pointpats-lenv" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pysal.explore.pointpats.Lenv">
+<em class="property">class </em><code class="sig-prename descclassname">pysal.explore.pointpats.</code><code class="sig-name descname">Lenv</code><span class="sig-paren">(</span><em class="sig-param">pp</em>, <em class="sig-param">intervals=10</em>, <em class="sig-param">dmin=0.0</em>, <em class="sig-param">dmax=None</em>, <em class="sig-param">d=None</em>, <em class="sig-param">pct=0.05</em>, <em class="sig-param">realizations=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/pointpats/distance_statistics.html#Lenv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.pointpats.Lenv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulation envelope for L function.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>pp</strong><span class="classifier"><a class="reference internal" href="pysal.explore.pointpats.PointPattern.html#pysal.explore.pointpats.PointPattern" title="pysal.explore.pointpats.PointPattern"><code class="xref py py-class docutils literal notranslate"><span class="pre">PointPattern</span></code></a></span></dt><dd><p>Point Pattern instance.</p>
+</dd>
+<dt><strong>intervals</strong><span class="classifier">int</span></dt><dd><p>The length of distance domain sequence. Default is 10.</p>
+</dd>
+<dt><strong>dmin</strong><span class="classifier">float</span></dt><dd><p>The minimum of the distance domain.</p>
+</dd>
+<dt><strong>dmax</strong><span class="classifier">float</span></dt><dd><p>Upper limit of distance range. If dmax is None, dmax will be
+set to maximum nearest neighbor distance.</p>
+</dd>
+<dt><strong>d</strong><span class="classifier">sequence</span></dt><dd><p>The distance domain sequence.
+If d is specified, intervals, dmin and dmax are ignored.</p>
+</dd>
+<dt><strong>pct</strong><span class="classifier">float</span></dt><dd><p>1-alpha, alpha is the significance level. Default is 0.05,
+which means 95% confidence level for the envelopes.</p>
+</dd>
+<dt><strong>realizations: :class:`.PointProcess`</strong></dt><dd><p>Point process instance with more than 1 realizations.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pysal.lib</span> <span class="k">as</span> <span class="nn">ps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pointpats</span> <span class="k">import</span> <span class="n">Lenv</span><span class="p">,</span> <span class="n">PoissonPointProcess</span><span class="p">,</span> <span class="n">Window</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pysal.lib.cg</span> <span class="k">import</span> <span class="n">shapely_ext</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">va</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;vautm17n.shp&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">polys</span> <span class="o">=</span> <span class="p">[</span><span class="n">shp</span> <span class="k">for</span> <span class="n">shp</span> <span class="ow">in</span> <span class="n">va</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">state</span> <span class="o">=</span> <span class="n">shapely_ext</span><span class="o">.</span><span class="n">cascaded_union</span><span class="p">(</span><span class="n">polys</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pp</span> <span class="o">=</span> <span class="n">PoissonPointProcess</span><span class="p">(</span><span class="n">Window</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">parts</span><span class="p">),</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">asPP</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">realizations</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">csrs</span> <span class="o">=</span> <span class="n">PoissonPointProcess</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">window</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">asPP</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lenv</span> <span class="o">=</span> <span class="n">Lenv</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="n">realizations</span><span class="o">=</span><span class="n">csrs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lenv</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href="../generated/pysal-explore-pointpats-Lenv-1.py">Source code</a>, <a class="reference external" href="../generated/pysal-explore-pointpats-Lenv-1.png">png</a>, <a class="reference external" href="../generated/pysal-explore-pointpats-Lenv-1.hires.png">hires.png</a>, <a class="reference external" href="../generated/pysal-explore-pointpats-Lenv-1.pdf">pdf</a>)</p>
+<div class="figure align-default">
+<img alt="../_images/pysal-explore-pointpats-Lenv-1.png" src="../_images/pysal-explore-pointpats-Lenv-1.png" />
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>name</strong><span class="classifier">string</span></dt><dd><p>Name of the function. (“G”, “F”, “J”, “K” or “L”)</p>
+</dd>
+<dt><strong>observed</strong><span class="classifier">array</span></dt><dd><p>A 2-dimensional numpy array of 2 columns. The first column is
+the distance domain sequence for the observed point pattern.
+The second column is L function for the observed point
+pattern.</p>
+</dd>
+<dt><strong>low</strong><span class="classifier">array</span></dt><dd><p>A 1-dimensional numpy array. Lower bound of the simulation
+envelope.</p>
+</dd>
+<dt><strong>high</strong><span class="classifier">array</span></dt><dd><p>A 1-dimensional numpy array. Higher bound of the simulation
+envelope.</p>
+</dd>
+<dt><strong>mean</strong><span class="classifier">array</span></dt><dd><p>A 1-dimensional numpy array. Mean values of the simulation
+envelope.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>calc</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>mapper</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>plot</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pysal.explore.pointpats.Lenv.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">pp</em>, <em class="sig-param">intervals=10</em>, <em class="sig-param">dmin=0.0</em>, <em class="sig-param">dmax=None</em>, <em class="sig-param">d=None</em>, <em class="sig-param">pct=0.05</em>, <em class="sig-param">realizations=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/pointpats/distance_statistics.html#Lenv.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.pointpats.Lenv.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pysal.explore.pointpats.Lenv.__init__" title="pysal.explore.pointpats.Lenv.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self, pp[, intervals, dmin, dmax, …])</p></td>
+<td><p>Initialize self.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc</span></code>(self, \*args, \*\*kwargs)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mapper</span></code>(self, realizations)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code>(self)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../_sources/generated/pysal.explore.pointpats.Lenv.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

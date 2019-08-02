@@ -1,0 +1,6 @@
+pysal.viz.splot.esda.moran\_scatterplot
+=======================================
+
+.. currentmodule:: pysal.viz.splot.esda
+
+.. autofunction:: moran_scatterplot

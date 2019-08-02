@@ -1,0 +1,6 @@
+pysal.viz.splot.mapping.vba\_choropleth
+=======================================
+
+.. currentmodule:: pysal.viz.splot.mapping
+
+.. autofunction:: vba_choropleth

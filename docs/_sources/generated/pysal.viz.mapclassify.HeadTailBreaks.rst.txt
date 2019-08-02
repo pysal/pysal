@@ -1,0 +1,29 @@
+pysal.viz.mapclassify.HeadTailBreaks
+====================================
+
+.. currentmodule:: pysal.viz.mapclassify
+
+.. autoclass:: HeadTailBreaks
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~HeadTailBreaks.__init__
+      ~HeadTailBreaks.find_bin
+      ~HeadTailBreaks.get_adcm
+      ~HeadTailBreaks.get_gadf
+      ~HeadTailBreaks.get_tss
+      ~HeadTailBreaks.make
+      ~HeadTailBreaks.plot
+      ~HeadTailBreaks.update
+   
+   
+
+   
+   
+   

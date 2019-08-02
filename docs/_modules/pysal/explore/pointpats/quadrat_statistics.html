@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.explore.pointpats.quadrat_statistics &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../../../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../../installation.html">Installation</a></li>
+                <li><a href="../../../../api.html">API</a></li>
+                <li><a href="../../../../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for pysal.explore.pointpats.quadrat_statistics</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Quadrat statistics for planar point patterns</span>
+
+
+<span class="sd">TODO</span>
+
+<span class="sd">- use patch in matplotlib to plot rectangles and hexagons</span>
+<span class="sd">- plot chi2 statistics in each cell</span>
+<span class="sd">- delete those cells that do not intersect with the window (study area)</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Serge Rey, Wei Kang, Hu Shao&#39;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;RectangleM&#39;</span><span class="p">,</span> <span class="s1">&#39;HexagonM&#39;</span><span class="p">,</span> <span class="s1">&#39;QStatistic&#39;</span><span class="p">]</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">scipy</span>
+
+<div class="viewcode-block" id="RectangleM"><a class="viewcode-back" href="../../../../generated/pysal.explore.pointpats.RectangleM.html#pysal.explore.pointpats.RectangleM">[docs]</a><span class="k">class</span> <span class="nc">RectangleM</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Rectangle grid structure for quadrat-based method.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pp                : :class:`.PointPattern`</span>
+<span class="sd">                        Point Pattern instance.</span>
+<span class="sd">    count_column      : integer</span>
+<span class="sd">                        Number of rectangles in the horizontal</span>
+<span class="sd">                        direction. Use in pair with count_row to</span>
+<span class="sd">                        fully specify a rectangle. Incompatible with</span>
+<span class="sd">                        rectangle_width and rectangle_height.</span>
+<span class="sd">    count_row         : integer</span>
+<span class="sd">                        Number of rectangles in the vertical</span>
+<span class="sd">                        direction. Use in pair with count_column to</span>
+<span class="sd">                        fully specify a rectangle. Incompatible with</span>
+<span class="sd">                        rectangle_width and rectangle_height.</span>
+<span class="sd">    rectangle_width   : float</span>
+<span class="sd">                        Rectangle width. Use in pair with</span>
+<span class="sd">                        rectangle_height to fully specify a rectangle.</span>
+<span class="sd">                        Incompatible with count_column &amp; count_row.</span>
+<span class="sd">    rectangle_height  : float</span>
+<span class="sd">                        Rectangle height. Use in pair with</span>
+<span class="sd">                        rectangle_width to fully specify a rectangle.</span>
+<span class="sd">                        Incompatible with count_column &amp; count_row.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pp                : :class:`.PointPattern`</span>
+<span class="sd">                        Point Pattern instance.</span>
+<span class="sd">    mbb               : array</span>
+<span class="sd">                        Minimum bounding box for the point pattern.</span>
+<span class="sd">    points            : array</span>
+<span class="sd">                        x,y coordinates of the point points.</span>
+<span class="sd">    count_column      : integer</span>
+<span class="sd">                        Number of columns.</span>
+<span class="sd">    count_row         : integer</span>
+<span class="sd">                        Number of rows.</span>
+<span class="sd">    num               : integer</span>
+<span class="sd">                        Number of rectangular quadrats.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="RectangleM.__init__"><a class="viewcode-back" href="../../../../generated/pysal.explore.pointpats.RectangleM.html#pysal.explore.pointpats.RectangleM.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pp</span><span class="p">,</span> <span class="n">count_column</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">count_row</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+                 <span class="n">rectangle_width</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">rectangle_height</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mbb</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">mbb</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pp</span> <span class="o">=</span> <span class="n">pp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">points</span><span class="p">)</span>
+        <span class="n">x_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mbb</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">mbb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">y_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mbb</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">mbb</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">rectangle_width</span> <span class="o">&amp;</span> <span class="n">rectangle_height</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rectangle_width</span> <span class="o">=</span> <span class="n">rectangle_width</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rectangle_height</span> <span class="o">=</span> <span class="n">rectangle_height</span>
+
+            <span class="c1"># calculate column count and row count</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">count_column</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">x_range</span> <span class="o">/</span> <span class="n">rectangle_width</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">count_row</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">y_range</span> <span class="o">/</span> <span class="n">rectangle_height</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">count_column</span> <span class="o">=</span> <span class="n">count_column</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">count_row</span> <span class="o">=</span> <span class="n">count_row</span>
+
+            <span class="c1"># calculate the actual width and height of cell</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rectangle_width</span> <span class="o">=</span> <span class="n">x_range</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">count_column</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rectangle_height</span> <span class="o">=</span> <span class="n">y_range</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">count_row</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_column</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_row</span></div>
+
+    <span class="k">def</span> <span class="nf">point_location_sta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Count the point events in each cell.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict_id_count : dict</span>
+<span class="sd">                        keys: rectangle id, values: number of point</span>
+<span class="sd">                        events in each cell.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">dict_id_count</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">count_row</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">count_column</span><span class="p">):</span>
+                <span class="n">dict_id_count</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="n">i</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">count_column</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">:</span>
+            <span class="n">index_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">mbb</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">rectangle_width</span>
+            <span class="n">index_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">mbb</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">rectangle_height</span>
+            <span class="k">if</span> <span class="n">index_x</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_column</span><span class="p">:</span>
+                <span class="n">index_x</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">index_y</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_row</span><span class="p">:</span>
+                <span class="n">index_y</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">index_y</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_column</span> <span class="o">+</span> <span class="n">index_x</span>
+            <span class="n">dict_id_count</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">dict_id_count</span>
+
+    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Quadrat Count&quot;</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Plot rectangle tessellation as well as the number of points falling in each rectangle.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        title:   str, optional</span>
+<span class="sd">                 Title of the plot. Default is &quot;Quadrat Count&quot;.</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="n">line_width_cell</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">line_color_cell</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span>
+
+        <span class="n">x_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mbb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">y_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mbb</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># draw the point pattern along with its window</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+                         <span class="n">get_ax</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># draw cells and counts</span>
+        <span class="n">x_start_end</span> <span class="o">=</span> <span class="p">[</span><span class="n">x_min</span><span class="p">,</span>
+                       <span class="n">x_min</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_column</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">rectangle_width</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">count_row</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">y_min</span> <span class="o">+</span> <span class="n">row</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">rectangle_height</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_start_end</span><span class="p">,</span> <span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">lw</span> <span class="o">=</span> <span class="n">line_width_cell</span><span class="p">,</span>
+                    <span class="n">color</span><span class="o">=</span><span class="n">line_color_cell</span><span class="p">)</span>
+        <span class="n">y_start_end</span> <span class="o">=</span> <span class="p">[</span><span class="n">y_min</span><span class="p">,</span>
+                       <span class="n">y_min</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_row</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">rectangle_height</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">count_column</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x_min</span> <span class="o">+</span> <span class="n">column</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">rectangle_width</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">],</span> <span class="n">y_start_end</span><span class="p">,</span> <span class="n">lw</span> <span class="o">=</span> <span class="n">line_width_cell</span><span class="p">,</span>
+                    <span class="n">color</span><span class="o">=</span><span class="n">line_color_cell</span><span class="p">)</span>
+
+        <span class="n">dict_id_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">point_location_sta</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">count_column</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">count_row</span><span class="p">):</span>
+                <span class="n">cell_id</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">count_column</span>
+                <span class="n">count</span> <span class="o">=</span> <span class="n">dict_id_count</span><span class="p">[</span><span class="n">cell_id</span><span class="p">]</span>
+                <span class="n">position_x</span> <span class="o">=</span> <span class="n">x_min</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rectangle_width</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)</span>
+                <span class="n">position_y</span> <span class="o">=</span> <span class="n">y_min</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rectangle_height</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">position_x</span><span class="p">,</span> <span class="n">position_y</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">count</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="HexagonM"><a class="viewcode-back" href="../../../../generated/pysal.explore.pointpats.HexagonM.html#pysal.explore.pointpats.HexagonM">[docs]</a><span class="k">class</span> <span class="nc">HexagonM</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Hexagon grid structure for quadrat-based method.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pp                : :class:`.PointPattern`</span>
+<span class="sd">                        Point Pattern instance.</span>
+<span class="sd">    lh                : float</span>
+<span class="sd">                        Hexagon length (hexagon).</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pp                : :class:`.PointPattern`</span>
+<span class="sd">                        Point Pattern instance.</span>
+<span class="sd">    h_length          : float</span>
+<span class="sd">                        Hexagon length (hexagon).</span>
+<span class="sd">    mbb               : array</span>
+<span class="sd">                        Minimum bounding box for the point pattern.</span>
+<span class="sd">    points            : array</span>
+<span class="sd">                        x,y coordinates of the point points.</span>
+<span class="sd">    h_length          : float</span>
+<span class="sd">                        Hexagon length (hexagon).</span>
+<span class="sd">    count_row_even    : integer</span>
+<span class="sd">                        Number of even rows.</span>
+<span class="sd">    count_row_odd     : integer</span>
+<span class="sd">                        Number of odd rows.</span>
+<span class="sd">    count_column      : integer</span>
+<span class="sd">                        Number of columns.</span>
+<span class="sd">    num               : integer</span>
+<span class="sd">                        Number of hexagonal quadrats.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="HexagonM.__init__"><a class="viewcode-back" href="../../../../generated/pysal.explore.pointpats.HexagonM.html#pysal.explore.pointpats.HexagonM.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pp</span><span class="p">,</span> <span class="n">lh</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">points</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pp</span> <span class="o">=</span> <span class="n">pp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h_length</span> <span class="o">=</span> <span class="n">lh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mbb</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">mbb</span>
+        <span class="n">range_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mbb</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mbb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">range_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mbb</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mbb</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># calculate column count</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count_column</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_length</span><span class="o">/</span><span class="mf">2.0</span> <span class="o">&lt;</span> <span class="n">range_x</span><span class="p">:</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">((</span><span class="n">range_x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_length</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span>
+                <span class="mf">1.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_length</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">count_column</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+
+        <span class="c1"># calculate row count for the even columns</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">semi_height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_length</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count_row_even</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">semi_height</span> <span class="o">&lt;</span> <span class="n">range_y</span><span class="p">:</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">((</span><span class="n">range_y</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">semi_height</span><span class="p">)</span><span class="o">/</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">semi_height</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">count_row_even</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+
+        <span class="c1"># for the odd columns</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count_row_odd</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">range_y</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">semi_height</span><span class="o">*</span><span class="mi">2</span><span class="p">)))</span>
+
+        <span class="c1"># quadrat number</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_row_odd</span> <span class="o">*</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">count_column</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span>
+                                         <span class="bp">self</span><span class="o">.</span><span class="n">count_column</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> \
+                   <span class="bp">self</span><span class="o">.</span><span class="n">count_row_even</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">count_column</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">point_location_sta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Count the point events in each hexagon cell.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict_id_count : dict</span>
+<span class="sd">                        keys: rectangle id, values: number of point</span>
+<span class="sd">                        events in each hexagon cell.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">semi_cell_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_length</span> <span class="o">/</span> <span class="mf">2.0</span>
+        <span class="n">dict_id_count</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># even row may be equal with odd row or 1 more than odd row</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">count_row_even</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">count_column</span><span class="p">):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_row_even</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_row_odd</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">==</span>\
+                                <span class="bp">self</span><span class="o">.</span><span class="n">count_row_even</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">j</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                <span class="n">dict_id_count</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="n">i</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">count_column</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">x_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mbb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">y_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mbb</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">x_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mbb</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">y_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mbb</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
+            <span class="c1"># find the possible x index</span>
+            <span class="n">intercept_degree_x</span> <span class="o">=</span> <span class="p">((</span><span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">x_min</span><span class="p">)</span><span class="o">//</span><span class="n">semi_cell_length</span><span class="p">)</span>
+
+            <span class="c1"># find the possible y index</span>
+            <span class="n">possible_y_index_even</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">semi_height</span> <span class="o">-</span>
+                                         <span class="n">y_min</span><span class="p">)</span><span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">semi_height</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+            <span class="n">possible_y_index_odd</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y_min</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">semi_height</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">intercept_degree_x</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">center_index_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">intercept_degree_x</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">3</span>
+                <span class="n">center_index_y</span> <span class="o">=</span> <span class="n">possible_y_index_odd</span>
+                <span class="k">if</span> <span class="n">center_index_x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">center_index_y</span> <span class="o">=</span> <span class="n">possible_y_index_even</span>
+                <span class="n">dict_id_count</span><span class="p">[</span><span class="n">center_index_x</span> <span class="o">+</span> <span class="n">center_index_y</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_column</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span> <span class="c1"># two columns of cells can be possible</span>
+                <span class="n">center_index_x</span> <span class="o">=</span> <span class="n">intercept_degree_x</span><span class="o">//</span><span class="mi">3</span>
+                <span class="n">center_x</span> <span class="o">=</span> <span class="n">center_index_x</span><span class="o">*</span><span class="n">semi_cell_length</span><span class="o">*</span><span class="mi">3</span> <span class="o">+</span> <span class="n">x_min</span>
+                <span class="n">center_index_y</span> <span class="o">=</span> <span class="n">possible_y_index_odd</span>
+                <span class="n">center_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">center_index_y</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">semi_height</span> <span class="o">+</span> <span class="n">y_min</span>
+                <span class="k">if</span> <span class="n">center_index_x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">center_index_y</span> <span class="o">=</span> <span class="n">possible_y_index_even</span>
+                    <span class="n">center_y</span> <span class="o">=</span> <span class="n">center_index_y</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">semi_height</span><span class="o">*</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y_min</span>
+
+                <span class="k">if</span> <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">center_y</span><span class="p">:</span>  <span class="c1"># compare the upper bound</span>
+                    <span class="n">x0</span> <span class="o">=</span> <span class="n">center_x</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">h_length</span>
+                    <span class="n">y0</span> <span class="o">=</span> <span class="n">center_y</span>
+                    <span class="n">x1</span> <span class="o">=</span> <span class="n">center_x</span><span class="o">+</span><span class="n">semi_cell_length</span>
+                    <span class="n">y1</span> <span class="o">=</span> <span class="n">center_y</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">semi_height</span>
+                    <span class="n">indicator</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="p">((</span><span class="n">y0</span><span class="o">-</span><span class="n">y1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">x0</span><span class="o">-</span><span class="n">x1</span><span class="p">)</span><span class="o">*</span><span class="n">point</span><span class="p">[</span>
+                        <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">x0</span><span class="o">*</span><span class="n">y1</span><span class="o">-</span><span class="n">x1</span><span class="o">*</span><span class="n">y0</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">x0</span><span class="o">-</span><span class="n">x1</span><span class="p">)))</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1">#compare the lower bound</span>
+                    <span class="n">x0</span> <span class="o">=</span> <span class="n">center_x</span><span class="o">+</span><span class="n">semi_cell_length</span>
+                    <span class="n">y0</span> <span class="o">=</span> <span class="n">center_y</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">semi_height</span>
+                    <span class="n">x1</span> <span class="o">=</span> <span class="n">center_x</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">h_length</span>
+                    <span class="n">y1</span> <span class="o">=</span> <span class="n">center_y</span>
+                    <span class="n">indicator</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="p">((</span><span class="n">y0</span><span class="o">-</span><span class="n">y1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">x0</span><span class="o">-</span><span class="n">x1</span><span class="p">)</span><span class="o">*</span><span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                                            <span class="o">+</span> <span class="p">(</span><span class="n">x0</span><span class="o">*</span><span class="n">y1</span><span class="o">-</span><span class="n">x1</span><span class="o">*</span><span class="n">y0</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">x0</span><span class="o">-</span><span class="n">x1</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">indicator</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># we select right hexagon instead of the left</span>
+                    <span class="n">center_index_x</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">center_index_y</span> <span class="o">=</span> <span class="n">possible_y_index_odd</span>
+                    <span class="k">if</span> <span class="n">center_index_x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">center_index_y</span> <span class="o">=</span> <span class="n">possible_y_index_even</span>
+                <span class="n">dict_id_count</span><span class="p">[</span><span class="n">center_index_x</span> <span class="o">+</span> <span class="n">center_index_y</span>
+                              <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_column</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">dict_id_count</span>
+
+    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Quadrat Count&quot;</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Plot hexagon quadrats as well as the number of points falling in each quadrat.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        title:   str, optional</span>
+<span class="sd">                 Title of the plot. Default is &quot;Quadrat Count&quot;.</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">line_width_cell</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">line_color_cell</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span>
+
+        <span class="c1"># draw the point pattern along with its window</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span> <span class="n">title</span><span class="p">,</span>
+                         <span class="n">get_ax</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">x_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mbb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">y_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mbb</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># draw cells and counts</span>
+        <span class="n">dict_id_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">point_location_sta</span><span class="p">()</span>
+        <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">dict_id_count</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">index_x</span> <span class="o">=</span> <span class="nb">id</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_column</span>
+            <span class="n">index_y</span> <span class="o">=</span> <span class="nb">id</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_column</span>
+            <span class="n">center_x</span> <span class="o">=</span> <span class="n">index_x</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">h_length</span><span class="o">/</span><span class="mf">2.0</span><span class="o">*</span><span class="mf">3.0</span> <span class="o">+</span> <span class="n">x_min</span>
+            <span class="n">center_y</span> <span class="o">=</span> <span class="n">index_y</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">semi_height</span><span class="o">*</span><span class="mf">2.0</span> <span class="o">+</span> <span class="n">y_min</span>
+            <span class="k">if</span> <span class="n">index_x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># for the odd columns</span>
+                <span class="n">center_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">index_y</span><span class="o">*</span><span class="mf">2.0</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">semi_height</span> <span class="o">+</span> <span class="n">y_min</span>
+            <span class="n">list_points_cell</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">list_points_cell</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">center_x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_length</span><span class="p">,</span>
+                                     <span class="n">center_y</span><span class="p">])</span>
+            <span class="n">list_points_cell</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">center_x</span>
+                                     <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_length</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+                                     <span class="n">center_y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">semi_height</span><span class="p">])</span>
+            <span class="n">list_points_cell</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">center_x</span>
+                                     <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_length</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+                                     <span class="n">center_y</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">semi_height</span><span class="p">])</span>
+            <span class="n">list_points_cell</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">center_x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_length</span><span class="p">,</span>
+                                     <span class="n">center_y</span><span class="p">])</span>
+            <span class="n">list_points_cell</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">center_x</span>
+                                     <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_length</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+                                     <span class="n">center_y</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">semi_height</span><span class="p">])</span>
+            <span class="n">list_points_cell</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">center_x</span>
+                                     <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_length</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+                                     <span class="n">center_y</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">semi_height</span><span class="p">])</span>
+            <span class="n">list_points_cell</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">center_x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_length</span><span class="p">,</span>
+                                     <span class="n">center_y</span><span class="p">])</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span> <span class="n">list_points_cell</span><span class="p">)[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                    <span class="n">list_points_cell</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">lw</span> <span class="o">=</span><span class="n">line_width_cell</span><span class="p">,</span>
+                    <span class="n">color</span><span class="o">=</span><span class="n">line_color_cell</span><span class="p">)</span>
+
+            <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">center_x</span><span class="p">,</span> <span class="n">center_y</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">dict_id_count</span><span class="p">[</span><span class="nb">id</span><span class="p">]))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="QStatistic"><a class="viewcode-back" href="../../../../generated/pysal.explore.pointpats.QStatistic.html#pysal.explore.pointpats.QStatistic">[docs]</a><span class="k">class</span> <span class="nc">QStatistic</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Quadrat analysis of point pattern.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pp                : :class:`.PointPattern`</span>
+<span class="sd">                        Point Pattern instance.</span>
+<span class="sd">    shape             : string</span>
+<span class="sd">                        Grid structure. Either &quot;rectangle&quot; or &quot;hexagon&quot;.</span>
+<span class="sd">                        Default is &quot;rectangle&quot;.</span>
+<span class="sd">    nx                : integer</span>
+<span class="sd">                        Number of rectangles in the horizontal</span>
+<span class="sd">                        direction. Only when shape is specified as</span>
+<span class="sd">                        &quot;rectangle&quot; will nx be considered.</span>
+<span class="sd">    ny                : integer</span>
+<span class="sd">                        Number of rectangles in the vertical direction.</span>
+<span class="sd">                        Only when shape is specified as &quot;rectangle&quot;</span>
+<span class="sd">                        will ny be considered.</span>
+<span class="sd">    lh                : float</span>
+<span class="sd">                        Hexagon length (hexagon). Only when shape is</span>
+<span class="sd">                        specified as &quot;hexagon&quot; will lh be considered.</span>
+<span class="sd">                        Incompatible with nx &amp; ny.</span>
+<span class="sd">    realizations      : :class:`PointProcess`</span>
+<span class="sd">                        Point process instance with more than 1 point</span>
+<span class="sd">                        pattern realizations which would be used for</span>
+<span class="sd">                        simulation based inference. Default is 0</span>
+<span class="sd">                        where no simulation based inference is</span>
+<span class="sd">                        performed.</span>
+<span class="sd">                        </span>
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pp                : :class:`.PointPattern`</span>
+<span class="sd">                        Point Pattern instance.</span>
+<span class="sd">    mr                : :class:`.RectangleM` or :class:`.HexagonM`</span>
+<span class="sd">                        RectangleM or HexagonM instance.</span>
+<span class="sd">    chi2              : float</span>
+<span class="sd">                        Chi-squared test statistic for the observed</span>
+<span class="sd">                        point pattern pp.</span>
+<span class="sd">    df                : integer</span>
+<span class="sd">                        Degree of freedom.</span>
+<span class="sd">    chi2_pvalue       : float</span>
+<span class="sd">                        p-value based on analytical chi-squared</span>
+<span class="sd">                        distribution.</span>
+<span class="sd">    chi2_r_pvalue     : float</span>
+<span class="sd">                        p-value based on simulated sampling</span>
+<span class="sd">                        distribution. Only available when</span>
+<span class="sd">                        realizations is correctly specified.</span>
+<span class="sd">    chi2_realizations : array</span>
+<span class="sd">                        Chi-squared test statistics calculated for</span>
+<span class="sd">                        all of the simulated csr point patterns.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="QStatistic.__init__"><a class="viewcode-back" href="../../../../generated/pysal.explore.pointpats.QStatistic.html#pysal.explore.pointpats.QStatistic.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pp</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span> <span class="s2">&quot;rectangle&quot;</span><span class="p">,</span><span class="n">nx</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">ny</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+                 <span class="n">lh</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">realizations</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pp</span> <span class="o">=</span> <span class="n">pp</span>
+        <span class="k">if</span> <span class="n">shape</span> <span class="o">==</span> <span class="s2">&quot;rectangle&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mr</span> <span class="o">=</span> <span class="n">RectangleM</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="n">count_column</span> <span class="o">=</span> <span class="n">nx</span><span class="p">,</span>
+                                        <span class="n">count_row</span> <span class="o">=</span> <span class="n">ny</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">shape</span> <span class="o">==</span> <span class="s2">&quot;hexagon&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mr</span> <span class="o">=</span> <span class="n">HexagonM</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span><span class="n">lh</span><span class="p">)</span>
+
+        <span class="c1"># calculate chi2 test statisitc for the observed point pattern</span>
+        <span class="n">dict_id_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mr</span><span class="o">.</span><span class="n">point_location_sta</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chi2</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">chi2_pvalue</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">chisquare</span><span class="p">(</span>
+                <span class="nb">list</span><span class="p">(</span><span class="n">dict_id_count</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mr</span><span class="o">.</span><span class="n">num</span> <span class="o">-</span> <span class="mi">1</span>
+
+        <span class="c1"># when realizations is specified, perform simulation based</span>
+        <span class="c1"># inference.</span>
+        <span class="k">if</span> <span class="n">realizations</span><span class="p">:</span>
+            <span class="n">reals</span> <span class="o">=</span> <span class="n">realizations</span><span class="o">.</span><span class="n">realizations</span>
+            <span class="n">sim_n</span> <span class="o">=</span> <span class="n">realizations</span><span class="o">.</span><span class="n">samples</span>
+            <span class="n">chi2_realizations</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">#store test statisitcs for all the</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sim_n</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">shape</span> <span class="o">==</span> <span class="s2">&quot;rectangle&quot;</span><span class="p">:</span>
+                    <span class="n">mr_temp</span> <span class="o">=</span> <span class="n">RectangleM</span><span class="p">(</span><span class="n">reals</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                                                <span class="n">count_column</span><span class="o">=</span><span class="n">nx</span><span class="p">,</span>
+                                                <span class="n">count_row</span><span class="o">=</span><span class="n">ny</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">shape</span> <span class="o">==</span> <span class="s2">&quot;hexagon&quot;</span><span class="p">:</span>
+                    <span class="n">mr_temp</span> <span class="o">=</span> <span class="n">HexagonM</span><span class="p">(</span><span class="n">reals</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">lh</span><span class="p">)</span>
+                <span class="n">id_count_temp</span> <span class="o">=</span> <span class="n">mr_temp</span><span class="o">.</span><span class="n">point_location_sta</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+
+                <span class="c1">#calculate test statistics for simulated point patterns</span>
+                <span class="n">chi2_sim</span><span class="p">,</span><span class="n">p</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">chisquare</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">id_count_temp</span><span class="p">))</span>
+                <span class="n">chi2_realizations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chi2_sim</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">chi2_realizations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chi2_realizations</span><span class="p">)</span>
+
+            <span class="c1">#calculate pseudo pvalue</span>
+            <span class="n">above_chi2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chi2_realizations</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chi2</span>
+            <span class="n">larger_chi2</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">above_chi2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">chi2_r_pvalue</span> <span class="o">=</span> <span class="p">(</span><span class="n">larger_chi2</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">sim_n</span><span class="o">+</span> <span class="mf">1.</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Quadrat Count&quot;</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Plot quadrats as well as the number of points falling in each quadrat.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        title:   str, optional</span>
+<span class="sd">                 Title of the plot. Default is &quot;Quadrat Count&quot;.</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mr</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span><span class="p">)</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

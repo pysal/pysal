@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.model.spreg.ols_regimes &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../../../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../../installation.html">Installation</a></li>
+                <li><a href="../../../../api.html">API</a></li>
+                <li><a href="../../../../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for pysal.model.spreg.ols_regimes</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Ordinary Least Squares regression with regimes.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Luc Anselin luc.anselin@asu.edu, Pedro V. Amaral pedro.amaral@asu.edu, Daniel Arribas-Bel darribas@asu.edu&quot;</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">regimes</span> <span class="k">as</span> <span class="n">REGI</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">user_output</span> <span class="k">as</span> <span class="n">USER</span>
+<span class="kn">from</span> <span class="nn">.ols</span> <span class="k">import</span> <span class="n">BaseOLS</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">set_warn</span><span class="p">,</span> <span class="n">spbroadcast</span><span class="p">,</span> <span class="n">RegressionProps_basic</span><span class="p">,</span> <span class="n">RegressionPropsY</span><span class="p">,</span> <span class="n">spdot</span>
+<span class="kn">from</span> <span class="nn">.robust</span> <span class="k">import</span> <span class="n">hac_multi</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">summary_output</span> <span class="k">as</span> <span class="n">SUMMARY</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
+<span class="kn">from</span> <span class="nn">platform</span> <span class="k">import</span> <span class="n">system</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="k">as</span> <span class="nn">SP</span>
+
+
+<div class="viewcode-block" id="OLS_Regimes"><a class="viewcode-back" href="../../../../generated/pysal.model.spreg.OLS_Regimes.html#pysal.model.spreg.OLS_Regimes">[docs]</a><span class="k">class</span> <span class="nc">OLS_Regimes</span><span class="p">(</span><span class="n">BaseOLS</span><span class="p">,</span> <span class="n">REGI</span><span class="o">.</span><span class="n">Regimes_Frame</span><span class="p">,</span> <span class="n">RegressionPropsY</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Ordinary least squares with results and diagnostics.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y            : array</span>
+<span class="sd">                   nx1 array for dependent variable</span>
+<span class="sd">    x            : array</span>
+<span class="sd">                   Two dimensional array with n rows and one column for each</span>
+<span class="sd">                   independent (exogenous) variable, excluding the constant</span>
+<span class="sd">    regimes      : list</span>
+<span class="sd">                   List of n values with the mapping of each</span>
+<span class="sd">                   observation to a regime. Assumed to be aligned with &#39;x&#39;.</span>
+<span class="sd">    w            : pysal W object</span>
+<span class="sd">                   Spatial weights object (required if running spatial</span>
+<span class="sd">                   diagnostics)</span>
+<span class="sd">    robust       : string</span>
+<span class="sd">                   If &#39;white&#39;, then a White consistent estimator of the</span>
+<span class="sd">                   variance-covariance matrix is given.  If &#39;hac&#39;, then a</span>
+<span class="sd">                   HAC consistent estimator of the variance-covariance</span>
+<span class="sd">                   matrix is given. Default set to None. </span>
+<span class="sd">    gwk          : pysal W object</span>
+<span class="sd">                   Kernel spatial weights needed for HAC estimation. Note:</span>
+<span class="sd">                   matrix must have ones along the main diagonal.</span>
+<span class="sd">    sig2n_k      : boolean</span>
+<span class="sd">                   If True, then use n-k to estimate sigma^2. If False, use n.</span>
+<span class="sd">    nonspat_diag : boolean</span>
+<span class="sd">                   If True, then compute non-spatial diagnostics on</span>
+<span class="sd">                   the regression.</span>
+<span class="sd">    spat_diag    : boolean</span>
+<span class="sd">                   If True, then compute Lagrange multiplier tests (requires</span>
+<span class="sd">                   w). Note: see moran for further tests.</span>
+<span class="sd">    moran        : boolean</span>
+<span class="sd">                   If True, compute Moran&#39;s I on the residuals. Note:</span>
+<span class="sd">                   requires spat_diag=True.</span>
+<span class="sd">    white_test   : boolean</span>
+<span class="sd">                   If True, compute White&#39;s specification robust test.</span>
+<span class="sd">                   (requires nonspat_diag=True)</span>
+<span class="sd">    vm           : boolean</span>
+<span class="sd">                   If True, include variance-covariance matrix in summary</span>
+<span class="sd">                   results</span>
+<span class="sd">    constant_regi: [&#39;one&#39;, &#39;many&#39;]</span>
+<span class="sd">                   Switcher controlling the constant term setup. It may take</span>
+<span class="sd">                   the following values:</span>
+<span class="sd">                     *  &#39;one&#39;: a vector of ones is appended to x and held</span>
+<span class="sd">                               constant across regimes</span>
+<span class="sd">                     * &#39;many&#39;: a vector of ones is appended to x and considered</span>
+<span class="sd">                               different per regime (default)</span>
+<span class="sd">    cols2regi    : list, &#39;all&#39;</span>
+<span class="sd">                   Argument indicating whether each</span>
+<span class="sd">                   column of x should be considered as different per regime</span>
+<span class="sd">                   or held constant across regimes (False).</span>
+<span class="sd">                   If a list, k booleans indicating for each variable the</span>
+<span class="sd">                   option (True if one per regime, False to be held constant).</span>
+<span class="sd">                   If &#39;all&#39; (default), all the variables vary by regime.</span>
+<span class="sd">    regime_err_sep  : boolean</span>
+<span class="sd">                   If True, a separate regression is run for each regime.</span>
+<span class="sd">    cores        : boolean</span>
+<span class="sd">                   Specifies if multiprocessing is to be used</span>
+<span class="sd">                   Default: no multiprocessing, cores = False</span>
+<span class="sd">                   Note: Multiprocessing may not work on all platforms.</span>
+<span class="sd">    name_y       : string</span>
+<span class="sd">                   Name of dependent variable for use in output</span>
+<span class="sd">    name_x       : list of strings</span>
+<span class="sd">                   Names of independent variables for use in output</span>
+<span class="sd">    name_w       : string</span>
+<span class="sd">                   Name of weights matrix for use in output</span>
+<span class="sd">    name_gwk     : string</span>
+<span class="sd">                   Name of kernel weights matrix for use in output</span>
+<span class="sd">    name_ds      : string</span>
+<span class="sd">                   Name of dataset for use in output</span>
+<span class="sd">    name_regimes : string</span>
+<span class="sd">                   Name of regime variable for use in the output</span>
+
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    summary      : string</span>
+<span class="sd">                   Summary of regression results and diagnostics (note: use in</span>
+<span class="sd">                   conjunction with the print command)</span>
+<span class="sd">    betas        : array</span>
+<span class="sd">                   kx1 array of estimated coefficients</span>
+<span class="sd">    u            : array</span>
+<span class="sd">                   nx1 array of residuals</span>
+<span class="sd">    predy        : array</span>
+<span class="sd">                   nx1 array of predicted y values</span>
+<span class="sd">    n            : integer</span>
+<span class="sd">                   Number of observations</span>
+<span class="sd">    k            : integer</span>
+<span class="sd">                   Number of variables for which coefficients are estimated</span>
+<span class="sd">                   (including the constant)</span>
+<span class="sd">                   Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                   (see &#39;multi&#39; below for details)</span>
+<span class="sd">    y            : array</span>
+<span class="sd">                   nx1 array for dependent variable</span>
+<span class="sd">    x            : array</span>
+<span class="sd">                   Two dimensional array with n rows and one column for each</span>
+<span class="sd">                   independent (exogenous) variable, including the constant</span>
+<span class="sd">                   Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                   (see &#39;multi&#39; below for details)</span>
+<span class="sd">    robust       : string</span>
+<span class="sd">                   Adjustment for robust standard errors</span>
+<span class="sd">                   Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                   (see &#39;multi&#39; below for details)                  </span>
+<span class="sd">    mean_y       : float</span>
+<span class="sd">                   Mean of dependent variable</span>
+<span class="sd">    std_y        : float</span>
+<span class="sd">                   Standard deviation of dependent variable</span>
+<span class="sd">    vm           : array</span>
+<span class="sd">                   Variance covariance matrix (kxk)</span>
+<span class="sd">    r2           : float</span>
+<span class="sd">                   R squared</span>
+<span class="sd">                   Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                   (see &#39;multi&#39; below for details)</span>
+<span class="sd">    ar2          : float</span>
+<span class="sd">                   Adjusted R squared</span>
+<span class="sd">                   Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                   (see &#39;multi&#39; below for details)</span>
+<span class="sd">    utu          : float</span>
+<span class="sd">                   Sum of squared residuals</span>
+<span class="sd">    sig2         : float</span>
+<span class="sd">                   Sigma squared used in computations</span>
+<span class="sd">                   Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                   (see &#39;multi&#39; below for details)</span>
+<span class="sd">    sig2ML       : float</span>
+<span class="sd">                   Sigma squared (maximum likelihood)</span>
+<span class="sd">                   Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                   (see &#39;multi&#39; below for details)</span>
+<span class="sd">    f_stat       : tuple</span>
+<span class="sd">                   Statistic (float), p-value (float)</span>
+<span class="sd">                   Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                   (see &#39;multi&#39; below for details)</span>
+<span class="sd">    logll        : float</span>
+<span class="sd">                   Log likelihood</span>
+<span class="sd">                   Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                   (see &#39;multi&#39; below for details)</span>
+<span class="sd">    aic          : float</span>
+<span class="sd">                   Akaike information criterion </span>
+<span class="sd">                   Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                   (see &#39;multi&#39; below for details)</span>
+<span class="sd">    schwarz      : float</span>
+<span class="sd">                   Schwarz information criterion     </span>
+<span class="sd">                   Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                   (see &#39;multi&#39; below for details)</span>
+<span class="sd">    std_err      : array</span>
+<span class="sd">                   1xk array of standard errors of the betas    </span>
+<span class="sd">                   Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                   (see &#39;multi&#39; below for details)</span>
+<span class="sd">    t_stat       : list of tuples</span>
+<span class="sd">                   t statistic; each tuple contains the pair (statistic,</span>
+<span class="sd">                   p-value), where each is a float</span>
+<span class="sd">                   Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                   (see &#39;multi&#39; below for details)</span>
+<span class="sd">    mulColli     : float</span>
+<span class="sd">                   Multicollinearity condition number</span>
+<span class="sd">                   Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                   (see &#39;multi&#39; below for details)</span>
+<span class="sd">    jarque_bera  : dictionary</span>
+<span class="sd">                   &#39;jb&#39;: Jarque-Bera statistic (float); &#39;pvalue&#39;: p-value</span>
+<span class="sd">                   (float); &#39;df&#39;: degrees of freedom (int)  </span>
+<span class="sd">                   Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                   (see &#39;multi&#39; below for details)</span>
+<span class="sd">    breusch_pagan : dictionary</span>
+<span class="sd">                    &#39;bp&#39;: Breusch-Pagan statistic (float); &#39;pvalue&#39;: p-value</span>
+<span class="sd">                    (float); &#39;df&#39;: degrees of freedom (int)  </span>
+<span class="sd">                    Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                    (see &#39;multi&#39; below for details)</span>
+<span class="sd">    koenker_bassett : dictionary</span>
+<span class="sd">                      &#39;kb&#39;: Koenker-Bassett statistic (float); &#39;pvalue&#39;:</span>
+<span class="sd">                      p-value (float); &#39;df&#39;: degrees of freedom (int)  </span>
+<span class="sd">                      Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                      (see &#39;multi&#39; below for details)</span>
+<span class="sd">    white         : dictionary</span>
+<span class="sd">                    &#39;wh&#39;: White statistic (float); &#39;pvalue&#39;: p-value (float);</span>
+<span class="sd">                    &#39;df&#39;: degrees of freedom (int)  </span>
+<span class="sd">                    Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                    (see &#39;multi&#39; below for details)</span>
+<span class="sd">    lm_error      : tuple</span>
+<span class="sd">                    Lagrange multiplier test for spatial error model; tuple</span>
+<span class="sd">                    contains the pair (statistic, p-value), where each is a</span>
+<span class="sd">                    float </span>
+<span class="sd">                   Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                   (see &#39;multi&#39; below for details)</span>
+<span class="sd">    lm_lag        : tuple</span>
+<span class="sd">                    Lagrange multiplier test for spatial lag model; tuple</span>
+<span class="sd">                    contains the pair (statistic, p-value), where each is a</span>
+<span class="sd">                    float </span>
+<span class="sd">                   Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                   (see &#39;multi&#39; below for details)</span>
+<span class="sd">    rlm_error     : tuple</span>
+<span class="sd">                    Robust lagrange multiplier test for spatial error model;</span>
+<span class="sd">                    tuple contains the pair (statistic, p-value), where each</span>
+<span class="sd">                    is a float</span>
+<span class="sd">                   Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                   (see &#39;multi&#39; below for details)</span>
+<span class="sd">    rlm_lag       : tuple</span>
+<span class="sd">                    Robust lagrange multiplier test for spatial lag model;</span>
+<span class="sd">                    tuple contains the pair (statistic, p-value), where each</span>
+<span class="sd">                    is a float</span>
+<span class="sd">                   Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                   (see &#39;multi&#39; below for details)</span>
+<span class="sd">    lm_sarma      : tuple</span>
+<span class="sd">                    Lagrange multiplier test for spatial SARMA model; tuple</span>
+<span class="sd">                    contains the pair (statistic, p-value), where each is a</span>
+<span class="sd">                    float</span>
+<span class="sd">                   Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                   (see &#39;multi&#39; below for details)</span>
+<span class="sd">    moran_res     : tuple</span>
+<span class="sd">                    Moran&#39;s I for the residuals; tuple containing the triple</span>
+<span class="sd">                    (Moran&#39;s I, standardized Moran&#39;s I, p-value)</span>
+<span class="sd">    name_y        : string</span>
+<span class="sd">                    Name of dependent variable for use in output</span>
+<span class="sd">    name_x        : list of strings</span>
+<span class="sd">                    Names of independent variables for use in output</span>
+<span class="sd">    name_w        : string</span>
+<span class="sd">                    Name of weights matrix for use in output</span>
+<span class="sd">    name_gwk      : string</span>
+<span class="sd">                    Name of kernel weights matrix for use in output</span>
+<span class="sd">    name_ds       : string</span>
+<span class="sd">                    Name of dataset for use in output</span>
+<span class="sd">    name_regimes : string</span>
+<span class="sd">                   Name of regime variable for use in the output</span>
+<span class="sd">    title         : string</span>
+<span class="sd">                    Name of the regression method used</span>
+<span class="sd">                   Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                   (see &#39;multi&#39; below for details)</span>
+<span class="sd">    sig2n        : float</span>
+<span class="sd">                   Sigma squared (computed with n in the denominator)</span>
+<span class="sd">    sig2n_k      : float</span>
+<span class="sd">                   Sigma squared (computed with n-k in the denominator)</span>
+<span class="sd">    xtx          : float</span>
+<span class="sd">                   X&#39;X</span>
+<span class="sd">                   Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                   (see &#39;multi&#39; below for details)</span>
+<span class="sd">    xtxi         : float</span>
+<span class="sd">                   (X&#39;X)^-1</span>
+<span class="sd">                   Only available in dictionary &#39;multi&#39; when multiple regressions</span>
+<span class="sd">                   (see &#39;multi&#39; below for details)</span>
+<span class="sd">    regimes      : list</span>
+<span class="sd">                   List of n values with the mapping of each</span>
+<span class="sd">                   observation to a regime. Assumed to be aligned with &#39;x&#39;.</span>
+<span class="sd">    constant_regi: [&#39;one&#39;, &#39;many&#39;]</span>
+<span class="sd">                   Ignored if regimes=False. Constant option for regimes.</span>
+<span class="sd">                   Switcher controlling the constant term setup. It may take</span>
+<span class="sd">                   the following values:</span>
+<span class="sd">                     *  &#39;one&#39;: a vector of ones is appended to x and held</span>
+<span class="sd">                               constant across regimes</span>
+<span class="sd">                     * &#39;many&#39;: a vector of ones is appended to x and considered</span>
+<span class="sd">                               different per regime</span>
+<span class="sd">    cols2regi    : list, &#39;all&#39;</span>
+<span class="sd">                   Ignored if regimes=False. Argument indicating whether each</span>
+<span class="sd">                   column of x should be considered as different per regime</span>
+<span class="sd">                   or held constant across regimes (False).</span>
+<span class="sd">                   If a list, k booleans indicating for each variable the</span>
+<span class="sd">                   option (True if one per regime, False to be held constant).</span>
+<span class="sd">                   If &#39;all&#39;, all the variables vary by regime.</span>
+<span class="sd">    regime_err_sep  : boolean</span>
+<span class="sd">                   If True, a separate regression is run for each regime.</span>
+<span class="sd">    kr           : int</span>
+<span class="sd">                   Number of variables/columns to be &quot;regimized&quot; or subject</span>
+<span class="sd">                   to change by regime. These will result in one parameter</span>
+<span class="sd">                   estimate by regime for each variable (i.e. nr parameters per</span>
+<span class="sd">                   variable)</span>
+<span class="sd">    kf           : int</span>
+<span class="sd">                   Number of variables/columns to be considered fixed or</span>
+<span class="sd">                   global across regimes and hence only obtain one parameter</span>
+<span class="sd">                   estimate</span>
+<span class="sd">    nr           : int</span>
+<span class="sd">                   Number of different regimes in the &#39;regimes&#39; list</span>
+<span class="sd">    multi        : dictionary</span>
+<span class="sd">                   Only available when multiple regressions are estimated,</span>
+<span class="sd">                   i.e. when regime_err_sep=True and no variable is fixed</span>
+<span class="sd">                   across regimes.</span>
+<span class="sd">                   Contains all attributes of each individual regression</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; import pysal.lib</span>
+
+<span class="sd">    Open data on NCOVR US County Homicides (3085 areas) using pysal.lib.io.open().</span>
+<span class="sd">    This is the DBF associated with the NAT shapefile.  Note that</span>
+<span class="sd">    pysal.lib.io.open() also reads data in CSV format; since the actual class</span>
+<span class="sd">    requires data to be passed in as numpy arrays, the user can read their</span>
+<span class="sd">    data in using any method.  </span>
+
+<span class="sd">    &gt;&gt;&gt; db = pysal.lib.io.open(pysal.lib.examples.get_path(&quot;NAT.dbf&quot;),&#39;r&#39;)</span>
+
+<span class="sd">    Extract the HR90 column (homicide rates in 1990) from the DBF file and make it</span>
+<span class="sd">    the dependent variable for the regression. Note that PySAL requires this to be</span>
+<span class="sd">    an numpy array of shape (n, 1) as opposed to the also common shape of (n, )</span>
+<span class="sd">    that other packages accept.</span>
+
+<span class="sd">    &gt;&gt;&gt; y_var = &#39;HR90&#39;</span>
+<span class="sd">    &gt;&gt;&gt; y = db.by_col(y_var)</span>
+<span class="sd">    &gt;&gt;&gt; y = np.array(y).reshape(len(y), 1)</span>
+
+<span class="sd">    Extract UE90 (unemployment rate) and PS90 (population structure) vectors from</span>
+<span class="sd">    the DBF to be used as independent variables in the regression. Other variables</span>
+<span class="sd">    can be inserted by adding their names to x_var, such as x_var = [&#39;Var1&#39;,&#39;Var2&#39;,&#39;...]</span>
+<span class="sd">    Note that PySAL requires this to be an nxj numpy array, where j is the</span>
+<span class="sd">    number of independent variables (not including a constant). By default</span>
+<span class="sd">    this model adds a vector of ones to the independent variables passed in.</span>
+
+<span class="sd">    &gt;&gt;&gt; x_var = [&#39;PS90&#39;,&#39;UE90&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; x = np.array([db.by_col(name) for name in x_var]).T</span>
+
+<span class="sd">    The different regimes in this data are given according to the North and </span>
+<span class="sd">    South dummy (SOUTH).</span>
+
+<span class="sd">    &gt;&gt;&gt; r_var = &#39;SOUTH&#39;</span>
+<span class="sd">    &gt;&gt;&gt; regimes = db.by_col(r_var)</span>
+
+<span class="sd">    We can now run the regression and then have a summary of the output</span>
+<span class="sd">    by typing: olsr.summary</span>
+<span class="sd">    Alternatively, we can just check the betas and standard errors of the</span>
+<span class="sd">    parameters:</span>
+
+<span class="sd">    &gt;&gt;&gt; olsr = OLS_Regimes(y, x, regimes, nonspat_diag=False, name_y=y_var, name_x=[&#39;PS90&#39;,&#39;UE90&#39;], name_regimes=r_var, name_ds=&#39;NAT&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; olsr.betas</span>
+<span class="sd">    array([[ 0.39642899],</span>
+<span class="sd">           [ 0.65583299],</span>
+<span class="sd">           [ 0.48703937],</span>
+<span class="sd">           [ 5.59835   ],</span>
+<span class="sd">           [ 1.16210453],</span>
+<span class="sd">           [ 0.53163886]])</span>
+<span class="sd">    &gt;&gt;&gt; np.sqrt(olsr.vm.diagonal())</span>
+<span class="sd">    array([ 0.24816345,  0.09662678,  0.03628629,  0.46894564,  0.21667395,</span>
+<span class="sd">            0.05945651])</span>
+<span class="sd">    &gt;&gt;&gt; olsr.cols2regi</span>
+<span class="sd">    &#39;all&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="OLS_Regimes.__init__"><a class="viewcode-back" href="../../../../generated/pysal.model.spreg.OLS_Regimes.html#pysal.model.spreg.OLS_Regimes.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">regimes</span><span class="p">,</span>
+                 <span class="n">w</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">robust</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gwk</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sig2n_k</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">nonspat_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">spat_diag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">moran</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">white_test</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">vm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">constant_regi</span><span class="o">=</span><span class="s1">&#39;many&#39;</span><span class="p">,</span> <span class="n">cols2regi</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span>
+                 <span class="n">regime_err_sep</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">name_y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name_x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name_regimes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">name_w</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name_gwk</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name_ds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="n">n</span> <span class="o">=</span> <span class="n">USER</span><span class="o">.</span><span class="n">check_arrays</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="n">USER</span><span class="o">.</span><span class="n">check_y</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+        <span class="n">USER</span><span class="o">.</span><span class="n">check_weights</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">USER</span><span class="o">.</span><span class="n">check_robust</span><span class="p">(</span><span class="n">robust</span><span class="p">,</span> <span class="n">gwk</span><span class="p">)</span>
+        <span class="n">USER</span><span class="o">.</span><span class="n">check_spat_diag</span><span class="p">(</span><span class="n">spat_diag</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name_x_r</span> <span class="o">=</span> <span class="n">USER</span><span class="o">.</span><span class="n">set_name_x</span><span class="p">(</span><span class="n">name_x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">constant_regi</span> <span class="o">=</span> <span class="n">constant_regi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cols2regi</span> <span class="o">=</span> <span class="n">cols2regi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name_w</span> <span class="o">=</span> <span class="n">USER</span><span class="o">.</span><span class="n">set_name_w</span><span class="p">(</span><span class="n">name_w</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name_gwk</span> <span class="o">=</span> <span class="n">USER</span><span class="o">.</span><span class="n">set_name_w</span><span class="p">(</span><span class="n">name_gwk</span><span class="p">,</span> <span class="n">gwk</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name_ds</span> <span class="o">=</span> <span class="n">USER</span><span class="o">.</span><span class="n">set_name_ds</span><span class="p">(</span><span class="n">name_ds</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name_y</span> <span class="o">=</span> <span class="n">USER</span><span class="o">.</span><span class="n">set_name_y</span><span class="p">(</span><span class="n">name_y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name_regimes</span> <span class="o">=</span> <span class="n">USER</span><span class="o">.</span><span class="n">set_name_ds</span><span class="p">(</span><span class="n">name_regimes</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>
+        <span class="n">cols2regi</span> <span class="o">=</span> <span class="n">REGI</span><span class="o">.</span><span class="n">check_cols2regi</span><span class="p">(</span>
+            <span class="n">constant_regi</span><span class="p">,</span> <span class="n">cols2regi</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">add_cons</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regimes_set</span> <span class="o">=</span> <span class="n">REGI</span><span class="o">.</span><span class="n">_get_regimes_set</span><span class="p">(</span><span class="n">regimes</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regimes</span> <span class="o">=</span> <span class="n">regimes</span>
+        <span class="n">USER</span><span class="o">.</span><span class="n">check_regimes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regimes_set</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">regime_err_sep</span> <span class="o">==</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">robust</span> <span class="o">==</span> <span class="s1">&#39;hac&#39;</span><span class="p">:</span>
+            <span class="n">set_warn</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Error by regimes is incompatible with HAC estimation. Hence, error by regimes has been disabled for this model.&quot;</span><span class="p">)</span>
+            <span class="n">regime_err_sep</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regime_err_sep</span> <span class="o">=</span> <span class="n">regime_err_sep</span>
+        <span class="k">if</span> <span class="n">regime_err_sep</span> <span class="o">==</span> <span class="kc">True</span> <span class="ow">and</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols2regi</span><span class="p">)</span> <span class="o">==</span> <span class="nb">set</span><span class="p">([</span><span class="kc">True</span><span class="p">])</span> <span class="ow">and</span> <span class="n">constant_regi</span> <span class="o">==</span> <span class="s1">&#39;many&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+            <span class="n">name_x</span> <span class="o">=</span> <span class="n">USER</span><span class="o">.</span><span class="n">set_name_x</span><span class="p">(</span><span class="n">name_x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+            <span class="n">regi_ids</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">regimes</span><span class="p">)</span> <span class="o">==</span> <span class="n">r</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regimes_set</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ols_regimes_multi</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">regi_ids</span><span class="p">,</span> <span class="n">cores</span><span class="p">,</span>
+                                    <span class="n">gwk</span><span class="p">,</span> <span class="n">sig2n_k</span><span class="p">,</span> <span class="n">robust</span><span class="p">,</span> <span class="n">nonspat_diag</span><span class="p">,</span> <span class="n">spat_diag</span><span class="p">,</span> <span class="n">vm</span><span class="p">,</span> <span class="n">name_x</span><span class="p">,</span> <span class="n">moran</span><span class="p">,</span> <span class="n">white_test</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">name_x</span> <span class="o">=</span> <span class="n">USER</span><span class="o">.</span><span class="n">set_name_x</span><span class="p">(</span><span class="n">name_x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">constant</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_x</span> <span class="o">=</span> <span class="n">REGI</span><span class="o">.</span><span class="n">Regimes_Frame</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span>
+                                                         <span class="n">regimes</span><span class="p">,</span> <span class="n">constant_regi</span><span class="p">,</span> <span class="n">cols2regi</span><span class="p">,</span> <span class="n">name_x</span><span class="p">)</span>
+            <span class="n">BaseOLS</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">robust</span><span class="o">=</span><span class="n">robust</span><span class="p">,</span> <span class="n">gwk</span><span class="o">=</span><span class="n">gwk</span><span class="p">,</span> <span class="n">sig2n_k</span><span class="o">=</span><span class="n">sig2n_k</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">regime_err_sep</span> <span class="o">==</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">robust</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">y2</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">REGI</span><span class="o">.</span><span class="n">_get_weighted_var</span><span class="p">(</span>
+                    <span class="n">regimes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">regimes_set</span><span class="p">,</span> <span class="n">sig2n_k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+                <span class="n">ols2</span> <span class="o">=</span> <span class="n">BaseOLS</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y2</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x2</span><span class="p">,</span> <span class="n">sig2n_k</span><span class="o">=</span><span class="n">sig2n_k</span><span class="p">)</span>
+                <span class="n">RegressionProps_basic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">betas</span><span class="o">=</span><span class="n">ols2</span><span class="o">.</span><span class="n">betas</span><span class="p">,</span> <span class="n">vm</span><span class="o">=</span><span class="n">ols2</span><span class="o">.</span><span class="n">vm</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;ORDINARY LEAST SQUARES - REGIMES (Group-wise heteroskedasticity)&quot;</span>
+                <span class="n">nonspat_diag</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">set_warn</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Residuals treated as homoskedastic for the purpose of diagnostics.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;ORDINARY LEAST SQUARES - REGIMES&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">robust</span> <span class="o">=</span> <span class="n">USER</span><span class="o">.</span><span class="n">set_robust</span><span class="p">(</span><span class="n">robust</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">chow</span> <span class="o">=</span> <span class="n">REGI</span><span class="o">.</span><span class="n">Chow</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">SUMMARY</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">reg</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">vm</span><span class="o">=</span><span class="n">vm</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">nonspat_diag</span><span class="o">=</span><span class="n">nonspat_diag</span><span class="p">,</span>
+                        <span class="n">spat_diag</span><span class="o">=</span><span class="n">spat_diag</span><span class="p">,</span> <span class="n">moran</span><span class="o">=</span><span class="n">moran</span><span class="p">,</span> <span class="n">white_test</span><span class="o">=</span><span class="n">white_test</span><span class="p">,</span> <span class="n">regimes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_ols_regimes_multi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">regi_ids</span><span class="p">,</span> <span class="n">cores</span><span class="p">,</span>
+                           <span class="n">gwk</span><span class="p">,</span> <span class="n">sig2n_k</span><span class="p">,</span> <span class="n">robust</span><span class="p">,</span> <span class="n">nonspat_diag</span><span class="p">,</span> <span class="n">spat_diag</span><span class="p">,</span> <span class="n">vm</span><span class="p">,</span> <span class="n">name_x</span><span class="p">,</span> <span class="n">moran</span><span class="p">,</span> <span class="n">white_test</span><span class="p">):</span>
+        <span class="n">results_p</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        for r in self.regimes_set:</span>
+<span class="sd">            if system() == &#39;Windows&#39;:</span>
+<span class="sd">                is_win = True</span>
+<span class="sd">                results_p[r] = _work(*(self.y,x,w,regi_ids,r,robust,sig2n_k,self.name_ds,self.name_y,name_x,self.name_w,self.name_regimes))</span>
+<span class="sd">            else:</span>
+<span class="sd">                pool = mp.Pool(cores)</span>
+<span class="sd">                results_p[r] = pool.apply_async(_work,args=(self.y,x,w,regi_ids,r,robust,sig2n_k,self.name_ds,self.name_y,name_x,self.name_w,self.name_regimes))</span>
+<span class="sd">                is_win = False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regimes_set</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cores</span><span class="p">:</span>
+                <span class="n">pool</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+                <span class="n">results_p</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">apply_async</span><span class="p">(</span><span class="n">_work</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">regi_ids</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">robust</span><span class="p">,</span> <span class="n">sig2n_k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_y</span><span class="p">,</span> <span class="n">name_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_w</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_regimes</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">results_p</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">_work</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">regi_ids</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">robust</span><span class="p">,</span> <span class="n">sig2n_k</span><span class="p">,</span>
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">name_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_y</span><span class="p">,</span> <span class="n">name_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_w</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_regimes</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">kryd</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kr</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kf</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nr</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regimes_set</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">nr</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">kr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nr</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">kr</span><span class="p">),</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">betas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">nr</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">kr</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">predy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        if not is_win:</span>
+<span class="sd">            pool.close()</span>
+<span class="sd">            pool.join()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">cores</span><span class="p">:</span>
+            <span class="n">pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">pool</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name_y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_x</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regimes_set</span><span class="p">:</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            if is_win:</span>
+<span class="sd">                results[r] = results_p[r]</span>
+<span class="sd">            else:</span>
+<span class="sd">                results[r] = results_p[r].get()</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">cores</span><span class="p">:</span>
+                <span class="n">results</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">results_p</span><span class="p">[</span><span class="n">r</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">results</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">results_p</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">vm</span><span class="p">[(</span><span class="n">counter</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">kr</span><span class="p">):((</span><span class="n">counter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">kr</span><span class="p">),</span>
+                    <span class="p">(</span><span class="n">counter</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">kr</span><span class="p">):((</span><span class="n">counter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">kr</span><span class="p">)]</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">vm</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">betas</span><span class="p">[</span>
+                <span class="p">(</span><span class="n">counter</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">kr</span><span class="p">):((</span><span class="n">counter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">kr</span><span class="p">),</span> <span class="p">]</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">betas</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="n">regi_ids</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="p">]</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">u</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">predy</span><span class="p">[</span><span class="n">regi_ids</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="p">]</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">predy</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name_y</span> <span class="o">+=</span> <span class="n">results</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">name_y</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name_x</span> <span class="o">+=</span> <span class="n">results</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">name_x</span>
+            <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">multi</span> <span class="o">=</span> <span class="n">results</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hac_var</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="k">if</span> <span class="n">robust</span> <span class="o">==</span> <span class="s1">&#39;hac&#39;</span><span class="p">:</span>
+            <span class="n">hac_multi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gwk</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chow</span> <span class="o">=</span> <span class="n">REGI</span><span class="o">.</span><span class="n">Chow</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">spat_diag</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_spat_diag_props</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sig2n_k</span><span class="p">)</span>
+        <span class="n">SUMMARY</span><span class="o">.</span><span class="n">OLS_multi</span><span class="p">(</span><span class="n">reg</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">multireg</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">multi</span><span class="p">,</span> <span class="n">vm</span><span class="o">=</span><span class="n">vm</span><span class="p">,</span> <span class="n">nonspat_diag</span><span class="o">=</span><span class="n">nonspat_diag</span><span class="p">,</span>
+                          <span class="n">spat_diag</span><span class="o">=</span><span class="n">spat_diag</span><span class="p">,</span> <span class="n">moran</span><span class="o">=</span><span class="n">moran</span><span class="p">,</span> <span class="n">white_test</span><span class="o">=</span><span class="n">white_test</span><span class="p">,</span> <span class="n">regimes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_spat_diag_props</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">sig2n_k</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">x</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">REGI</span><span class="o">.</span><span class="n">regimeX_setup</span><span class="p">(</span>
+            <span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">regimes</span><span class="p">,</span> <span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">regimes_set</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xtx</span> <span class="o">=</span> <span class="n">spdot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xtxi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xtx</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_work</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">regi_ids</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">robust</span><span class="p">,</span> <span class="n">sig2n_k</span><span class="p">,</span> <span class="n">name_ds</span><span class="p">,</span> <span class="n">name_y</span><span class="p">,</span> <span class="n">name_x</span><span class="p">,</span> <span class="n">name_w</span><span class="p">,</span> <span class="n">name_regimes</span><span class="p">):</span>
+    <span class="n">y_r</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">regi_ids</span><span class="p">[</span><span class="n">r</span><span class="p">]]</span>
+    <span class="n">x_r</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">regi_ids</span><span class="p">[</span><span class="n">r</span><span class="p">]]</span>
+    <span class="n">x_constant</span> <span class="o">=</span> <span class="n">USER</span><span class="o">.</span><span class="n">check_constant</span><span class="p">(</span><span class="n">x_r</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">robust</span> <span class="o">==</span> <span class="s1">&#39;hac&#39;</span><span class="p">:</span>
+        <span class="n">robust</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">BaseOLS</span><span class="p">(</span><span class="n">y_r</span><span class="p">,</span> <span class="n">x_constant</span><span class="p">,</span> <span class="n">robust</span><span class="o">=</span><span class="n">robust</span><span class="p">,</span> <span class="n">sig2n_k</span><span class="o">=</span><span class="n">sig2n_k</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;ORDINARY LEAST SQUARES ESTIMATION - REGIME </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">r</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">robust</span> <span class="o">=</span> <span class="n">USER</span><span class="o">.</span><span class="n">set_robust</span><span class="p">(</span><span class="n">robust</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">name_ds</span> <span class="o">=</span> <span class="n">name_ds</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">name_y</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">name_y</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">name_x</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">name_x</span><span class="p">]</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">name_w</span> <span class="o">=</span> <span class="n">name_w</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">name_regimes</span> <span class="o">=</span> <span class="n">name_regimes</span>
+    <span class="k">if</span> <span class="n">w</span><span class="p">:</span>
+        <span class="n">w_r</span><span class="p">,</span> <span class="n">warn</span> <span class="o">=</span> <span class="n">REGI</span><span class="o">.</span><span class="n">w_regime</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">regi_ids</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="n">r</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">set_warn</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">warn</span><span class="p">)</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">w_r</span>
+    <span class="k">return</span> <span class="n">model</span>
+
+
+<span class="k">def</span> <span class="nf">_test</span><span class="p">():</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="n">start_suppress</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">get_printoptions</span><span class="p">()[</span><span class="s1">&#39;suppress&#39;</span><span class="p">]</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">suppress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">suppress</span><span class="o">=</span><span class="n">start_suppress</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">_test</span><span class="p">()</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">import</span> <span class="nn">pysal.lib</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;NAT.dbf&quot;</span><span class="p">),</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">y_var</span> <span class="o">=</span> <span class="s1">&#39;CRIME&#39;</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">db</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="n">y_var</span><span class="p">)])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">49</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">x_var</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;INC&#39;</span><span class="p">,</span> <span class="s1">&#39;HOVAL&#39;</span><span class="p">]</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">db</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">x_var</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">r_var</span> <span class="o">=</span> <span class="s1">&#39;NSA&#39;</span>
+    <span class="n">regimes</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="n">r_var</span><span class="p">)</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">Rook</span><span class="o">.</span><span class="n">from_shapefile</span><span class="p">(</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;columbus.shp&quot;</span><span class="p">))</span>
+    <span class="n">w</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="s1">&#39;r&#39;</span>
+    <span class="n">olsr</span> <span class="o">=</span> <span class="n">OLS_Regimes</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">regimes</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">constant_regi</span><span class="o">=</span><span class="s1">&#39;many&#39;</span><span class="p">,</span> <span class="n">nonspat_diag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">spat_diag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name_y</span><span class="o">=</span><span class="n">y_var</span><span class="p">,</span> <span class="n">name_x</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;INC&#39;</span><span class="p">,</span> <span class="s1">&#39;HOVAL&#39;</span><span class="p">],</span>
+                       <span class="n">name_ds</span><span class="o">=</span><span class="s1">&#39;columbus&#39;</span><span class="p">,</span> <span class="n">name_regimes</span><span class="o">=</span><span class="n">r_var</span><span class="p">,</span> <span class="n">name_w</span><span class="o">=</span><span class="s1">&#39;columbus.gal&#39;</span><span class="p">,</span> <span class="n">regime_err_sep</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cols2regi</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span> <span class="n">sig2n_k</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">robust</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">olsr</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

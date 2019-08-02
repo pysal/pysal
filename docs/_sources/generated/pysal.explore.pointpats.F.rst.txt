@@ -1,0 +1,23 @@
+pysal.explore.pointpats.F
+=========================
+
+.. currentmodule:: pysal.explore.pointpats
+
+.. autoclass:: F
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~F.__init__
+      ~F.plot
+   
+   
+
+   
+   
+   

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>References &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="pysal.model.mgwr.utils.compare_surfaces" href="generated/pysal.model.mgwr.utils.compare_surfaces.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="api.html">API</a></li>
+                <li><a href="#">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">References</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="references">
+<h1>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h1>
+<p id="bibtex-bibliography-references-0"><dl class="citation">
+<dt class="label" id="allen2015more"><span class="brackets">ABDW15</span></dt>
+<dd><p>Rebecca Allen, Simon Burgess, Russell Davidson, and Frank Windmeijer. More reliable inference for the dissimilarity index of segregation. <em>The econometrics journal</em>, 18(1):40–66, 2015.</p>
+</dd>
+<dt class="label" id="anselin1988"><span class="brackets">Ans88</span></dt>
+<dd><p>Luc Anselin. <em>Spatial Econometrics: Methods and Models</em>. Kluwer, Dordrecht, 1988.</p>
+</dd>
+<dt class="label" id="anselin95"><span class="brackets">Ans95</span></dt>
+<dd><p>Luc Anselin. Local indicators of spatial association-LISA. <em>Geographical Analysis</em>, 27(2):93–115, Sep 1995. URL: <a class="reference external" href="http://dx.doi.org/10.1111/j.1538-4632.1995.tb00338.x">http://dx.doi.org/10.1111/j.1538-4632.1995.tb00338.x</a>, <a class="reference external" href="https://doi.org/10.1111/j.1538-4632.1995.tb00338.x">doi:10.1111/j.1538-4632.1995.tb00338.x</a>.</p>
+</dd>
+<dt class="label" id="anselin2011"><span class="brackets">Ans11</span></dt>
+<dd><p>Luc Anselin. GMM estimation of spatial error autocorrelation with and without heteroskedasticity. Technical Report, GeoDa Center for Geospatial Analysis and Computation, 2011.</p>
+</dd>
+<dt class="label" id="arraiz2010"><span class="brackets">ADKP10</span></dt>
+<dd><p>Irani Arraiz, David M. Drukker, Harry H. Kelejian, and Ingmar R. Prucha. A spatial Cliff-Ord-type model with heteroskedastic innovations: Small and large sample results. <em>Journal of Regional Science</em>, 50(2):592–614, 2010. <a class="reference external" href="https://doi.org/10.1111/j.1467-9787.2009.00618.x">doi:10.1111/j.1467-9787.2009.00618.x</a>.</p>
+</dd>
+<dt class="label" id="assun-o-1999"><span class="brackets">AR99</span></dt>
+<dd><p>Renato M. Assuncao and Edna A. Reis. A new proposal to adjust Moran’s I for population density. <em>Statistics in Medicine</em>, 18(16):2147–2162, Aug 1999. URL: <a class="reference external" href="http://dx.doi.org/10.1002/(sici)1097-0258(19990830)18:16&lt;2147::aid-sim179&gt;3.0.co;2-i">http://dx.doi.org/10.1002/(sici)1097-0258(19990830)18:16&lt;2147::aid-sim179&gt;3.0.co;2-i</a>, <a class="reference external" href="https://doi.org/10.1002/(sici)1097-0258(19990830)18:16&lt;2147::aid-sim179&gt;3.0.co;2-i">doi:10.1002/(sici)1097-0258(19990830)18:16&lt;2147::aid-sim179&gt;3.0.co;2-i</a>.</p>
+</dd>
+<dt class="label" id="bickenbach2003"><span class="brackets">BB03</span></dt>
+<dd><p>Frank Bickenbach and Eckhardt Bode. Evaluating the Markov property in studies of economic convergence. <em>International Regional Science Review</em>, 26(3):363–392, 2003. URL: <a class="reference external" href="https://doi.org/10.1177/0160017603253789">https://doi.org/10.1177/0160017603253789</a>, <a class="reference external" href="https://doi.org/10.1177/0160017603253789">doi:10.1177/0160017603253789</a>.</p>
+</dd>
+<dt class="label" id="carrington1997measuring"><span class="brackets">CT97</span></dt>
+<dd><p>William J Carrington and Kenneth R Troske. On measuring segregation in samples with small units. <em>Journal of Business \&amp; Economic Statistics</em>, 15(4):402–409, 1997.</p>
+</dd>
+<dt class="label" id="christensen2005"><span class="brackets">Chr05</span></dt>
+<dd><p>David Christensen. Fast algorithms for the calculation of kendall’s τ. <em>Computational Statistics</em>, 20(1):51–62, Mar 2005. URL: <a class="reference external" href="https://doi.org/10.1007/BF02736122&quot;">https://doi.org/10.1007/BF02736122”</a>, <a class="reference external" href="https://doi.org/10.1007/BF02736122">doi:10.1007/BF02736122</a>.</p>
+</dd>
+<dt class="label" id="cliff81"><span class="brackets">CO81</span></dt>
+<dd><p>A.D. Cliff and J.K. Ord. <em>Spatial Processes: Models and Applications</em>. Pion, London, 1981.</p>
+</dd>
+<dt class="label" id="dijkstra1959a"><span class="brackets">Dij59</span></dt>
+<dd><p>E. W. Dijkstra. A Note on Two Problems in Connexion with Graphs. <em>Numerische Mathematik</em>, 1(1):269–271, 1959. <a class="reference external" href="https://doi.org/10.1007/BF01386390">doi:10.1007/BF01386390</a>.</p>
+</dd>
+<dt class="label" id="drukker2013"><span class="brackets">DEP13</span></dt>
+<dd><p>David M Drukker, Peter Egger, and Ingmar R Prucha. On two-step estimation of a spatial autoregressive model with autoregressive disturbances and endogenous regressors. <em>Econometric Reviews</em>, 32(5-6):686–733, 2013.</p>
+</dd>
+<dt class="label" id="folch2016centralization"><span class="brackets">FR16</span></dt>
+<dd><p>David C Folch and Sergio J Rey. The centralization index: a measure of local spatial segregation. <em>Papers in Regional Science</em>, 95(3):555–576, 2016.</p>
+</dd>
+<dt class="label" id="formby-2004fk"><span class="brackets">FSZ04</span></dt>
+<dd><p>John P. Formby, W. James Smith, and Buhong Zheng. Mobility measurement, transition matrices and statistical inference. <em>Journal of Econometrics</em>, 120(1):181–205, 2004. URL: <a class="reference external" href="http://www.sciencedirect.com/science/article/pii/S0304407603002112">http://www.sciencedirect.com/science/article/pii/S0304407603002112</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1016/S0304-4076(03)00211-2">doi:https://doi.org/10.1016/S0304-4076(03)00211-2</a>.</p>
+</dd>
+<dt class="label" id="fotheringham-geographically-2002"><span class="brackets">FBC02</span></dt>
+<dd><p>A. Stewart Fotheringham, Chris Brunsdon, and Martin Charlton. <em>Geographically Weighted Regression: The Analysis of Spatially Varying Relationships</em>. John Wiley \&amp; Sons, February 2002. ISBN 978-0-470-85525-6.</p>
+</dd>
+<dt class="label" id="fotheringham-2017"><span class="brackets">FYK17</span></dt>
+<dd><p>A. Stewart Fotheringham, Wenbai Yang, and Wei Kang. Multiscale geographically weighted regression (mgwr). <em>Annals of the American Association of Geographers</em>, 107(6):1247–1265, 2017. URL: <a class="reference external" href="http://dx.doi.org/10.1080/24694452.2017.1352480">http://dx.doi.org/10.1080/24694452.2017.1352480</a>, <a class="reference external" href="https://arxiv.org/abs/http://dx.doi.org/10.1080/24694452.2017.1352480">arXiv:http://dx.doi.org/10.1080/24694452.2017.1352480</a>, <a class="reference external" href="https://doi.org/10.1080/24694452.2017.1352480">doi:10.1080/24694452.2017.1352480</a>.</p>
+</dd>
+<dt class="label" id="getis-2010"><span class="brackets">GO10</span></dt>
+<dd><p>Arthur Getis and J. K. Ord. The analysis of spatial association by use of distance statistics. <em>Geographical Analysis</em>, 24(3):189–206, Sep 2010. URL: <a class="reference external" href="http://dx.doi.org/10.1111/j.1538-4632.1992.tb00261.x">http://dx.doi.org/10.1111/j.1538-4632.1992.tb00261.x</a>, <a class="reference external" href="https://doi.org/10.1111/j.1538-4632.1992.tb00261.x">doi:10.1111/j.1538-4632.1992.tb00261.x</a>.</p>
+</dd>
+<dt class="label" id="hong2014implementing"><span class="brackets">HOSullivanS14</span></dt>
+<dd><p>Seong-Yun Hong, David O’Sullivan, and Yukio Sadahiro. Implementing spatial segregation measures in r. <em>PloS one</em>, 9(11):e113767, 2014.</p>
+</dd>
+<dt class="label" id="hong2014measuring"><span class="brackets">HS14</span></dt>
+<dd><p>Seong-Yun Hong and Yukio Sadahiro. Measuring geographic segregation: a graph-based approach. <em>Journal of Geographical Systems</em>, 16(2):211–231, 2014.</p>
+</dd>
+<dt class="label" id="hubert-1981"><span class="brackets">HGC81</span></dt>
+<dd><p>L. J. Hubert, R. G. Golledge, and C. M. Costanzo. Generalized procedures for evaluating spatial autocorrelation. <em>Geographical Analysis</em>, 13(3):224–233, Sep 1981. URL: <a class="reference external" href="http://dx.doi.org/10.1111/j.1538-4632.1981.tb00731.x">http://dx.doi.org/10.1111/j.1538-4632.1981.tb00731.x</a>, <a class="reference external" href="https://doi.org/10.1111/j.1538-4632.1981.tb00731.x">doi:10.1111/j.1538-4632.1981.tb00731.x</a>.</p>
+</dd>
+<dt class="label" id="ibe2009"><span class="brackets">Ibe09</span></dt>
+<dd><p>Oliver Ibe. <em>Markov processes for stochastic modeling</em>. Elsevier Academic Press, Amsterdam, 2009.</p>
+</dd>
+<dt class="label" id="isard1967methods"><span class="brackets">Isa67</span></dt>
+<dd><p>Walter Isard. <em>Methods of regional analysis</em>. Volume 4. Рипол Классик, 1967.</p>
+</dd>
+<dt class="label" id="jiang-2013"><span class="brackets">Jia13</span></dt>
+<dd><p>Bin Jiang. Head/tail breaks: a new classification scheme for data with a heavy-tailed distribution. <em>The Professional Geographer</em>, 65(3):482–494, Aug 2013. URL: <a class="reference external" href="http://dx.doi.org/10.1080/00330124.2012.700499">http://dx.doi.org/10.1080/00330124.2012.700499</a>, <a class="reference external" href="https://doi.org/10.1080/00330124.2012.700499">doi:10.1080/00330124.2012.700499</a>.</p>
+</dd>
+<dt class="label" id="kelejian1999"><span class="brackets">KP99</span></dt>
+<dd><p>H H Kelejian and I R Prucha. A generalized moments estimator for the autoregressive parameter in a spatial model. <em>Int. Econ. Rev.</em>, 40:509–534, 1999.</p>
+</dd>
+<dt class="label" id="kelejian1998"><span class="brackets">KP98</span></dt>
+<dd><p>Harry H Kelejian and Ingmar R Prucha. A generalized spatial two-stage least squares procedure for estimating a spatial autoregressive model with autoregressive disturbances. <em>J. Real Estate Fin. Econ.</em>, 17(1):99–121, 1998.</p>
+</dd>
+<dt class="label" id="kemeny1967"><span class="brackets">KS67</span></dt>
+<dd><p>John G. Kemeny and James Laurie Snell. <em>Finite markov chains</em>. Van Nostrand, 1967.</p>
+</dd>
+<dt class="label" id="kullback1962"><span class="brackets">KKK62</span></dt>
+<dd><p>S. Kullback, M. Kupperman, and H. H. Ku. Tests for contingency tables and Markov chains. <em>Technometrics</em>, 4(4):573–608, 1962. URL: <a class="reference external" href="http://www.jstor.org/stable/1266291">http://www.jstor.org/stable/1266291</a>, <a class="reference external" href="https://doi.org/10.2307/1266291">doi:10.2307/1266291</a>.</p>
+</dd>
+<dt class="label" id="vanlieshout1996"><span class="brackets">LB96</span></dt>
+<dd><p>M. N. M. Lieshout and A. J. Baddeley. A nonparametric measure of spatial interaction in point patterns. <em>Statistica Neerlandica</em>, 50(3):344–361, 1996. <a class="reference external" href="https://doi.org/10.1111/j.1467-9574.1996.tb01501.x">doi:10.1111/j.1467-9574.1996.tb01501.x</a>.</p>
+</dd>
+<dt class="label" id="massey1988dimensions"><span class="brackets">MD88</span></dt>
+<dd><p>Douglas S Massey and Nancy A Denton. The dimensions of residential segregation. <em>Social forces</em>, 67(2):281–315, 1988.</p>
+</dd>
+<dt class="label" id="morgan1983distance"><span class="brackets">Mor83</span></dt>
+<dd><p>Barrie S Morgan. A distance-decay based interaction index to measure residential segregation. <em>Area</em>, pages 211–217, 1983.</p>
+</dd>
+<dt class="label" id="morrill1991measure"><span class="brackets">Mor91</span></dt>
+<dd><p>Richard L Morrill. On the measure of geographic segregation. In <em>Geography research forum</em>, volume 11, 25–36. 1991.</p>
+</dd>
+<dt class="label" id="okabe2001"><span class="brackets">OY01</span></dt>
+<dd><p>Atsuyuki Okabe and Ikuho Yamada. The K-Function Method on a Network and Its Computational Implementation. <em>Geographical Analysis</em>, 33(3):271–290, 2001.</p>
+</dd>
+<dt class="label" id="ord-2010"><span class="brackets">OG10</span></dt>
+<dd><p>J. K. Ord and Arthur Getis. Local spatial autocorrelation statistics: distributional issues and an application. <em>Geographical Analysis</em>, 27(4):286–306, Sep 2010. URL: <a class="reference external" href="http://dx.doi.org/10.1111/j.1538-4632.1995.tb00912.x">http://dx.doi.org/10.1111/j.1538-4632.1995.tb00912.x</a>, <a class="reference external" href="https://doi.org/10.1111/j.1538-4632.1995.tb00912.x">doi:10.1111/j.1538-4632.1995.tb00912.x</a>.</p>
+</dd>
+<dt class="label" id="press2007"><span class="brackets">PTVF07</span></dt>
+<dd><p>William H Press, Saul A Teukolsky, William T Vetterling, and Brian P Flannery. <em>Numerical recipes: the art of scientific computing</em>. Cambridge Univ Pr, Cambridge, 3rd edition, 2007.</p>
+</dd>
+<dt class="label" id="reardon1998measures"><span class="brackets">Rea98</span></dt>
+<dd><p>Sean F Reardon. Measures of racial diversity and segregation in multigroup and hierarchically structured populations. In <em>annual meeting of the Eastern Sociological Society, Philadelphia, PA</em>. 1998.</p>
+</dd>
+<dt class="label" id="reardon2002measures"><span class="brackets">RF02</span></dt>
+<dd><p>Sean F Reardon and Glenn Firebaugh. Measures of multigroup segregation. <em>Sociological methodology</em>, 32(1):33–67, 2002.</p>
+</dd>
+<dt class="label" id="reardon2004measures"><span class="brackets">ROSullivan04</span></dt>
+<dd><p>Sean F Reardon and David O’Sullivan. Measures of spatial segregation. <em>Sociological methodology</em>, 34(1):121–162, 2004.</p>
+</dd>
+<dt class="label" id="rey-2013-sea"><span class="brackets">RS13</span></dt>
+<dd><p>Sergio J Rey and Richard J Smith. A spatial decomposition of the Gini coefficient. <em>Letters in Spatial and Resource Sciences</em>, 6:55–70, 2013.</p>
+</dd>
+<dt class="label" id="rey2001"><span class="brackets">Rey01</span></dt>
+<dd><p>Sergio J. Rey. Spatial empirics for economic growth and convergence. <em>Geographical Analysis</em>, 33(3):195–214, 2001. URL: <a class="reference external" href="https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1538-4632.2001.tb00444.x">https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1538-4632.2001.tb00444.x</a>, <a class="reference external" href="https://doi.org/10.1111/j.1538-4632.2001.tb00444.x">doi:10.1111/j.1538-4632.2001.tb00444.x</a>.</p>
+</dd>
+<dt class="label" id="rey2004a"><span class="brackets">Rey04</span></dt>
+<dd><p>Sergio J. Rey. Spatial dependence in the evolution of regional income distributions. In A. Getis, J. Múr, and H. Zoeller, editors, <em>Spatial econometrics and spatial statistics</em>, pages 193–213. Palgrave, Hampshire, 2004.</p>
+</dd>
+<dt class="label" id="rey2014"><span class="brackets">Rey14a</span></dt>
+<dd><p>Sergio J. Rey. Fast algorithms for a space-time concordance measure. <em>Computational Statistics</em>, 29(3-4):799–811, 2014. URL: <a class="reference external" href="https://doi.org/10.1007/s00180-013-0461-2">https://doi.org/10.1007/s00180-013-0461-2</a>, <a class="reference external" href="https://doi.org/10.1007/s00180-013-0461-2">doi:10.1007/s00180-013-0461-2</a>.</p>
+</dd>
+<dt class="label" id="rey2014a"><span class="brackets">Rey14b</span></dt>
+<dd><p>Sergio J. Rey. Rank-based Markov chains for regional income distribution dynamics. <em>Journal of Geographical Systems</em>, 16(2):115–137, 2014.</p>
+</dd>
+<dt class="label" id="rey2016"><span class="brackets">Rey16</span></dt>
+<dd><p>Sergio J. Rey. Space–time patterns of rank concordance: local indicators of mobility association with application to spatial income inequality dynamics. <em>Annals of the American Association of Geographers</em>, 106(4):788–803, 2016. URL: <a class="reference external" href="https://doi.org/10.1080/24694452.2016.1151336">https://doi.org/10.1080/24694452.2016.1151336</a>, <a class="reference external" href="https://doi.org/10.1080/24694452.2016.1151336">doi:10.1080/24694452.2016.1151336</a>.</p>
+</dd>
+<dt class="label" id="pysal2007"><span class="brackets">RA07</span></dt>
+<dd><p>Sergio J. Rey and Luc Anselin. PySAL: A Python Library of Spatial Analytical Methods. <em>The Review of Regional Studies</em>, 37(1):5–27, 2007.</p>
+</dd>
+<dt class="label" id="rey2011"><span class="brackets">RMA11</span></dt>
+<dd><p>Sergio J. Rey, Alan T. Murray, and Luc Anselin. Visualizing regional income distribution dynamics. <em>Letters in Spatial and Resource Sciences</em>, 4(1):81–90, 2011. URL: <a class="reference external" href="https://doi.org/10.1007/s12076-010-0048-2">https://doi.org/10.1007/s12076-010-0048-2</a>, <a class="reference external" href="https://doi.org/10.1007/s12076-010-0048-2">doi:10.1007/s12076-010-0048-2</a>.</p>
+</dd>
+<dt class="label" id="rey-interregional-2010"><span class="brackets">RSastreGutierrez10</span></dt>
+<dd><p>Sergio J. Rey and Myrna L Sastré-Gutiérrez. Interregional inequality dynamics in Mexico. <em>Spatial Economic Analysis</em>, 5(3):277–298, 2010.</p>
+</dd>
+<dt class="label" id="rey-2016"><span class="brackets">RSL16</span></dt>
+<dd><p>Sergio J. Rey, Philip Stephens, and Jason Laura. An evaluation of sampling and full enumeration strategies for Fisher Jenks classification in big data settings. <em>Transactions in GIS</em>, 21(4):796–810, Oct 2016. URL: <a class="reference external" href="http://dx.doi.org/10.1111/tgis.12236">http://dx.doi.org/10.1111/tgis.12236</a>, <a class="reference external" href="https://doi.org/10.1111/tgis.12236">doi:10.1111/tgis.12236</a>.</p>
+</dd>
+<dt class="label" id="roberto2015divergence"><span class="brackets">Rob15</span></dt>
+<dd><p>Elizabeth Roberto. The divergence index: a decomposable measure of segregation and inequality. <em>arXiv preprint arXiv:1508.01167</em>, 2015.</p>
+</dd>
+<dt class="label" id="sakoda1981generalized"><span class="brackets">Sak81</span></dt>
+<dd><p>James M Sakoda. A generalized index of dissimilarity. <em>Demography</em>, 18(2):245–250, 1981.</p>
+</dd>
+<dt class="label" id="simpson1949measurement"><span class="brackets">Sim49</span></dt>
+<dd><p>Edward H Simpson. Measurement of diversity. <em>nature</em>, 163(4148):688, 1949.</p>
+</dd>
+<dt class="label" id="theil1972statistical"><span class="brackets">The72</span></dt>
+<dd><p>Henry Theil. <em>Statistical decomposition analysis; with applications in the social and administrative sciences</em>. London North-Holland, 1972.</p>
+</dd>
+<dt class="label" id="tivadar2019oasisr"><span class="brackets">Tiv19</span></dt>
+<dd><p>Mihai Tivadar. Oasisr: an r package to bring some order to the world of segregation measurement. <em>Journal of Statistical Software</em>, 89(7):1–39, 2019.</p>
+</dd>
+<dt class="label" id="wong1993spatial"><span class="brackets">Won93</span></dt>
+<dd><p>David WS Wong. Spatial indices of segregation. <em>Urban studies</em>, 30(3):559–572, 1993.</p>
+</dd>
+<dt class="label" id="yu-2019"><span class="brackets">YFL+19</span></dt>
+<dd><p>Hanchen Yu, Alexander Stewart Fotheringham, Ziqi Li, Taylor Oshan, Wei Kang, and Levi John Wolf. Inference in multiscale geographically weighted regression. <em>Geographical Analysis</em>, 2019. URL: <a class="reference external" href="https://onlinelibrary.wiley.com/doi/abs/10.1111/gean.12189">https://onlinelibrary.wiley.com/doi/abs/10.1111/gean.12189</a>, <a class="reference external" href="https://arxiv.org/abs/https://onlinelibrary.wiley.com/doi/pdf/10.1111/gean.12189">arXiv:https://onlinelibrary.wiley.com/doi/pdf/10.1111/gean.12189</a>, <a class="reference external" href="https://doi.org/10.1111/gean.12189">doi:10.1111/gean.12189</a>.</p>
+</dd>
+</dl>
+</p>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="_sources/references.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

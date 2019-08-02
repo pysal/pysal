@@ -1,0 +1,33 @@
+pysal.lib.cg.Chain
+==================
+
+.. currentmodule:: pysal.lib.cg
+
+.. autoclass:: Chain
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Chain.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Chain.arclen
+      ~Chain.bounding_box
+      ~Chain.len
+      ~Chain.parts
+      ~Chain.segments
+      ~Chain.vertices
+   
+   

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.explore.giddy.ergodic &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../../../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../../installation.html">Installation</a></li>
+                <li><a href="../../../../api.html">API</a></li>
+                <li><a href="../../../../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for pysal.explore.giddy.ergodic</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Summary measures for ergodic Markov chains</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Sergio J. Rey &lt;sjsrey@gmail.com&gt;&quot;</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;steady_state&#39;</span><span class="p">,</span> <span class="s1">&#39;fmpt&#39;</span><span class="p">,</span> <span class="s1">&#39;var_fmpt&#39;</span><span class="p">]</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy.linalg</span> <span class="k">as</span> <span class="nn">la</span>
+
+
+<div class="viewcode-block" id="steady_state"><a class="viewcode-back" href="../../../../generated/pysal.explore.giddy.ergodic.steady_state.html#pysal.explore.giddy.ergodic.steady_state">[docs]</a><span class="k">def</span> <span class="nf">steady_state</span><span class="p">(</span><span class="n">P</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the steady state probability vector for a regular Markov</span>
+<span class="sd">    transition matrix P.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    P        : array</span>
+<span class="sd">               (k, k), an ergodic Markov transition probability matrix.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">             : array</span>
+<span class="sd">               (k, ), steady state distribution.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Taken from :cite:`Kemeny1967`. Land of Oz example where the states are</span>
+<span class="sd">    Rain, Nice and Snow, so there is 25 percent chance that if it</span>
+<span class="sd">    rained in Oz today, it will snow tomorrow, while if it snowed today in</span>
+<span class="sd">    Oz there is a 50 percent chance of snow again tomorrow and a 25</span>
+<span class="sd">    percent chance of a nice day (nice, like when the witch with the monkeys</span>
+<span class="sd">    is melting).</span>
+
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.explore.giddy.ergodic import steady_state</span>
+<span class="sd">    &gt;&gt;&gt; p=np.array([[.5, .25, .25],[.5,0,.5],[.25,.25,.5]])</span>
+<span class="sd">    &gt;&gt;&gt; steady_state(p)</span>
+<span class="sd">    array([0.4, 0.2, 0.4])</span>
+
+<span class="sd">    Thus, the long run distribution for Oz is to have 40 percent of the</span>
+<span class="sd">    days classified as Rain, 20 percent as Nice, and 40 percent as Snow</span>
+<span class="sd">    (states are mutually exclusive).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">v</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">la</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">P</span><span class="p">))</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+    <span class="c1"># for a regular P maximum eigenvalue will be 1</span>
+    <span class="n">mv</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="c1"># find its position</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">mv</span><span class="p">)</span>
+
+    <span class="n">row</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">d</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span>
+
+    <span class="c1"># normalize eigenvector corresponding to the eigenvalue 1</span>
+    <span class="k">return</span> <span class="n">row</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">row</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="fmpt"><a class="viewcode-back" href="../../../../generated/pysal.explore.giddy.ergodic.fmpt.html#pysal.explore.giddy.ergodic.fmpt">[docs]</a><span class="k">def</span> <span class="nf">fmpt</span><span class="p">(</span><span class="n">P</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the matrix of first mean passage times for an ergodic transition</span>
+<span class="sd">    probability matrix.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    P    : array</span>
+<span class="sd">           (k, k), an ergodic Markov transition probability matrix.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    M    : array</span>
+<span class="sd">           (k, k), elements are the expected value for the number of intervals</span>
+<span class="sd">           required for a chain starting in state i to first enter state j.</span>
+<span class="sd">           If i=j then this is the recurrence time.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.explore.giddy.ergodic import fmpt</span>
+<span class="sd">    &gt;&gt;&gt; p=np.array([[.5, .25, .25],[.5,0,.5],[.25,.25,.5]])</span>
+<span class="sd">    &gt;&gt;&gt; fm=fmpt(p)</span>
+<span class="sd">    &gt;&gt;&gt; fm</span>
+<span class="sd">    array([[2.5       , 4.        , 3.33333333],</span>
+<span class="sd">           [2.66666667, 5.        , 2.66666667],</span>
+<span class="sd">           [3.33333333, 4.        , 2.5       ]])</span>
+
+<span class="sd">    Thus, if it is raining today in Oz we can expect a nice day to come</span>
+<span class="sd">    along in another 4 days, on average, and snow to hit in 3.33 days. We can</span>
+<span class="sd">    expect another rainy day in 2.5 days. If it is nice today in Oz, we would</span>
+<span class="sd">    experience a change in the weather (either rain or snow) in 2.67 days from</span>
+<span class="sd">    today. (That wicked witch can only die once so I reckon that is the</span>
+<span class="sd">    ultimate absorbing state).</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Uses formulation (and examples on p. 218) in :cite:`Kemeny1967`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+    <span class="n">ss</span> <span class="o">=</span> <span class="n">steady_state</span><span class="p">(</span><span class="n">P</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+        <span class="n">A</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ss</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+    <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="n">la</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">I</span> <span class="o">-</span> <span class="n">P</span> <span class="o">+</span> <span class="n">A</span><span class="p">)</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
+    <span class="n">A_diag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+    <span class="n">A_diag</span> <span class="o">=</span> <span class="n">A_diag</span> <span class="o">+</span> <span class="p">(</span><span class="n">A_diag</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">A_diag</span><span class="p">)</span>
+    <span class="n">Zdg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">Z</span><span class="p">))</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="p">(</span><span class="n">I</span> <span class="o">-</span> <span class="n">Z</span> <span class="o">+</span> <span class="n">E</span> <span class="o">*</span> <span class="n">Zdg</span><span class="p">)</span> <span class="o">*</span> <span class="n">D</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">M</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="var_fmpt"><a class="viewcode-back" href="../../../../generated/pysal.explore.giddy.ergodic.var_fmpt.html#pysal.explore.giddy.ergodic.var_fmpt">[docs]</a><span class="k">def</span> <span class="nf">var_fmpt</span><span class="p">(</span><span class="n">P</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Variances of first mean passage times for an ergodic transition</span>
+<span class="sd">    probability matrix.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    P      : array</span>
+<span class="sd">             (k, k), an ergodic Markov transition probability matrix.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">           : array</span>
+<span class="sd">             (k, k), elements are the variances for the number of intervals</span>
+<span class="sd">             required for a chain starting in state i to first enter state j.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.explore.giddy.ergodic import var_fmpt</span>
+<span class="sd">    &gt;&gt;&gt; p=np.array([[.5, .25, .25],[.5,0,.5],[.25,.25,.5]])</span>
+<span class="sd">    &gt;&gt;&gt; vfm=var_fmpt(p)</span>
+<span class="sd">    &gt;&gt;&gt; vfm</span>
+<span class="sd">    array([[ 5.58333333, 12.        ,  6.88888889],</span>
+<span class="sd">           [ 6.22222222, 12.        ,  6.22222222],</span>
+<span class="sd">           [ 6.88888889, 12.        ,  5.58333333]])</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Uses formulation (and examples on p. 83) in :cite:`Kemeny1967`.</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">P</span> <span class="o">**</span> <span class="mi">1000</span>
+    <span class="n">n</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="n">la</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">I</span> <span class="o">-</span> <span class="n">P</span> <span class="o">+</span> <span class="n">A</span><span class="p">)</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">A</span><span class="p">))</span>
+    <span class="n">Zdg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">Z</span><span class="p">))</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="p">(</span><span class="n">I</span> <span class="o">-</span> <span class="n">Z</span> <span class="o">+</span> <span class="n">E</span> <span class="o">*</span> <span class="n">Zdg</span><span class="p">)</span> <span class="o">*</span> <span class="n">D</span>
+    <span class="n">ZM</span> <span class="o">=</span> <span class="n">Z</span> <span class="o">*</span> <span class="n">M</span>
+    <span class="n">ZMdg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">ZM</span><span class="p">))</span>
+    <span class="n">W</span> <span class="o">=</span> <span class="n">M</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">Zdg</span> <span class="o">*</span> <span class="n">D</span> <span class="o">-</span> <span class="n">I</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">ZM</span> <span class="o">-</span> <span class="n">E</span> <span class="o">*</span> <span class="n">ZMdg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">W</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">M</span><span class="p">))</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+pysal.viz.splot.esda.moran\_facet
+=================================
+
+.. currentmodule:: pysal.viz.splot.esda
+
+.. autofunction:: moran_facet

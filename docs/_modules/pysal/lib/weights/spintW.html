@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.lib.weights.spintW &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../../../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../../installation.html">Installation</a></li>
+                <li><a href="../../../../api.html">API</a></li>
+                <li><a href="../../../../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for pysal.lib.weights.spintW</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Spatial weights for spatial interaction including contiguity OD weights (ODW),</span>
+<span class="sd">network based weights (netW), and distance-decay based vector weights (vecW).</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Taylor Oshan  &lt;tayoshan@gmail.com&gt; &quot;</span>
+
+<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="k">import</span> <span class="n">kron</span>
+<span class="kn">from</span> <span class="nn">.weights</span> <span class="k">import</span> <span class="n">W</span><span class="p">,</span> <span class="n">WSP</span>
+<span class="kn">from</span> <span class="nn">.distance</span> <span class="k">import</span> <span class="n">DistanceBand</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+
+<div class="viewcode-block" id="ODW"><a class="viewcode-back" href="../../../../generated/pysal.lib.weights.ODW.html#pysal.lib.weights.ODW">[docs]</a><span class="k">def</span> <span class="nf">ODW</span><span class="p">(</span><span class="n">Wo</span><span class="p">,</span> <span class="n">Wd</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">silence_warnings</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constructs an o*d by o*d origin-destination style spatial weight for o*d</span>
+<span class="sd">    flows using standard spatial weights on o origins and d destinations. Input</span>
+<span class="sd">    spatial weights must be binary or able to be sutiably transformed to binary.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Wo          : W object for origin locations</span>
+<span class="sd">                  o x o spatial weight object amongst o origins</span>
+
+<span class="sd">    Wd          : W object for destination locations</span>
+<span class="sd">                  d x d spatial weight object amongst d destinations</span>
+
+<span class="sd">    transform   : Transformation for standardization of final OD spatial weight; default</span>
+<span class="sd">                  is &#39;r&#39; for row standardized</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    W           : spatial contiguity W object for assocations between flows</span>
+<span class="sd">                 o*d x o*d spatial weight object amongst o*d flows between o</span>
+<span class="sd">                 origins and d destinations</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pysal.lib</span>
+<span class="sd">    &gt;&gt;&gt; O = pysal.lib.weights.lat2W(2,2)</span>
+<span class="sd">    &gt;&gt;&gt; D = pysal.lib.weights.lat2W(2,2)</span>
+<span class="sd">    &gt;&gt;&gt; OD = pysal.lib.weights.ODW(O,D)</span>
+<span class="sd">    &gt;&gt;&gt; OD.weights[0]</span>
+<span class="sd">    [0.25, 0.25, 0.25, 0.25]</span>
+<span class="sd">    &gt;&gt;&gt; OD.neighbors[0]</span>
+<span class="sd">    array([ 5,  6,  9, 10], dtype=int32)</span>
+<span class="sd">    &gt;&gt;&gt; OD.full()[0][0]</span>
+<span class="sd">    array([0.  , 0.  , 0.  , 0.  , 0.  , 0.25, 0.25, 0.  , 0.  , 0.25, 0.25,</span>
+<span class="sd">           0.  , 0.  , 0.  , 0.  , 0.  ])</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">Wo</span><span class="o">.</span><span class="n">transform</span> <span class="ow">is</span> <span class="ow">not</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">Wo</span><span class="o">.</span><span class="n">tranform</span> <span class="o">=</span> <span class="s1">&#39;b&#39;</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Wo is not binary and cannot be transformed to &#39;</span>
+                    <span class="s1">&#39;binary. Wo must be binary or suitably transformed to binary.&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">Wd</span><span class="o">.</span><span class="n">transform</span> <span class="ow">is</span> <span class="ow">not</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">Wd</span><span class="o">.</span><span class="n">tranform</span> <span class="o">=</span> <span class="s1">&#39;b&#39;</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Wd is not binary and cannot be transformed to &#39;</span>
+                   <span class="s1">&#39;binary. Wd must be binary or suitably transformed to binary.&#39;</span><span class="p">)</span>
+    <span class="n">Wo</span> <span class="o">=</span> <span class="n">Wo</span><span class="o">.</span><span class="n">sparse</span>
+    <span class="n">Wo</span><span class="o">.</span><span class="n">eliminate_zeros</span><span class="p">()</span>
+    <span class="n">Wd</span> <span class="o">=</span> <span class="n">Wd</span><span class="o">.</span><span class="n">sparse</span>
+    <span class="n">Wd</span><span class="o">.</span><span class="n">eliminate_zeros</span><span class="p">()</span>
+    <span class="n">Ww</span> <span class="o">=</span> <span class="n">kron</span><span class="p">(</span><span class="n">Wo</span><span class="p">,</span> <span class="n">Wd</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;csr&#39;</span><span class="p">)</span>
+    <span class="n">Ww</span><span class="o">.</span><span class="n">eliminate_zeros</span><span class="p">()</span>
+    <span class="n">Ww</span> <span class="o">=</span> <span class="n">WSP</span><span class="p">(</span><span class="n">Ww</span><span class="p">)</span><span class="o">.</span><span class="n">to_W</span><span class="p">(</span><span class="n">silence_warnings</span><span class="o">=</span><span class="n">silence_warnings</span><span class="p">)</span>
+    <span class="n">Ww</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">transform</span>
+    <span class="k">return</span> <span class="n">Ww</span></div>
+
+<div class="viewcode-block" id="netW"><a class="viewcode-back" href="../../../../generated/pysal.lib.weights.netW.html#pysal.lib.weights.netW">[docs]</a><span class="k">def</span> <span class="nf">netW</span><span class="p">(</span><span class="n">link_list</span><span class="p">,</span> <span class="n">share</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="n">transform</span> <span class="o">=</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a network-contiguity based weight object based on different nodal</span>
+<span class="sd">    relationships encoded in a network.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    link_list   : list</span>
+<span class="sd">                  of tuples where each tuple is of the form (o,d) where o is an</span>
+<span class="sd">                  origin id and d is a destination id</span>
+
+<span class="sd">    share       : string</span>
+<span class="sd">                  denoting how to define the nodal relationship used to</span>
+<span class="sd">                  determine neighboring edges; defualt is &#39;A&#39; for any shared</span>
+<span class="sd">                  nodes between two network edges; options include:</span>
+<span class="sd">                    &#39;A&#39;: any shared nodes</span>
+<span class="sd">                    &#39;O&#39;: a shared origin node</span>
+<span class="sd">                    &#39;D&#39;: a shared destination node</span>
+<span class="sd">                    &#39;OD&#39; a shared origin node or a shared destination node</span>
+<span class="sd">                    &#39;C&#39;: a shared node that is the destination of the first</span>
+<span class="sd">                         edge and the origin of the second edge - i.e., a</span>
+<span class="sd">                         directed chain is formed moving from edge one to edge</span>
+<span class="sd">                         two.</span>
+
+<span class="sd">    transform   : Transformation for standardization of final OD spatial weight; default</span>
+<span class="sd">                  is &#39;r&#39; for row standardized</span>
+<span class="sd">    **kwargs    : keyword arguments</span>
+<span class="sd">                  optional arguments for :class:`pysal.weights.W`</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">     W          : nodal contiguity W object for networkd edges or flows</span>
+<span class="sd">                  W Object representing the binary adjacency of the network edges</span>
+<span class="sd">                  given a definition of nodal relationshipysal.lib.weights.spintW.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import pysal.lib</span>
+<span class="sd">    &gt;&gt;&gt; links = [(&#39;a&#39;,&#39;b&#39;), (&#39;a&#39;,&#39;c&#39;), (&#39;a&#39;,&#39;d&#39;), (&#39;c&#39;,&#39;d&#39;), (&#39;c&#39;, &#39;b&#39;), (&#39;c&#39;,&#39;a&#39;)]</span>
+<span class="sd">    &gt;&gt;&gt; O = pysal.lib.weights.netW(links, share=&#39;O&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; O.neighbors[(&#39;a&#39;, &#39;b&#39;)]</span>
+<span class="sd">    [(&#39;a&#39;, &#39;c&#39;), (&#39;a&#39;, &#39;d&#39;)]</span>
+<span class="sd">    &gt;&gt;&gt; OD = pysal.lib.weights.netW(links, share=&#39;OD&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; OD.neighbors[(&#39;a&#39;, &#39;b&#39;)]</span>
+<span class="sd">    [(&#39;a&#39;, &#39;c&#39;), (&#39;a&#39;, &#39;d&#39;), (&#39;c&#39;, &#39;b&#39;)]</span>
+<span class="sd">    &gt;&gt;&gt; any_common = pysal.lib.weights.netW(links, share=&#39;A&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; any_common.neighbors[(&#39;a&#39;, &#39;b&#39;)]</span>
+<span class="sd">    [(&#39;a&#39;, &#39;c&#39;), (&#39;a&#39;, &#39;d&#39;), (&#39;c&#39;, &#39;b&#39;), (&#39;c&#39;, &#39;a&#39;)]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">neighbors</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">neighbors</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="n">link_list</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
+        <span class="n">neighbors</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">neigh</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">neigh</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">share</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;OD&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">neigh</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">neigh</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="n">neighbors</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neigh</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">share</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;O&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">neigh</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="n">neighbors</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neigh</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">share</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;D&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">neigh</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="n">neighbors</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neigh</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">share</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">neigh</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="n">neighbors</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neigh</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">share</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">neigh</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">neigh</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> \
+                	<span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">neigh</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">neigh</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="n">neighbors</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neigh</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Parameter &#39;share&#39; must be &#39;O&#39;, &#39;D&#39;,&quot;</span>
+                       <span class="s2">&quot; &#39;OD&#39;, or &#39;C&#39;&quot;</span><span class="p">)</span>
+    <span class="n">netW</span> <span class="o">=</span> <span class="n">W</span><span class="p">(</span><span class="n">neighbors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">netW</span><span class="o">.</span><span class="n">tranform</span> <span class="o">=</span> <span class="n">transform</span>
+    <span class="k">return</span> <span class="n">netW</span></div>
+
+<div class="viewcode-block" id="vecW"><a class="viewcode-back" href="../../../../generated/pysal.lib.weights.vecW.html#pysal.lib.weights.vecW">[docs]</a><span class="k">def</span> <span class="nf">vecW</span><span class="p">(</span><span class="n">origin_x</span><span class="p">,</span> <span class="n">origin_y</span><span class="p">,</span> <span class="n">dest_x</span><span class="p">,</span> <span class="n">dest_y</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">build_sp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Distance-based spatial weight for vectors that is computed using a</span>
+<span class="sd">    4-dimensional distance between the origin x,y-coordinates and the</span>
+<span class="sd">    destination x,y-coordinates</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    origin_x   : list or array</span>
+<span class="sd">                 of vector origin x-coordinates</span>
+<span class="sd">    origin_y   : list or array</span>
+<span class="sd">                 of vector origin y-coordinates</span>
+<span class="sd">    dest_x     : list or array</span>
+<span class="sd">                 of vector destination x-coordinates</span>
+<span class="sd">    dest_y     : list or array</span>
+<span class="sd">                 of vector destination y-coordinates</span>
+<span class="sd">    threshold  : float</span>
+<span class="sd">                 distance band</span>
+<span class="sd">    p          : float</span>
+<span class="sd">                 Minkowski p-norm distance metric parameter:</span>
+<span class="sd">                 1&lt;=p&lt;=infinity</span>
+<span class="sd">                 2: Euclidean distance</span>
+<span class="sd">                 1: Manhattan distance</span>
+<span class="sd">    binary     : boolean</span>
+<span class="sd">                 If true w_{ij}=1 if d_{i,j}&lt;=threshold, otherwise w_{i,j}=0</span>
+<span class="sd">                 If false wij=dij^{alpha}</span>
+<span class="sd">    alpha      : float</span>
+<span class="sd">                 distance decay parameter for weight (default -1.0)</span>
+<span class="sd">                 if alpha is positive the weights will not decline with</span>
+<span class="sd">                 distance. If binary is True, alpha is ignored</span>
+
+<span class="sd">    ids         : list</span>
+<span class="sd">                  values to use for keys of the neighbors and weights dicts</span>
+<span class="sd">    build_sp    : boolean</span>
+<span class="sd">                  True to build sparse distance matrix and false to build dense</span>
+<span class="sd">                  distance matrix; significant speed gains may be obtained</span>
+<span class="sd">                  dending on the sparsity of the of distance_matrix and</span>
+<span class="sd">                  threshold that is applied</span>
+<span class="sd">    **kwargs    : keyword arguments</span>
+<span class="sd">                  optional arguments for :class:`pysal.weights.W`</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    ------</span>
+<span class="sd">    W           : DistanceBand W object that uses 4-dimenional distances between</span>
+<span class="sd">                  vectors origin and destination coordinates.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import pysal.lib</span>
+<span class="sd">    &gt;&gt;&gt; x1 = [5,6,3]</span>
+<span class="sd">    &gt;&gt;&gt; y1 = [1,8,5]</span>
+<span class="sd">    &gt;&gt;&gt; x2 = [2,4,9]</span>
+<span class="sd">    &gt;&gt;&gt; y2 = [3,6,1]</span>
+<span class="sd">    &gt;&gt;&gt; W1 = pysal.lib.weights.vecW(x1, y1, x2, y2, threshold=999)</span>
+<span class="sd">    &gt;&gt;&gt; list(W1.neighbors[0])</span>
+<span class="sd">    [1, 2]</span>
+<span class="sd">    &gt;&gt;&gt; W2 = pysal.lib.weights.vecW(x1, y2, x1, y2, threshold=8.5)</span>
+<span class="sd">    &gt;&gt;&gt; list(W2.neighbors[0])</span>
+<span class="sd">    [1, 2]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">origin_x</span><span class="p">,</span> <span class="n">origin_y</span><span class="p">,</span> <span class="n">dest_x</span><span class="p">,</span> <span class="n">dest_y</span><span class="p">))</span>
+    <span class="n">W</span> <span class="o">=</span> <span class="n">DistanceBand</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="n">binary</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
+            <span class="n">ids</span><span class="o">=</span><span class="n">ids</span><span class="p">,</span> <span class="n">build_sp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">W</span></div>
+
+<div class="viewcode-block" id="mat2L"><a class="viewcode-back" href="../../../../generated/pysal.lib.weights.mat2L.html#pysal.lib.weights.mat2L">[docs]</a><span class="k">def</span> <span class="nf">mat2L</span><span class="p">(</span><span class="n">edge_matrix</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a matrix denoting network connectivity (edges or flows) to a list</span>
+<span class="sd">    denoting edges</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    edge_matrix   : array</span>
+<span class="sd">                    where rows denote network edge origins, columns denote</span>
+<span class="sd">                    network edge destinations, and non-zero entries denote the</span>
+<span class="sd">                    existence of an edge between a given origin and destination</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">     edge_list    : list</span>
+<span class="sd">                    of tuples where each tuple is of the form (o,d) where o is an</span>
+<span class="sd">                    origin id and d is a destination id</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">edge_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">!=</span><span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Matrix of network edges should be two dimensions&quot;</span>
+    	        <span class="s2">&quot;with edge origins on one axis and edge destinations on the&quot;</span>
+    	        <span class="s2">&quot;second axis with non-zero matrix entires denoting an edge&quot;</span>
+    	        <span class="s2">&quot;between and origin and destination&quot;</span><span class="p">)</span>
+    <span class="n">edge_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">edge_matrix</span><span class="o">.</span><span class="n">shape</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">rows</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cols</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">edge_matrix</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">edge_list</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">edge_list</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

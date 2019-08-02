@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.model.spreg.OLS &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pysal.model.spreg.ML_Lag" href="pysal.model.spreg.ML_Lag.html" />
+    <link rel="prev" title="pysal.viz.splot.mapping.mapclassify_bin" href="pysal.viz.splot.mapping.mapclassify_bin.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../installation.html">Installation</a></li>
+                <li><a href="../api.html">API</a></li>
+                <li><a href="../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">pysal.model.spreg.OLS</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="pysal-model-spreg-ols">
+<h1>pysal.model.spreg.OLS<a class="headerlink" href="#pysal-model-spreg-ols" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pysal.model.spreg.OLS">
+<em class="property">class </em><code class="sig-prename descclassname">pysal.model.spreg.</code><code class="sig-name descname">OLS</code><span class="sig-paren">(</span><em class="sig-param">y</em>, <em class="sig-param">x</em>, <em class="sig-param">w=None</em>, <em class="sig-param">robust=None</em>, <em class="sig-param">gwk=None</em>, <em class="sig-param">sig2n_k=True</em>, <em class="sig-param">nonspat_diag=True</em>, <em class="sig-param">spat_diag=False</em>, <em class="sig-param">moran=False</em>, <em class="sig-param">white_test=False</em>, <em class="sig-param">vm=False</em>, <em class="sig-param">name_y=None</em>, <em class="sig-param">name_x=None</em>, <em class="sig-param">name_w=None</em>, <em class="sig-param">name_gwk=None</em>, <em class="sig-param">name_ds=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/model/spreg/ols.html#OLS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.model.spreg.OLS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ordinary least squares with results and diagnostics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>nx1 array for dependent variable</p>
+</dd>
+<dt><strong>x</strong><span class="classifier">array</span></dt><dd><p>Two dimensional array with n rows and one column for each
+independent (exogenous) variable, excluding the constant</p>
+</dd>
+<dt><strong>w</strong><span class="classifier">pysal W object</span></dt><dd><p>Spatial weights object (required if running spatial
+diagnostics)</p>
+</dd>
+<dt><strong>robust</strong><span class="classifier">string</span></dt><dd><p>If ‘white’, then a White consistent estimator of the
+variance-covariance matrix is given.  If ‘hac’, then a
+HAC consistent estimator of the variance-covariance
+matrix is given. Default set to None.</p>
+</dd>
+<dt><strong>gwk</strong><span class="classifier">pysal W object</span></dt><dd><p>Kernel spatial weights needed for HAC estimation. Note:
+matrix must have ones along the main diagonal.</p>
+</dd>
+<dt><strong>sig2n_k</strong><span class="classifier">boolean</span></dt><dd><p>If True, then use n-k to estimate sigma^2. If False, use n.</p>
+</dd>
+<dt><strong>nonspat_diag</strong><span class="classifier">boolean</span></dt><dd><p>If True, then compute non-spatial diagnostics on
+the regression.</p>
+</dd>
+<dt><strong>spat_diag</strong><span class="classifier">boolean</span></dt><dd><p>If True, then compute Lagrange multiplier tests (requires
+w). Note: see moran for further tests.</p>
+</dd>
+<dt><strong>moran</strong><span class="classifier">boolean</span></dt><dd><p>If True, compute Moran’s I on the residuals. Note:
+requires spat_diag=True.</p>
+</dd>
+<dt><strong>white_test</strong><span class="classifier">boolean</span></dt><dd><p>If True, compute White’s specification robust test.
+(requires nonspat_diag=True)</p>
+</dd>
+<dt><strong>vm</strong><span class="classifier">boolean</span></dt><dd><p>If True, include variance-covariance matrix in summary
+results</p>
+</dd>
+<dt><strong>name_y</strong><span class="classifier">string</span></dt><dd><p>Name of dependent variable for use in output</p>
+</dd>
+<dt><strong>name_x</strong><span class="classifier">list of strings</span></dt><dd><p>Names of independent variables for use in output</p>
+</dd>
+<dt><strong>name_w</strong><span class="classifier">string</span></dt><dd><p>Name of weights matrix for use in output</p>
+</dd>
+<dt><strong>name_gwk</strong><span class="classifier">string</span></dt><dd><p>Name of kernel weights matrix for use in output</p>
+</dd>
+<dt><strong>name_ds</strong><span class="classifier">string</span></dt><dd><p>Name of dataset for use in output</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pysal.lib</span>
+</pre></div>
+</div>
+<p>Open data on Columbus neighborhood crime (49 areas) using pysal.lib.io.open().
+This is the DBF associated with the Columbus shapefile.  Note that
+pysal.lib.io.open() also reads data in CSV format; also, the actual OLS class
+requires data to be passed in as numpy arrays so the user can read their
+data in using any method.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">db</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;columbus.dbf&#39;</span><span class="p">),</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Extract the HOVAL column (home values) from the DBF file and make it the
+dependent variable for the regression. Note that PySAL requires this to be
+an nx1 numpy array.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hoval</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="s2">&quot;HOVAL&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">hoval</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hoval</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Extract CRIME (crime) and INC (income) vectors from the DBF to be used as
+independent variables in the regression.  Note that PySAL requires this to
+be an nxj numpy array, where j is the number of independent variables (not
+including a constant). pysal.model.spreg.OLS adds a vector of ones to the
+independent variables passed in.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="s2">&quot;INC&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="s2">&quot;CRIME&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+<p>The minimum parameters needed to run an ordinary least squares regression
+are the two numpy arrays containing the independent variable and dependent
+variables respectively.  To make the printed results more meaningful, the
+user can pass in explicit names for the variables used; this is optional.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ols</span> <span class="o">=</span> <span class="n">OLS</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">name_y</span><span class="o">=</span><span class="s1">&#39;home value&#39;</span><span class="p">,</span> <span class="n">name_x</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;income&#39;</span><span class="p">,</span><span class="s1">&#39;crime&#39;</span><span class="p">],</span> <span class="n">name_ds</span><span class="o">=</span><span class="s1">&#39;columbus&#39;</span><span class="p">,</span> <span class="n">white_test</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>pysal.model.spreg.OLS computes the regression coefficients and their standard
+errors, t-stats and p-values. It also computes a large battery of
+diagnostics on the regression. In this example we compute the white test
+which by default isn’t (‘white_test=True’). All of these results can be independently
+accessed as attributes of the regression object created by running
+pysal.model.spreg.OLS.  They can also be accessed at one time by printing the
+summary attribute of the regression object. In the example below, the
+parameter on crime is -0.4849, with a t-statistic of -2.6544 and p-value
+of 0.01087.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ols</span><span class="o">.</span><span class="n">betas</span>
+<span class="go">array([[ 46.42818268],</span>
+<span class="go">       [  0.62898397],</span>
+<span class="go">       [ -0.48488854]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="nb">round</span><span class="p">(</span><span class="n">ols</span><span class="o">.</span><span class="n">t_stat</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">-2.654</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="nb">round</span><span class="p">(</span><span class="n">ols</span><span class="o">.</span><span class="n">t_stat</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">0.011</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="nb">round</span><span class="p">(</span><span class="n">ols</span><span class="o">.</span><span class="n">r2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">0.35</span>
+</pre></div>
+</div>
+<p>Or we can easily obtain a full summary of all the results nicely formatted and
+ready to be printed:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">ols</span><span class="o">.</span><span class="n">summary</span>
+<span class="go">REGRESSION</span>
+<span class="go">----------</span>
+<span class="go">SUMMARY OF OUTPUT: ORDINARY LEAST SQUARES</span>
+<span class="go">-----------------------------------------</span>
+<span class="go">Data set            :    columbus</span>
+<span class="go">Dependent Variable  :  home value                Number of Observations:          49</span>
+<span class="go">Mean dependent var  :     38.4362                Number of Variables   :           3</span>
+<span class="go">S.D. dependent var  :     18.4661                Degrees of Freedom    :          46</span>
+<span class="go">R-squared           :      0.3495</span>
+<span class="go">Adjusted R-squared  :      0.3212</span>
+<span class="go">Sum squared residual:   10647.015                F-statistic           :     12.3582</span>
+<span class="go">Sigma-square        :     231.457                Prob(F-statistic)     :   5.064e-05</span>
+<span class="go">S.E. of regression  :      15.214                Log likelihood        :    -201.368</span>
+<span class="go">Sigma-square ML     :     217.286                Akaike info criterion :     408.735</span>
+<span class="go">S.E of regression ML:     14.7406                Schwarz criterion     :     414.411</span>
+<span class="go">&lt;BLANKLINE&gt;</span>
+<span class="go">------------------------------------------------------------------------------------</span>
+<span class="go">            Variable     Coefficient       Std.Error     t-Statistic     Probability</span>
+<span class="go">------------------------------------------------------------------------------------</span>
+<span class="go">            CONSTANT      46.4281827      13.1917570       3.5194844       0.0009867</span>
+<span class="go">               crime      -0.4848885       0.1826729      -2.6544086       0.0108745</span>
+<span class="go">              income       0.6289840       0.5359104       1.1736736       0.2465669</span>
+<span class="go">------------------------------------------------------------------------------------</span>
+<span class="go">&lt;BLANKLINE&gt;</span>
+<span class="go">REGRESSION DIAGNOSTICS</span>
+<span class="go">MULTICOLLINEARITY CONDITION NUMBER           12.538</span>
+<span class="go">&lt;BLANKLINE&gt;</span>
+<span class="go">TEST ON NORMALITY OF ERRORS</span>
+<span class="go">TEST                             DF        VALUE           PROB</span>
+<span class="go">Jarque-Bera                       2          39.706           0.0000</span>
+<span class="go">&lt;BLANKLINE&gt;</span>
+<span class="go">DIAGNOSTICS FOR HETEROSKEDASTICITY</span>
+<span class="go">RANDOM COEFFICIENTS</span>
+<span class="go">TEST                             DF        VALUE           PROB</span>
+<span class="go">Breusch-Pagan test                2           5.767           0.0559</span>
+<span class="go">Koenker-Bassett test              2           2.270           0.3214</span>
+<span class="go">&lt;BLANKLINE&gt;</span>
+<span class="go">SPECIFICATION ROBUST TEST</span>
+<span class="go">TEST                             DF        VALUE           PROB</span>
+<span class="go">White                             5           2.906           0.7145</span>
+<span class="go">================================ END OF REPORT =====================================</span>
+</pre></div>
+</div>
+<p>If the optional parameters w and spat_diag are passed to pysal.model.spreg.OLS,
+spatial diagnostics will also be computed for the regression.  These
+include Lagrange multiplier tests and Moran’s I of the residuals.  The w
+parameter is a PySAL spatial weights matrix. In this example, w is built
+directly from the shapefile columbus.shp, but w can also be read in from a
+GAL or GWT file.  In this case a rook contiguity weights matrix is built,
+but PySAL also offers queen contiguity, distance weights and k nearest
+neighbor weights among others. In the example, the Moran’s I of the
+residuals is 0.204 with a standardized value of 2.592 and a p-value of
+0.0095.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">Rook</span><span class="o">.</span><span class="n">from_shapefile</span><span class="p">(</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;columbus.shp&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ols</span> <span class="o">=</span> <span class="n">OLS</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">spat_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">moran</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name_y</span><span class="o">=</span><span class="s1">&#39;home value&#39;</span><span class="p">,</span> <span class="n">name_x</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;income&#39;</span><span class="p">,</span><span class="s1">&#39;crime&#39;</span><span class="p">],</span> <span class="n">name_ds</span><span class="o">=</span><span class="s1">&#39;columbus&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ols</span><span class="o">.</span><span class="n">betas</span>
+<span class="go">array([[ 46.42818268],</span>
+<span class="go">       [  0.62898397],</span>
+<span class="go">       [ -0.48488854]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="nb">round</span><span class="p">(</span><span class="n">ols</span><span class="o">.</span><span class="n">moran_res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">0.204</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="nb">round</span><span class="p">(</span><span class="n">ols</span><span class="o">.</span><span class="n">moran_res</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">2.592</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="nb">round</span><span class="p">(</span><span class="n">ols</span><span class="o">.</span><span class="n">moran_res</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">0.0095</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>summary</strong><span class="classifier">string</span></dt><dd><p>Summary of regression results and diagnostics (note: use in
+conjunction with the print command)</p>
+</dd>
+<dt><strong>betas</strong><span class="classifier">array</span></dt><dd><p>kx1 array of estimated coefficients</p>
+</dd>
+<dt><strong>u</strong><span class="classifier">array</span></dt><dd><p>nx1 array of residuals</p>
+</dd>
+<dt><strong>predy</strong><span class="classifier">array</span></dt><dd><p>nx1 array of predicted y values</p>
+</dd>
+<dt><strong>n</strong><span class="classifier">integer</span></dt><dd><p>Number of observations</p>
+</dd>
+<dt><strong>k</strong><span class="classifier">integer</span></dt><dd><p>Number of variables for which coefficients are estimated
+(including the constant)</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>nx1 array for dependent variable</p>
+</dd>
+<dt><strong>x</strong><span class="classifier">array</span></dt><dd><p>Two dimensional array with n rows and one column for each
+independent (exogenous) variable, including the constant</p>
+</dd>
+<dt><strong>robust</strong><span class="classifier">string</span></dt><dd><p>Adjustment for robust standard errors</p>
+</dd>
+<dt><strong>mean_y</strong><span class="classifier">float</span></dt><dd><p>Mean of dependent variable</p>
+</dd>
+<dt><strong>std_y</strong><span class="classifier">float</span></dt><dd><p>Standard deviation of dependent variable</p>
+</dd>
+<dt><strong>vm</strong><span class="classifier">array</span></dt><dd><p>Variance covariance matrix (kxk)</p>
+</dd>
+<dt><strong>r2</strong><span class="classifier">float</span></dt><dd><p>R squared</p>
+</dd>
+<dt><strong>ar2</strong><span class="classifier">float</span></dt><dd><p>Adjusted R squared</p>
+</dd>
+<dt><strong>utu</strong><span class="classifier">float</span></dt><dd><p>Sum of squared residuals</p>
+</dd>
+<dt><strong>sig2</strong><span class="classifier">float</span></dt><dd><p>Sigma squared used in computations</p>
+</dd>
+<dt><strong>sig2ML</strong><span class="classifier">float</span></dt><dd><p>Sigma squared (maximum likelihood)</p>
+</dd>
+<dt><strong>f_stat</strong><span class="classifier">tuple</span></dt><dd><p>Statistic (float), p-value (float)</p>
+</dd>
+<dt><strong>logll</strong><span class="classifier">float</span></dt><dd><p>Log likelihood</p>
+</dd>
+<dt><strong>aic</strong><span class="classifier">float</span></dt><dd><p>Akaike information criterion</p>
+</dd>
+<dt><strong>schwarz</strong><span class="classifier">float</span></dt><dd><p>Schwarz information criterion</p>
+</dd>
+<dt><strong>std_err</strong><span class="classifier">array</span></dt><dd><p>1xk array of standard errors of the betas</p>
+</dd>
+<dt><strong>t_stat</strong><span class="classifier">list of tuples</span></dt><dd><p>t statistic; each tuple contains the pair (statistic,
+p-value), where each is a float</p>
+</dd>
+<dt><strong>mulColli</strong><span class="classifier">float</span></dt><dd><p>Multicollinearity condition number</p>
+</dd>
+<dt><strong>jarque_bera</strong><span class="classifier">dictionary</span></dt><dd><p>‘jb’: Jarque-Bera statistic (float); ‘pvalue’: p-value
+(float); ‘df’: degrees of freedom (int)</p>
+</dd>
+<dt><strong>breusch_pagan</strong><span class="classifier">dictionary</span></dt><dd><p>‘bp’: Breusch-Pagan statistic (float); ‘pvalue’: p-value
+(float); ‘df’: degrees of freedom (int)</p>
+</dd>
+<dt><strong>koenker_bassett</strong><span class="classifier">dictionary</span></dt><dd><p>‘kb’: Koenker-Bassett statistic (float); ‘pvalue’:
+p-value (float); ‘df’: degrees of freedom (int)</p>
+</dd>
+<dt><strong>white</strong><span class="classifier">dictionary</span></dt><dd><p>‘wh’: White statistic (float); ‘pvalue’: p-value (float);
+‘df’: degrees of freedom (int)</p>
+</dd>
+<dt><strong>lm_error</strong><span class="classifier">tuple</span></dt><dd><p>Lagrange multiplier test for spatial error model; tuple
+contains the pair (statistic, p-value), where each is a
+float</p>
+</dd>
+<dt><strong>lm_lag</strong><span class="classifier">tuple</span></dt><dd><p>Lagrange multiplier test for spatial lag model; tuple
+contains the pair (statistic, p-value), where each is a
+float</p>
+</dd>
+<dt><strong>rlm_error</strong><span class="classifier">tuple</span></dt><dd><p>Robust lagrange multiplier test for spatial error model;
+tuple contains the pair (statistic, p-value), where each
+is a float</p>
+</dd>
+<dt><strong>rlm_lag</strong><span class="classifier">tuple</span></dt><dd><p>Robust lagrange multiplier test for spatial lag model;
+tuple contains the pair (statistic, p-value), where each
+is a float</p>
+</dd>
+<dt><strong>lm_sarma</strong><span class="classifier">tuple</span></dt><dd><p>Lagrange multiplier test for spatial SARMA model; tuple
+contains the pair (statistic, p-value), where each is a
+float</p>
+</dd>
+<dt><strong>moran_res</strong><span class="classifier">tuple</span></dt><dd><p>Moran’s I for the residuals; tuple containing the triple
+(Moran’s I, standardized Moran’s I, p-value)</p>
+</dd>
+<dt><strong>name_y</strong><span class="classifier">string</span></dt><dd><p>Name of dependent variable for use in output</p>
+</dd>
+<dt><strong>name_x</strong><span class="classifier">list of strings</span></dt><dd><p>Names of independent variables for use in output</p>
+</dd>
+<dt><strong>name_w</strong><span class="classifier">string</span></dt><dd><p>Name of weights matrix for use in output</p>
+</dd>
+<dt><strong>name_gwk</strong><span class="classifier">string</span></dt><dd><p>Name of kernel weights matrix for use in output</p>
+</dd>
+<dt><strong>name_ds</strong><span class="classifier">string</span></dt><dd><p>Name of dataset for use in output</p>
+</dd>
+<dt><strong>title</strong><span class="classifier">string</span></dt><dd><p>Name of the regression method used</p>
+</dd>
+<dt><strong>sig2n</strong><span class="classifier">float</span></dt><dd><p>Sigma squared (computed with n in the denominator)</p>
+</dd>
+<dt><strong>sig2n_k</strong><span class="classifier">float</span></dt><dd><p>Sigma squared (computed with n-k in the denominator)</p>
+</dd>
+<dt><strong>xtx</strong><span class="classifier">float</span></dt><dd><p>X’X</p>
+</dd>
+<dt><strong>xtxi</strong><span class="classifier">float</span></dt><dd><p>(X’X)^-1</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pysal.model.spreg.OLS.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">y</em>, <em class="sig-param">x</em>, <em class="sig-param">w=None</em>, <em class="sig-param">robust=None</em>, <em class="sig-param">gwk=None</em>, <em class="sig-param">sig2n_k=True</em>, <em class="sig-param">nonspat_diag=True</em>, <em class="sig-param">spat_diag=False</em>, <em class="sig-param">moran=False</em>, <em class="sig-param">white_test=False</em>, <em class="sig-param">vm=False</em>, <em class="sig-param">name_y=None</em>, <em class="sig-param">name_x=None</em>, <em class="sig-param">name_w=None</em>, <em class="sig-param">name_gwk=None</em>, <em class="sig-param">name_ds=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/model/spreg/ols.html#OLS.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.model.spreg.OLS.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pysal.model.spreg.OLS.__init__" title="pysal.model.spreg.OLS.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self, y, x[, w, robust, gwk, …])</p></td>
+<td><p>Initialize self.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean_y</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sig2n</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sig2n_k</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">std_y</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">utu</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">vm</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../_sources/generated/pysal.model.spreg.OLS.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

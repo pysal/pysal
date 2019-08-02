@@ -1,0 +1,6 @@
+pysal.explore.pointpats.euclidean\_median
+=========================================
+
+.. currentmodule:: pysal.explore.pointpats
+
+.. autofunction:: euclidean_median

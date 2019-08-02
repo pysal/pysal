@@ -1,0 +1,22 @@
+pysal.explore.segregation.aspatial.Exposure
+===========================================
+
+.. currentmodule:: pysal.explore.segregation.aspatial
+
+.. autoclass:: Exposure
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Exposure.__init__
+   
+   
+
+   
+   
+   

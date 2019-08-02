@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.viz.splot._viz_libpysal_mpl &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../../../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../../installation.html">Installation</a></li>
+                <li><a href="../../../../api.html">API</a></li>
+                <li><a href="../../../../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for pysal.viz.splot._viz_libpysal_mpl</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib.collections</span> <span class="k">import</span> <span class="n">LineCollection</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Lightweight visualizations for pysal.lib using Matplotlib and Geopandas</span>
+
+<span class="sd">TODO</span>
+<span class="sd">* make gdf argument in plot_spatial_weights optional</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Stefanie Lumnitz &lt;stefanie.lumitz@gmail.com&gt;&quot;</span><span class="p">)</span>
+
+
+
+<div class="viewcode-block" id="plot_spatial_weights"><a class="viewcode-back" href="../../../../generated/pysal.viz.splot.libpysal.plot_spatial_weights.html#pysal.viz.splot.libpysal.plot_spatial_weights">[docs]</a><span class="k">def</span> <span class="nf">plot_spatial_weights</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">gdf</span><span class="p">,</span> <span class="n">indexed_on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                         <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">node_kws</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">edge_kws</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">nonplanar_edge_kws</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot spatial weights network.</span>
+<span class="sd">    NOTE: Additionally plots `w.non_planar_joins` if</span>
+<span class="sd">    `pysal.lib.weights.util.nonplanar_neighbors()` was applied.</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    w : pysal.lib.W object</span>
+<span class="sd">        Values of pysal.lib weights object.</span>
+<span class="sd">    gdf : geopandas dataframe </span>
+<span class="sd">        The original shapes whose topological relations are </span>
+<span class="sd">        modelled in W.</span>
+<span class="sd">    indexed_on : str, optional</span>
+<span class="sd">        Column of gdf which the weights object uses as an index.</span>
+<span class="sd">        Default =None, so the geodataframe&#39;s index is used.</span>
+<span class="sd">    ax : matplotlib axis, optional</span>
+<span class="sd">        Axis on which to plot the weights. </span>
+<span class="sd">        Default =None, so plots on the current figure.</span>
+<span class="sd">    figsize : tuple, optional</span>
+<span class="sd">        W, h of figure. Default =(10,10)</span>
+<span class="sd">    node_kws : keyword argument dictionary, optional</span>
+<span class="sd">        Dictionary of keyword arguments to send to pyplot.scatter,</span>
+<span class="sd">        which provide fine-grained control over the aesthetics</span>
+<span class="sd">        of the nodes in the plot. Default =None.</span>
+<span class="sd">    edge_kws : keyword argument dictionary, optional</span>
+<span class="sd">        Dictionary of keyword arguments to send to pyplot.plot,</span>
+<span class="sd">        which provide fine-grained control over the aesthetics</span>
+<span class="sd">        of the edges in the plot. Default =None.</span>
+<span class="sd">    nonplanar_edge_kws : keyword argument dictionary, optional</span>
+<span class="sd">        Dictionary of keyword arguments to send to pyplot.plot,</span>
+<span class="sd">        which provide fine-grained control over the aesthetics</span>
+<span class="sd">        of the edges from `weights.non_planar_joins` in the plot.</span>
+<span class="sd">        Default =None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig : matplotlip Figure instance</span>
+<span class="sd">        Figure of spatial weight network.</span>
+<span class="sd">    ax : matplotlib Axes instance</span>
+<span class="sd">        Axes in which the figure is plotted. </span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Imports</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib.weights.contiguity import Queen</span>
+<span class="sd">    &gt;&gt;&gt; import geopandas as gpd</span>
+<span class="sd">    &gt;&gt;&gt; import pysal.lib</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib import examples</span>
+<span class="sd">    &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.viz.splot.libpysal import plot_spatial_weights</span>
+<span class="sd">    </span>
+<span class="sd">    Data preparation and statistical analysis</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; gdf = gpd.read_file(examples.get_path(&#39;map_RS_BR.shp&#39;))</span>
+<span class="sd">    &gt;&gt;&gt; weights = Queen.from_dataframe(gdf)</span>
+<span class="sd">    &gt;&gt;&gt; wnp = pysal.lib.weights.util.nonplanar_neighbors(weights, gdf)</span>
+<span class="sd">    </span>
+<span class="sd">    Plot weights</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; plot_spatial_weights(weights, gdf)</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    Plot corrected weights</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; plot_spatial_weights(wnp, gdf)</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">()</span>
+
+        <span class="c1"># default for node_kws</span>
+    <span class="k">if</span> <span class="n">node_kws</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">node_kws</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;#4d4d4d&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;#4d4d4d&#39;</span><span class="p">)</span>
+
+        <span class="c1"># default for edge_kws</span>
+    <span class="k">if</span> <span class="n">edge_kws</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">edge_kws</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">colors</span><span class="o">=</span><span class="s1">&#39;#4393c3&#39;</span><span class="p">)</span>
+
+        <span class="c1"># default for nonplanar_edge_kws</span>
+    <span class="k">if</span> <span class="n">nonplanar_edge_kws</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">edge_kws</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;lw&#39;</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">)</span>
+        <span class="n">nonplanar_edge_kws</span> <span class="o">=</span> <span class="n">edge_kws</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">nonplanar_edge_kws</span><span class="p">[</span><span class="s1">&#39;colors&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;#d6604d&#39;</span>
+
+    <span class="n">node_has_nonplanar_join</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s1">&#39;non_planar_joins&#39;</span><span class="p">):</span>
+        <span class="c1"># This attribute is present when an instance is created by the user</span>
+        <span class="c1"># calling `weights.util.nonplanar_neighbors`. If so, treat those</span>
+        <span class="c1"># edges differently by default.</span>
+        <span class="n">node_has_nonplanar_join</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">non_planar_joins</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+    <span class="n">centroids_shp</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">centroid</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">segments</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">non_planar_segments</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">indexed_on</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dict_index</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="n">indexed_on</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">gdf</span><span class="p">))))</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">id_order</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">islands</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="c1"># Find the centroid of the polygon we&#39;re looking at now</span>
+            <span class="n">origin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">centroids_shp</span><span class="p">[</span><span class="n">dict_index</span><span class="p">[</span><span class="n">idx</span><span class="p">]]</span><span class="o">.</span><span class="n">coords</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">jdx</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">neighbors</span><span class="p">[</span><span class="n">idx</span><span class="p">]:</span>
+                <span class="n">dest</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">centroids_shp</span><span class="p">[</span><span class="n">dict_index</span><span class="p">[</span><span class="n">jdx</span><span class="p">]]</span><span class="o">.</span><span class="n">coords</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">idx</span> <span class="ow">in</span> <span class="n">node_has_nonplanar_join</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">jdx</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">non_planar_joins</span><span class="p">[</span><span class="n">idx</span><span class="p">]):</span>
+                    <span class="c1"># This is a non-planar edge</span>
+                    <span class="n">non_planar_segments</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">origin</span><span class="p">,</span> <span class="n">dest</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">segments</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">origin</span><span class="p">,</span> <span class="n">dest</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">id_order</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">islands</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Find the centroid of the polygon we&#39;re looking at now</span>
+            <span class="n">origin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">centroids_shp</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">coords</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">neighbors</span><span class="p">[</span><span class="n">idx</span><span class="p">]:</span>
+                <span class="n">jdx</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">id2i</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                <span class="n">dest</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">centroids_shp</span><span class="p">[</span><span class="n">jdx</span><span class="p">]</span><span class="o">.</span><span class="n">coords</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">idx</span> <span class="ow">in</span> <span class="n">node_has_nonplanar_join</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">jdx</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">non_planar_joins</span><span class="p">[</span><span class="n">idx</span><span class="p">]):</span>
+                    <span class="c1"># This is a non-planar edge</span>
+                    <span class="n">non_planar_segments</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">origin</span><span class="p">,</span> <span class="n">dest</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">segments</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">origin</span><span class="p">,</span> <span class="n">dest</span><span class="p">])</span>
+
+    <span class="c1"># Plot the polygons from the geodataframe as a base layer</span>
+    <span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#bababa&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+
+    <span class="c1"># plot polygon centroids</span>
+    <span class="n">gdf</span><span class="o">.</span><span class="n">centroid</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">node_kws</span><span class="p">)</span>
+
+    <span class="c1"># plot weight edges</span>
+    <span class="n">non_planar_segs_plot</span> <span class="o">=</span> <span class="n">LineCollection</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">non_planar_segments</span><span class="p">),</span> <span class="o">**</span><span class="n">nonplanar_edge_kws</span><span class="p">)</span>
+    <span class="n">segs_plot</span> <span class="o">=</span> <span class="n">LineCollection</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">segments</span><span class="p">),</span> <span class="o">**</span><span class="n">edge_kws</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="n">segs_plot</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="n">non_planar_segs_plot</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

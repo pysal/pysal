@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.model.spreg.ML_Lag_Regimes &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../installation.html">Installation</a></li>
+                <li><a href="../api.html">API</a></li>
+                <li><a href="../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">pysal.model.spreg.ML_Lag_Regimes</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="pysal-model-spreg-ml-lag-regimes">
+<h1>pysal.model.spreg.ML_Lag_Regimes<a class="headerlink" href="#pysal-model-spreg-ml-lag-regimes" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pysal.model.spreg.ML_Lag_Regimes">
+<em class="property">class </em><code class="sig-prename descclassname">pysal.model.spreg.</code><code class="sig-name descname">ML_Lag_Regimes</code><span class="sig-paren">(</span><em class="sig-param">y</em>, <em class="sig-param">x</em>, <em class="sig-param">regimes</em>, <em class="sig-param">w=None</em>, <em class="sig-param">constant_regi='many'</em>, <em class="sig-param">cols2regi='all'</em>, <em class="sig-param">method='full'</em>, <em class="sig-param">epsilon=1e-07</em>, <em class="sig-param">regime_lag_sep=False</em>, <em class="sig-param">regime_err_sep=False</em>, <em class="sig-param">cores=False</em>, <em class="sig-param">spat_diag=False</em>, <em class="sig-param">vm=False</em>, <em class="sig-param">name_y=None</em>, <em class="sig-param">name_x=None</em>, <em class="sig-param">name_w=None</em>, <em class="sig-param">name_ds=None</em>, <em class="sig-param">name_regimes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/model/spreg/ml_lag_regimes.html#ML_Lag_Regimes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.model.spreg.ML_Lag_Regimes" title="Permalink to this definition">¶</a></dt>
+<dd><p>ML estimation of the spatial lag model with regimes (note no consistency 
+checks, diagnostics or constants added); Anselin (1988) <a class="reference internal" href="../references.html#anselin1988" id="id1">[Ans88]</a></p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>nx1 array for dependent variable</p>
+</dd>
+<dt><strong>x</strong><span class="classifier">array</span></dt><dd><p>Two dimensional array with n rows and one column for each
+independent (exogenous) variable, excluding the constant</p>
+</dd>
+<dt><strong>regimes</strong><span class="classifier">list</span></dt><dd><p>List of n values with the mapping of each
+observation to a regime. Assumed to be aligned with ‘x’.</p>
+</dd>
+<dt><strong>constant_regi: [‘one’, ‘many’]</strong></dt><dd><p>Switcher controlling the constant term setup. It may take
+the following values:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>‘one’: a vector of ones is appended to x and held</dt><dd><p>constant across regimes</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>‘many’: a vector of ones is appended to x and considered</dt><dd><p>different per regime (default)</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</dd>
+<dt><strong>cols2regi</strong><span class="classifier">list, ‘all’</span></dt><dd><p>Argument indicating whether each
+column of x should be considered as different per regime
+or held constant across regimes (False).
+If a list, k booleans indicating for each variable the
+option (True if one per regime, False to be held constant).
+If ‘all’ (default), all the variables vary by regime.</p>
+</dd>
+<dt><strong>w</strong><span class="classifier">Sparse matrix</span></dt><dd><p>Spatial weights sparse matrix</p>
+</dd>
+<dt><strong>method</strong><span class="classifier">string</span></dt><dd><p>if ‘full’, brute force calculation (full matrix expressions)
+if ‘ord’, Ord eigenvalue method
+if ‘LU’, LU sparse matrix decomposition</p>
+</dd>
+<dt><strong>epsilon</strong><span class="classifier">float</span></dt><dd><p>tolerance criterion in mimimize_scalar function and inverse_product</p>
+</dd>
+<dt><strong>regime_lag_sep: boolean</strong></dt><dd><p>If True, the spatial parameter for spatial lag is also
+computed according to different regimes. If False (default), 
+the spatial parameter is fixed accross regimes.</p>
+</dd>
+<dt><strong>cores</strong><span class="classifier">boolean</span></dt><dd><p>Specifies if multiprocessing is to be used
+Default: no multiprocessing, cores = False
+Note: Multiprocessing may not work on all platforms.</p>
+</dd>
+<dt><strong>spat_diag</strong><span class="classifier">boolean</span></dt><dd><p>if True, include spatial diagnostics (not implemented yet)</p>
+</dd>
+<dt><strong>vm</strong><span class="classifier">boolean</span></dt><dd><p>if True, include variance-covariance matrix in summary
+results</p>
+</dd>
+<dt><strong>name_y</strong><span class="classifier">string</span></dt><dd><p>Name of dependent variable for use in output</p>
+</dd>
+<dt><strong>name_x</strong><span class="classifier">list of strings</span></dt><dd><p>Names of independent variables for use in output</p>
+</dd>
+<dt><strong>name_w</strong><span class="classifier">string</span></dt><dd><p>Name of weights matrix for use in output</p>
+</dd>
+<dt><strong>name_ds</strong><span class="classifier">string</span></dt><dd><p>Name of dataset for use in output</p>
+</dd>
+<dt><strong>name_regimes</strong><span class="classifier">string</span></dt><dd><p>Name of regimes variable for use in output</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes</dt>
+<dd class="field-even"><dl>
+<dt><strong>summary</strong><span class="classifier">string</span></dt><dd><p>Summary of regression results and diagnostics (note: use in
+conjunction with the print command)</p>
+</dd>
+<dt><strong>betas</strong><span class="classifier">array</span></dt><dd><p>(k+1)x1 array of estimated coefficients (rho first)</p>
+</dd>
+<dt><strong>rho</strong><span class="classifier">float</span></dt><dd><p>estimate of spatial autoregressive coefficient
+Only available in dictionary ‘multi’ when multiple regressions
+(see ‘multi’ below for details)</p>
+</dd>
+<dt><strong>u</strong><span class="classifier">array</span></dt><dd><p>nx1 array of residuals</p>
+</dd>
+<dt><strong>predy</strong><span class="classifier">array</span></dt><dd><p>nx1 array of predicted y values</p>
+</dd>
+<dt><strong>n</strong><span class="classifier">integer</span></dt><dd><p>Number of observations</p>
+</dd>
+<dt><strong>k</strong><span class="classifier">integer</span></dt><dd><p>Number of variables for which coefficients are estimated
+(including the constant, excluding the rho)
+Only available in dictionary ‘multi’ when multiple regressions
+(see ‘multi’ below for details)</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>nx1 array for dependent variable</p>
+</dd>
+<dt><strong>x</strong><span class="classifier">array</span></dt><dd><p>Two dimensional array with n rows and one column for each
+independent (exogenous) variable, including the constant
+Only available in dictionary ‘multi’ when multiple regressions
+(see ‘multi’ below for details)</p>
+</dd>
+<dt><strong>method</strong><span class="classifier">string</span></dt><dd><p>log Jacobian method
+if ‘full’: brute force (full matrix computations)
+if ‘ord’, Ord eigenvalue method
+if ‘LU’, LU sparse matrix decomposition</p>
+</dd>
+<dt><strong>epsilon</strong><span class="classifier">float</span></dt><dd><p>tolerance criterion used in minimize_scalar function and inverse_product</p>
+</dd>
+<dt><strong>mean_y</strong><span class="classifier">float</span></dt><dd><p>Mean of dependent variable</p>
+</dd>
+<dt><strong>std_y</strong><span class="classifier">float</span></dt><dd><p>Standard deviation of dependent variable</p>
+</dd>
+<dt><strong>vm</strong><span class="classifier">array</span></dt><dd><p>Variance covariance matrix (k+1 x k+1), all coefficients</p>
+</dd>
+<dt><strong>vm1</strong><span class="classifier">array</span></dt><dd><p>Variance covariance matrix (k+2 x k+2), includes sig2
+Only available in dictionary ‘multi’ when multiple regressions
+(see ‘multi’ below for details)</p>
+</dd>
+<dt><strong>sig2</strong><span class="classifier">float</span></dt><dd><p>Sigma squared used in computations
+Only available in dictionary ‘multi’ when multiple regressions
+(see ‘multi’ below for details)</p>
+</dd>
+<dt><strong>logll</strong><span class="classifier">float</span></dt><dd><p>maximized log-likelihood (including constant terms)
+Only available in dictionary ‘multi’ when multiple regressions
+(see ‘multi’ below for details)</p>
+</dd>
+<dt><strong>aic</strong><span class="classifier">float</span></dt><dd><p>Akaike information criterion
+Only available in dictionary ‘multi’ when multiple regressions
+(see ‘multi’ below for details)</p>
+</dd>
+<dt><strong>schwarz</strong><span class="classifier">float</span></dt><dd><p>Schwarz criterion
+Only available in dictionary ‘multi’ when multiple regressions
+(see ‘multi’ below for details)</p>
+</dd>
+<dt><strong>predy_e</strong><span class="classifier">array</span></dt><dd><p>predicted values from reduced form</p>
+</dd>
+<dt><strong>e_pred</strong><span class="classifier">array</span></dt><dd><p>prediction errors using reduced form predicted values</p>
+</dd>
+<dt><strong>pr2</strong><span class="classifier">float</span></dt><dd><p>Pseudo R squared (squared correlation between y and ypred)
+Only available in dictionary ‘multi’ when multiple regressions
+(see ‘multi’ below for details)</p>
+</dd>
+<dt><strong>pr2_e</strong><span class="classifier">float</span></dt><dd><p>Pseudo R squared (squared correlation between y and ypred_e
+(using reduced form))
+Only available in dictionary ‘multi’ when multiple regressions
+(see ‘multi’ below for details)</p>
+</dd>
+<dt><strong>std_err</strong><span class="classifier">array</span></dt><dd><p>1xk array of standard errors of the betas    
+Only available in dictionary ‘multi’ when multiple regressions
+(see ‘multi’ below for details)</p>
+</dd>
+<dt><strong>z_stat</strong><span class="classifier">list of tuples</span></dt><dd><p>z statistic; each tuple contains the pair (statistic,
+p-value), where each is a float
+Only available in dictionary ‘multi’ when multiple regressions
+(see ‘multi’ below for details)</p>
+</dd>
+<dt><strong>name_y</strong><span class="classifier">string</span></dt><dd><p>Name of dependent variable for use in output</p>
+</dd>
+<dt><strong>name_x</strong><span class="classifier">list of strings</span></dt><dd><p>Names of independent variables for use in output</p>
+</dd>
+<dt><strong>name_w</strong><span class="classifier">string</span></dt><dd><p>Name of weights matrix for use in output</p>
+</dd>
+<dt><strong>name_ds</strong><span class="classifier">string</span></dt><dd><p>Name of dataset for use in output</p>
+</dd>
+<dt><strong>name_regimes</strong><span class="classifier">string</span></dt><dd><p>Name of regimes variable for use in output</p>
+</dd>
+<dt><strong>title</strong><span class="classifier">string</span></dt><dd><p>Name of the regression method used
+Only available in dictionary ‘multi’ when multiple regressions
+(see ‘multi’ below for details)</p>
+</dd>
+<dt><strong>regimes</strong><span class="classifier">list</span></dt><dd><p>List of n values with the mapping of each
+observation to a regime. Assumed to be aligned with ‘x’.</p>
+</dd>
+<dt><strong>constant_regi: [‘one’, ‘many’]</strong></dt><dd><p>Ignored if regimes=False. Constant option for regimes.
+Switcher controlling the constant term setup. It may take
+the following values:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>‘one’: a vector of ones is appended to x and held</dt><dd><p>constant across regimes</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>‘many’: a vector of ones is appended to x and considered</dt><dd><p>different per regime</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</dd>
+<dt><strong>cols2regi</strong><span class="classifier">list, ‘all’</span></dt><dd><p>Ignored if regimes=False. Argument indicating whether each
+column of x should be considered as different per regime
+or held constant across regimes (False).
+If a list, k booleans indicating for each variable the
+option (True if one per regime, False to be held constant).
+If ‘all’, all the variables vary by regime.</p>
+</dd>
+<dt><strong>regime_lag_sep</strong><span class="classifier">boolean</span></dt><dd><p>If True, the spatial parameter for spatial lag is also
+computed according to different regimes. If False (default), 
+the spatial parameter is fixed accross regimes.</p>
+</dd>
+<dt><strong>regime_err_sep</strong><span class="classifier">boolean</span></dt><dd><p>always set to False - kept for compatibility with other
+regime models</p>
+</dd>
+<dt><strong>kr</strong><span class="classifier">int</span></dt><dd><p>Number of variables/columns to be “regimized” or subject
+to change by regime. These will result in one parameter
+estimate by regime for each variable (i.e. nr parameters per
+variable)</p>
+</dd>
+<dt><strong>kf</strong><span class="classifier">int</span></dt><dd><p>Number of variables/columns to be considered fixed or
+global across regimes and hence only obtain one parameter
+estimate</p>
+</dd>
+<dt><strong>nr</strong><span class="classifier">int</span></dt><dd><p>Number of different regimes in the ‘regimes’ list</p>
+</dd>
+<dt><strong>multi</strong><span class="classifier">dictionary</span></dt><dd><p>Only available when multiple regressions are estimated,
+i.e. when regime_err_sep=True and no variable is fixed
+across regimes.
+Contains all attributes of each individual regression</p>
+</dd>
+<dt><strong>Examples</strong></dt><dd></dd>
+<dt><strong>________</strong></dt><dd></dd>
+<dt><strong>Open data baltim.dbf using pysal and create the variables matrices and weights matrix.</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; import numpy as np</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; import pysal.lib</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; from pysal.lib import examples</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; db =  pysal.lib.io.open(examples.get_path(“baltim.dbf”),’r’)</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; ds_name = “baltim.dbf”</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; y_name = “PRICE”</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; y = np.array(db.by_col(y_name)).T</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; y.shape = (len(y),1)</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; x_names = [“NROOM”,”AGE”,”SQFT”]</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; x = np.array([db.by_col(var) for var in x_names]).T</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; ww = ps.open(ps.examples.get_path(“baltim_q.gal”))</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; w = ww.read()</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; ww.close()</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; w_name = “baltim_q.gal”</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; w.transform = ‘r’</strong></dt><dd></dd>
+<dt><strong>Since in this example we are interested in checking whether the results vary</strong></dt><dd></dd>
+<dt><strong>by regimes, we use CITCOU to define whether the location is in the city or</strong></dt><dd></dd>
+<dt><strong>outside the city (in the county):</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; regimes = db.by_col(“CITCOU”)</strong></dt><dd></dd>
+<dt><strong>Now we can run the regression with all parameters:</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; mllag = ML_Lag_Regimes(y,x,regimes,w=w,name_y=y_name,name_x=x_names,               name_w=w_name,name_ds=ds_name,name_regimes=”CITCOU”)</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; np.around(mllag.betas, decimals=4)</strong></dt><dd></dd>
+<dt><strong>array([[-15.0059],</strong></dt><dd><p>[  4.496 ],
+[ -0.0318],
+[  0.35  ],
+[ -4.5404],
+[  3.9219],
+[ -0.1702],
+[  0.8194],
+[  0.5385]])</p>
+</dd>
+<dt><strong>&gt;&gt;&gt; “{0:.6f}”.format(mllag.rho)</strong></dt><dd></dd>
+<dt><strong>‘0.538503’</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; “{0:.6f}”.format(mllag.mean_y)</strong></dt><dd></dd>
+<dt><strong>‘44.307180’</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; “{0:.6f}”.format(mllag.std_y)</strong></dt><dd></dd>
+<dt><strong>‘23.606077’</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; np.around(np.diag(mllag.vm1), decimals=4)</strong></dt><dd></dd>
+<dt><strong>array([  47.42  ,    2.3953,    0.0051,    0.0648,   69.6765,    3.2066,</strong></dt><dd><p>0.0116,    0.0486,    0.004 ,  390.7274])</p>
+</dd>
+<dt><strong>&gt;&gt;&gt; np.around(np.diag(mllag.vm), decimals=4)</strong></dt><dd></dd>
+<dt><strong>array([ 47.42  ,   2.3953,   0.0051,   0.0648,  69.6765,   3.2066,</strong></dt><dd><p>0.0116,   0.0486,   0.004 ])</p>
+</dd>
+<dt><strong>&gt;&gt;&gt; “{0:.6f}”.format(mllag.sig2)</strong></dt><dd></dd>
+<dt><strong>‘200.044334’</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; “{0:.6f}”.format(mllag.logll)</strong></dt><dd></dd>
+<dt><strong>‘-864.985056’</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; “{0:.6f}”.format(mllag.aic)</strong></dt><dd></dd>
+<dt><strong>‘1747.970112’</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; “{0:.6f}”.format(mllag.schwarz)</strong></dt><dd></dd>
+<dt><strong>‘1778.136835’</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; mllag.title</strong></dt><dd></dd>
+<dt><strong>‘MAXIMUM LIKELIHOOD SPATIAL LAG - REGIMES (METHOD = full)’</strong></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 71%" />
+<col style="width: 29%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>ML_Lag_Regimes_Multi</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pysal.model.spreg.ML_Lag_Regimes.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">y</em>, <em class="sig-param">x</em>, <em class="sig-param">regimes</em>, <em class="sig-param">w=None</em>, <em class="sig-param">constant_regi='many'</em>, <em class="sig-param">cols2regi='all'</em>, <em class="sig-param">method='full'</em>, <em class="sig-param">epsilon=1e-07</em>, <em class="sig-param">regime_lag_sep=False</em>, <em class="sig-param">regime_err_sep=False</em>, <em class="sig-param">cores=False</em>, <em class="sig-param">spat_diag=False</em>, <em class="sig-param">vm=False</em>, <em class="sig-param">name_y=None</em>, <em class="sig-param">name_x=None</em>, <em class="sig-param">name_w=None</em>, <em class="sig-param">name_ds=None</em>, <em class="sig-param">name_regimes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/model/spreg/ml_lag_regimes.html#ML_Lag_Regimes.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.model.spreg.ML_Lag_Regimes.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ML_Lag_Regimes_Multi</span></code>(self, y, x, w_i, w, …)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pysal.model.spreg.ML_Lag_Regimes.__init__" title="pysal.model.spreg.ML_Lag_Regimes.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self, y, x, regimes[, w, …])</p></td>
+<td><p>Initialize self.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean_y</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sig2n</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sig2n_k</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">std_y</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">utu</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">vm</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../_sources/generated/pysal.model.spreg.ML_Lag_Regimes.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

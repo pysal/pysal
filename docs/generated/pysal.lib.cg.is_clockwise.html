@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.lib.cg.is_clockwise &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pysal.lib.cg.point_touches_rectangle" href="pysal.lib.cg.point_touches_rectangle.html" />
+    <link rel="prev" title="pysal.lib.cg.convex_hull" href="pysal.lib.cg.convex_hull.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../installation.html">Installation</a></li>
+                <li><a href="../api.html">API</a></li>
+                <li><a href="../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">pysal.lib.cg.is_clockwise</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="pysal-lib-cg-is-clockwise">
+<h1>pysal.lib.cg.is_clockwise<a class="headerlink" href="#pysal-lib-cg-is-clockwise" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="pysal.lib.cg.is_clockwise">
+<code class="sig-prename descclassname">pysal.lib.cg.</code><code class="sig-name descname">is_clockwise</code><span class="sig-paren">(</span><em class="sig-param">vertices</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/lib/cg/standalone.html#is_clockwise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.lib.cg.is_clockwise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether a list of points describing a polygon are clockwise or counterclockwise.</p>
+<p>is_clockwise(Point list) -&gt; bool</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>vertices</strong><span class="classifier">a list of points that form a single ring</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">is_clockwise</span><span class="p">([</span><span class="n">Point</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span> <span class="n">Point</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span> <span class="n">Point</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">))])</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_clockwise</span><span class="p">([</span><span class="n">Point</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span> <span class="n">Point</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)),</span> <span class="n">Point</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">))])</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mf">106.57798</span><span class="p">,</span> <span class="mf">35.174143999999998</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.583412</span><span class="p">,</span> <span class="mf">35.174141999999996</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.58417999999999</span><span class="p">,</span> <span class="mf">35.174143000000001</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.58377999999999</span><span class="p">,</span> <span class="mf">35.175542999999998</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.58287999999999</span><span class="p">,</span> <span class="mf">35.180543</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.58263099999999</span><span class="p">,</span> <span class="mf">35.181455</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.58257999999999</span><span class="p">,</span> <span class="mf">35.181643000000001</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.58198299999999</span><span class="p">,</span> <span class="mf">35.184615000000001</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.58148</span><span class="p">,</span> <span class="mf">35.187242999999995</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.58127999999999</span><span class="p">,</span> <span class="mf">35.188243</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.58138</span><span class="p">,</span> <span class="mf">35.188243</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.58108</span><span class="p">,</span> <span class="mf">35.189442999999997</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.58104</span><span class="p">,</span> <span class="mf">35.189644000000001</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.58028</span><span class="p">,</span> <span class="mf">35.193442999999995</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.580029</span><span class="p">,</span> <span class="mf">35.194541000000001</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.57974399999999</span><span class="p">,</span> <span class="mf">35.195785999999998</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.579475</span><span class="p">,</span> <span class="mf">35.196961999999999</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.57922699999999</span><span class="p">,</span> <span class="mf">35.198042999999998</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.578397</span><span class="p">,</span> <span class="mf">35.201665999999996</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.57827999999999</span><span class="p">,</span> <span class="mf">35.201642999999997</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.57737999999999</span><span class="p">,</span> <span class="mf">35.201642999999997</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.57697999999999</span><span class="p">,</span> <span class="mf">35.201543000000001</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56436599999999</span><span class="p">,</span> <span class="mf">35.200311999999997</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56058</span><span class="p">,</span> <span class="mf">35.199942999999998</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56048</span><span class="p">,</span> <span class="mf">35.197342999999996</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56048</span><span class="p">,</span> <span class="mf">35.195842999999996</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56048</span><span class="p">,</span> <span class="mf">35.194342999999996</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56048</span><span class="p">,</span> <span class="mf">35.193142999999999</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56048</span><span class="p">,</span> <span class="mf">35.191873999999999</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56048</span><span class="p">,</span> <span class="mf">35.191742999999995</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56048</span><span class="p">,</span> <span class="mf">35.190242999999995</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56037999999999</span><span class="p">,</span> <span class="mf">35.188642999999999</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56037999999999</span><span class="p">,</span> <span class="mf">35.187242999999995</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56037999999999</span><span class="p">,</span> <span class="mf">35.186842999999996</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56037999999999</span><span class="p">,</span> <span class="mf">35.186552999999996</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56037999999999</span><span class="p">,</span> <span class="mf">35.185842999999998</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56037999999999</span><span class="p">,</span> <span class="mf">35.184443000000002</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56037999999999</span><span class="p">,</span> <span class="mf">35.182943000000002</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56037999999999</span><span class="p">,</span> <span class="mf">35.181342999999998</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56037999999999</span><span class="p">,</span> <span class="mf">35.180433000000001</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56037999999999</span><span class="p">,</span> <span class="mf">35.179943000000002</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56037999999999</span><span class="p">,</span> <span class="mf">35.178542999999998</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56037999999999</span><span class="p">,</span> <span class="mf">35.177790999999999</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56037999999999</span><span class="p">,</span> <span class="mf">35.177143999999998</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56037999999999</span><span class="p">,</span> <span class="mf">35.175643999999998</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56037999999999</span><span class="p">,</span> <span class="mf">35.174444000000001</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56037999999999</span><span class="p">,</span> <span class="mf">35.174043999999995</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.560526</span><span class="p">,</span> <span class="mf">35.174043999999995</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56478</span><span class="p">,</span> <span class="mf">35.174043999999995</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56627999999999</span><span class="p">,</span> <span class="mf">35.174143999999998</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.566541</span><span class="p">,</span> <span class="mf">35.174144999999996</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.569023</span><span class="p">,</span> <span class="mf">35.174157000000001</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56917199999999</span><span class="p">,</span> <span class="mf">35.174157999999998</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.56938</span><span class="p">,</span> <span class="mf">35.174143999999998</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.57061499999999</span><span class="p">,</span> <span class="mf">35.174143999999998</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.57097999999999</span><span class="p">,</span> <span class="mf">35.174143999999998</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.57679999999999</span><span class="p">,</span> <span class="mf">35.174143999999998</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">106.57798</span><span class="p">,</span> <span class="mf">35.174143999999998</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_clockwise</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../_sources/generated/pysal.lib.cg.is_clockwise.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

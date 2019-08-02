@@ -1,0 +1,29 @@
+pysal.viz.mapclassify.FisherJenks
+=================================
+
+.. currentmodule:: pysal.viz.mapclassify
+
+.. autoclass:: FisherJenks
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FisherJenks.__init__
+      ~FisherJenks.find_bin
+      ~FisherJenks.get_adcm
+      ~FisherJenks.get_gadf
+      ~FisherJenks.get_tss
+      ~FisherJenks.make
+      ~FisherJenks.plot
+      ~FisherJenks.update
+   
+   
+
+   
+   
+   

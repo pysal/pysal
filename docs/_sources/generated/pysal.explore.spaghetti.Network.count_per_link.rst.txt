@@ -1,0 +1,6 @@
+pysal.explore.spaghetti.Network.count\_per\_link
+================================================
+
+.. currentmodule:: pysal.explore.spaghetti
+
+.. automethod:: Network.count_per_link

@@ -1,0 +1,22 @@
+pysal.explore.segregation.spatial.SpatialProximity
+==================================================
+
+.. currentmodule:: pysal.explore.segregation.spatial
+
+.. autoclass:: SpatialProximity
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SpatialProximity.__init__
+   
+   
+
+   
+   
+   

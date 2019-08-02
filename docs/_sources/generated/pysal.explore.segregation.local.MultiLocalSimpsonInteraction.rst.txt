@@ -1,0 +1,22 @@
+pysal.explore.segregation.local.MultiLocalSimpsonInteraction
+============================================================
+
+.. currentmodule:: pysal.explore.segregation.local
+
+.. autoclass:: MultiLocalSimpsonInteraction
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MultiLocalSimpsonInteraction.__init__
+   
+   
+
+   
+   
+   

@@ -1,0 +1,22 @@
+pysal.explore.segregation.aspatial.GiniSeg
+==========================================
+
+.. currentmodule:: pysal.explore.segregation.aspatial
+
+.. autoclass:: GiniSeg
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GiniSeg.__init__
+   
+   
+
+   
+   
+   

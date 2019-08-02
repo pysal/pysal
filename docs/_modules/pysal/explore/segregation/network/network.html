@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.explore.segregation.network.network &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../../../../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../../../installation.html">Installation</a></li>
+                <li><a href="../../../../../api.html">API</a></li>
+                <li><a href="../../../../../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for pysal.explore.segregation.network.network</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Calculate street network-based segregation measures.&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Elijah Knaap &lt;elijah.knaap@ucr.edu&gt; Renan X. Cortes &lt;renanc@ucr.edu&gt; and Sergio J. Rey &lt;sergio.rey@ucr.edu&gt;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="k">import</span> <span class="n">warn</span>
+<span class="kn">from</span> <span class="nn">pysal.explore.segregation.util</span> <span class="k">import</span> <span class="n">project_gdf</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">pandana</span> <span class="k">as</span> <span class="nn">pdna</span>
+    <span class="kn">from</span> <span class="nn">urbanaccess.osm.load</span> <span class="k">import</span> <span class="n">ua_network_from_bbox</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">warn</span><span class="p">(</span>
+        <span class="s2">&quot;You need pandana and urbanaccess to work with segregation&#39;s network module</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;You can install them with  `pip install urbanaccess pandana` &quot;</span>
+        <span class="s2">&quot;or `conda install -c udst pandana urbanaccess`&quot;</span><span class="p">)</span>
+
+
+<span class="c1"># This class allows us to hide the diagnostic messages from urbanaccess if the `quiet` flag is set</span>
+<span class="k">class</span> <span class="nc">_HiddenPrints</span><span class="p">:</span>  <span class="c1"># from https://stackoverflow.com/questions/8391411/suppress-calls-to-print-python</span>
+    <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_original_stdout</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_original_stdout</span>
+
+
+<div class="viewcode-block" id="get_osm_network"><a class="viewcode-back" href="../../../../../generated/pysal.explore.segregation.network.get_osm_network.html#pysal.explore.segregation.network.get_osm_network">[docs]</a><span class="k">def</span> <span class="nf">get_osm_network</span><span class="p">(</span><span class="n">geodataframe</span><span class="p">,</span> <span class="n">maxdist</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Download a street network from OSM.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    geodataframe : geopandas.GeoDataFrame</span>
+<span class="sd">        geopandas.GeoDataFrame of the study area.</span>
+<span class="sd">        Coordinate system should be in WGS84</span>
+<span class="sd">    maxdist : int</span>
+<span class="sd">        Total distance (in meters) of the network queries you may need.</span>
+<span class="sd">        This is used to buffer the network to ensure theres enough to satisfy</span>
+<span class="sd">        your largest query, otherwise there may be edge effects.</span>
+<span class="sd">    quiet: bool</span>
+<span class="sd">        If True, diagnostic messages from urbanaccess will be suppressed</span>
+<span class="sd">    **kwargs : dict</span>
+<span class="sd">        additional kwargs passed through to</span>
+<span class="sd">        urbanaccess.ua_network_from_bbox</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandana.Network</span>
+<span class="sd">        A pandana Network instance for use in accessibility calculations or</span>
+<span class="sd">        spatial segregation measures that include a distance decay</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">geodataframe</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">project_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">)</span>
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="n">maxdist</span><span class="p">)</span>
+    <span class="n">bounds</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">epsg</span><span class="o">=</span><span class="mi">4326</span><span class="p">)</span><span class="o">.</span><span class="n">total_bounds</span>
+
+    <span class="k">if</span> <span class="n">quiet</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Downloading data from OSM. This may take awhile.&#39;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">_HiddenPrints</span><span class="p">():</span>
+            <span class="n">net</span> <span class="o">=</span> <span class="n">ua_network_from_bbox</span><span class="p">(</span><span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                                       <span class="n">bounds</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">net</span> <span class="o">=</span> <span class="n">ua_network_from_bbox</span><span class="p">(</span><span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                   <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Building network&quot;</span><span class="p">)</span>
+    <span class="n">network</span> <span class="o">=</span> <span class="n">pdna</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="n">net</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">net</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;y&quot;</span><span class="p">],</span> <span class="n">net</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;from&quot;</span><span class="p">],</span>
+                           <span class="n">net</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;to&quot;</span><span class="p">],</span> <span class="n">net</span><span class="p">[</span><span class="mi">1</span><span class="p">][[</span><span class="s2">&quot;distance&quot;</span><span class="p">]])</span>
+
+    <span class="k">return</span> <span class="n">network</span></div>
+
+
+<div class="viewcode-block" id="calc_access"><a class="viewcode-back" href="../../../../../generated/pysal.explore.segregation.network.calc_access.html#pysal.explore.segregation.network.calc_access">[docs]</a><span class="k">def</span> <span class="nf">calc_access</span><span class="p">(</span><span class="n">geodataframe</span><span class="p">,</span>
+                <span class="n">network</span><span class="p">,</span>
+                <span class="n">distance</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+                <span class="n">decay</span><span class="o">=</span><span class="s2">&quot;linear&quot;</span><span class="p">,</span>
+                <span class="n">variables</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">precompute</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate access to population groups.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    geodataframe : geopandas.GeoDataFrame</span>
+<span class="sd">        geodataframe with demographic data</span>
+<span class="sd">    network : pandana.Network</span>
+<span class="sd">        pandana.Network instance. This is likely created with `get_osm_network`</span>
+<span class="sd">        or via helper functions from OSMnet or UrbanAccess.</span>
+<span class="sd">    distance : int</span>
+<span class="sd">        maximum distance to consider `accessible` (the default is 2000).</span>
+<span class="sd">    decay : str</span>
+<span class="sd">        decay type pandana should use &quot;linear&quot;, &quot;exp&quot;, or &quot;flat&quot;</span>
+<span class="sd">        (which means no decay). The default is &quot;linear&quot;.</span>
+<span class="sd">    variables : list</span>
+<span class="sd">        list of variable names present on gdf that should be calculated</span>
+<span class="sd">    precompute: bool (default True)</span>
+<span class="sd">        whether pandana should precompute the distance matrix. It can only be</span>
+<span class="sd">        precomputed once, so If you plan to pass the same network to this</span>
+<span class="sd">        function several times, you should set precompute=False for later runs</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DataFrame</span>
+<span class="sd">        DataFrame with two columns, `total_population` and `group_population`</span>
+<span class="sd">        which represent the total number of each group that can be reached</span>
+<span class="sd">        within the supplied `distance` parameter. The DataFrame is indexed</span>
+<span class="sd">        on node_ids</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">precompute</span><span class="p">:</span>
+        <span class="n">network</span><span class="o">.</span><span class="n">precompute</span><span class="p">(</span><span class="n">distance</span><span class="p">)</span>
+
+    <span class="n">geodataframe</span><span class="p">[</span><span class="s2">&quot;node_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">get_node_ids</span><span class="p">(</span><span class="n">geodataframe</span><span class="o">.</span><span class="n">centroid</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                                                    <span class="n">geodataframe</span><span class="o">.</span><span class="n">centroid</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="n">access</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">:</span>
+        <span class="n">network</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">geodataframe</span><span class="o">.</span><span class="n">node_ids</span><span class="p">,</span>
+                    <span class="n">variable</span><span class="o">=</span><span class="n">geodataframe</span><span class="p">[</span><span class="n">variable</span><span class="p">],</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">variable</span><span class="p">)</span>
+
+        <span class="n">access_pop</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">distance</span><span class="p">,</span>
+                                       <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span>
+                                       <span class="n">decay</span><span class="o">=</span><span class="n">decay</span><span class="p">,</span>
+                                       <span class="n">name</span><span class="o">=</span><span class="n">variable</span><span class="p">)</span>
+
+        <span class="n">access</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">access_pop</span><span class="p">)</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;acc_&quot;</span> <span class="o">+</span> <span class="n">variable</span> <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">]</span>
+    <span class="n">access</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">access</span><span class="p">)))</span>
+
+    <span class="k">return</span> <span class="n">access</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+pysal.explore.spaghetti.Network.\_yieldneighbor
+===============================================
+
+.. currentmodule:: pysal.explore.spaghetti
+
+.. automethod:: Network._yieldneighbor

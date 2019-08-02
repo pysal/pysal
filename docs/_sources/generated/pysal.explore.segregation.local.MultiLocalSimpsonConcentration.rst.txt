@@ -1,0 +1,22 @@
+pysal.explore.segregation.local.MultiLocalSimpsonConcentration
+==============================================================
+
+.. currentmodule:: pysal.explore.segregation.local
+
+.. autoclass:: MultiLocalSimpsonConcentration
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MultiLocalSimpsonConcentration.__init__
+   
+   
+
+   
+   
+   

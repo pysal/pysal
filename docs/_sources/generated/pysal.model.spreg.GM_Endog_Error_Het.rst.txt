@@ -1,0 +1,29 @@
+pysal.model.spreg.GM\_Endog\_Error\_Het
+=======================================
+
+.. currentmodule:: pysal.model.spreg
+
+.. autoclass:: GM_Endog_Error_Het
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GM_Endog_Error_Het.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~GM_Endog_Error_Het.mean_y
+      ~GM_Endog_Error_Het.std_y
+   
+   
