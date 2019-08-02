@@ -21,11 +21,10 @@ help:
 
 github:
 	@make html
-	@cp -a _build/html/. ../docs
+	@rsync -avh _build/html/ ../docs/ --delete
 
 
 
 clean:
 	rm -rf $(BUILDDIR)/*
 	rm -rf auto_examples/
-	rm -rf ../docs/*
