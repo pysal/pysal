@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.lib.weights.weights &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../../installation.html">Installation</a></li>
+                <li><a href="../../../../api.html">API</a></li>
+                <li><a href="../../../../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for pysal.lib.weights.weights</h1><div class="highlight"><pre>
+<span></span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Weights.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Sergio J. Rey &lt;srey@asu.edu&gt; &quot;</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="k">import</span> <span class="n">basename</span> <span class="k">as</span> <span class="n">BASENAME</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse</span>
+<span class="kn">from</span> <span class="nn">scipy.sparse.csgraph</span> <span class="k">import</span> <span class="n">connected_components</span>
+<span class="c1">#from .util import full, WSP2W resolve import cycle by</span>
+<span class="c1">#forcing these into methods</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">adjtools</span>
+<span class="kn">from</span> <span class="nn">..io.fileio</span> <span class="k">import</span> <span class="n">FileIO</span> <span class="k">as</span> <span class="n">popen</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;W&#39;</span><span class="p">,</span> <span class="s1">&#39;WSP&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="W"><a class="viewcode-back" href="../../../../generated/pysal.lib.weights.W.html#pysal.lib.weights.W">[docs]</a><span class="k">class</span> <span class="nc">W</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Spatial weights class.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    neighbors            : dictionary</span>
+<span class="sd">                           Key is region ID, value is a list of neighbor IDS.</span>
+<span class="sd">                           Example:  {&#39;a&#39;:[&#39;b&#39;],&#39;b&#39;:[&#39;a&#39;,&#39;c&#39;],&#39;c&#39;:[&#39;b&#39;]}</span>
+<span class="sd">    weights              : dictionary</span>
+<span class="sd">                           Key is region ID, value is a list of edge weights.</span>
+<span class="sd">                           If not supplied all edge weights are assumed to have a weight of 1.</span>
+<span class="sd">                           Example: {&#39;a&#39;:[0.5],&#39;b&#39;:[0.5,1.5],&#39;c&#39;:[1.5]}</span>
+<span class="sd">    id_order             : list</span>
+<span class="sd">                           An ordered list of ids, defines the order of</span>
+<span class="sd">                           observations when iterating over W if not set,</span>
+<span class="sd">                           lexicographical ordering is used to iterate and the</span>
+<span class="sd">                           id_order_set property will return False. This can be</span>
+<span class="sd">                           set after creation by setting the &#39;id_order&#39; property.</span>
+<span class="sd">    silent_island_warning: boolean</span>
+<span class="sd">                           By default pysal.lib will print a warning if the</span>
+<span class="sd">                           dataset contains any disconnected observations or</span>
+<span class="sd">                           islands. To silence this warning set this</span>
+<span class="sd">                           parameter to True.</span>
+<span class="sd">    silent_connected_components   : boolean</span>
+<span class="sd">                            By default PySAL will print a warning if the</span>
+<span class="sd">                            dataset contains any disconnected components in the</span>
+<span class="sd">                            adjacency matrix. These are disconnected *groups*</span>
+<span class="sd">                            of islands. To silence this warning set this</span>
+<span class="sd">                            parameter to True.</span>
+<span class="sd">    ids                  : list</span>
+<span class="sd">                           Values to use for keys of the neighbors and weights dicts.</span>
+
+<span class="sd">    Attributes (NOTE: these are described by their docstrings. to view, use the `help` function)</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    asymmetries</span>
+<span class="sd">    cardinalities</span>
+<span class="sd">    component_labels</span>
+<span class="sd">    diagW2</span>
+<span class="sd">    diagWtW</span>
+<span class="sd">    diagWtW_WW</span>
+<span class="sd">    histogram</span>
+<span class="sd">    id2i</span>
+<span class="sd">    id_order</span>
+<span class="sd">    id_order_set</span>
+<span class="sd">    islands</span>
+<span class="sd">    max_neighbors</span>
+<span class="sd">    mean_neighbors</span>
+<span class="sd">    min_neighbors</span>
+<span class="sd">    n</span>
+<span class="sd">    n_components</span>
+<span class="sd">    neighbor_offsets</span>
+<span class="sd">    nonzero</span>
+<span class="sd">    pct_nonzero</span>
+<span class="sd">    s0</span>
+<span class="sd">    s1</span>
+<span class="sd">    s2</span>
+<span class="sd">    s2array</span>
+<span class="sd">    sd</span>
+<span class="sd">    sparse</span>
+<span class="sd">    trcW2</span>
+<span class="sd">    trcWtW</span>
+<span class="sd">    trcWtW_WW</span>
+<span class="sd">    transform</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib.weights import W</span>
+<span class="sd">    &gt;&gt;&gt; neighbors = {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}</span>
+<span class="sd">    &gt;&gt;&gt; weights = {0: [1, 1], 1: [1, 1, 1], 2: [1, 1], 3: [1, 1, 1], 4: [1, 1, 1, 1], 5: [1, 1, 1], 6: [1, 1], 7: [1, 1, 1], 8: [1, 1]}</span>
+<span class="sd">    &gt;&gt;&gt; w = W(neighbors, weights)</span>
+<span class="sd">    &gt;&gt;&gt; &quot;%.3f&quot;%w.pct_nonzero</span>
+<span class="sd">    &#39;29.630&#39;</span>
+
+<span class="sd">    Read from external gal file</span>
+
+<span class="sd">    &gt;&gt;&gt; import pysal.lib</span>
+<span class="sd">    &gt;&gt;&gt; w = pysal.lib.io.open(pysal.lib.examples.get_path(&quot;stl.gal&quot;)).read()</span>
+<span class="sd">    &gt;&gt;&gt; w.n</span>
+<span class="sd">    78</span>
+<span class="sd">    &gt;&gt;&gt; &quot;%.3f&quot;%w.pct_nonzero</span>
+<span class="sd">    &#39;6.542&#39;</span>
+
+<span class="sd">    Set weights implicitly</span>
+
+<span class="sd">    &gt;&gt;&gt; neighbors = {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}</span>
+<span class="sd">    &gt;&gt;&gt; w = W(neighbors)</span>
+<span class="sd">    &gt;&gt;&gt; round(w.pct_nonzero,3)</span>
+<span class="sd">    29.63</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib.weights import lat2W</span>
+<span class="sd">    &gt;&gt;&gt; w = lat2W(100, 100)</span>
+<span class="sd">    &gt;&gt;&gt; w.trcW2</span>
+<span class="sd">    39600.0</span>
+<span class="sd">    &gt;&gt;&gt; w.trcWtW</span>
+<span class="sd">    39600.0</span>
+<span class="sd">    &gt;&gt;&gt; w.transform=&#39;r&#39;</span>
+<span class="sd">    &gt;&gt;&gt; round(w.trcW2, 3)</span>
+<span class="sd">    2530.722</span>
+<span class="sd">    &gt;&gt;&gt; round(w.trcWtW, 3)</span>
+<span class="sd">    2533.667</span>
+
+<span class="sd">    Cardinality Histogram</span>
+<span class="sd">    &gt;&gt;&gt; w.histogram</span>
+<span class="sd">    [(2, 4), (3, 392), (4, 9604)]</span>
+
+<span class="sd">    Disconnected observations (islands)</span>
+
+<span class="sd">    &gt;&gt;&gt; from pysal.lib.weights import W</span>
+<span class="sd">    &gt;&gt;&gt; w = W({1:[0],0:[1],2:[], 3:[]})</span>
+
+<span class="sd">    WARNING: there are 2 disconnected observations</span>
+<span class="sd">    Island ids:  [2, 3]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="W.__init__"><a class="viewcode-back" href="../../../../generated/pysal.lib.weights.W.html#pysal.lib.weights.W.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighbors</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">id_order</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">silence_warnings</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">silent_island_warning</span> <span class="o">=</span> <span class="n">silence_warnings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">silent_connected_components</span> <span class="o">=</span> <span class="n">silence_warnings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neighbors</span> <span class="o">=</span> <span class="n">neighbors</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">weights</span><span class="p">:</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">neighbors</span><span class="p">:</span>
+                <span class="n">weights</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">neighbors</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">[</span><span class="s1">&#39;O&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># original weights</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="s1">&#39;O&#39;</span>
+        <span class="k">if</span> <span class="n">id_order</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_id_order</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neighbors</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_id_order</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_id_order_set</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_id_order</span> <span class="o">=</span> <span class="n">id_order</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_id_order_set</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">islands</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">silent_island_warning</span><span class="p">:</span>
+            <span class="n">ni</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">islands</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ni</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;There is one disconnected observation&quot;</span>
+                              <span class="s2">&quot; (no neighbors).</span><span class="se">\n</span><span class="s2">Island id: </span><span class="si">{}</span><span class="s2">&quot;</span>
+                              <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">islands</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span> 
+                              <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;There are </span><span class="si">%d</span><span class="s2"> disconnected observations&quot;</span> <span class="o">%</span> <span class="n">ni</span> <span class="o">+</span> <span class="s1">&#39; </span><span class="se">\n</span><span class="s1"> &#39;</span>
+                              <span class="s2">&quot; Island ids: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">island</span><span class="p">)</span> <span class="k">for</span> <span class="n">island</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">islands</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_components</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">islands</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">silent_connected_components</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The weights matrix is not fully connected. There are </span><span class="si">%d</span><span class="s2"> components&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Reset properties.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">popen</span><span class="p">(</span><span class="n">dataPath</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">dataFormat</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">w</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_shapefile</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># we could also just &quot;do the right thing,&quot; but I think it&#39;d make sense to</span>
+        <span class="c1"># try and get people to use `Rook.from_shapefile(shapefile)` rather than</span>
+        <span class="c1"># W.from_shapefile(shapefile, type=`rook`), otherwise we&#39;d need to build</span>
+        <span class="c1"># a type dispatch table. Generic W should be for stuff we don&#39;t know</span>
+        <span class="c1"># anything about. </span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Use type-specific constructors, like Rook,&#39;</span>
+                                  <span class="s1">&#39; Queen, DistanceBand, or Kernel&#39;</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_WSP</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">WSP</span><span class="p">,</span> <span class="n">silence_warnings</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">WSP2W</span><span class="p">(</span><span class="n">WSP</span><span class="p">,</span> <span class="n">silence_warnings</span><span class="o">=</span><span class="n">silence_warnings</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_adjlist</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">adjlist</span><span class="p">,</span> <span class="n">focal_col</span><span class="o">=</span><span class="s1">&#39;focal&#39;</span><span class="p">,</span> 
+                     <span class="n">neighbor_col</span><span class="o">=</span><span class="s1">&#39;neighbor&#39;</span><span class="p">,</span> <span class="n">weight_col</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return an adjacency list representation of a weights object. </span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        adjlist         :   pandas DataFrame</span>
+<span class="sd">                            adjacency list with a minimum of two columns</span>
+<span class="sd">        focal_col       :   string</span>
+<span class="sd">                            name of the column with the &quot;source&quot; node ids</span>
+<span class="sd">        neighbor_col    :   string</span>
+<span class="sd">                            name of the column with the &quot;destination&quot; node ids</span>
+<span class="sd">        weight_col      :   string</span>
+<span class="sd">                            name of the column with the weight information. If not provided and</span>
+<span class="sd">                            the dataframe has no column named &quot;weight&quot; then all weights</span>
+<span class="sd">                            are assumed to be 1.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">weight_col</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+           <span class="n">weight_col</span> <span class="o">=</span> <span class="s1">&#39;weight&#39;</span> 
+        <span class="n">try_weightcol</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">adjlist</span><span class="p">,</span> <span class="n">weight_col</span><span class="p">)</span> 
+        <span class="k">if</span> <span class="n">try_weightcol</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">adjlist</span> <span class="o">=</span> <span class="n">adjlist</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">adjlist</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">all_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">adjlist</span><span class="p">[</span><span class="n">focal_col</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span> 
+        <span class="n">all_ids</span> <span class="o">|=</span> <span class="nb">set</span><span class="p">(</span><span class="n">adjlist</span><span class="p">[</span><span class="n">neighbor_col</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+        <span class="n">grouper</span> <span class="o">=</span> <span class="n">adjlist</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">focal_col</span><span class="p">)</span>
+        <span class="n">neighbors</span> <span class="o">=</span> <span class="n">grouper</span><span class="p">[</span><span class="n">neighbor_col</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">grouper</span><span class="p">[</span><span class="n">weight_col</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">neighbors</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">k</span><span class="p">:[]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> 
+                          <span class="n">all_ids</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">neighbors</span><span class="o">.</span><span class="n">keys</span><span class="p">()))})</span>
+        <span class="n">weights</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">k</span><span class="p">:[]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> 
+                        <span class="n">all_ids</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">weights</span><span class="o">.</span><span class="n">keys</span><span class="p">()))})</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">neighbors</span><span class="o">=</span><span class="n">neighbors</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">to_adjlist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remove_symmetric</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
+                   <span class="n">focal_col</span><span class="o">=</span><span class="s1">&#39;focal&#39;</span><span class="p">,</span> <span class="n">neighbor_col</span><span class="o">=</span><span class="s1">&#39;neighbor&#39;</span><span class="p">,</span> <span class="n">weight_col</span><span class="o">=</span><span class="s1">&#39;weight&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute an adjacency list representation of a weights object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        remove_symmetric    :   bool</span>
+<span class="sd">                            whether or not to remove ``symmetric&#39;&#39; entries. If the W is symmetric,</span>
+<span class="sd">                            a standard ``directed&#39;&#39; adjacency list will contain both the forward and</span>
+<span class="sd">                            backward links by default because adjacency lists are a directed</span>
+<span class="sd">                            graph representation. If this is True, a W created from this adjacency list</span>
+<span class="sd">                            **MAY NOT BE THE SAME** as the original W. If you would like to </span>
+<span class="sd">                            consider (1,2) and (2,1) as distinct links, leave this as &quot;False&quot;. </span>
+<span class="sd">        focal_col       :   string</span>
+<span class="sd">                            name of the column in which to store &quot;source&quot; node ids.</span>
+<span class="sd">        neighbor_col    :   string</span>
+<span class="sd">                            name of the column in which to store &quot;destination&quot; node ids.</span>
+<span class="sd">        weight_col      :   string</span>
+<span class="sd">                            name of the column in which to store weight information. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s1">&#39;pandas must be installed to use this method&#39;</span><span class="p">)</span>
+        <span class="n">adjlist</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(((</span><span class="n">idx</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span><span class="n">w</span><span class="p">)</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">neighb</span> <span class="ow">in</span> <span class="bp">self</span> 
+                                           <span class="k">for</span> <span class="n">n</span><span class="p">,</span><span class="n">w</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">neighb</span><span class="o">.</span><span class="n">items</span><span class="p">())),</span>
+                               <span class="n">columns</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;focal&#39;</span><span class="p">,</span> <span class="s1">&#39;neighbor&#39;</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">adjtools</span><span class="o">.</span><span class="n">filter_adjlist</span><span class="p">(</span><span class="n">adjlist</span><span class="p">)</span> <span class="k">if</span> <span class="n">remove_symmetric</span> <span class="k">else</span> <span class="n">adjlist</span>
+
+    <span class="k">def</span> <span class="nf">to_networkx</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert a weights object to a networkx graph</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        a networkx graph representation of the W object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;NetworkX is required to use this function.&quot;</span><span class="p">)</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">asymmetries</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span> <span class="k">else</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">nx</span><span class="o">.</span><span class="n">from_scipy_sparse_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sparse</span><span class="p">,</span> <span class="n">create_using</span><span class="o">=</span><span class="n">G</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_networkx</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="n">weight_col</span><span class="o">=</span><span class="s1">&#39;weight&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert a networkx graph to a PySAL W object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        graph       :   networkx graph</span>
+<span class="sd">                        the graph to convert to a W</span>
+<span class="sd">        weight_col  :   string</span>
+<span class="sd">                        if the graph is labeled, this should be the</span>
+<span class="sd">                        name of the field to use as the weight for</span>
+<span class="sd">                        the W.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        a pysal.weights.W object containing the same graph</span>
+<span class="sd">        as the networkx graph</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;NetworkX is required to use this function.&quot;</span><span class="p">)</span>
+        <span class="n">sparse_matrix</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">to_scipy_sparse_matrix</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">WSP</span><span class="p">(</span><span class="n">sparse_matrix</span><span class="p">)</span><span class="o">.</span><span class="n">to_W</span><span class="p">()</span>
+        <span class="n">neighbors</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">focal</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">():</span>
+            <span class="n">links</span> <span class="o">=</span> <span class="n">graph</span><span class="p">[</span><span class="n">focal</span><span class="p">]</span>
+            <span class="n">neighbors</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">focal</span><span class="p">:[]})</span>
+            <span class="n">weights</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">focal</span><span class="p">:[]})</span>
+            <span class="k">for</span> <span class="n">neighbor</span><span class="p">,</span> <span class="n">weight</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">links</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+                   <span class="n">neighbors</span><span class="p">[</span><span class="n">focal</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neighbor</span><span class="p">)</span>
+                   <span class="k">if</span> <span class="n">weight</span> <span class="o">==</span> <span class="p">{}:</span>
+                       <span class="n">weights</span><span class="p">[</span><span class="n">focal</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                   <span class="k">else</span><span class="p">:</span>
+                       <span class="n">weights</span><span class="p">[</span><span class="n">focal</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">weight</span><span class="p">[</span><span class="n">weight_col</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">neighbors</span><span class="o">=</span><span class="n">neighbors</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sparse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sparse matrix object.</span>
+
+<span class="sd">        For any matrix manipulations required for w, w.sparse should be</span>
+<span class="sd">        used. This is based on scipy.sparse.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;sparse&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sparse</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_sparse</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;sparse&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sparse</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sparse</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">n_components</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Store whether the adjacency matrix is fully connected.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;n_components&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_n_components</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_component_labels</span> <span class="o">=</span> <span class="n">connected_components</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sparse</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;n_components&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_components</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;component_labels&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_component_labels</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_components</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">component_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Store the graph component in which each observation falls.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;component_labels&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_n_components</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_component_labels</span> <span class="o">=</span> <span class="n">connected_components</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sparse</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;n_components&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_components</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;component_labels&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_component_labels</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_component_labels</span>
+
+    <span class="k">def</span> <span class="nf">_build_sparse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Construct the sparse attribute.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">id2i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id2i</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">neigh_list</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neighbor_offsets</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="n">card</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cardinalities</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">id2i</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">*</span> <span class="n">card</span><span class="p">)</span>
+            <span class="n">col</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">neigh_list</span><span class="p">)</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">((</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">)),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">s</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">id2i</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Dictionary where the key is an ID and the value is that ID&#39;s</span>
+<span class="sd">        index in W.id_order.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;id2i&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_id2i</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">id_i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id_order</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_id2i</span><span class="p">[</span><span class="n">id_i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_id2i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id2i</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;id2i&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id2i</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id2i</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">n</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Number of units.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;n&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neighbors</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">s0</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;s0 is defined as</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">               s0=\sum_i \sum_j w_{i,j}</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;s0&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_s0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;s0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s0</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">s1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;s1 is defined as</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">               s1=1/2 \sum_i \sum_j (w_{i,j} + w_{j,i})^2</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;s1&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse</span>
+            <span class="n">t2</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>  <span class="c1"># element-wise square</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_s1</span> <span class="o">=</span> <span class="n">t2</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="mf">2.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;s1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s1</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s1</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">s2array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Individual elements comprising s2.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        s2</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;s2array&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_s2array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">s</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">())</span> <span class="o">**</span> <span class="mi">2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;s2array&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s2array</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s2array</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">s2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;s2 is defined as</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">                s2=\sum_j (\sum_i w_{i,j} + \sum_i w_{j,i})^2</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;s2&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_s2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s2array</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;s2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s2</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s2</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">trcW2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Trace of :math:`WW`.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        diagW2</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;trcW2&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_trcW2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diagW2</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;trcw2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trcW2</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trcW2</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">diagW2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Diagonal of :math:`WW`.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        trcW2</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;diagw2&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_diagW2</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sparse</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse</span><span class="p">)</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;diagW2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diagW2</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diagW2</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">diagWtW</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Diagonal of :math:`W^{&#39;}W`.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        trcWtW</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;diagWtW&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_diagWtW</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse</span><span class="p">)</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;diagWtW&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diagWtW</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diagWtW</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">trcWtW</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Trace of :math:`W^{&#39;}W`.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        diagWtW</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;trcWtW&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_trcWtW</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diagWtW</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;trcWtW&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trcWtW</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trcWtW</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">diagWtW_WW</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Diagonal of :math:`W^{&#39;}W + WW`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;diagWtW_WW&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="n">wt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_diagWtW_WW</span> <span class="o">=</span> <span class="p">(</span><span class="n">wt</span> <span class="o">*</span> <span class="n">w</span> <span class="o">+</span> <span class="n">w</span> <span class="o">*</span> <span class="n">w</span><span class="p">)</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;diagWtW_WW&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diagWtW_WW</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diagWtW_WW</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">trcWtW_WW</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Trace of :math:`W^{&#39;}W + WW`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;trcWtW_WW&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_trcWtW_WW</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diagWtW_WW</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;trcWtW_WW&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trcWtW_WW</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trcWtW_WW</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">pct_nonzero</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Percentage of nonzero weights.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;pct_nonzero&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pct_nonzero</span> <span class="o">=</span> <span class="mf">100.</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">nnz</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;pct_nonzero&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pct_nonzero</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pct_nonzero</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">cardinalities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Number of neighbors for each observation.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;cardinalities&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id_order</span><span class="p">:</span>
+                <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neighbors</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cardinalities</span> <span class="o">=</span> <span class="n">c</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;cardinalities&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cardinalities</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cardinalities</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">max_neighbors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Largest number of neighbors.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;max_neighbors&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_max_neighbors</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cardinalities</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;max_neighbors&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_neighbors</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_neighbors</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">mean_neighbors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Average number of neighbors.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;mean_neighbors&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mean_neighbors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cardinalities</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;mean_neighbors&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mean_neighbors</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mean_neighbors</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">min_neighbors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Minimum number of neighbors.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;min_neighbors&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_min_neighbors</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cardinalities</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;min_neighbors&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_neighbors</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_neighbors</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nonzero</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Number of nonzero weights.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;nonzero&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_nonzero</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">nnz</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;nonzero&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nonzero</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nonzero</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Standard deviation of number of neighbors.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;sd&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cardinalities</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;sd&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sd</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sd</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">asymmetries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List of id pairs with asymmetric weights.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;asymmetries&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_asymmetries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">asymmetry</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;asymmetries&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_asymmetries</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_asymmetries</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">islands</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List of ids without any neighbors.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;islands&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_islands</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span>
+                             <span class="n">c</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cardinalities</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;islands&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_islands</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_islands</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Cardinality histogram as a dictionary where key is the id and</span>
+<span class="sd">        value is the number of neighbors for that unit.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;histogram&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="n">ct</span><span class="p">,</span> <span class="nb">bin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cardinalities</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
+                                   <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_neighbors</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_neighbors</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_histogram</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="nb">bin</span><span class="p">,</span> <span class="n">ct</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;histogram&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_histogram</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_histogram</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Allow a dictionary like interaction with the weights class.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from pysal.lib.weights import lat2W</span>
+<span class="sd">        &gt;&gt;&gt; w = lat2W()</span>
+
+<span class="sd">        &gt;&gt;&gt; w[0] == dict({1: 1.0, 5: 1.0})</span>
+<span class="sd">        True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neighbors</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">key</span><span class="p">])))</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Support iteration over weights.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from pysal.lib.weights import lat2W</span>
+<span class="sd">        &gt;&gt;&gt; w=lat2W(3,3)</span>
+<span class="sd">        &gt;&gt;&gt; for i,wi in enumerate(w):</span>
+<span class="sd">        ...     print(i,wi[0])</span>
+<span class="sd">        ...</span>
+<span class="sd">        0 0</span>
+<span class="sd">        1 1</span>
+<span class="sd">        2 2</span>
+<span class="sd">        3 3</span>
+<span class="sd">        4 4</span>
+<span class="sd">        5 5</span>
+<span class="sd">        6 6</span>
+<span class="sd">        7 7</span>
+<span class="sd">        8 8</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id_order</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">i</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neighbors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">])))</span>
+
+    <span class="k">def</span> <span class="nf">remap_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_ids</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        In place modification throughout `W` of id values from `w.id_order` to</span>
+<span class="sd">        `new_ids` in all</span>
+
+<span class="sd">        ...</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        new_ids     :   list</span>
+<span class="sd">                        /ndarray</span>
+<span class="sd">                        Aligned list of new ids to be inserted. Note that first</span>
+<span class="sd">                        element of new_ids will replace first element of</span>
+<span class="sd">                        w.id_order, second element of new_ids replaces second</span>
+<span class="sd">                        element of w.id_order and so on.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+
+<span class="sd">        &gt;&gt;&gt; from pysal.lib.weights import lat2W</span>
+<span class="sd">        &gt;&gt;&gt; w = lat2W(3, 3)</span>
+<span class="sd">        &gt;&gt;&gt; w.id_order</span>
+<span class="sd">        [0, 1, 2, 3, 4, 5, 6, 7, 8]</span>
+<span class="sd">        &gt;&gt;&gt; w.neighbors[0]</span>
+<span class="sd">        [3, 1]</span>
+<span class="sd">        &gt;&gt;&gt; new_ids = [&#39;id%i&#39;%id for id in w.id_order]</span>
+<span class="sd">        &gt;&gt;&gt; _ = w.remap_ids(new_ids)</span>
+<span class="sd">        &gt;&gt;&gt; w.id_order</span>
+<span class="sd">        [&#39;id0&#39;, &#39;id1&#39;, &#39;id2&#39;, &#39;id3&#39;, &#39;id4&#39;, &#39;id5&#39;, &#39;id6&#39;, &#39;id7&#39;, &#39;id8&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; w.neighbors[&#39;id0&#39;]</span>
+<span class="sd">        [&#39;id3&#39;, &#39;id1&#39;]</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">old_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id_order</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">old_ids</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_ids</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;W.remap_ids: length of `old_ids` does not match </span><span class="se">\</span>
+<span class="s2">            that of new_ids&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">new_ids</span><span class="p">))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_ids</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;W.remap_ids: list `new_ids` contains duplicates&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_neighbors</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">new_weights</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">old_transformations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">[</span><span class="s1">&#39;O&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">new_transformations</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">o</span><span class="p">,</span><span class="n">n</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">old_ids</span><span class="p">,</span> <span class="n">new_ids</span><span class="p">):</span>
+                <span class="n">o_neighbors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neighbors</span><span class="p">[</span><span class="n">o</span><span class="p">]</span>
+                <span class="n">o_weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">o</span><span class="p">]</span>
+                <span class="n">n_neighbors</span> <span class="o">=</span> <span class="p">[</span> <span class="n">new_ids</span><span class="p">[</span><span class="n">old_ids</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">j</span><span class="p">)]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">o_neighbors</span><span class="p">]</span>
+                <span class="n">new_neighbors</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_neighbors</span>
+                <span class="n">new_weights</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">o_weights</span><span class="p">[:]</span>
+                <span class="n">new_transformations</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">old_transformations</span><span class="p">[</span><span class="n">o</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neighbors</span> <span class="o">=</span> <span class="n">new_neighbors</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">new_weights</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">[</span><span class="s2">&quot;O&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_transformations</span>
+
+            <span class="n">id_order</span> <span class="o">=</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id_order</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">old_ids</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">id_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">id_order</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">id_order</span><span class="p">[</span><span class="n">id_</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__set_id_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ordered_ids</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the iteration order in w.</span>
+
+<span class="sd">        W can be iterated over. On construction the iteration order is set to</span>
+<span class="sd">        the lexicographic order of the keys in the w.weights dictionary. If a specific order</span>
+<span class="sd">        is required it can be set with this method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        ordered_ids : sequence</span>
+<span class="sd">                      identifiers for observations in specified order</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+
+<span class="sd">        ordered_ids is checked against the ids implied by the keys in</span>
+<span class="sd">        w.weights. If they are not equivalent sets an exception is raised and</span>
+<span class="sd">        the iteration order is not changed.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+
+<span class="sd">        &gt;&gt;&gt; from pysal.lib.weights import lat2W</span>
+<span class="sd">        &gt;&gt;&gt; w=lat2W(3,3)</span>
+<span class="sd">        &gt;&gt;&gt; for i,wi in enumerate(w):</span>
+<span class="sd">        ...     print(i, wi[0])</span>
+<span class="sd">        ...</span>
+<span class="sd">        0 0</span>
+<span class="sd">        1 1</span>
+<span class="sd">        2 2</span>
+<span class="sd">        3 3</span>
+<span class="sd">        4 4</span>
+<span class="sd">        5 5</span>
+<span class="sd">        6 6</span>
+<span class="sd">        7 7</span>
+<span class="sd">        8 8</span>
+<span class="sd">        &gt;&gt;&gt; w.id_order</span>
+<span class="sd">        [0, 1, 2, 3, 4, 5, 6, 7, 8]</span>
+<span class="sd">        &gt;&gt;&gt; w.id_order=range(8,-1,-1)</span>
+<span class="sd">        &gt;&gt;&gt; list(w.id_order)</span>
+<span class="sd">        [8, 7, 6, 5, 4, 3, 2, 1, 0]</span>
+<span class="sd">        &gt;&gt;&gt; for i,w_i in enumerate(w):</span>
+<span class="sd">        ...     print(i,w_i[0])</span>
+<span class="sd">        ...</span>
+<span class="sd">        0 8</span>
+<span class="sd">        1 7</span>
+<span class="sd">        2 6</span>
+<span class="sd">        3 5</span>
+<span class="sd">        4 4</span>
+<span class="sd">        5 3</span>
+<span class="sd">        6 2</span>
+<span class="sd">        7 1</span>
+<span class="sd">        8 0</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id_order</span><span class="p">)</span> <span class="o">==</span> <span class="nb">set</span><span class="p">(</span><span class="n">ordered_ids</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_id_order</span> <span class="o">=</span> <span class="n">ordered_ids</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_id_order_set</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;ordered_ids do not align with W ids&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__get_id_order</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the ids for the observations in the order in which they</span>
+<span class="sd">        would be encountered if iterating over the weights.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id_order</span>
+
+    <span class="n">id_order</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">__get_id_order</span><span class="p">,</span> <span class="n">__set_id_order</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">id_order_set</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns True if user has set id_order, False if not.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from pysal.lib.weights import lat2W</span>
+<span class="sd">        &gt;&gt;&gt; w=lat2W()</span>
+<span class="sd">        &gt;&gt;&gt; w.id_order_set</span>
+<span class="sd">        True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id_order_set</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">neighbor_offsets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given the current id_order, neighbor_offsets[id] is the offsets of the</span>
+<span class="sd">        id&#39;s neighbors in id_order.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list</span>
+<span class="sd">                offsets of the id&#39;s neighbors in id_order</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from pysal.lib.weights import W</span>
+<span class="sd">        &gt;&gt;&gt; neighbors={&#39;c&#39;: [&#39;b&#39;], &#39;b&#39;: [&#39;c&#39;, &#39;a&#39;], &#39;a&#39;: [&#39;b&#39;]}</span>
+<span class="sd">        &gt;&gt;&gt; weights ={&#39;c&#39;: [1.0], &#39;b&#39;: [1.0, 1.0], &#39;a&#39;: [1.0]}</span>
+<span class="sd">        &gt;&gt;&gt; w=W(neighbors,weights)</span>
+<span class="sd">        &gt;&gt;&gt; w.id_order = [&#39;a&#39;,&#39;b&#39;,&#39;c&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; w.neighbor_offsets[&#39;b&#39;]</span>
+<span class="sd">        [2, 0]</span>
+<span class="sd">        &gt;&gt;&gt; w.id_order = [&#39;b&#39;,&#39;a&#39;,&#39;c&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; w.neighbor_offsets[&#39;b&#39;]</span>
+<span class="sd">        [2, 1]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="s2">&quot;neighbors_0&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__neighbors_0</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">id2i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id2i</span>
+            <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">neigh_list</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neighbors</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__neighbors_0</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">id2i</span><span class="p">[</span><span class="n">neigh</span><span class="p">]</span> <span class="k">for</span> <span class="n">neigh</span> <span class="ow">in</span> <span class="n">neigh_list</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;neighbors_0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__neighbors_0</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__neighbors_0</span>
+
+    <span class="k">def</span> <span class="nf">get_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Getter for transform property.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        transformation : string (or none)</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from pysal.lib.weights import lat2W</span>
+<span class="sd">        &gt;&gt;&gt; w=lat2W()</span>
+<span class="sd">        &gt;&gt;&gt; w.weights[0]</span>
+<span class="sd">        [1.0, 1.0]</span>
+<span class="sd">        &gt;&gt;&gt; w.transform</span>
+<span class="sd">        &#39;O&#39;</span>
+<span class="sd">        &gt;&gt;&gt; w.transform=&#39;r&#39;</span>
+<span class="sd">        &gt;&gt;&gt; w.weights[0]</span>
+<span class="sd">        [0.5, 0.5]</span>
+<span class="sd">        &gt;&gt;&gt; w.transform=&#39;b&#39;</span>
+<span class="sd">        &gt;&gt;&gt; w.weights[0]</span>
+<span class="sd">        [1.0, 1.0]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform</span>
+
+    <span class="k">def</span> <span class="nf">set_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;B&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Transformations of weights.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+
+<span class="sd">        Transformations are applied only to the value of the weights at</span>
+<span class="sd">        instantiation. Chaining of transformations cannot be done on a W</span>
+<span class="sd">        instance.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        transform   :   string</span>
+<span class="sd">                        not case sensitive)</span>
+
+<span class="sd">        .. table::</span>
+
+<span class="sd">           :widths: auto</span>
+
+<span class="sd">           ================   ======================================================</span>
+<span class="sd">           transform string   value</span>
+<span class="sd">           ================   ======================================================</span>
+<span class="sd">           B                  Binary</span>
+<span class="sd">           R                  Row-standardization (global sum=n)</span>
+<span class="sd">           D                  Double-standardization (global sum=1)</span>
+<span class="sd">           V                  Variance stabilizing</span>
+<span class="sd">           O                  Restore original transformation (from instantiation)</span>
+<span class="sd">           ================   ======================================================</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from pysal.lib.weights import lat2W</span>
+<span class="sd">        &gt;&gt;&gt; w=lat2W()</span>
+<span class="sd">        &gt;&gt;&gt; w.weights[0]</span>
+<span class="sd">        [1.0, 1.0]</span>
+<span class="sd">        &gt;&gt;&gt; w.transform</span>
+<span class="sd">        &#39;O&#39;</span>
+<span class="sd">        &gt;&gt;&gt; w.transform=&#39;r&#39;</span>
+<span class="sd">        &gt;&gt;&gt; w.weights[0]</span>
+<span class="sd">        [0.5, 0.5]</span>
+<span class="sd">        &gt;&gt;&gt; w.transform=&#39;b&#39;</span>
+<span class="sd">        &gt;&gt;&gt; w.weights[0]</span>
+<span class="sd">        [1.0, 1.0]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_transform</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">[</span><span class="n">value</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;R&quot;</span><span class="p">:</span>
+                <span class="c1"># row standardized weights</span>
+                <span class="n">weights</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">[</span><span class="s1">&#39;O&#39;</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">:</span>
+                    <span class="n">wijs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">row_sum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">wijs</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.0</span>
+                    <span class="k">if</span> <span class="n">row_sum</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">silent_island_warning</span><span class="p">:</span>
+                            <span class="nb">print</span><span class="p">((</span><span class="s1">&#39;WARNING: &#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="s1">&#39; is an island (no neighbors)&#39;</span><span class="p">))</span>
+                    <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">wij</span> <span class="o">/</span> <span class="n">row_sum</span> <span class="k">for</span> <span class="n">wij</span> <span class="ow">in</span> <span class="n">wijs</span><span class="p">]</span>
+                <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="n">weights</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;D&quot;</span><span class="p">:</span>
+                <span class="c1"># doubly-standardized weights</span>
+                <span class="c1"># update current chars before doing global sum</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
+                <span class="n">s0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s0</span>
+                <span class="n">ws</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">s0</span>
+                <span class="n">weights</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">[</span><span class="s1">&#39;O&#39;</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">:</span>
+                    <span class="n">wijs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">wij</span> <span class="o">*</span> <span class="n">ws</span> <span class="k">for</span> <span class="n">wij</span> <span class="ow">in</span> <span class="n">wijs</span><span class="p">]</span>
+                <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="n">weights</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;B&quot;</span><span class="p">:</span>
+                <span class="c1"># binary transformation</span>
+                <span class="n">weights</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">[</span><span class="s1">&#39;O&#39;</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">:</span>
+                    <span class="n">wijs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span> <span class="k">for</span> <span class="n">wij</span> <span class="ow">in</span> <span class="n">wijs</span><span class="p">]</span>
+                <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="n">weights</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;V&quot;</span><span class="p">:</span>
+                <span class="c1"># variance stabilizing</span>
+                <span class="n">weights</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">q</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cardinalities</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">Q</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">[</span><span class="s1">&#39;O&#39;</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">:</span>
+                    <span class="n">wijs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">sum</span><span class="p">([</span><span class="n">wij</span> <span class="o">*</span> <span class="n">wij</span> <span class="k">for</span> <span class="n">wij</span> <span class="ow">in</span> <span class="n">wijs</span><span class="p">]))</span>
+                    <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">wij</span> <span class="o">/</span> <span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">wij</span> <span class="ow">in</span> <span class="n">wijs</span><span class="p">]</span>
+                    <span class="n">Q</span> <span class="o">+=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">si</span> <span class="k">for</span> <span class="n">si</span> <span class="ow">in</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+                <span class="n">nQ</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">/</span> <span class="n">Q</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">:</span>
+                    <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span> <span class="o">*</span> <span class="n">nQ</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+                <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="n">weights</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;O&quot;</span><span class="p">:</span>
+                <span class="c1"># put weights back to original transformation</span>
+                <span class="n">weights</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">original</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">[</span><span class="n">value</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">original</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;unsupported weights transformation&#39;</span><span class="p">)</span>
+
+    <span class="n">transform</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_transform</span><span class="p">,</span> <span class="n">set_transform</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">asymmetry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">intrinsic</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Asymmetry check.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        intrinsic   :   boolean</span>
+<span class="sd">                        default=True</span>
+
+<span class="sd">                intrinsic symmetry:</span>
+<span class="sd">                      :math:`w_{i,j} == w_{j,i}`</span>
+
+<span class="sd">                if intrisic is False:</span>
+<span class="sd">                    symmetry is defined as :math:`i \in N_j \ AND \ j \in N_i` where</span>
+<span class="sd">                    :math:`N_j` is the set of neighbors for j.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        asymmetries : list</span>
+<span class="sd">                      empty if no asymmetries are found</span>
+<span class="sd">                      if asymmetries, then a list of (i,j) tuples is returned</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+
+<span class="sd">        &gt;&gt;&gt; from pysal.lib.weights import lat2W</span>
+<span class="sd">        &gt;&gt;&gt; w=lat2W(3,3)</span>
+<span class="sd">        &gt;&gt;&gt; w.asymmetry()</span>
+<span class="sd">        []</span>
+<span class="sd">        &gt;&gt;&gt; w.transform=&#39;r&#39;</span>
+<span class="sd">        &gt;&gt;&gt; w.asymmetry()</span>
+<span class="sd">        [(0, 1), (0, 3), (1, 0), (1, 2), (1, 4), (2, 1), (2, 5), (3, 0), (3, 4), (3, 6), (4, 1), (4, 3), (4, 5), (4, 7), (5, 2), (5, 4), (5, 8), (6, 3), (6, 7), (7, 4), (7, 6), (7, 8), (8, 5), (8, 7)]</span>
+<span class="sd">        &gt;&gt;&gt; result = w.asymmetry(intrinsic=False)</span>
+<span class="sd">        &gt;&gt;&gt; result</span>
+<span class="sd">        []</span>
+<span class="sd">        &gt;&gt;&gt; neighbors={0:[1,2,3], 1:[1,2,3], 2:[0,1], 3:[0,1]}</span>
+<span class="sd">        &gt;&gt;&gt; weights={0:[1,1,1], 1:[1,1,1], 2:[1,1], 3:[1,1]}</span>
+<span class="sd">        &gt;&gt;&gt; w=W(neighbors,weights)</span>
+<span class="sd">        &gt;&gt;&gt; w.asymmetry()</span>
+<span class="sd">        [(0, 1), (1, 0)]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">intrinsic</span><span class="p">:</span>
+            <span class="n">wd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="s1">&#39;b&#39;</span>
+            <span class="n">wd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">transform</span>
+
+        <span class="n">ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">wd</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ijs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">ids</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ids</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="n">ijs</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">ijs</span>
+
+    <span class="k">def</span> <span class="nf">symmetrize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct a symmetric KNN weight.</span>
+
+<span class="sd">        This ensures that the neighbors of each focal observation</span>
+<span class="sd">        consider the focal observation itself as a neighbor. </span>
+
+<span class="sd">        This returns a generic W object, since the object is no</span>
+<span class="sd">        longer guaranteed to have k neighbors for each observation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">inplace</span><span class="p">:</span>
+            <span class="n">neighbors</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neighbors</span><span class="p">)</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span>
+            <span class="n">out_W</span> <span class="o">=</span> <span class="n">W</span><span class="p">(</span><span class="n">neighbors</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+            <span class="n">out_W</span><span class="o">.</span><span class="n">symmetrize</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">out_W</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">focal</span><span class="p">,</span> <span class="n">fneighbs</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neighbors</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+                <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">neighbor</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fneighbs</span><span class="p">):</span>
+                    <span class="n">neighb_neighbors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neighbors</span><span class="p">[</span><span class="n">neighbor</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">focal</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">neighb_neighbors</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">neighbors</span><span class="p">[</span><span class="n">neighbor</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">focal</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">neighbor</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">focal</span><span class="p">][</span><span class="n">j</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+            <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">full</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a full numpy array.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        self        : W</span>
+<span class="sd">                   spatial weights object</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        (fullw, keys) : tuple</span>
+<span class="sd">                        first element being the full numpy array and second element</span>
+<span class="sd">                        keys being the ids associated with each row in the array.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from pysal.lib.weights import W, full</span>
+<span class="sd">        &gt;&gt;&gt; neighbors = {&#39;first&#39;:[&#39;second&#39;],&#39;second&#39;:[&#39;first&#39;,&#39;third&#39;],&#39;third&#39;:[&#39;second&#39;]}</span>
+<span class="sd">        &gt;&gt;&gt; weights = {&#39;first&#39;:[1],&#39;second&#39;:[1,1],&#39;third&#39;:[1]}</span>
+<span class="sd">        &gt;&gt;&gt; w = W(neighbors, weights)</span>
+<span class="sd">        &gt;&gt;&gt; wf, ids = full(w)</span>
+<span class="sd">        &gt;&gt;&gt; wf</span>
+<span class="sd">        array([[0., 1., 0.],</span>
+<span class="sd">               [1., 0., 1.],</span>
+<span class="sd">               [0., 1., 0.]])</span>
+<span class="sd">        &gt;&gt;&gt; ids</span>
+<span class="sd">        [&#39;first&#39;, &#39;second&#39;, &#39;third&#39;]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">wfull</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neighbors</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_order</span><span class="p">:</span>
+            <span class="n">keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_order</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">keys</span><span class="p">):</span>
+            <span class="n">n_i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neighbors</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="n">w_i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">wij</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">n_i</span><span class="p">,</span> <span class="n">w_i</span><span class="p">):</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="n">keys</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+                <span class="n">wfull</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">wij</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">wfull</span><span class="p">,</span> <span class="n">keys</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">to_WSP</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Generate a WSP object.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        implicit : pysal.lib.weights.WSP</span>
+<span class="sd">                   Thin W class</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from pysal.lib.weights import W, WSP</span>
+<span class="sd">        &gt;&gt;&gt; neighbors={&#39;first&#39;:[&#39;second&#39;],&#39;second&#39;:[&#39;first&#39;,&#39;third&#39;],&#39;third&#39;:[&#39;second&#39;]}</span>
+<span class="sd">        &gt;&gt;&gt; weights={&#39;first&#39;:[1],&#39;second&#39;:[1,1],&#39;third&#39;:[1]}</span>
+<span class="sd">        &gt;&gt;&gt; w=W(neighbors,weights)</span>
+<span class="sd">        &gt;&gt;&gt; wsp=w.to_WSP()</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(wsp, WSP)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; wsp.n</span>
+<span class="sd">        3</span>
+<span class="sd">        &gt;&gt;&gt; wsp.s0</span>
+<span class="sd">        4</span>
+
+<span class="sd">        See also</span>
+<span class="sd">        --------</span>
+<span class="sd">        WSP</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">WSP</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sparse</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id_order</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">set_shapefile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shapefile</span><span class="p">,</span> <span class="n">idVariable</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">full</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adding meta data for writing headers of gal and gwt files.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        shapefile :     string</span>
+<span class="sd">                        shapefile name used to construct weights</span>
+
+<span class="sd">        idVariable :    string</span>
+<span class="sd">                        name of attribute in shapefile to associate with ids in the weights</span>
+
+<span class="sd">        full :          boolean</span>
+<span class="sd">                        True - write out entire path for shapefile, False</span>
+<span class="sd">                        (default) only base of shapefile without extension</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">full</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_shpName</span> <span class="o">=</span> <span class="n">shapefile</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_shpName</span> <span class="o">=</span> <span class="n">BASENAME</span><span class="p">(</span><span class="n">shapefile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_varName</span> <span class="o">=</span> <span class="n">idVariable</span>
+
+    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gdf</span><span class="p">,</span> <span class="n">indexed_on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span>
+             <span class="n">node_kws</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">edge_kws</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot spatial weights objects.</span>
+<span class="sd">        NOTE: Requires matplotlib, and implicitly requires geopandas </span>
+<span class="sd">        dataframe as input.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ---------</span>
+<span class="sd">        gdf         : geopandas geodataframe </span>
+<span class="sd">                      the original shapes whose topological relations are </span>
+<span class="sd">                      modelled in W. </span>
+<span class="sd">        indexed_on  : str </span>
+<span class="sd">                      column of gdf which the weights object uses as an index.</span>
+<span class="sd">                      (Default: None, so the geodataframe&#39;s index is used)</span>
+<span class="sd">        ax          : matplotlib axis</span>
+<span class="sd">                      axis on which to plot the weights. </span>
+<span class="sd">                      (Default: None, so plots on the current figure)</span>
+<span class="sd">        color       : string</span>
+<span class="sd">                      matplotlib color string, will color both nodes and edges</span>
+<span class="sd">                      the same by default. </span>
+<span class="sd">        node_kws    : keyword argument dictionary</span>
+<span class="sd">                      dictionary of keyword arguments to send to pyplot.scatter,</span>
+<span class="sd">                      which provide fine-grained control over the aesthetics</span>
+<span class="sd">                      of the nodes in the plot</span>
+<span class="sd">        edge_kws    : keyword argument dictionary</span>
+<span class="sd">                      dictionary of keyword arguments to send to pyplot.plot,</span>
+<span class="sd">                      which provide fine-grained control over the aesthetics</span>
+<span class="sd">                      of the edges in the plot</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        f,ax : matplotlib figure,axis on which the plot is made. </span>
+
+<span class="sd">        NOTE: if you&#39;d like to overlay the actual shapes from the </span>
+<span class="sd">              geodataframe, call gdf.plot(ax=ax) after this. To plot underneath,</span>
+<span class="sd">              adjust the z-order of the geopandas plot: gdf.plot(ax=ax,zorder=0)</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+
+<span class="sd">        &gt;&gt;&gt; from pysal.lib.weights import Queen</span>
+<span class="sd">        &gt;&gt;&gt; import pysal.lib as lp</span>
+<span class="sd">        &gt;&gt;&gt; import geopandas</span>
+<span class="sd">        &gt;&gt;&gt; gdf = geopandas.read_file(lp.examples.get_path(&quot;columbus.shp&quot;))</span>
+<span class="sd">        &gt;&gt;&gt; weights = Queen.from_dataframe(gdf)</span>
+<span class="sd">        &gt;&gt;&gt; tmp = weights.plot(gdf, color=&#39;firebrickred&#39;, node_kws=dict(marker=&#39;*&#39;, color=&#39;k&#39;))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;W.plot depends on matplotlib.pyplot, and this was&quot;</span>
+                              <span class="s2">&quot;not able to be imported. </span><span class="se">\n</span><span class="s2">Install matplotlib to&quot;</span>
+                              <span class="s2">&quot;plot spatial weights.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">node_kws</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;color&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">node_kws</span><span class="p">:</span>
+                <span class="n">node_kws</span><span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">color</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">node_kws</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">edge_kws</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;color&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">edge_kws</span><span class="p">:</span>
+                <span class="n">edge_kws</span><span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">color</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">edge_kws</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span> 
+
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">neighbors</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">idx</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">islands</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">indexed_on</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">neighbors</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="n">gdf</span><span class="p">[</span><span class="n">indexed_on</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">neighbors</span><span class="p">)]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="n">gdf</span><span class="p">[</span><span class="n">indexed_on</span><span class="p">]</span> <span class="o">==</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">centroids</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">neighbors</span><span class="p">]</span><span class="o">.</span><span class="n">centroid</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+            <span class="n">centroids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">centroids</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+            <span class="n">focal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">gdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">centroid</span><span class="o">.</span><span class="n">xy</span><span class="p">)</span>
+            <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">nidx</span><span class="p">,</span> <span class="n">neighbor</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">neighbors</span><span class="p">,</span> <span class="n">centroids</span><span class="p">):</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">idx</span><span class="p">,</span><span class="n">nidx</span><span class="p">)</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">focal</span><span class="p">,</span> <span class="n">neighbor</span><span class="p">)),</span> <span class="n">marker</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="o">**</span><span class="n">edge_kws</span><span class="p">)</span>
+                <span class="n">seen</span><span class="o">.</span><span class="n">update</span><span class="p">((</span><span class="n">idx</span><span class="p">,</span><span class="n">nidx</span><span class="p">))</span>
+                <span class="n">seen</span><span class="o">.</span><span class="n">update</span><span class="p">((</span><span class="n">nidx</span><span class="p">,</span><span class="n">idx</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">gdf</span><span class="o">.</span><span class="n">centroid</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="p">),</span>
+                   <span class="n">gdf</span><span class="o">.</span><span class="n">centroid</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="p">),</span>
+                   <span class="o">**</span><span class="n">node_kws</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">f</span><span class="p">,</span><span class="n">ax</span></div>
+
+
+<div class="viewcode-block" id="WSP"><a class="viewcode-back" href="../../../../generated/pysal.lib.weights.WSP.html#pysal.lib.weights.WSP">[docs]</a><span class="k">class</span> <span class="nc">WSP</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Thin W class for spreg.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    sparse   : sparse_matrix</span>
+<span class="sd">               NxN object from scipy.sparse</span>
+
+<span class="sd">    id_order : list</span>
+<span class="sd">               An ordered list of ids, assumed to match the ordering in</span>
+<span class="sd">               sparse.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    n           : int</span>
+<span class="sd">                  description</span>
+<span class="sd">    s0          : float</span>
+<span class="sd">                  description</span>
+<span class="sd">    trcWtW_WW   : float</span>
+<span class="sd">                  description</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    From GAL information</span>
+
+<span class="sd">    &gt;&gt;&gt; import scipy.sparse</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib.weights import WSP</span>
+<span class="sd">    &gt;&gt;&gt; rows = [0, 1, 1, 2, 2, 3]</span>
+<span class="sd">    &gt;&gt;&gt; cols = [1, 0, 2, 1, 3, 3]</span>
+<span class="sd">    &gt;&gt;&gt; weights =  [1, 0.75, 0.25, 0.9, 0.1, 1]</span>
+<span class="sd">    &gt;&gt;&gt; sparse = scipy.sparse.csr_matrix((weights, (rows, cols)), shape=(4,4))</span>
+<span class="sd">    &gt;&gt;&gt; w = WSP(sparse)</span>
+<span class="sd">    &gt;&gt;&gt; w.s0</span>
+<span class="sd">    4.0</span>
+<span class="sd">    &gt;&gt;&gt; w.trcWtW_WW</span>
+<span class="sd">    6.395</span>
+<span class="sd">    &gt;&gt;&gt; w.n</span>
+<span class="sd">    4</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="WSP.__init__"><a class="viewcode-back" href="../../../../generated/pysal.lib.weights.WSP.html#pysal.lib.weights.WSP.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sparse</span><span class="p">,</span> <span class="n">id_order</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">issparse</span><span class="p">(</span><span class="n">sparse</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;must pass a scipy sparse object&quot;</span><span class="p">)</span>
+        <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">if</span> <span class="n">rows</span> <span class="o">!=</span> <span class="n">cols</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Weights object must be square&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sparse</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">id_order</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">id_order</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Number of values in id_order must match shape of sparse&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_order</span> <span class="o">=</span> <span class="n">id_order</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span> <span class="o">=</span> <span class="p">{}</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">s0</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;s0 is defined as:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">               s0=\sum_i \sum_j w_{i,j}</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;s0&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_s0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;s0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s0</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">trcWtW_WW</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Trace of :math:`W^{&#39;}W + WW`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;trcWtW_WW&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_trcWtW_WW</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diagWtW_WW</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;trcWtW_WW&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trcWtW_WW</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trcWtW_WW</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">diagWtW_WW</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Diagonal of :math:`W^{&#39;}W + WW`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;diagWtW_WW&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="n">wt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_diagWtW_WW</span> <span class="o">=</span> <span class="p">(</span><span class="n">wt</span> <span class="o">*</span> <span class="n">w</span> <span class="o">+</span> <span class="n">w</span> <span class="o">*</span> <span class="n">w</span><span class="p">)</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;diagWtW_WW&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diagWtW_WW</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diagWtW_WW</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_W</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">W</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructs a WSP object from the W&#39;s sparse matrix</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        W       :   pysal.lib.weights.W</span>
+<span class="sd">                    a pysal weights object with a sparse form and ids</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        a WSP instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">W</span><span class="o">.</span><span class="n">sparse</span><span class="p">,</span> <span class="n">id_order</span><span class="o">=</span><span class="n">W</span><span class="o">.</span><span class="n">id_order</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">to_W</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">silence_warnings</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert a pysal WSP object (thin weights matrix) to a pysal W object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        self                     : WSP</span>
+<span class="sd">                                  PySAL sparse weights object</span>
+<span class="sd">        silence_warnings         : boolean</span>
+<span class="sd">                                  Switch to turn off (default on) print statements</span>
+<span class="sd">                                  for every observation with islands</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        w       : W</span>
+<span class="sd">                  PySAL weights object</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from pysal.lib.weights import lat2SW, WSP, WSP2W</span>
+
+<span class="sd">        Build a 10x10 scipy.sparse matrix for a rectangular 2x5 region of cells</span>
+<span class="sd">        (rook contiguity), then construct a pysal.lib sparse weights object (self).</span>
+
+<span class="sd">        &gt;&gt;&gt; sp = lat2SW(2, 5)</span>
+<span class="sd">        &gt;&gt;&gt; self = WSP(sp)</span>
+<span class="sd">        &gt;&gt;&gt; self.n</span>
+<span class="sd">        10</span>
+<span class="sd">        &gt;&gt;&gt; print(self.sparse[0].todense())</span>
+<span class="sd">        [[0 1 0 0 0 1 0 0 0 0]]</span>
+
+<span class="sd">        Convert this sparse weights object to a standard PySAL weights object.</span>
+
+<span class="sd">        &gt;&gt;&gt; w = WSP2W(self)</span>
+<span class="sd">        &gt;&gt;&gt; w.n</span>
+<span class="sd">        10</span>
+<span class="sd">        &gt;&gt;&gt; print(w.full()[0][0])</span>
+<span class="sd">        [0. 1. 0. 0. 0. 1. 0. 0. 0. 0.]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">indices</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">indptr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">indptr</span>
+        <span class="n">id_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_order</span>
+        <span class="k">if</span> <span class="n">id_order</span><span class="p">:</span>
+            <span class="c1"># replace indices with user IDs</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="p">[</span><span class="n">id_order</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">id_order</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">))</span>
+        <span class="n">neighbors</span><span class="p">,</span> <span class="n">weights</span> <span class="o">=</span> <span class="p">{},</span> <span class="p">{}</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">indptr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">):</span>
+            <span class="n">oid</span> <span class="o">=</span> <span class="n">id_order</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">indptr</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">neighbors</span><span class="p">[</span><span class="n">oid</span><span class="p">]</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+            <span class="n">weights</span><span class="p">[</span><span class="n">oid</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">end</span>
+        <span class="n">ids</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id_order</span><span class="p">)</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">W</span><span class="p">(</span><span class="n">neighbors</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span>
+                    <span class="n">silence_warnings</span><span class="o">=</span><span class="n">silence_warnings</span><span class="p">)</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">_sparse</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sparse</span><span class="p">)</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;sparse&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">_sparse</span>
+        <span class="k">return</span> <span class="n">w</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

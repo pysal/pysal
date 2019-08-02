@@ -1,0 +1,22 @@
+pysal.explore.segregation.local.LocalRelativeCentralization
+===========================================================
+
+.. currentmodule:: pysal.explore.segregation.local
+
+.. autoclass:: LocalRelativeCentralization
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~LocalRelativeCentralization.__init__
+   
+   
+
+   
+   
+   

@@ -1,0 +1,22 @@
+pysal.explore.inequality.theil.Theil
+====================================
+
+.. currentmodule:: pysal.explore.inequality.theil
+
+.. autoclass:: Theil
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Theil.__init__
+   
+   
+
+   
+   
+   

@@ -1,0 +1,22 @@
+pysal.explore.segregation.spatial.SpatialDissim
+===============================================
+
+.. currentmodule:: pysal.explore.segregation.spatial
+
+.. autoclass:: SpatialDissim
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SpatialDissim.__init__
+   
+   
+
+   
+   
+   

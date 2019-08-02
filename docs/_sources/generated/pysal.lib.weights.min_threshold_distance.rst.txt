@@ -1,0 +1,6 @@
+pysal.lib.weights.min\_threshold\_distance
+==========================================
+
+.. currentmodule:: pysal.lib.weights
+
+.. autofunction:: min_threshold_distance

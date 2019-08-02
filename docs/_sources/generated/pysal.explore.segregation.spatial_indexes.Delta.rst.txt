@@ -1,0 +1,22 @@
+pysal.explore.segregation.spatial\_indexes.Delta
+================================================
+
+.. currentmodule:: pysal.explore.segregation.spatial_indexes
+
+.. autoclass:: Delta
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Delta.__init__
+   
+   
+
+   
+   
+   

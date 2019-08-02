@@ -1,0 +1,6 @@
+pysal.lib.cg.convex\_hull
+=========================
+
+.. currentmodule:: pysal.lib.cg
+
+.. autofunction:: convex_hull

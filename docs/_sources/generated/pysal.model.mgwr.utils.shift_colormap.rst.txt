@@ -1,0 +1,6 @@
+pysal.model.mgwr.utils.shift\_colormap
+======================================
+
+.. currentmodule:: pysal.model.mgwr.utils
+
+.. autofunction:: shift_colormap

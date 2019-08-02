@@ -1,0 +1,22 @@
+pysal.explore.segregation.spatial.RelativeConcentration
+=======================================================
+
+.. currentmodule:: pysal.explore.segregation.spatial
+
+.. autoclass:: RelativeConcentration
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~RelativeConcentration.__init__
+   
+   
+
+   
+   
+   

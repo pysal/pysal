@@ -1,0 +1,22 @@
+pysal.explore.segregation.aspatial.BiasCorrectedDissim
+======================================================
+
+.. currentmodule:: pysal.explore.segregation.aspatial
+
+.. autoclass:: BiasCorrectedDissim
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BiasCorrectedDissim.__init__
+   
+   
+
+   
+   
+   

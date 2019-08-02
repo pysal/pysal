@@ -1,0 +1,22 @@
+pysal.explore.segregation.aspatial.MultiDivergence
+==================================================
+
+.. currentmodule:: pysal.explore.segregation.aspatial
+
+.. autoclass:: MultiDivergence
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MultiDivergence.__init__
+   
+   
+
+   
+   
+   

@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.model.mgwr.sel_bw &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../../installation.html">Installation</a></li>
+                <li><a href="../../../../api.html">API</a></li>
+                <li><a href="../../../../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for pysal.model.mgwr.sel_bw</h1><div class="highlight"><pre>
+<span></span><span class="c1"># GWR Bandwidth selection class</span>
+
+<span class="c1"># x_glob parameter does not yet do anything; it is for semiparametric</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Taylor Oshan Tayoshan@gmail.com&quot;</span>
+
+
+<span class="kn">from</span> <span class="nn">pysal.model.spreg</span> <span class="k">import</span> <span class="n">user_output</span> <span class="k">as</span> <span class="n">USER</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
+<span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="k">import</span> <span class="n">pdist</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">minimize_scalar</span>
+<span class="kn">from</span> <span class="nn">pysal.model.spglm.family</span> <span class="k">import</span> <span class="n">Gaussian</span><span class="p">,</span> <span class="n">Poisson</span><span class="p">,</span> <span class="n">Binomial</span>
+<span class="kn">from</span> <span class="nn">.kernels</span> <span class="k">import</span> <span class="n">Kernel</span>
+<span class="kn">from</span> <span class="nn">.gwr</span> <span class="k">import</span> <span class="n">GWR</span>
+<span class="kn">from</span> <span class="nn">.search</span> <span class="k">import</span> <span class="n">golden_section</span><span class="p">,</span> <span class="n">equal_interval</span><span class="p">,</span> <span class="n">multi_bw</span>
+<span class="kn">from</span> <span class="nn">.diagnostics</span> <span class="k">import</span> <span class="n">get_AICc</span><span class="p">,</span> <span class="n">get_AIC</span><span class="p">,</span> <span class="n">get_BIC</span><span class="p">,</span> <span class="n">get_CV</span>
+
+<span class="n">getDiag</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;AICc&quot;</span><span class="p">:</span> <span class="n">get_AICc</span><span class="p">,</span> <span class="s2">&quot;AIC&quot;</span><span class="p">:</span> <span class="n">get_AIC</span><span class="p">,</span> <span class="s2">&quot;BIC&quot;</span><span class="p">:</span> <span class="n">get_BIC</span><span class="p">,</span> <span class="s2">&quot;CV&quot;</span><span class="p">:</span> <span class="n">get_CV</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="Sel_BW"><a class="viewcode-back" href="../../../../generated/pysal.model.mgwr.sel_bw.Sel_BW.html#pysal.model.mgwr.sel_bw.Sel_BW">[docs]</a><span class="k">class</span> <span class="nc">Sel_BW</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Select bandwidth for kernel</span>
+
+<span class="sd">    Methods: p211 - p213, bandwidth selection</span>
+
+<span class="sd">    :cite:`fotheringham_geographically_2002`: Fotheringham, A. S., Brunsdon, C., &amp; Charlton, M. (2002).</span>
+<span class="sd">    Geographically weighted regression: the analysis of spatially varying relationships.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y              : array</span>
+<span class="sd">                     n*1, dependent variable.</span>
+<span class="sd">    X_glob         : array</span>
+<span class="sd">                     n*k1, fixed independent variable.</span>
+<span class="sd">    X_loc          : array</span>
+<span class="sd">                     n*k2, local independent variable, including constant.</span>
+<span class="sd">    coords         : list of tuples</span>
+<span class="sd">                     (x,y) of points used in bandwidth selection</span>
+<span class="sd">    family         : family object/instance, optional</span>
+<span class="sd">                     underlying probability model: Gaussian(), Poisson(),</span>
+<span class="sd">                     Binomial(). Default is Gaussian().</span>
+<span class="sd">    offset         : array</span>
+<span class="sd">                     n*1, the offset variable at the ith location. For Poisson model</span>
+<span class="sd">                     this term is often the size of the population at risk or</span>
+<span class="sd">                     the expected size of the outcome in spatial epidemiology</span>
+<span class="sd">                     Default is None where Ni becomes 1.0 for all locations</span>
+<span class="sd">    kernel         : string, optional</span>
+<span class="sd">                     kernel function: &#39;gaussian&#39;, &#39;bisquare&#39;, &#39;exponential&#39;.</span>
+<span class="sd">                     Default is &#39;bisquare&#39;.</span>
+<span class="sd">    fixed          : boolean</span>
+<span class="sd">                     True for fixed bandwidth and False for adaptive (NN)</span>
+<span class="sd">    multi          : True for multiple (covaraite-specific) bandwidths</span>
+<span class="sd">                     False for a traditional (same for  all covariates)</span>
+<span class="sd">                     bandwdith; defualt is False.</span>
+<span class="sd">    constant       : boolean</span>
+<span class="sd">                     True to include intercept (default) in model and False to exclude</span>
+<span class="sd">                     intercept.</span>
+<span class="sd">    spherical      : boolean</span>
+<span class="sd">                     True for shperical coordinates (long-lat),</span>
+<span class="sd">                     False for projected coordinates (defalut).</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y              : array</span>
+<span class="sd">                     n*1, dependent variable.</span>
+<span class="sd">    X_glob         : array</span>
+<span class="sd">                     n*k1, fixed independent variable.</span>
+<span class="sd">    X_loc          : array</span>
+<span class="sd">                     n*k2, local independent variable, including constant.</span>
+<span class="sd">    coords         : list of tuples</span>
+<span class="sd">                     (x,y) of points used in bandwidth selection</span>
+<span class="sd">    family         : string</span>
+<span class="sd">                     GWR model type: &#39;Gaussian&#39;, &#39;logistic, &#39;Poisson&#39;&#39;</span>
+<span class="sd">    kernel         : string</span>
+<span class="sd">                     type of kernel used and wether fixed or adaptive</span>
+<span class="sd">    fixed          : boolean</span>
+<span class="sd">                     True for fixed bandwidth and False for adaptive (NN)</span>
+<span class="sd">    criterion      : string</span>
+<span class="sd">                     bw selection criterion: &#39;AICc&#39;, &#39;AIC&#39;, &#39;BIC&#39;, &#39;CV&#39;</span>
+<span class="sd">    search_method  : string</span>
+<span class="sd">                     bw search method: &#39;golden&#39;, &#39;interval&#39;</span>
+<span class="sd">    bw_min         : float</span>
+<span class="sd">                     min value used in bandwidth search</span>
+<span class="sd">    bw_max         : float</span>
+<span class="sd">                     max value used in bandwidth search</span>
+<span class="sd">    interval       : float</span>
+<span class="sd">                     interval increment used in interval search</span>
+<span class="sd">    tol            : float</span>
+<span class="sd">                     tolerance used to determine convergence</span>
+<span class="sd">    max_iter       : integer</span>
+<span class="sd">                     max interations if no convergence to tol</span>
+<span class="sd">    multi          : True for multiple (covaraite-specific) bandwidths</span>
+<span class="sd">                     False for a traditional (same for  all covariates)</span>
+<span class="sd">                     bandwdith; defualt is False.</span>
+<span class="sd">    constant       : boolean</span>
+<span class="sd">                     True to include intercept (default) in model and False to exclude</span>
+<span class="sd">                     intercept.</span>
+<span class="sd">    offset         : array</span>
+<span class="sd">                     n*1, the offset variable at the ith location. For Poisson model</span>
+<span class="sd">                     this term is often the size of the population at risk or</span>
+<span class="sd">                     the expected size of the outcome in spatial epidemiology</span>
+<span class="sd">                     Default is None where Ni becomes 1.0 for all locations</span>
+<span class="sd">    spherical      : boolean</span>
+<span class="sd">                     True for shperical coordinates (long-lat),</span>
+<span class="sd">                     False for projected coordinates (defalut).</span>
+<span class="sd">    search_params  : dict</span>
+<span class="sd">                     stores search arguments</span>
+<span class="sd">    int_score      : boolan</span>
+<span class="sd">                     True if adaptive bandwidth is being used and bandwdith</span>
+<span class="sd">                     selection should be discrete. False</span>
+<span class="sd">                     if fixed bandwidth is being used and bandwidth does not have</span>
+<span class="sd">                     to be discrete.</span>
+<span class="sd">    bw             : scalar or array-like</span>
+<span class="sd">                     Derived optimal bandwidth(s). Will be a scalar for GWR</span>
+<span class="sd">                     (multi=False) and a list of scalars for MGWR (multi=True)</span>
+<span class="sd">                     with one bandwidth for each covariate.</span>
+<span class="sd">    S              : array</span>
+<span class="sd">                     n*n, hat matrix derived from the iterative backfitting</span>
+<span class="sd">                     algorthim for MGWR during bandwidth selection</span>
+<span class="sd">    R              : array</span>
+<span class="sd">                     n*n*k, partial hat matrices derived from the iterative</span>
+<span class="sd">                     backfitting algoruthm for MGWR during bandwidth selection.</span>
+<span class="sd">                     There is one n*n matrix for each of the k covariates.</span>
+<span class="sd">    params         : array</span>
+<span class="sd">                     n*k, calibrated parameter estimates for MGWR based on the</span>
+<span class="sd">                     iterative backfitting algorithm - computed and saved here to</span>
+<span class="sd">                     avoid having to do it again in the MGWR object.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pysal.lib as ps</span>
+<span class="sd">    &gt;&gt;&gt; from mgwr.sel_bw import Sel_BW</span>
+<span class="sd">    &gt;&gt;&gt; data = ps.io.open(ps.examples.get_path(&#39;GData_utm.csv&#39;))</span>
+<span class="sd">    &gt;&gt;&gt; coords = list(zip(data.by_col(&#39;X&#39;), data.by_col(&#39;Y&#39;)))</span>
+<span class="sd">    &gt;&gt;&gt; y = np.array(data.by_col(&#39;PctBach&#39;)).reshape((-1,1))</span>
+<span class="sd">    &gt;&gt;&gt; rural = np.array(data.by_col(&#39;PctRural&#39;)).reshape((-1,1))</span>
+<span class="sd">    &gt;&gt;&gt; pov = np.array(data.by_col(&#39;PctPov&#39;)).reshape((-1,1))</span>
+<span class="sd">    &gt;&gt;&gt; african_amer = np.array(data.by_col(&#39;PctBlack&#39;)).reshape((-1,1))</span>
+<span class="sd">    &gt;&gt;&gt; X = np.hstack([rural, pov, african_amer])</span>
+<span class="sd">    </span>
+<span class="sd">    Golden section search AICc - adaptive bisquare</span>
+
+<span class="sd">    &gt;&gt;&gt; bw = Sel_BW(coords, y, X).search(criterion=&#39;AICc&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; print(bw)</span>
+<span class="sd">    93.0</span>
+
+<span class="sd">    Golden section search AIC - adaptive Gaussian</span>
+
+<span class="sd">    &gt;&gt;&gt; bw = Sel_BW(coords, y, X, kernel=&#39;gaussian&#39;).search(criterion=&#39;AIC&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; print(bw)</span>
+<span class="sd">    50.0</span>
+
+<span class="sd">    Golden section search BIC - adaptive Gaussian</span>
+
+<span class="sd">    &gt;&gt;&gt; bw = Sel_BW(coords, y, X, kernel=&#39;gaussian&#39;).search(criterion=&#39;BIC&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; print(bw)</span>
+<span class="sd">    62.0</span>
+
+<span class="sd">    Golden section search CV - adaptive Gaussian</span>
+
+<span class="sd">    &gt;&gt;&gt; bw = Sel_BW(coords, y, X, kernel=&#39;gaussian&#39;).search(criterion=&#39;CV&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; print(bw)</span>
+<span class="sd">    68.0</span>
+
+<span class="sd">    Interval AICc - fixed bisquare</span>
+
+<span class="sd">    &gt;&gt;&gt; sel = Sel_BW(coords, y, X, fixed=True)</span>
+<span class="sd">    &gt;&gt;&gt; bw = sel.search(search_method=&#39;interval&#39;, bw_min=211001.0, bw_max=211035.0, interval=2)</span>
+<span class="sd">    &gt;&gt;&gt; print(bw)</span>
+<span class="sd">    211025.0</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Sel_BW.__init__"><a class="viewcode-back" href="../../../../generated/pysal.model.mgwr.sel_bw.Sel_BW.html#pysal.model.mgwr.sel_bw.Sel_BW.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">coords</span><span class="p">,</span>
+        <span class="n">y</span><span class="p">,</span>
+        <span class="n">X_loc</span><span class="p">,</span>
+        <span class="n">X_glob</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">family</span><span class="o">=</span><span class="n">Gaussian</span><span class="p">(),</span>
+        <span class="n">offset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">kernel</span><span class="o">=</span><span class="s2">&quot;bisquare&quot;</span><span class="p">,</span>
+        <span class="n">fixed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">multi</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">constant</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">spherical</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_loc</span> <span class="o">=</span> <span class="n">X_loc</span>
+        <span class="k">if</span> <span class="n">X_glob</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X_glob</span> <span class="o">=</span> <span class="n">X_glob</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X_glob</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">family</span> <span class="o">=</span> <span class="n">family</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fixed</span> <span class="o">=</span> <span class="n">fixed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">=</span> <span class="n">kernel</span>
+        <span class="k">if</span> <span class="n">offset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span> <span class="o">*</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">multi</span> <span class="o">=</span> <span class="n">multi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_functions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">constant</span> <span class="o">=</span> <span class="n">constant</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spherical</span> <span class="o">=</span> <span class="n">spherical</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">search_params</span> <span class="o">=</span> <span class="p">{}</span></div>
+
+    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">search_method</span><span class="o">=</span><span class="s2">&quot;golden_section&quot;</span><span class="p">,</span>
+        <span class="n">criterion</span><span class="o">=</span><span class="s2">&quot;AICc&quot;</span><span class="p">,</span>
+        <span class="n">bw_min</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">bw_max</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">interval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">tol</span><span class="o">=</span><span class="mf">1.0e-6</span><span class="p">,</span>
+        <span class="n">max_iter</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+        <span class="n">init_multi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">tol_multi</span><span class="o">=</span><span class="mf">1.0e-5</span><span class="p">,</span>
+        <span class="n">rss_score</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">max_iter_multi</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+        <span class="n">multi_bw_min</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
+        <span class="n">multi_bw_max</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
+        <span class="n">bws_same_times</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">pool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to select one unique bandwidth for a gwr model or a</span>
+<span class="sd">        bandwidth vector for a mgwr model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        criterion      : string</span>
+<span class="sd">                         bw selection criterion: &#39;AICc&#39;, &#39;AIC&#39;, &#39;BIC&#39;, &#39;CV&#39;</span>
+<span class="sd">        search_method  : string</span>
+<span class="sd">                         bw search method: &#39;golden&#39;, &#39;interval&#39;</span>
+<span class="sd">        bw_min         : float</span>
+<span class="sd">                         min value used in bandwidth search</span>
+<span class="sd">        bw_max         : float</span>
+<span class="sd">                         max value used in bandwidth search</span>
+<span class="sd">        multi_bw_min   : list </span>
+<span class="sd">                         min values used for each covariate in mgwr bandwidth search.</span>
+<span class="sd">                         Must be either a single value or have one value for</span>
+<span class="sd">                         each covariate including the intercept</span>
+<span class="sd">        multi_bw_max   : list</span>
+<span class="sd">                         max values used for each covariate in mgwr bandwidth</span>
+<span class="sd">                         search. Must be either a single value or have one value</span>
+<span class="sd">                         for each covariate including the intercept</span>
+<span class="sd">        interval       : float</span>
+<span class="sd">                         interval increment used in interval search</span>
+<span class="sd">        tol            : float</span>
+<span class="sd">                         tolerance used to determine convergence</span>
+<span class="sd">        max_iter       : integer</span>
+<span class="sd">                         max iterations if no convergence to tol</span>
+<span class="sd">        init_multi     : float</span>
+<span class="sd">                         None (default) to initialize MGWR with a bandwidth</span>
+<span class="sd">                         derived from GWR. Otherwise this option will choose the</span>
+<span class="sd">                         bandwidth to initialize MGWR with.</span>
+<span class="sd">        tol_multi      : convergence tolerence for the multiple bandwidth</span>
+<span class="sd">                         backfitting algorithm; a larger tolerance may stop the</span>
+<span class="sd">                         algorith faster though it may result in a less optimal</span>
+<span class="sd">                         model</span>
+<span class="sd">        max_iter_multi : max iterations if no convergence to tol for multiple</span>
+<span class="sd">                         bandwidth backfitting algorithm</span>
+<span class="sd">        rss_score      : True to use the residual sum of sqaures to evaluate</span>
+<span class="sd">                         each iteration of the multiple bandwidth backfitting</span>
+<span class="sd">                         routine and False to use a smooth function; default is</span>
+<span class="sd">                         False</span>
+<span class="sd">        bws_same_times : If bandwidths keep the same between iterations for</span>
+<span class="sd">                         bws_same_times (default 3) in backfitting, then use the</span>
+<span class="sd">                         current set of bandwidths as final bandwidths.</span>
+<span class="sd">        pool           : A multiprocessing Pool object to enbale parallel fitting;</span>
+<span class="sd">                         default is None</span>
+<span class="sd">        verbose        : Boolean</span>
+<span class="sd">                         If true, bandwidth searching history is printed out; default is False.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bw             : scalar or array</span>
+<span class="sd">                         optimal bandwidth value or values; returns scalar for</span>
+<span class="sd">                         multi=False and array for multi=True; ordering of bandwidths</span>
+<span class="sd">                         matches the ordering of the covariates (columns) of the</span>
+<span class="sd">                         designs matrix, X</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_loc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">constant</span><span class="p">:</span>  <span class="c1"># k is the number of covariates</span>
+            <span class="n">k</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">search_method</span> <span class="o">=</span> <span class="n">search_method</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span> <span class="o">=</span> <span class="n">criterion</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bw_min</span> <span class="o">=</span> <span class="n">bw_min</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bw_max</span> <span class="o">=</span> <span class="n">bw_max</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bws_same_times</span> <span class="o">=</span> <span class="n">bws_same_times</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pool</span> <span class="o">=</span> <span class="n">pool</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">multi_bw_min</span><span class="p">)</span> <span class="o">==</span> <span class="n">k</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">multi_bw_min</span> <span class="o">=</span> <span class="n">multi_bw_min</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">multi_bw_min</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">multi_bw_min</span> <span class="o">=</span> <span class="n">multi_bw_min</span> <span class="o">*</span> <span class="n">k</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+                <span class="s2">&quot;multi_bw_min must be either a list containing&quot;</span>
+                <span class="s2">&quot; a single entry or a list containing an entry for each of k&quot;</span>
+                <span class="s2">&quot; covariates including the intercept&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">multi_bw_max</span><span class="p">)</span> <span class="o">==</span> <span class="n">k</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">multi_bw_max</span> <span class="o">=</span> <span class="n">multi_bw_max</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">multi_bw_max</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">multi_bw_max</span> <span class="o">=</span> <span class="n">multi_bw_max</span> <span class="o">*</span> <span class="n">k</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+                <span class="s2">&quot;multi_bw_max must be either a list containing&quot;</span>
+                <span class="s2">&quot; a single entry or a list containing an entry for each of k&quot;</span>
+                <span class="s2">&quot; covariates including the intercept&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">interval</span> <span class="o">=</span> <span class="n">interval</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tol</span> <span class="o">=</span> <span class="n">tol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_multi</span> <span class="o">=</span> <span class="n">init_multi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tol_multi</span> <span class="o">=</span> <span class="n">tol_multi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rss_score</span> <span class="o">=</span> <span class="n">rss_score</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_iter_multi</span> <span class="o">=</span> <span class="n">max_iter_multi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">search_params</span><span class="p">[</span><span class="s2">&quot;search_method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">search_method</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">search_params</span><span class="p">[</span><span class="s2">&quot;criterion&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">criterion</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">search_params</span><span class="p">[</span><span class="s2">&quot;bw_min&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bw_min</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">search_params</span><span class="p">[</span><span class="s2">&quot;bw_max&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bw_max</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">search_params</span><span class="p">[</span><span class="s2">&quot;interval&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">interval</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">search_params</span><span class="p">[</span><span class="s2">&quot;tol&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">search_params</span><span class="p">[</span><span class="s2">&quot;max_iter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_iter</span>
+        <span class="c1"># self._check_min_max()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">int_score</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fixed</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mbw</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bw</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>  <span class="c1"># params n by k</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bw_init</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bw</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># scalar, optimal bw from initial gwr model</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_bw</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pool</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_bw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">gwr_func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">bw</span><span class="p">:</span> <span class="n">getDiag</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">](</span>
+            <span class="n">GWR</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">X_loc</span><span class="p">,</span>
+                <span class="n">bw</span><span class="p">,</span>
+                <span class="n">family</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">family</span><span class="p">,</span>
+                <span class="n">kernel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="p">,</span>
+                <span class="n">fixed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fixed</span><span class="p">,</span>
+                <span class="n">constant</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">constant</span><span class="p">,</span>
+                <span class="n">offset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span>
+                <span class="n">spherical</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">spherical</span><span class="p">,</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">lite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pool</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_optimized_function</span> <span class="o">=</span> <span class="n">gwr_func</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_method</span> <span class="o">==</span> <span class="s2">&quot;golden_section&quot;</span><span class="p">:</span>
+            <span class="n">a</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_section</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">X_glob</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_loc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">constant</span>
+            <span class="p">)</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="mf">0.38197</span>  <span class="c1"># 1 - (np.sqrt(5.0)-1.0)/2.0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bw</span> <span class="o">=</span> <span class="n">golden_section</span><span class="p">(</span>
+                <span class="n">a</span><span class="p">,</span>
+                <span class="n">c</span><span class="p">,</span>
+                <span class="n">delta</span><span class="p">,</span>
+                <span class="n">gwr_func</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">int_score</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_method</span> <span class="o">==</span> <span class="s2">&quot;interval&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bw</span> <span class="o">=</span> <span class="n">equal_interval</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bw_min</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bw_max</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">interval</span><span class="p">,</span>
+                <span class="n">gwr_func</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">int_score</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_method</span> <span class="o">==</span> <span class="s2">&quot;scipy&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bw_min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bw_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_section</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">X_glob</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_loc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">constant</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bw_min</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">bw_max</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                    <span class="s2">&quot;Maximum bandwidth and minimum bandwidth must be distinct for scipy optimizer.&quot;</span>
+                <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_optimize_result</span> <span class="o">=</span> <span class="n">minimize_scalar</span><span class="p">(</span>
+                <span class="n">gwr_func</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bw_min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bw_max</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;bounded&quot;</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bw</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_optimize_result</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_optimize_result</span><span class="o">.</span><span class="n">fun</span><span class="p">,</span> <span class="p">[]]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;Unsupported computational search method &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_method</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_mbw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">constant</span><span class="p">:</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">USER</span><span class="o">.</span><span class="n">check_constant</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_loc</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_loc</span>
+        <span class="n">n</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">family</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">family</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span>
+        <span class="n">kernel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span>
+        <span class="n">fixed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fixed</span>
+        <span class="n">spherical</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spherical</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coords</span>
+        <span class="n">search_method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_method</span>
+        <span class="n">criterion</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span>
+        <span class="n">bw_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bw_min</span>
+        <span class="n">bw_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bw_max</span>
+        <span class="n">multi_bw_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_bw_min</span>
+        <span class="n">multi_bw_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_bw_max</span>
+        <span class="n">interval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interval</span>
+        <span class="n">tol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tol</span>
+        <span class="n">max_iter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span>
+        <span class="n">bws_same_times</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bws_same_times</span>
+
+        <span class="k">def</span> <span class="nf">gwr_func</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">bw</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">GWR</span><span class="p">(</span>
+                <span class="n">coords</span><span class="p">,</span>
+                <span class="n">y</span><span class="p">,</span>
+                <span class="n">X</span><span class="p">,</span>
+                <span class="n">bw</span><span class="p">,</span>
+                <span class="n">family</span><span class="o">=</span><span class="n">family</span><span class="p">,</span>
+                <span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span>
+                <span class="n">fixed</span><span class="o">=</span><span class="n">fixed</span><span class="p">,</span>
+                <span class="n">offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span>
+                <span class="n">constant</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">spherical</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">spherical</span><span class="p">,</span>
+                <span class="n">hat_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">lite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pool</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">bw_func</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+            <span class="n">selector</span> <span class="o">=</span> <span class="n">Sel_BW</span><span class="p">(</span>
+                <span class="n">coords</span><span class="p">,</span>
+                <span class="n">y</span><span class="p">,</span>
+                <span class="n">X</span><span class="p">,</span>
+                <span class="n">X_glob</span><span class="o">=</span><span class="p">[],</span>
+                <span class="n">family</span><span class="o">=</span><span class="n">family</span><span class="p">,</span>
+                <span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span>
+                <span class="n">fixed</span><span class="o">=</span><span class="n">fixed</span><span class="p">,</span>
+                <span class="n">offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span>
+                <span class="n">constant</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">spherical</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">spherical</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">selector</span>
+
+        <span class="k">def</span> <span class="nf">sel_func</span><span class="p">(</span><span class="n">bw_func</span><span class="p">,</span> <span class="n">bw_min</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bw_max</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">bw_func</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+                <span class="n">search_method</span><span class="o">=</span><span class="n">search_method</span><span class="p">,</span>
+                <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span>
+                <span class="n">bw_min</span><span class="o">=</span><span class="n">bw_min</span><span class="p">,</span>
+                <span class="n">bw_max</span><span class="o">=</span><span class="n">bw_max</span><span class="p">,</span>
+                <span class="n">interval</span><span class="o">=</span><span class="n">interval</span><span class="p">,</span>
+                <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span>
+                <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span><span class="p">,</span>
+                <span class="n">pool</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="p">,</span>
+                <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bw</span> <span class="o">=</span> <span class="n">multi_bw</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">init_multi</span><span class="p">,</span>
+            <span class="n">y</span><span class="p">,</span>
+            <span class="n">X</span><span class="p">,</span>
+            <span class="n">n</span><span class="p">,</span>
+            <span class="n">k</span><span class="p">,</span>
+            <span class="n">family</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tol_multi</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_iter_multi</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rss_score</span><span class="p">,</span>
+            <span class="n">gwr_func</span><span class="p">,</span>
+            <span class="n">bw_func</span><span class="p">,</span>
+            <span class="n">sel_func</span><span class="p">,</span>
+            <span class="n">multi_bw_min</span><span class="p">,</span>
+            <span class="n">multi_bw_max</span><span class="p">,</span>
+            <span class="n">bws_same_times</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_init_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_glob</span><span class="p">,</span> <span class="n">X_loc</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">constant</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_glob</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">n_glob</span> <span class="o">=</span> <span class="n">X_glob</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">n_glob</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_loc</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">n_loc</span> <span class="o">=</span> <span class="n">X_loc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">n_loc</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">constant</span><span class="p">:</span>
+            <span class="n">n_vars</span> <span class="o">=</span> <span class="n">n_glob</span> <span class="o">+</span> <span class="n">n_loc</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">n_vars</span> <span class="o">=</span> <span class="n">n_glob</span> <span class="o">+</span> <span class="n">n_loc</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">int_score</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="mi">40</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n_vars</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">n</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sq_dists</span> <span class="o">=</span> <span class="n">pdist</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">sq_dists</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">sq_dists</span><span class="p">)</span> <span class="o">*</span> <span class="mf">2.0</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bw_min</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bw_min</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bw_max</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bw_max</span>
+
+        <span class="k">return</span> <span class="n">a</span><span class="p">,</span> <span class="n">c</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

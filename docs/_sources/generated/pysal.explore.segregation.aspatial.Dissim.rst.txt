@@ -1,0 +1,22 @@
+pysal.explore.segregation.aspatial.Dissim
+=========================================
+
+.. currentmodule:: pysal.explore.segregation.aspatial
+
+.. autoclass:: Dissim
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Dissim.__init__
+   
+   
+
+   
+   
+   

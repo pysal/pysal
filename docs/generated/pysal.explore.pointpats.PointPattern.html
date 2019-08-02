@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.explore.pointpats.PointPattern &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="pysal.explore.inequality.gini.Gini_Spatial" href="pysal.explore.inequality.gini.Gini_Spatial.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../installation.html">Installation</a></li>
+                <li><a href="../api.html">API</a></li>
+                <li><a href="../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">pysal.explore.pointpats.PointPattern</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="pysal-explore-pointpats-pointpattern">
+<h1>pysal.explore.pointpats.PointPattern<a class="headerlink" href="#pysal-explore-pointpats-pointpattern" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pysal.explore.pointpats.PointPattern">
+<em class="property">class </em><code class="sig-prename descclassname">pysal.explore.pointpats.</code><code class="sig-name descname">PointPattern</code><span class="sig-paren">(</span><em class="sig-param">points</em>, <em class="sig-param">window=None</em>, <em class="sig-param">names=None</em>, <em class="sig-param">coord_names=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/pointpats/pointpattern.html#PointPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.pointpats.PointPattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Planar Point Pattern Class 2-D.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>points:       array</strong></dt><dd><p>(n,p), n points with p &gt;= 2 attributes on each
+point. Two attributes must comprise the spatial
+coordinate pair. Default is that the first two
+attributes are the x and y spatial coordinates.</p>
+</dd>
+<dt><strong>window:       :class:`.Window`</strong></dt><dd><p>Bounding geometric object for the point pattern.
+If not specified, window will be set to the minimum
+bounding rectangle of the point pattern.</p>
+</dd>
+<dt><strong>names:        list</strong></dt><dd><p>The names of the attributes.</p>
+</dd>
+<dt><strong>coord_names:  list</strong></dt><dd><p>The names of the attributes defining the two spatial
+coordinates.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pointpats</span> <span class="k">import</span> <span class="n">PointPattern</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">points</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">66.22</span><span class="p">,</span> <span class="mf">32.54</span><span class="p">],</span> <span class="p">[</span><span class="mf">22.52</span><span class="p">,</span> <span class="mf">22.39</span><span class="p">],</span> <span class="p">[</span><span class="mf">31.01</span><span class="p">,</span> <span class="mf">81.21</span><span class="p">],</span>
+<span class="gp">... </span>          <span class="p">[</span><span class="mf">9.47</span><span class="p">,</span> <span class="mf">31.02</span><span class="p">],</span> <span class="p">[</span><span class="mf">30.78</span><span class="p">,</span> <span class="mf">60.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">75.21</span><span class="p">,</span> <span class="mf">58.93</span><span class="p">],</span>
+<span class="gp">... </span>          <span class="p">[</span><span class="mf">79.26</span><span class="p">,</span>  <span class="mf">7.68</span><span class="p">],</span> <span class="p">[</span><span class="mf">8.23</span><span class="p">,</span> <span class="mf">39.93</span><span class="p">],</span> <span class="p">[</span><span class="mf">98.73</span><span class="p">,</span> <span class="mf">77.17</span><span class="p">],</span>
+<span class="gp">... </span>          <span class="p">[</span><span class="mf">89.78</span><span class="p">,</span> <span class="mf">42.53</span><span class="p">],</span> <span class="p">[</span><span class="mf">65.19</span><span class="p">,</span> <span class="mf">92.08</span><span class="p">],</span> <span class="p">[</span><span class="mf">54.46</span><span class="p">,</span> <span class="mf">8.48</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pp</span> <span class="o">=</span> <span class="n">PointPattern</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pp</span><span class="o">.</span><span class="n">n</span>
+<span class="go">12</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pp</span><span class="o">.</span><span class="n">mean_nnd</span>
+<span class="go">21.612139802089246</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pp</span><span class="o">.</span><span class="n">lambda_mbb</span>
+<span class="go">0.0015710507711240867</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pp</span><span class="o">.</span><span class="n">lambda_hull</span>
+<span class="go">0.0022667153468973137</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pp</span><span class="o">.</span><span class="n">hull_area</span>
+<span class="go">5294.00395</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pp</span><span class="o">.</span><span class="n">mbb_area</span>
+<span class="go">7638.200000000001</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference internal" href="pysal.explore.pointpats.hull.html#pysal.explore.pointpats.hull" title="pysal.explore.pointpats.hull"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hull</span></code></a></dt><dd><p>Points defining convex hull in counterclockwise order</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">hull_area</span></code></dt><dd><p>Area of convex hull</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">lambda_hull</span></code></dt><dd><p>Intensity based on convex hull</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">lambda_mbb</span></code></dt><dd><p>Intensity based on minimum bounding box</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">lambda_window</span></code></dt><dd><p>Intensity estimate based on area of window</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">max_nnd</span></code></dt><dd><p>Max nearest neighbor distance</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">mbb</span></code></dt><dd><p>Minimum bounding box</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">mbb_area</span></code></dt><dd><p>Area of minimum bounding box</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean_nnd</span></code></dt><dd><p>Mean nearest neighbor distance</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">min_nnd</span></code></dt><dd><p>Min nearest neighbor distance</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">n</span></code></dt><dd><p>Number of points</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">nnd</span></code></dt><dd><p>Nearest neighbor distances</p>
+</dd>
+<dt><strong>tree</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">window</span></code></dt><dd><p>Bounding geometry for the point pattern</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">explode</span></code>(self, mark)</p></td>
+<td><p>Explode a marked point pattern into a sequence of individual point patterns.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_pairs</span></code>(self, r)</p></td>
+<td><p>Find all pairs of points in the pattern that are within r units of each other</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">flip_coordinates</span></code>(self)</p></td>
+<td><p>Flips the coordinates of a point pattern.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_window</span></code>(self)</p></td>
+<td><p>Bounding geometry for the point pattern</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">knn</span></code>(self[, k])</p></td>
+<td><p>Find k nearest neighbors for each point in the pattern</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_other</span></code>(self, other[, k])</p></td>
+<td><p>Find k nearest neighbors in the pattern for each point in other</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code>(self[, window, title, hull, get_ax])</p></td>
+<td><p>Plot function for a point pattern.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code>(self)</p></td>
+<td><p>Description of the point pattern.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">superimpose</span></code>(self, point_pattern)</p></td>
+<td><p>Returns a superimposed point pattern.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">unique</span></code>(self)</p></td>
+<td><p>Remove duplicate points in the point pattern.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 58%" />
+<col style="width: 42%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>add_marks</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>set_window</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pysal.explore.pointpats.PointPattern.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">points</em>, <em class="sig-param">window=None</em>, <em class="sig-param">names=None</em>, <em class="sig-param">coord_names=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/pointpats/pointpattern.html#PointPattern.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.pointpats.PointPattern.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pysal.explore.pointpats.PointPattern.__init__" title="pysal.explore.pointpats.PointPattern.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self, points[, window, names, …])</p></td>
+<td><p>Initialize self.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_marks</span></code>(self, marks[, mark_names])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">explode</span></code>(self, mark)</p></td>
+<td><p>Explode a marked point pattern into a sequence of individual point patterns.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_pairs</span></code>(self, r)</p></td>
+<td><p>Find all pairs of points in the pattern that are within r units of each other</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">flip_coordinates</span></code>(self)</p></td>
+<td><p>Flips the coordinates of a point pattern.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_window</span></code>(self)</p></td>
+<td><p>Bounding geometry for the point pattern</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">knn</span></code>(self[, k])</p></td>
+<td><p>Find k nearest neighbors for each point in the pattern</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_other</span></code>(self, other[, k])</p></td>
+<td><p>Find k nearest neighbors in the pattern for each point in other</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code>(self[, window, title, hull, get_ax])</p></td>
+<td><p>Plot function for a point pattern.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_window</span></code>(self, window)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code>(self)</p></td>
+<td><p>Description of the point pattern.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">superimpose</span></code>(self, point_pattern)</p></td>
+<td><p>Returns a superimposed point pattern.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">unique</span></code>(self)</p></td>
+<td><p>Remove duplicate points in the point pattern.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">hull</span></code></p></td>
+<td><p>Points defining convex hull in counterclockwise order</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">hull_area</span></code></p></td>
+<td><p>Area of convex hull</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">lambda_hull</span></code></p></td>
+<td><p>Intensity based on convex hull</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">lambda_mbb</span></code></p></td>
+<td><p>Intensity based on minimum bounding box</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">lambda_window</span></code></p></td>
+<td><p>Intensity estimate based on area of window</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">max_nnd</span></code></p></td>
+<td><p>Max nearest neighbor distance</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mbb</span></code></p></td>
+<td><p>Minimum bounding box</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mbb_area</span></code></p></td>
+<td><p>Area of minimum bounding box</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean_nnd</span></code></p></td>
+<td><p>Mean nearest neighbor distance</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">min_nnd</span></code></p></td>
+<td><p>Min nearest neighbor distance</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">n</span></code></p></td>
+<td><p>Number of points</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">nnd</span></code></p></td>
+<td><p>Nearest neighbor distances</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">tree</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">window</span></code></p></td>
+<td><p>Bounding geometry for the point pattern</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../_sources/generated/pysal.explore.pointpats.PointPattern.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

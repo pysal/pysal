@@ -1,0 +1,23 @@
+pysal.explore.pointpats.G
+=========================
+
+.. currentmodule:: pysal.explore.pointpats
+
+.. autoclass:: G
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~G.__init__
+      ~G.plot
+   
+   
+
+   
+   
+   

@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.explore.giddy.markov.Spatial_Markov &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="pysal.explore.giddy.markov.Markov" href="pysal.explore.giddy.markov.Markov.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../installation.html">Installation</a></li>
+                <li><a href="../api.html">API</a></li>
+                <li><a href="../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">pysal.explore.giddy.markov.Spatial_Markov</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="pysal-explore-giddy-markov-spatial-markov">
+<h1>pysal.explore.giddy.markov.Spatial_Markov<a class="headerlink" href="#pysal-explore-giddy-markov-spatial-markov" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pysal.explore.giddy.markov.Spatial_Markov">
+<em class="property">class </em><code class="sig-prename descclassname">pysal.explore.giddy.markov.</code><code class="sig-name descname">Spatial_Markov</code><span class="sig-paren">(</span><em class="sig-param">y</em>, <em class="sig-param">w</em>, <em class="sig-param">k=4</em>, <em class="sig-param">m=4</em>, <em class="sig-param">permutations=0</em>, <em class="sig-param">fixed=True</em>, <em class="sig-param">discrete=False</em>, <em class="sig-param">cutoffs=None</em>, <em class="sig-param">lag_cutoffs=None</em>, <em class="sig-param">variable_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/giddy/markov.html#Spatial_Markov"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.giddy.markov.Spatial_Markov" title="Permalink to this definition">¶</a></dt>
+<dd><p>Markov transitions conditioned on the value of the spatial lag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>(n, t), one row per observation, one column per state of
+each observation, with as many columns as time periods.</p>
+</dd>
+<dt><strong>w</strong><span class="classifier">W</span></dt><dd><p>spatial weights object.</p>
+</dd>
+<dt><strong>k</strong><span class="classifier">integer, optional</span></dt><dd><p>number of classes (quantiles) for input time series y.
+Default is 4. If discrete=True, k is determined
+endogenously.</p>
+</dd>
+<dt><strong>m</strong><span class="classifier">integer, optional</span></dt><dd><p>number of classes (quantiles) for the spatial lags of
+regional time series. Default is 4. If discrete=True,
+m is determined endogenously.</p>
+</dd>
+<dt><strong>permutations</strong><span class="classifier">int, optional</span></dt><dd><p>number of permutations for use in randomization based
+inference (the default is 0).</p>
+</dd>
+<dt><strong>fixed</strong><span class="classifier">bool, optional</span></dt><dd><p>If true, discretization are taken over the entire n*t
+pooled series and cutoffs can be user-defined. If
+cutoffs and lag_cutoffs are not given, quantiles are
+used. If false, quantiles are taken each time period
+over n. Default is True.</p>
+</dd>
+<dt><strong>discrete</strong><span class="classifier">bool, optional</span></dt><dd><p>If true, categorical spatial lags which are most common
+categories of neighboring observations serve as the
+conditioning and fixed is ignored; if false, weighted
+averages of neighboring observations are used. Default is
+false.</p>
+</dd>
+<dt><strong>cutoffs</strong><span class="classifier">array, optional</span></dt><dd><p>users can specify the discretization cutoffs for
+continuous time series. Default is None, meaning that
+quantiles will be used for the discretization.</p>
+</dd>
+<dt><strong>lag_cutoffs</strong><span class="classifier">array, optional</span></dt><dd><p>users can specify the discretization cutoffs for the
+spatial lags of continuous time series. Default is
+None, meaning that quantiles will be used for the
+discretization.</p>
+</dd>
+<dt><strong>variable_name</strong><span class="classifier">string</span></dt><dd><p>name of variable.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Based on <a class="reference internal" href="../references.html#rey2001" id="id1">[Rey01]</a>.</p>
+<p>The shtest and chi2 tests should be used with caution as they are based on
+classic theory assuming random transitions. The x2 based test is
+preferable since it simulates the randomness under the null. It is an
+experimental test requiring further analysis.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pysal.lib</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pysal.explore.giddy.markov</span> <span class="k">import</span> <span class="n">Spatial_Markov</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;usjoin.csv&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">by_col</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">y</span><span class="p">)]</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1929</span><span class="p">,</span><span class="mi">2010</span><span class="p">)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pci</span> <span class="o">=</span> <span class="n">pci</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rpci</span> <span class="o">=</span> <span class="n">pci</span><span class="o">/</span><span class="p">(</span><span class="n">pci</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;states48.gal&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="s1">&#39;r&#39;</span>
+</pre></div>
+</div>
+<p>Now we create a <cite>Spatial_Markov</cite> instance for the continuous relative per
+capita income time series for 48 US lower states 1929-2009. The current
+implementation allows users to classify the continuous incomes in a more
+flexible way.</p>
+<p>(1) Global quintiles to discretize the income data (k=5), and global
+quintiles to discretize the spatial lags of incomes (m=5).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sm</span> <span class="o">=</span> <span class="n">Spatial_Markov</span><span class="p">(</span><span class="n">rpci</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">fixed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">variable_name</span><span class="o">=</span><span class="s1">&#39;rpci&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can examine the cutoffs for the incomes and cutoffs for the spatial lags</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sm</span><span class="o">.</span><span class="n">cutoffs</span>
+<span class="go">array([0.83999133, 0.94707545, 1.03242697, 1.14911154])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sm</span><span class="o">.</span><span class="n">lag_cutoffs</span>
+<span class="go">array([0.88973386, 0.95891917, 1.01469758, 1.1183566 ])</span>
+</pre></div>
+</div>
+<p>Obviously, they are slightly different.</p>
+<p>We now look at the estimated spatially lag conditioned transition
+probability matrices.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">sm</span><span class="o">.</span><span class="n">P</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">[[0.96341463 0.0304878  0.00609756 0.         0.        ]</span>
+<span class="go"> [0.06040268 0.83221477 0.10738255 0.         0.        ]</span>
+<span class="go"> [0.         0.14       0.74       0.12       0.        ]</span>
+<span class="go"> [0.         0.03571429 0.32142857 0.57142857 0.07142857]</span>
+<span class="go"> [0.         0.         0.         0.16666667 0.83333333]]</span>
+<span class="go">[[0.79831933 0.16806723 0.03361345 0.         0.        ]</span>
+<span class="go"> [0.0754717  0.88207547 0.04245283 0.         0.        ]</span>
+<span class="go"> [0.00537634 0.06989247 0.8655914  0.05913978 0.        ]</span>
+<span class="go"> [0.         0.         0.06372549 0.90196078 0.03431373]</span>
+<span class="go"> [0.         0.         0.         0.19444444 0.80555556]]</span>
+<span class="go">[[0.84693878 0.15306122 0.         0.         0.        ]</span>
+<span class="go"> [0.08133971 0.78947368 0.1291866  0.         0.        ]</span>
+<span class="go"> [0.00518135 0.0984456  0.79274611 0.0984456  0.00518135]</span>
+<span class="go"> [0.         0.         0.09411765 0.87058824 0.03529412]</span>
+<span class="go"> [0.         0.         0.         0.10204082 0.89795918]]</span>
+<span class="go">[[0.8852459  0.09836066 0.         0.01639344 0.        ]</span>
+<span class="go"> [0.03875969 0.81395349 0.13953488 0.         0.00775194]</span>
+<span class="go"> [0.0049505  0.09405941 0.77722772 0.11881188 0.0049505 ]</span>
+<span class="go"> [0.         0.02339181 0.12865497 0.75438596 0.09356725]</span>
+<span class="go"> [0.         0.         0.         0.09661836 0.90338164]]</span>
+<span class="go">[[0.33333333 0.66666667 0.         0.         0.        ]</span>
+<span class="go"> [0.0483871  0.77419355 0.16129032 0.01612903 0.        ]</span>
+<span class="go"> [0.01149425 0.16091954 0.74712644 0.08045977 0.        ]</span>
+<span class="go"> [0.         0.01036269 0.06217617 0.89637306 0.03108808]</span>
+<span class="go"> [0.         0.         0.         0.02352941 0.97647059]]</span>
+</pre></div>
+</div>
+<p>The probability of a poor state remaining poor is 0.963 if their
+neighbors are in the 1st quintile and 0.798 if their neighbors are
+in the 2nd quintile. The probability of a rich economy remaining
+rich is 0.976 if their neighbors are in the 5th quintile, but if their
+neighbors are in the 4th quintile this drops to 0.903.</p>
+<p>The global transition probability matrix is estimated:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sm</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
+<span class="go">[[0.91461837 0.07503234 0.00905563 0.00129366 0.        ]</span>
+<span class="go"> [0.06570302 0.82654402 0.10512484 0.00131406 0.00131406]</span>
+<span class="go"> [0.00520833 0.10286458 0.79427083 0.09505208 0.00260417]</span>
+<span class="go"> [0.         0.00913838 0.09399478 0.84856397 0.04830287]</span>
+<span class="go"> [0.         0.         0.         0.06217617 0.93782383]]</span>
+</pre></div>
+</div>
+<p>The Q and likelihood ratio statistics are both significant indicating
+the dynamics are not homogeneous across the lag classes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;</span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">sm</span><span class="o">.</span><span class="n">LR</span>
+<span class="go">&#39;170.659&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;</span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">sm</span><span class="o">.</span><span class="n">Q</span>
+<span class="go">&#39;200.624&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;</span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">sm</span><span class="o">.</span><span class="n">LR_p_value</span>
+<span class="go">&#39;0.000&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;</span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">sm</span><span class="o">.</span><span class="n">Q_p_value</span>
+<span class="go">&#39;0.000&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sm</span><span class="o">.</span><span class="n">dof_hom</span>
+<span class="go">60</span>
+</pre></div>
+</div>
+<p>The long run distribution for states with poor (rich) neighbors has
+0.435 (0.018) of the values in the first quintile, 0.263 (0.200) in
+the second quintile, 0.204 (0.190) in the third, 0.0684 (0.255) in the
+fourth and 0.029 (0.337) in the fifth quintile.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sm</span><span class="o">.</span><span class="n">S</span>
+<span class="go">array([[0.43509425, 0.2635327 , 0.20363044, 0.06841983, 0.02932278],</span>
+<span class="go">       [0.13391287, 0.33993305, 0.25153036, 0.23343016, 0.04119356],</span>
+<span class="go">       [0.12124869, 0.21137444, 0.2635101 , 0.29013417, 0.1137326 ],</span>
+<span class="go">       [0.0776413 , 0.19748806, 0.25352636, 0.22480415, 0.24654013],</span>
+<span class="go">       [0.01776781, 0.19964349, 0.19009833, 0.25524697, 0.3372434 ]])</span>
+</pre></div>
+</div>
+<p>States with incomes in the first quintile with neighbors in the
+first quintile return to the first quartile after 2.298 years, after
+leaving the first quintile. They enter the fourth quintile after
+80.810 years after leaving the first quintile, on average.
+Poor states within neighbors in the fourth quintile return to the
+first quintile, on average, after 12.88 years, and would enter the
+fourth quintile after 28.473 years.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">sm</span><span class="o">.</span><span class="n">F</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">[[  2.29835259  28.95614035  46.14285714  80.80952381 279.42857143]</span>
+<span class="go"> [ 33.86549708   3.79459555  22.57142857  57.23809524 255.85714286]</span>
+<span class="go"> [ 43.60233918   9.73684211   4.91085714  34.66666667 233.28571429]</span>
+<span class="go"> [ 46.62865497  12.76315789   6.25714286  14.61564626 198.61904762]</span>
+<span class="go"> [ 52.62865497  18.76315789  12.25714286   6.          34.1031746 ]]</span>
+<span class="go">[[  7.46754205   9.70574606  25.76785714  74.53116883 194.23446197]</span>
+<span class="go"> [ 27.76691978   2.94175577  24.97142857  73.73474026 193.4380334 ]</span>
+<span class="go"> [ 53.57477715  28.48447637   3.97566318  48.76331169 168.46660482]</span>
+<span class="go"> [ 72.03631562  46.94601483  18.46153846   4.28393653 119.70329314]</span>
+<span class="go"> [ 77.17917276  52.08887197  23.6043956    5.14285714  24.27564033]]</span>
+<span class="go">[[  8.24751154   6.53333333  18.38765432  40.70864198 112.76732026]</span>
+<span class="go"> [ 47.35040872   4.73094099  11.85432099  34.17530864 106.23398693]</span>
+<span class="go"> [ 69.42288828  24.76666667   3.794921    22.32098765  94.37966594]</span>
+<span class="go"> [ 83.72288828  39.06666667  14.3          3.44668119  76.36702977]</span>
+<span class="go"> [ 93.52288828  48.86666667  24.1          9.8          8.79255406]]</span>
+<span class="go">[[ 12.87974382  13.34847151  19.83446328  28.47257282  55.82395142]</span>
+<span class="go"> [ 99.46114206   5.06359731  10.54545198  23.05133495  49.68944423]</span>
+<span class="go"> [117.76777159  23.03735526   3.94436301  15.0843986   43.57927247]</span>
+<span class="go"> [127.89752089  32.4393006   14.56853107   4.44831643  31.63099455]</span>
+<span class="go"> [138.24752089  42.7893006   24.91853107  10.35         4.05613474]]</span>
+<span class="go">[[ 56.2815534    1.5         10.57236842  27.02173913 110.54347826]</span>
+<span class="go"> [ 82.9223301    5.00892857   9.07236842  25.52173913 109.04347826]</span>
+<span class="go"> [ 97.17718447  19.53125      5.26043557  21.42391304 104.94565217]</span>
+<span class="go"> [127.1407767   48.74107143  33.29605263   3.91777427  83.52173913]</span>
+<span class="go"> [169.6407767   91.24107143  75.79605263  42.5          2.96521739]]</span>
+</pre></div>
+</div>
+<p>(2) Global quintiles to discretize the income data (k=5), and global
+quartiles to discretize the spatial lags of incomes (m=4).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sm</span> <span class="o">=</span> <span class="n">Spatial_Markov</span><span class="p">(</span><span class="n">rpci</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">fixed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">variable_name</span><span class="o">=</span><span class="s1">&#39;rpci&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can also examine the cutoffs for the incomes and cutoffs for the spatial
+lags:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sm</span><span class="o">.</span><span class="n">cutoffs</span>
+<span class="go">array([0.83999133, 0.94707545, 1.03242697, 1.14911154])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sm</span><span class="o">.</span><span class="n">lag_cutoffs</span>
+<span class="go">array([0.91440247, 0.98583079, 1.08698351])</span>
+</pre></div>
+</div>
+<p>We now look at the estimated spatially lag conditioned transition
+probability matrices.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">sm</span><span class="o">.</span><span class="n">P</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">[[0.95708955 0.03544776 0.00746269 0.         0.        ]</span>
+<span class="go"> [0.05825243 0.83980583 0.10194175 0.         0.        ]</span>
+<span class="go"> [0.         0.1294964  0.76258993 0.10791367 0.        ]</span>
+<span class="go"> [0.         0.01538462 0.18461538 0.72307692 0.07692308]</span>
+<span class="go"> [0.         0.         0.         0.14285714 0.85714286]]</span>
+<span class="go">[[0.7421875  0.234375   0.0234375  0.         0.        ]</span>
+<span class="go"> [0.08550186 0.85130112 0.06319703 0.         0.        ]</span>
+<span class="go"> [0.00865801 0.06926407 0.86147186 0.05627706 0.004329  ]</span>
+<span class="go"> [0.         0.         0.05363985 0.92337165 0.02298851]</span>
+<span class="go"> [0.         0.         0.         0.13432836 0.86567164]]</span>
+<span class="go">[[0.95145631 0.04854369 0.         0.         0.        ]</span>
+<span class="go"> [0.06       0.79       0.145      0.         0.005     ]</span>
+<span class="go"> [0.00358423 0.10394265 0.7921147  0.09677419 0.00358423]</span>
+<span class="go"> [0.         0.01630435 0.13586957 0.75543478 0.0923913 ]</span>
+<span class="go"> [0.         0.         0.         0.10204082 0.89795918]]</span>
+<span class="go">[[0.16666667 0.66666667 0.         0.16666667 0.        ]</span>
+<span class="go"> [0.03488372 0.80232558 0.15116279 0.01162791 0.        ]</span>
+<span class="go"> [0.00840336 0.13445378 0.70588235 0.1512605  0.        ]</span>
+<span class="go"> [0.         0.01171875 0.08203125 0.87109375 0.03515625]</span>
+<span class="go"> [0.         0.         0.         0.03434343 0.96565657]]</span>
+</pre></div>
+</div>
+<p>We now obtain 4 5*5 spatial lag conditioned transition probability
+matrices instead of 5 as in case (1).</p>
+<p>The Q and likelihood ratio statistics are still both significant.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;</span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">sm</span><span class="o">.</span><span class="n">LR</span>
+<span class="go">&#39;172.105&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;</span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">sm</span><span class="o">.</span><span class="n">Q</span>
+<span class="go">&#39;321.128&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;</span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">sm</span><span class="o">.</span><span class="n">LR_p_value</span>
+<span class="go">&#39;0.000&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;</span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">sm</span><span class="o">.</span><span class="n">Q_p_value</span>
+<span class="go">&#39;0.000&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sm</span><span class="o">.</span><span class="n">dof_hom</span>
+<span class="go">45</span>
+</pre></div>
+</div>
+<p>(3) We can also set the cutoffs for relative incomes and their
+spatial lags manually.
+For example, we want the defining cutoffs to be [0.8, 0.9, 1, 1.2],
+meaning that relative incomes:
+2.1 smaller than 0.8 : class 0
+2.2 between 0.8 and 0.9: class 1
+2.3 between 0.9 and 1.0 : class 2
+2.4 between 1.0 and 1.2: class 3
+2.5 larger than 1.2: class 4</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sm</span> <span class="o">=</span> <span class="n">Spatial_Markov</span><span class="p">(</span><span class="n">rpci</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">cutoffs</span><span class="o">=</span><span class="n">cc</span><span class="p">,</span> <span class="n">lag_cutoffs</span><span class="o">=</span><span class="n">cc</span><span class="p">,</span> <span class="n">variable_name</span><span class="o">=</span><span class="s1">&#39;rpci&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sm</span><span class="o">.</span><span class="n">cutoffs</span>
+<span class="go">array([0.8, 0.9, 1. , 1.2])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sm</span><span class="o">.</span><span class="n">k</span>
+<span class="go">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sm</span><span class="o">.</span><span class="n">lag_cutoffs</span>
+<span class="go">array([0.8, 0.9, 1. , 1.2])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sm</span><span class="o">.</span><span class="n">m</span>
+<span class="go">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">sm</span><span class="o">.</span><span class="n">P</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">[[0.96703297 0.03296703 0.         0.         0.        ]</span>
+<span class="go"> [0.10638298 0.68085106 0.21276596 0.         0.        ]</span>
+<span class="go"> [0.         0.14285714 0.7755102  0.08163265 0.        ]</span>
+<span class="go"> [0.         0.         0.5        0.5        0.        ]</span>
+<span class="go"> [0.         0.         0.         0.         0.        ]]</span>
+<span class="go">[[0.88636364 0.10606061 0.00757576 0.         0.        ]</span>
+<span class="go"> [0.04402516 0.89308176 0.06289308 0.         0.        ]</span>
+<span class="go"> [0.         0.05882353 0.8627451  0.07843137 0.        ]</span>
+<span class="go"> [0.         0.         0.13846154 0.86153846 0.        ]</span>
+<span class="go"> [0.         0.         0.         0.         1.        ]]</span>
+<span class="go">[[0.78082192 0.17808219 0.02739726 0.01369863 0.        ]</span>
+<span class="go"> [0.03488372 0.90406977 0.05813953 0.00290698 0.        ]</span>
+<span class="go"> [0.         0.05919003 0.84735202 0.09034268 0.00311526]</span>
+<span class="go"> [0.         0.         0.05811623 0.92985972 0.01202405]</span>
+<span class="go"> [0.         0.         0.         0.14285714 0.85714286]]</span>
+<span class="go">[[0.82692308 0.15384615 0.         0.01923077 0.        ]</span>
+<span class="go"> [0.0703125  0.7890625  0.125      0.015625   0.        ]</span>
+<span class="go"> [0.00295858 0.06213018 0.82248521 0.10946746 0.00295858]</span>
+<span class="go"> [0.         0.00185529 0.07606679 0.88497217 0.03710575]</span>
+<span class="go"> [0.         0.         0.         0.07803468 0.92196532]]</span>
+<span class="go">[[0.         0.         0.         0.         0.        ]</span>
+<span class="go"> [0.         0.         0.         0.         0.        ]</span>
+<span class="go"> [0.         0.06666667 0.9        0.03333333 0.        ]</span>
+<span class="go"> [0.         0.         0.05660377 0.90566038 0.03773585]</span>
+<span class="go"> [0.         0.         0.         0.03932584 0.96067416]]</span>
+</pre></div>
+</div>
+<p>(4) Spatial_Markov also accept discrete time series and calculate
+categorical spatial lags on which several transition probability matrices
+are conditioned.
+Let’s still use the US state income time series to demonstrate. We first
+discretize them into categories and then pass them to Spatial_Markov.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pysal.viz.mapclassify</span> <span class="k">as</span> <span class="nn">mc</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">mc</span><span class="o">.</span><span class="n">Quantiles</span><span class="p">(</span><span class="n">rpci</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">yb</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">rpci</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sm</span> <span class="o">=</span> <span class="n">Spatial_Markov</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">discrete</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">variable_name</span><span class="o">=</span><span class="s1">&#39;discretized rpci&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sm</span><span class="o">.</span><span class="n">k</span>
+<span class="go">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sm</span><span class="o">.</span><span class="n">m</span>
+<span class="go">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">sm</span><span class="o">.</span><span class="n">P</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">[[0.94787645 0.04440154 0.00772201 0.         0.        ]</span>
+<span class="go"> [0.08333333 0.81060606 0.10606061 0.         0.        ]</span>
+<span class="go"> [0.         0.12765957 0.79787234 0.07446809 0.        ]</span>
+<span class="go"> [0.         0.02777778 0.22222222 0.66666667 0.08333333]</span>
+<span class="go"> [0.         0.         0.         0.33333333 0.66666667]]</span>
+<span class="go">[[0.888      0.096      0.016      0.         0.        ]</span>
+<span class="go"> [0.06049822 0.84341637 0.09608541 0.         0.        ]</span>
+<span class="go"> [0.00666667 0.10666667 0.81333333 0.07333333 0.        ]</span>
+<span class="go"> [0.         0.         0.08527132 0.86821705 0.04651163]</span>
+<span class="go"> [0.         0.         0.         0.10204082 0.89795918]]</span>
+<span class="go">[[0.65217391 0.32608696 0.02173913 0.         0.        ]</span>
+<span class="go"> [0.07446809 0.80851064 0.11170213 0.         0.00531915]</span>
+<span class="go"> [0.01071429 0.1        0.76428571 0.11785714 0.00714286]</span>
+<span class="go"> [0.         0.00552486 0.09392265 0.86187845 0.03867403]</span>
+<span class="go"> [0.         0.         0.         0.13157895 0.86842105]]</span>
+<span class="go">[[0.91935484 0.06451613 0.         0.01612903 0.        ]</span>
+<span class="go"> [0.06796117 0.90291262 0.02912621 0.         0.        ]</span>
+<span class="go"> [0.         0.05755396 0.87769784 0.0647482  0.        ]</span>
+<span class="go"> [0.         0.02150538 0.10752688 0.80107527 0.06989247]</span>
+<span class="go"> [0.         0.         0.         0.08064516 0.91935484]]</span>
+<span class="go">[[0.81818182 0.18181818 0.         0.         0.        ]</span>
+<span class="go"> [0.01754386 0.70175439 0.26315789 0.01754386 0.        ]</span>
+<span class="go"> [0.         0.14285714 0.73333333 0.12380952 0.        ]</span>
+<span class="go"> [0.         0.0042735  0.06837607 0.89316239 0.03418803]</span>
+<span class="go"> [0.         0.         0.         0.03891051 0.96108949]]</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>class_ids</strong><span class="classifier">array</span></dt><dd><p>(n, t), discretized series if y is continuous. Otherwise
+it is identical to y.</p>
+</dd>
+<dt><strong>classes</strong><span class="classifier">array</span></dt><dd><p>(k, 1), all different classes (bins).</p>
+</dd>
+<dt><strong>lclass_ids</strong><span class="classifier">array</span></dt><dd><p>(n, t), spatial lag series.</p>
+</dd>
+<dt><strong>lclasses</strong><span class="classifier">array</span></dt><dd><p>(k, 1), all different classes (bins) for
+spatial lags.</p>
+</dd>
+<dt><strong>p</strong><span class="classifier">array</span></dt><dd><p>(k, k), transition probability matrix for a-spatial
+Markov.</p>
+</dd>
+<dt><strong>s</strong><span class="classifier">array</span></dt><dd><p>(k, 1), ergodic distribution for a-spatial Markov.</p>
+</dd>
+<dt><strong>transitions</strong><span class="classifier">array</span></dt><dd><p>(k, k), counts of transitions between each state i and j
+for a-spatial Markov.</p>
+</dd>
+<dt><strong>T</strong><span class="classifier">array</span></dt><dd><p>(k, k, k), counts of transitions for each conditional
+Markov.  T[0] is the matrix of transitions for
+observations with lags in the 0th quantile; T[k-1] is the
+transitions for the observations with lags in the k-1th.</p>
+</dd>
+<dt><strong>P</strong><span class="classifier">array</span></dt><dd><p>(k, k, k), transition probability matrix for spatial
+Markov first dimension is the conditioned on the lag.</p>
+</dd>
+<dt><strong>S</strong><span class="classifier">array</span></dt><dd><p>(k, k), steady state distributions for spatial Markov.
+Each row is a conditional steady_state.</p>
+</dd>
+<dt><strong>F</strong><span class="classifier">array</span></dt><dd><p>(k, k, k),first mean passage times.
+First dimension is conditioned on the lag.</p>
+</dd>
+<dt><strong>shtest</strong><span class="classifier">list</span></dt><dd><p>(k elements), each element of the list is a tuple for a
+multinomial difference test between the steady state
+distribution from a conditional distribution versus the
+overall steady state distribution: first element of the
+tuple is the chi2 value, second its p-value and the third
+the degrees of freedom.</p>
+</dd>
+<dt><strong>chi2</strong><span class="classifier">list</span></dt><dd><p>(k elements), each element of the list is a tuple for a
+chi-squared test of the difference between the
+conditional transition matrix against the overall
+transition matrix: first element of the tuple is the chi2
+value, second its p-value and the third the degrees of
+freedom.</p>
+</dd>
+<dt><strong>x2</strong><span class="classifier">float</span></dt><dd><p>sum of the chi2 values for each of the conditional tests.
+Has an asymptotic chi2 distribution with k(k-1)(k-1)
+degrees of freedom. Under the null that transition
+probabilities are spatially homogeneous.
+(see chi2 above)</p>
+</dd>
+<dt><strong>x2_dof</strong><span class="classifier">int</span></dt><dd><p>degrees of freedom for homogeneity test.</p>
+</dd>
+<dt><strong>x2_pvalue</strong><span class="classifier">float</span></dt><dd><p>pvalue for homogeneity test based on analytic.
+distribution</p>
+</dd>
+<dt><strong>x2_rpvalue</strong><span class="classifier">float</span></dt><dd><p>(if permutations&gt;0)
+pseudo p-value for x2 based on random spatial
+permutations of the rows of the original transitions.</p>
+</dd>
+<dt><strong>x2_realizations</strong><span class="classifier">array</span></dt><dd><p>(permutations,1), the values of x2 for the random
+permutations.</p>
+</dd>
+<dt><strong>Q</strong><span class="classifier">float</span></dt><dd><p>Chi-square test of homogeneity across lag classes based
+on <a class="reference internal" href="../references.html#bickenbach2003" id="id2">[BB03]</a>.</p>
+</dd>
+<dt><strong>Q_p_value</strong><span class="classifier">float</span></dt><dd><p>p-value for Q.</p>
+</dd>
+<dt><strong>LR</strong><span class="classifier">float</span></dt><dd><p>Likelihood ratio statistic for homogeneity across lag
+classes based on <a class="reference internal" href="../references.html#bickenbach2003" id="id3">[BB03]</a>.</p>
+</dd>
+<dt><strong>LR_p_value</strong><span class="classifier">float</span></dt><dd><p>p-value for LR.</p>
+</dd>
+<dt><strong>dof_hom</strong><span class="classifier">int</span></dt><dd><p>degrees of freedom for LR and Q, corrected for 0 cells.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code>(self[, file_name])</p></td>
+<td><p>A summary method to call the Markov homogeneity test to test for temporally lagged spatial dependence.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pysal.explore.giddy.markov.Spatial_Markov.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">y</em>, <em class="sig-param">w</em>, <em class="sig-param">k=4</em>, <em class="sig-param">m=4</em>, <em class="sig-param">permutations=0</em>, <em class="sig-param">fixed=True</em>, <em class="sig-param">discrete=False</em>, <em class="sig-param">cutoffs=None</em>, <em class="sig-param">lag_cutoffs=None</em>, <em class="sig-param">variable_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/giddy/markov.html#Spatial_Markov.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.giddy.markov.Spatial_Markov.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pysal.explore.giddy.markov.Spatial_Markov.__init__" title="pysal.explore.giddy.markov.Spatial_Markov.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self, y, w[, k, m, permutations, …])</p></td>
+<td><p>Initialize self.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code>(self[, file_name])</p></td>
+<td><p>A summary method to call the Markov homogeneity test to test for temporally lagged spatial dependence.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">F</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">LR</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">LR_p_value</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Q</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Q_p_value</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">S</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">chi2</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dof_hom</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ht</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">s</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">shtest</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">x2</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">x2_dof</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">x2_pvalue</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../_sources/generated/pysal.explore.giddy.markov.Spatial_Markov.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

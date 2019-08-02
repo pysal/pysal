@@ -1,0 +1,6 @@
+pysal.explore.spaghetti.generatetree
+====================================
+
+.. currentmodule:: pysal.explore.spaghetti
+
+.. autofunction:: generatetree

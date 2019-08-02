@@ -1,0 +1,22 @@
+pysal.explore.segregation.non\_spatial\_indexes.Bias\_Corrected\_Dissim
+=======================================================================
+
+.. currentmodule:: pysal.explore.segregation.non_spatial_indexes
+
+.. autoclass:: Bias_Corrected_Dissim
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Bias_Corrected_Dissim.__init__
+   
+   
+
+   
+   
+   

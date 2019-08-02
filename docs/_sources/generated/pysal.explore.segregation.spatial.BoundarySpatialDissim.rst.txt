@@ -1,0 +1,22 @@
+pysal.explore.segregation.spatial.BoundarySpatialDissim
+=======================================================
+
+.. currentmodule:: pysal.explore.segregation.spatial
+
+.. autoclass:: BoundarySpatialDissim
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BoundarySpatialDissim.__init__
+   
+   
+
+   
+   
+   

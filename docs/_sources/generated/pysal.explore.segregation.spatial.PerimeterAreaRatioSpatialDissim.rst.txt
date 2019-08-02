@@ -1,0 +1,22 @@
+pysal.explore.segregation.spatial.PerimeterAreaRatioSpatialDissim
+=================================================================
+
+.. currentmodule:: pysal.explore.segregation.spatial
+
+.. autoclass:: PerimeterAreaRatioSpatialDissim
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PerimeterAreaRatioSpatialDissim.__init__
+   
+   
+
+   
+   
+   

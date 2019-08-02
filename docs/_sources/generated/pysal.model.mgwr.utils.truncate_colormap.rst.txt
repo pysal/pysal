@@ -1,0 +1,6 @@
+pysal.model.mgwr.utils.truncate\_colormap
+=========================================
+
+.. currentmodule:: pysal.model.mgwr.utils
+
+.. autofunction:: truncate_colormap

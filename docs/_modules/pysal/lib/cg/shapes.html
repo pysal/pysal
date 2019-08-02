@@ -1,0 +1,2137 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.lib.cg.shapes &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../../installation.html">Installation</a></li>
+                <li><a href="../../../../api.html">API</a></li>
+                <li><a href="../../../../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for pysal.lib.cg.shapes</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Computational geometry code for PySAL: Python Spatial Analysis Library.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Sergio J. Rey, Xinyue Ye, Charles Schmidt, Andrew Winslow, Hu Shao&quot;</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">.sphere</span> <span class="k">import</span> <span class="n">arcdist</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Point&#39;</span><span class="p">,</span> <span class="s1">&#39;LineSegment&#39;</span><span class="p">,</span> <span class="s1">&#39;Line&#39;</span><span class="p">,</span> <span class="s1">&#39;Ray&#39;</span><span class="p">,</span> <span class="s1">&#39;Chain&#39;</span><span class="p">,</span> <span class="s1">&#39;Polygon&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;Rectangle&#39;</span><span class="p">,</span> <span class="s1">&#39;asShape&#39;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="asShape"><a class="viewcode-back" href="../../../../generated/pysal.lib.cg.asShape.html#pysal.lib.cg.asShape">[docs]</a><span class="k">def</span> <span class="nf">asShape</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a pysal shape object from obj.</span>
+<span class="sd">    obj must support the __geo_interface__.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="p">(</span><span class="n">Point</span><span class="p">,</span> <span class="n">LineSegment</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Ray</span><span class="p">,</span> <span class="n">Chain</span><span class="p">,</span> <span class="n">Polygon</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="n">obj</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s1">&#39;__geo_interface__&#39;</span><span class="p">):</span>
+        <span class="n">geo</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">__geo_interface__</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">geo</span> <span class="o">=</span> <span class="n">obj</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">geo</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%r</span><span class="s1"> does not appear to be a shape object&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">obj</span><span class="p">))</span>
+    <span class="n">geo_type</span> <span class="o">=</span> <span class="n">geo</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="c1">#if geo_type.startswith(&#39;multi&#39;):</span>
+    <span class="c1">#    raise NotImplementedError, &quot;%s are not supported at this time.&quot;%geo_type</span>
+    <span class="k">if</span> <span class="n">geo_type</span> <span class="ow">in</span> <span class="n">_geoJSON_type_to_Pysal_type</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_geoJSON_type_to_Pysal_type</span><span class="p">[</span><span class="n">geo_type</span><span class="p">]</span><span class="o">.</span><span class="n">__from_geo_interface__</span><span class="p">(</span><span class="n">geo</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is not supported at this time.&quot;</span> <span class="o">%</span> <span class="n">geo_type</span><span class="p">)</span></div>
+
+<span class="k">class</span> <span class="nc">Geometry</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A base class to help implement is_geometry and make geometric types</span>
+<span class="sd">    extendable.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="Point"><a class="viewcode-back" href="../../../../generated/pysal.lib.cg.Point.html#pysal.lib.cg.Point">[docs]</a><span class="k">class</span> <span class="nc">Point</span><span class="p">(</span><span class="n">Geometry</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Geometric class for point objects.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Point.__init__"><a class="viewcode-back" href="../../../../generated/pysal.lib.cg.Point.html#pysal.lib.cg.Point.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loc</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns an instance of a Point object.</span>
+
+<span class="sd">        __init__((number, number)) -&gt; Point</span>
+
+<span class="sd">        Test tag: &lt;tc&gt;#is#Point.__init__&lt;/tc&gt;</span>
+<span class="sd">        Test tag: &lt;tc&gt;#tests#Point.__init__&lt;/tc&gt;</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        loc : tuple location (number x-tuple, x &gt; 1)</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; p = Point((1, 3))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__loc</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">loc</span><span class="p">))</span></div>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">__from_geo_interface__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">geo</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">geo</span><span class="p">[</span><span class="s1">&#39;coordinates&#39;</span><span class="p">])</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">__geo_interface__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Point&#39;</span><span class="p">,</span> <span class="s1">&#39;coordinates&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__loc</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tests if the Point is &lt; another object.</span>
+
+<span class="sd">        __ne__(x) -&gt; bool</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : an object to test equality against</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; Point((0,1)) &lt; Point((0,1))</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; Point((0,1)) &lt; Point((1,1))</span>
+<span class="sd">        True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__loc</span><span class="p">)</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">__loc</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tests if the Point is &lt;= another object.</span>
+
+<span class="sd">        __ne__(x) -&gt; bool</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : an object to test equality against</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; Point((0,1)) &lt;= Point((0,1))</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; Point((0,1)) &lt;= Point((1,1))</span>
+<span class="sd">        True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__loc</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">__loc</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tests if the Point is equal to another object.</span>
+
+<span class="sd">        __eq__(x) -&gt; bool</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : an object to test equality against</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; Point((0,1)) == Point((0,1))</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; Point((0,1)) == Point((1,1))</span>
+<span class="sd">        False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__loc</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">__loc</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tests if the Point is not equal to another object.</span>
+
+<span class="sd">        __ne__(x) -&gt; bool</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : an object to test equality against</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; Point((0,1)) != Point((0,1))</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; Point((0,1)) != Point((1,1))</span>
+<span class="sd">        True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__loc</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">__loc</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tests if the Point is &gt; another object.</span>
+
+<span class="sd">        __ne__(x) -&gt; bool</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : an object to test equality against</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; Point((0,1)) &gt; Point((0,1))</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; Point((0,1)) &gt; Point((1,1))</span>
+<span class="sd">        False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__loc</span><span class="p">)</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">__loc</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tests if the Point is &gt;= another object.</span>
+
+<span class="sd">        __ne__(x) -&gt; bool</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : an object to test equality against</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; Point((0,1)) &gt;= Point((0,1))</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; Point((0,1)) &gt;= Point((1,1))</span>
+<span class="sd">        False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__loc</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">__loc</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the hash of the Point&#39;s location.</span>
+
+<span class="sd">        x.__hash__() -&gt; hash(x)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; hash(Point((0,1))) == hash(Point((0,1)))</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; hash(Point((0,1))) == hash(Point((1,1)))</span>
+<span class="sd">        False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__loc</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the coordinate for the given dimension.</span>
+
+<span class="sd">        x.__getitem__(i) -&gt; x[i]</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        i : index of the desired dimension.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; p = Point((5.5,4.3))</span>
+<span class="sd">        &gt;&gt;&gt; p[0] == 5.5</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; p[1] == 4.3</span>
+<span class="sd">        True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__loc</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getslice__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the coordinate for the given dimensions.</span>
+
+<span class="sd">        x.__getitem__(i,j) -&gt; x[i:j]</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        i : index to start slice</span>
+<span class="sd">        j : index to end slice (excluded).</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; p = Point((3,6,2))</span>
+<span class="sd">        &gt;&gt;&gt; p[:2] == (3,6)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; p[1:2] == (6,)</span>
+<span class="sd">        True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__loc</span><span class="o">.</span><span class="n">__getslice__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the number of dimension in the point.</span>
+
+<span class="sd">        __len__() -&gt; int</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; len(Point((1,2)))</span>
+<span class="sd">        2</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__loc</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the string representation of the Point</span>
+
+<span class="sd">        __repr__() -&gt; string</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; Point((0,1))</span>
+<span class="sd">        (0.0, 1.0)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a string representation of a Point object.</span>
+
+<span class="sd">        __str__() -&gt; string</span>
+
+<span class="sd">        Test tag: &lt;tc&gt;#is#Point.__str__&lt;/tc&gt;</span>
+<span class="sd">        Test tag: &lt;tc&gt;#tests#Point.__str__&lt;/tc&gt;</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; p = Point((1, 3))</span>
+<span class="sd">        &gt;&gt;&gt; str(p)</span>
+<span class="sd">        &#39;(1.0, 3.0)&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__loc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;POINT (</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">__loc</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LineSegment"><a class="viewcode-back" href="../../../../generated/pysal.lib.cg.LineSegment.html#pysal.lib.cg.LineSegment">[docs]</a><span class="k">class</span> <span class="nc">LineSegment</span><span class="p">(</span><span class="n">Geometry</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Geometric representation of line segment objects.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    start_pt     : Point</span>
+<span class="sd">                   Point where segment begins</span>
+<span class="sd">    end_pt       : Point</span>
+<span class="sd">                   Point where segment ends</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    p1              : Point</span>
+<span class="sd">                      Starting point</span>
+<span class="sd">    p2              : Point</span>
+<span class="sd">                      Ending point</span>
+<span class="sd">    bounding_box    : tuple</span>
+<span class="sd">                      The bounding box of the segment (number 4-tuple)</span>
+<span class="sd">    len             : float</span>
+<span class="sd">                      The length of the segment</span>
+<span class="sd">    line            : Line</span>
+<span class="sd">                      The line on which the segment lies</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="LineSegment.__init__"><a class="viewcode-back" href="../../../../generated/pysal.lib.cg.LineSegment.html#pysal.lib.cg.LineSegment.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_pt</span><span class="p">,</span> <span class="n">end_pt</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a LineSegment object.</span>
+
+<span class="sd">        __init__(Point, Point) -&gt; LineSegment</span>
+
+<span class="sd">        Test tag: &lt;tc&gt;#is#LineSegment.__init__&lt;/tc&gt;</span>
+<span class="sd">        Test tag: &lt;tc&gt;#tests#LineSegment.__init__&lt;/tc&gt;</span>
+
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; ls = LineSegment(Point((1, 2)), Point((5, 6)))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_p1</span> <span class="o">=</span> <span class="n">start_pt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_p2</span> <span class="o">=</span> <span class="n">end_pt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_props</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;LineSegment(&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_p1</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_p2</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;LINESTRING (</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_p1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                                  <span class="bp">self</span><span class="o">.</span><span class="n">_p2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p2</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns true if self and other are the same line segment</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; l1 = LineSegment(Point((1, 2)), Point((5, 6)))</span>
+<span class="sd">        &gt;&gt;&gt; l2 = LineSegment(Point((5, 6)), Point((1, 2)))</span>
+<span class="sd">        &gt;&gt;&gt; l1 == l2</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; l2 == l1</span>
+<span class="sd">        True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">p1</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p1</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">p2</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p2</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">p2</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p1</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">p1</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p2</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">intersect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test whether segment intersects with other segment</span>
+
+<span class="sd">        Handles endpoints of segments being on other segment</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+
+<span class="sd">        &gt;&gt;&gt; ls = LineSegment(Point((5,0)), Point((10,0)))</span>
+<span class="sd">        &gt;&gt;&gt; ls1 = LineSegment(Point((5,0)), Point((10,1)))</span>
+<span class="sd">        &gt;&gt;&gt; ls.intersect(ls1)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; ls2 = LineSegment(Point((5,1)), Point((10,1)))</span>
+<span class="sd">        &gt;&gt;&gt; ls.intersect(ls2)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; ls2 = LineSegment(Point((7,-1)), Point((7,2)))</span>
+<span class="sd">        &gt;&gt;&gt; ls.intersect(ls2)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ccw1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sw_ccw</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">p2</span><span class="p">)</span>
+        <span class="n">ccw2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sw_ccw</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">p1</span><span class="p">)</span>
+        <span class="n">ccw3</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">sw_ccw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p1</span><span class="p">)</span>
+        <span class="n">ccw4</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">sw_ccw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p2</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ccw1</span><span class="o">*</span><span class="n">ccw2</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">ccw3</span><span class="o">*</span><span class="n">ccw4</span> <span class="o">&lt;=</span><span class="mi">0</span>
+
+
+
+    <span class="k">def</span> <span class="nf">_reset_props</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        HELPER METHOD. DO NOT CALL.</span>
+
+<span class="sd">        Resets attributes which are functions of other attributes. The getters for these attributes (implemented as</span>
+<span class="sd">        properties) then recompute their values if they have been reset since the last call to the getter.</span>
+
+<span class="sd">        _reset_props() -&gt; None</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; ls = LineSegment(Point((1, 2)), Point((5, 6)))</span>
+<span class="sd">        &gt;&gt;&gt; ls._reset_props()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bounding_box</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_len</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_line</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">_get_p1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        HELPER METHOD. DO NOT CALL.</span>
+
+<span class="sd">        Returns the p1 attribute of the line segment.</span>
+
+<span class="sd">        _get_p1() -&gt; Point</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; ls = LineSegment(Point((1, 2)), Point((5, 6)))</span>
+<span class="sd">        &gt;&gt;&gt; r = ls._get_p1()</span>
+<span class="sd">        &gt;&gt;&gt; r == Point((1, 2))</span>
+<span class="sd">        True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p1</span>
+
+    <span class="k">def</span> <span class="nf">_set_p1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        HELPER METHOD. DO NOT CALL.</span>
+
+<span class="sd">        Sets the p1 attribute of the line segment.</span>
+
+<span class="sd">        _set_p1(Point) -&gt; Point</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; ls = LineSegment(Point((1, 2)), Point((5, 6)))</span>
+<span class="sd">        &gt;&gt;&gt; r = ls._set_p1(Point((3, -1)))</span>
+<span class="sd">        &gt;&gt;&gt; r == Point((3.0, -1.0))</span>
+<span class="sd">        True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_p1</span> <span class="o">=</span> <span class="n">p1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_props</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p1</span>
+
+    <span class="n">p1</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_p1</span><span class="p">,</span> <span class="n">_set_p1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_p2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        HELPER METHOD. DO NOT CALL.</span>
+
+<span class="sd">        Returns the p2 attribute of the line segment.</span>
+
+<span class="sd">        _get_p2() -&gt; Point</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; ls = LineSegment(Point((1, 2)), Point((5, 6)))</span>
+<span class="sd">        &gt;&gt;&gt; r = ls._get_p2()</span>
+<span class="sd">        &gt;&gt;&gt; r == Point((5, 6))</span>
+<span class="sd">        True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p2</span>
+
+    <span class="k">def</span> <span class="nf">_set_p2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p2</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        HELPER METHOD. DO NOT CALL.</span>
+
+<span class="sd">        Sets the p2 attribute of the line segment.</span>
+
+<span class="sd">        _set_p2(Point) -&gt; Point</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; ls = LineSegment(Point((1, 2)), Point((5, 6)))</span>
+<span class="sd">        &gt;&gt;&gt; r = ls._set_p2(Point((3, -1)))</span>
+<span class="sd">        &gt;&gt;&gt; r == Point((3.0, -1.0))</span>
+<span class="sd">        True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_p2</span> <span class="o">=</span> <span class="n">p2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_props</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p2</span>
+
+    <span class="n">p2</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_p2</span><span class="p">,</span> <span class="n">_set_p2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">is_ccw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns whether a point is counterclockwise of the segment. Exclusive.</span>
+
+<span class="sd">        is_ccw(Point) -&gt; bool</span>
+
+<span class="sd">        Test tag: &lt;tc&gt;#is#LineSegment.is_ccw&lt;/tc&gt;</span>
+<span class="sd">        Test tag: &lt;tc&gt;#tests#LineSegment.is_ccw&lt;/tc&gt;</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pt : point lying ccw or cw of a segment</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; ls = LineSegment(Point((0, 0)), Point((5, 0)))</span>
+<span class="sd">        &gt;&gt;&gt; ls.is_ccw(Point((2, 2)))</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; ls.is_ccw(Point((2, -2)))</span>
+<span class="sd">        False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">v1</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p1</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">v2</span> <span class="o">=</span> <span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p1</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">v1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">v2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">v1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">v2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">is_cw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns whether a point is clockwise of the segment. Exclusive.</span>
+
+<span class="sd">        is_cw(Point) -&gt; bool</span>
+
+<span class="sd">        Test tag: &lt;tc&gt;#is#LineSegment.is_cw&lt;/tc&gt;</span>
+<span class="sd">        Test tag: &lt;tc&gt;#tests#LineSegment.is_cw&lt;/tc&gt;</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pt : point lying ccw or cw of a segment</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; ls = LineSegment(Point((0, 0)), Point((5, 0)))</span>
+<span class="sd">        &gt;&gt;&gt; ls.is_cw(Point((2, 2)))</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; ls.is_cw(Point((2, -2)))</span>
+<span class="sd">        True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">v1</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p1</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">v2</span> <span class="o">=</span> <span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p1</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">v1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">v2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">v1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">v2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">sw_ccw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sedgewick test for pt being ccw of segment</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        1 if turn from self.p1 to self.p2 to pt is ccw</span>
+<span class="sd">        -1 if turn from self.p1 to self.p2 to pt is cw</span>
+<span class="sd">        -1 if the points are collinear and self.p1 is in the middle</span>
+<span class="sd">        1 if the points are collinear and self.p2 is in the middle</span>
+<span class="sd">        0 if the points are collinear and pt is in the middle</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">p0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p1</span>
+        <span class="n">p1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p2</span>
+        <span class="n">p2</span> <span class="o">=</span> <span class="n">pt</span>
+
+        <span class="n">dx1</span> <span class="o">=</span> <span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">p0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">dy1</span> <span class="o">=</span> <span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">p0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">dx2</span> <span class="o">=</span> <span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">p0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">dy2</span> <span class="o">=</span> <span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">p0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">dy1</span><span class="o">*</span><span class="n">dx2</span> <span class="o">&lt;</span> <span class="n">dy2</span><span class="o">*</span><span class="n">dx1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">dy1</span><span class="o">*</span><span class="n">dx2</span> <span class="o">&gt;</span> <span class="n">dy2</span><span class="o">*</span><span class="n">dx1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">dx1</span><span class="o">*</span><span class="n">dx2</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">dy1</span><span class="o">*</span><span class="n">dy2</span> <span class="o">&lt;</span><span class="mi">0</span><span class="p">):</span>
+                <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="n">dx1</span><span class="o">*</span><span class="n">dx1</span> <span class="o">+</span> <span class="n">dy1</span><span class="o">*</span><span class="n">dy1</span> <span class="o">&gt;=</span> <span class="n">dx2</span><span class="o">*</span><span class="n">dx2</span> <span class="o">+</span> <span class="n">dy2</span><span class="o">*</span><span class="n">dy2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+
+
+
+
+    <span class="k">def</span> <span class="nf">get_swap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a LineSegment object which has its endpoints swapped.</span>
+
+<span class="sd">        get_swap() -&gt; LineSegment</span>
+
+<span class="sd">        Test tag: &lt;tc&gt;#is#LineSegment.get_swap&lt;/tc&gt;</span>
+<span class="sd">        Test tag: &lt;tc&gt;#tests#LineSegment.get_swap&lt;/tc&gt;</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; ls = LineSegment(Point((1, 2)), Point((5, 6)))</span>
+<span class="sd">        &gt;&gt;&gt; swap = ls.get_swap()</span>
+<span class="sd">        &gt;&gt;&gt; swap.p1[0]</span>
+<span class="sd">        5.0</span>
+<span class="sd">        &gt;&gt;&gt; swap.p1[1]</span>
+<span class="sd">        6.0</span>
+<span class="sd">        &gt;&gt;&gt; swap.p2[0]</span>
+<span class="sd">        1.0</span>
+<span class="sd">        &gt;&gt;&gt; swap.p2[1]</span>
+<span class="sd">        2.0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">LineSegment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_p2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p1</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">bounding_box</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the minimum bounding box of a LineSegment object.</span>
+
+<span class="sd">        Test tag: &lt;tc&gt;#is#LineSegment.bounding_box&lt;/tc&gt;</span>
+<span class="sd">        Test tag: &lt;tc&gt;#tests#LineSegment.bounding_box&lt;/tc&gt;</span>
+
+<span class="sd">        bounding_box -&gt; Rectangle</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; ls = LineSegment(Point((1, 2)), Point((5, 6)))</span>
+<span class="sd">        &gt;&gt;&gt; ls.bounding_box.left</span>
+<span class="sd">        1.0</span>
+<span class="sd">        &gt;&gt;&gt; ls.bounding_box.lower</span>
+<span class="sd">        2.0</span>
+<span class="sd">        &gt;&gt;&gt; ls.bounding_box.right</span>
+<span class="sd">        5.0</span>
+<span class="sd">        &gt;&gt;&gt; ls.bounding_box.upper</span>
+<span class="sd">        6.0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bounding_box</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># If LineSegment attributes p1, p2 changed, recompute</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_bounding_box</span> <span class="o">=</span> <span class="n">Rectangle</span><span class="p">(</span>
+                <span class="nb">min</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_p1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]]),</span> <span class="nb">min</span><span class="p">([</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_p1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]]),</span>
+                <span class="nb">max</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_p1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]]),</span> <span class="nb">max</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_p1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]]))</span>
+        <span class="k">return</span> <span class="n">Rectangle</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_bounding_box</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bounding_box</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bounding_box</span><span class="o">.</span><span class="n">right</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_bounding_box</span><span class="o">.</span><span class="n">upper</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">len</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the length of a LineSegment object.</span>
+
+<span class="sd">        Test tag: &lt;tc&gt;#is#LineSegment.len&lt;/tc&gt;</span>
+<span class="sd">        Test tag: &lt;tc&gt;#tests#LineSegment.len&lt;/tc&gt;</span>
+
+<span class="sd">        len() -&gt; number</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; ls = LineSegment(Point((2, 2)), Point((5, 2)))</span>
+<span class="sd">        &gt;&gt;&gt; ls.len</span>
+<span class="sd">        3.0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_len</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># If LineSegment attributes p1, p2 changed, recompute</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_len</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                   <span class="bp">self</span><span class="o">.</span><span class="n">_p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p2</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_len</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">line</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a Line object of the line which the segment lies on.</span>
+
+<span class="sd">        Test tag: &lt;tc&gt;#is#LineSegment.line&lt;/tc&gt;</span>
+<span class="sd">        Test tag: &lt;tc&gt;#tests#LineSegment.line&lt;/tc&gt;</span>
+
+<span class="sd">        line() -&gt; Line</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; ls = LineSegment(Point((2, 2)), Point((3, 3)))</span>
+<span class="sd">        &gt;&gt;&gt; l = ls.line</span>
+<span class="sd">        &gt;&gt;&gt; l.m</span>
+<span class="sd">        1.0</span>
+<span class="sd">        &gt;&gt;&gt; l.b</span>
+<span class="sd">        0.0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_line</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">dx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">dy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">dx</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">dy</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_line</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">elif</span> <span class="n">dx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_line</span> <span class="o">=</span> <span class="n">VerticalLine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_p1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="n">dy</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">dx</span><span class="p">)</span>
+                <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">m</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># y - mx</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_line</span> <span class="o">=</span> <span class="n">Line</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_line</span></div>
+
+
+<span class="k">class</span> <span class="nc">VerticalLine</span><span class="p">(</span><span class="n">Geometry</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Geometric representation of verticle line objects.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x       : float</span>
+<span class="sd">              x-intercept</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a VerticalLine object.</span>
+
+<span class="sd">        __init__(number) -&gt; VerticalLine</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : the x-intercept of the line</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; ls = VerticalLine(0)</span>
+<span class="sd">        &gt;&gt;&gt; ls.m</span>
+<span class="sd">        inf</span>
+<span class="sd">        &gt;&gt;&gt; ls.b</span>
+<span class="sd">        nan</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">x</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the x-value of the line at a particular y-value.</span>
+
+<span class="sd">        x(number) -&gt; number</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        y : the y-value to compute x at</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; l = VerticalLine(0)</span>
+<span class="sd">        &gt;&gt;&gt; l.x(0.25)</span>
+<span class="sd">        0.0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x</span>
+
+    <span class="k">def</span> <span class="nf">y</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the y-value of the line at a particular x-value.</span>
+
+<span class="sd">        y(number) -&gt; number</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : the x-value to compute y at</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; l = VerticalLine(1)</span>
+<span class="sd">        &gt;&gt;&gt; l.y(1)</span>
+<span class="sd">        nan</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Line"><a class="viewcode-back" href="../../../../generated/pysal.lib.cg.Line.html#pysal.lib.cg.Line">[docs]</a><span class="k">class</span> <span class="nc">Line</span><span class="p">(</span><span class="n">Geometry</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Geometric representation of line objects.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    m       : float</span>
+<span class="sd">              slope</span>
+<span class="sd">    b       : float</span>
+<span class="sd">              y-intercept</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Line.__init__"><a class="viewcode-back" href="../../../../generated/pysal.lib.cg.Line.html#pysal.lib.cg.Line.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a Line object.</span>
+
+<span class="sd">        __init__(number, number) -&gt; Line</span>
+
+<span class="sd">        Test tag: &lt;tc&gt;#is#Line.__init__&lt;/tc&gt;</span>
+<span class="sd">        Test tag: &lt;tc&gt;#tests#Line.__init__&lt;/tc&gt;</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        m : the slope of the line</span>
+<span class="sd">        b : the y-intercept of the line</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; ls = Line(1, 0)</span>
+<span class="sd">        &gt;&gt;&gt; ls.m</span>
+<span class="sd">        1.0</span>
+<span class="sd">        &gt;&gt;&gt; ls.b</span>
+<span class="sd">        0.0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">m</span> <span class="o">==</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">m</span> <span class="o">==</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ArithmeticError</span><span class="p">(</span><span class="s1">&#39;Slope cannot be infinite.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">b</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">x</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the x-value of the line at a particular y-value.</span>
+
+<span class="sd">        x(number) -&gt; number</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        y : the y-value to compute x at</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; l = Line(0.5, 0)</span>
+<span class="sd">        &gt;&gt;&gt; l.x(0.25)</span>
+<span class="sd">        0.5</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">m</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ArithmeticError</span><span class="p">(</span><span class="s1">&#39;Cannot solve for X when slope is zero.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">m</span>
+
+    <span class="k">def</span> <span class="nf">y</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the y-value of the line at a particular x-value.</span>
+
+<span class="sd">        y(number) -&gt; number</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : the x-value to compute y at</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; l = Line(1, 0)</span>
+<span class="sd">        &gt;&gt;&gt; l.y(1)</span>
+<span class="sd">        1.0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">m</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">m</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span></div>
+
+
+<div class="viewcode-block" id="Ray"><a class="viewcode-back" href="../../../../generated/pysal.lib.cg.Ray.html#pysal.lib.cg.Ray">[docs]</a><span class="k">class</span> <span class="nc">Ray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Geometric representation of ray objects.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    o       : Point</span>
+<span class="sd">              Origin (point where ray originates)</span>
+<span class="sd">    p       : Point</span>
+<span class="sd">              Second point on the ray (not point where ray originates)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Ray.__init__"><a class="viewcode-back" href="../../../../generated/pysal.lib.cg.Ray.html#pysal.lib.cg.Ray.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">second_p</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a ray with the values specified.</span>
+
+<span class="sd">        __init__(Point, Point) -&gt; Ray</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        origin   : the point where the ray originates</span>
+<span class="sd">        second_p : the second point specifying the ray (not the origin)</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; l = Ray(Point((0, 0)), Point((1, 0)))</span>
+<span class="sd">        &gt;&gt;&gt; str(l.o)</span>
+<span class="sd">        &#39;(0.0, 0.0)&#39;</span>
+<span class="sd">        &gt;&gt;&gt; str(l.p)</span>
+<span class="sd">        &#39;(1.0, 0.0)&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">o</span> <span class="o">=</span> <span class="n">origin</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">second_p</span></div></div>
+
+
+<div class="viewcode-block" id="Chain"><a class="viewcode-back" href="../../../../generated/pysal.lib.cg.Chain.html#pysal.lib.cg.Chain">[docs]</a><span class="k">class</span> <span class="nc">Chain</span><span class="p">(</span><span class="n">Geometry</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Geometric representation of a chain, also known as a polyline.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    vertices    : list</span>
+<span class="sd">                  List of Points of the vertices of the chain in order.</span>
+<span class="sd">    len         : float</span>
+<span class="sd">                  The geometric length of the chain.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Chain.__init__"><a class="viewcode-back" href="../../../../generated/pysal.lib.cg.Chain.html#pysal.lib.cg.Chain.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertices</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a chain created from the points specified.</span>
+
+<span class="sd">        __init__(Point list or list of Point lists) -&gt; Chain</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        vertices : list -- Point list or list of Point lists.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; c = Chain([Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((2, 1))])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_vertices</span> <span class="o">=</span> <span class="p">[</span><span class="n">part</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_vertices</span> <span class="o">=</span> <span class="p">[</span><span class="n">vertices</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_props</span><span class="p">()</span></div>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">__from_geo_interface__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">geo</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">geo</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;linestring&#39;</span><span class="p">:</span>
+            <span class="n">verts</span> <span class="o">=</span> <span class="p">[</span><span class="n">Point</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span> <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">geo</span><span class="p">[</span><span class="s1">&#39;coordinates&#39;</span><span class="p">]]</span>
+        <span class="k">elif</span> <span class="n">geo</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;multilinestring&#39;</span><span class="p">:</span>
+            <span class="n">verts</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">Point</span><span class="p">,</span> <span class="n">part</span><span class="p">))</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">geo</span><span class="p">[</span><span class="s1">&#39;coordinates&#39;</span><span class="p">]]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%r</span><span class="s1"> is not a Chain&#39;</span><span class="o">%</span><span class="n">geo</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">verts</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">__geo_interface__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;LineString&#39;</span><span class="p">,</span> <span class="s1">&#39;coordinates&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;MultiLineString&#39;</span><span class="p">,</span> <span class="s1">&#39;coordinates&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">_reset_props</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        HELPER METHOD. DO NOT CALL.</span>
+
+<span class="sd">        Resets attributes which are functions of other attributes. The getters for these attributes (implemented as</span>
+<span class="sd">        properties) then recompute their values if they have been reset since the last call to the getter.</span>
+
+<span class="sd">        _reset_props() -&gt; None</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; ls = Chain([Point((1, 2)), Point((5, 6))])</span>
+<span class="sd">        &gt;&gt;&gt; ls._reset_props()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_len</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_arclen</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bounding_box</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the vertices of the chain in clockwise order.</span>
+
+<span class="sd">        vertices -&gt; Point list</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; c = Chain([Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((2, 1))])</span>
+<span class="sd">        &gt;&gt;&gt; verts = c.vertices</span>
+<span class="sd">        &gt;&gt;&gt; len(verts)</span>
+<span class="sd">        4</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="n">part</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vertices</span><span class="p">],</span> <span class="p">[])</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">parts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the parts of the chain.</span>
+
+<span class="sd">        parts -&gt; Point list</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; c = Chain([[Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((0, 1))],[Point((2,1)),Point((2,2)),Point((1,2)),Point((1,1))]])</span>
+<span class="sd">        &gt;&gt;&gt; len(c.parts)</span>
+<span class="sd">        2</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">part</span><span class="p">]</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vertices</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">bounding_box</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the bounding box of the chain.</span>
+
+<span class="sd">        bounding_box -&gt; Rectangle</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; c = Chain([Point((0, 0)), Point((2, 0)), Point((2, 1)), Point((0, 1))])</span>
+<span class="sd">        &gt;&gt;&gt; c.bounding_box.left</span>
+<span class="sd">        0.0</span>
+<span class="sd">        &gt;&gt;&gt; c.bounding_box.lower</span>
+<span class="sd">        0.0</span>
+<span class="sd">        &gt;&gt;&gt; c.bounding_box.right</span>
+<span class="sd">        2.0</span>
+<span class="sd">        &gt;&gt;&gt; c.bounding_box.upper</span>
+<span class="sd">        1.0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bounding_box</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">vertices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_bounding_box</span> <span class="o">=</span> <span class="n">Rectangle</span><span class="p">(</span>
+                <span class="nb">min</span><span class="p">([</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]),</span> <span class="nb">min</span><span class="p">([</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]),</span>
+                <span class="nb">max</span><span class="p">([</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]),</span> <span class="nb">max</span><span class="p">([</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bounding_box</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">len</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the geometric length of the chain.</span>
+
+<span class="sd">        len -&gt; number</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; c = Chain([Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((2, 1))])</span>
+<span class="sd">        &gt;&gt;&gt; c.len</span>
+<span class="sd">        3.0</span>
+<span class="sd">        &gt;&gt;&gt; c = Chain([[Point((0, 0)), Point((1, 0)), Point((1, 1))],[Point((10,10)),Point((11,10)),Point((11,11))]])</span>
+<span class="sd">        &gt;&gt;&gt; c.len</span>
+<span class="sd">        4.0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">dist</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">v1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">v2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">v2</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="k">def</span> <span class="nf">part_perimeter</span><span class="p">(</span><span class="n">part</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="n">dist</span><span class="p">(</span><span class="n">part</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">part</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)])</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_len</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_len</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">part_perimeter</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vertices</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_len</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">arclen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the geometric length of the chain computed using arcdistance (meters).</span>
+
+<span class="sd">        len -&gt; number</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">part_perimeter</span><span class="p">(</span><span class="n">part</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="n">arcdist</span><span class="p">(</span><span class="n">part</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">part</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1000.</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arclen</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_arclen</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">part_perimeter</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vertices</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arclen</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">segments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the segments that compose the Chain</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[[</span><span class="n">LineSegment</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">part</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">part</span><span class="p">[</span><span class="mi">1</span><span class="p">:])]</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vertices</span><span class="p">]</span></div>
+
+
+<span class="k">class</span> <span class="nc">Ring</span><span class="p">(</span><span class="n">Geometry</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Geometric representation of a Linear Ring</span>
+
+<span class="sd">    Linear Rings must be closed, the first and last point must be the same. Open rings will be closed.</span>
+
+<span class="sd">    This class exists primarily as a geometric primitive to form complex polygons with multiple rings and holes.</span>
+
+<span class="sd">    The ordering of the vertices is ignored and will not be altered.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    vertices : list -- a list of vertices</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    __________</span>
+<span class="sd">    vertices        : list</span>
+<span class="sd">                      List of Points with the vertices of the ring</span>
+<span class="sd">    len             : int</span>
+<span class="sd">                      Number of vertices</span>
+<span class="sd">    perimeter       : float</span>
+<span class="sd">                      Geometric length of the perimeter of the ring</span>
+<span class="sd">    bounding_box    : Rectangle</span>
+<span class="sd">                      Bounding box of the ring</span>
+<span class="sd">    area            : float</span>
+<span class="sd">                      area enclosed by the ring</span>
+<span class="sd">    centroid        : tuple</span>
+<span class="sd">                      The centroid of the ring defined by the &#39;center of gravity&#39; or &#39;center or mass&#39;</span>
+<span class="sd">    _quad_tree_structure</span>
+<span class="sd">                    : object</span>
+<span class="sd">                      The quad tree structure for the ring. This structure could help test if a point is inside the ring</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertices</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">vertices</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">vertices</span> <span class="o">=</span> <span class="n">vertices</span><span class="p">[:]</span> <span class="o">+</span> <span class="n">vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
+            <span class="c1">#raise ValueError, &quot;Supplied vertices do not form a closed ring, the first and last vertices are not the same&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_perimeter</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bounding_box</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_area</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_centroid</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_quad_tree_structure</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">len</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">dist</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">v1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">v2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">v2</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">perimeter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_perimeter</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dist</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_perimeter</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">dist</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+                                   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)])</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_perimeter</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">bounding_box</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the bounding box of the ring</span>
+
+<span class="sd">        bounding_box -&gt; Rectangle</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; r = Ring([Point((0, 0)), Point((2, 0)), Point((2, 1)), Point((0, 1)), Point((0,0))])</span>
+<span class="sd">        &gt;&gt;&gt; r.bounding_box.left</span>
+<span class="sd">        0.0</span>
+<span class="sd">        &gt;&gt;&gt; r.bounding_box.lower</span>
+<span class="sd">        0.0</span>
+<span class="sd">        &gt;&gt;&gt; r.bounding_box.right</span>
+<span class="sd">        2.0</span>
+<span class="sd">        &gt;&gt;&gt; r.bounding_box.upper</span>
+<span class="sd">        1.0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bounding_box</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">vertices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_bounding_box</span> <span class="o">=</span> <span class="n">Rectangle</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bounding_box</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the area of the ring.</span>
+
+<span class="sd">        area -&gt; number</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; r = Ring([Point((0, 0)), Point((2, 0)), Point((2, 1)), Point((0, 1)), Point((0,0))])</span>
+<span class="sd">        &gt;&gt;&gt; r.area</span>
+<span class="sd">        2.0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">signed_area</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">signed_area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_area</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">vertices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]</span>
+            <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+            <span class="n">A</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">A</span> <span class="o">+=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">*</span> \
+                    <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="n">A</span> <span class="o">=</span> <span class="n">A</span> <span class="o">*</span> <span class="mf">0.5</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_area</span> <span class="o">=</span> <span class="o">-</span><span class="n">A</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_area</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">centroid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the centroid of the ring.</span>
+
+<span class="sd">        centroid -&gt; Point</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The centroid returned by this method is the geometric centroid.</span>
+<span class="sd">        Also known as the &#39;center of gravity&#39; or &#39;center of mass&#39;.</span>
+
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; r = Ring([Point((0, 0)), Point((2, 0)), Point((2, 1)), Point((0, 1)), Point((0,0))])</span>
+<span class="sd">        &gt;&gt;&gt; str(r.centroid)</span>
+<span class="sd">        &#39;(1.0, 0.5)&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_centroid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">vertices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]</span>
+            <span class="n">A</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">signed_area</span>
+            <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">cx</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">cy</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">f</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">cx</span> <span class="o">+=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">f</span>
+                <span class="n">cy</span> <span class="o">+=</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">f</span>
+            <span class="n">cx</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">A</span><span class="p">)</span> <span class="o">*</span> <span class="n">cx</span>
+            <span class="n">cy</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">A</span><span class="p">)</span> <span class="o">*</span> <span class="n">cy</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_centroid</span> <span class="o">=</span> <span class="n">Point</span><span class="p">((</span><span class="n">cx</span><span class="p">,</span> <span class="n">cy</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_centroid</span>
+
+    <span class="k">def</span> <span class="nf">build_quad_tree_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Build the quad tree structure for this ring. Once the structure is built, speed for testing if a point is inside the ring will be inscreased significantly.</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_quad_tree_structure</span> <span class="o">=</span> <span class="n">QuadTreeStructureSingleRing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+		
+    <span class="k">def</span> <span class="nf">contains_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Point containment using winding number</span>
+
+<span class="sd">        Implementation based on: http://www.engr.colostate.edu/~dga/dga/papers/point_in_polygon.pdf</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_quad_tree_structure</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">point</span>
+
+            <span class="c1"># bbox check</span>
+            <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounding_box</span><span class="o">.</span><span class="n">left</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounding_box</span><span class="o">.</span><span class="n">right</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounding_box</span><span class="o">.</span><span class="n">lower</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounding_box</span><span class="o">.</span><span class="n">upper</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+            <span class="n">rn</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span>
+            <span class="n">xs</span> <span class="o">=</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">rn</span><span class="p">)</span> <span class="p">]</span>
+            <span class="n">ys</span> <span class="o">=</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">rn</span><span class="p">)</span> <span class="p">]</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">yi</span> <span class="o">=</span> <span class="n">ys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">yj</span> <span class="o">=</span> <span class="n">ys</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">xi</span> <span class="o">=</span> <span class="n">xs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">xj</span> <span class="o">=</span> <span class="n">xs</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">yi</span><span class="o">*</span><span class="n">yj</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">r</span> <span class="o">=</span> <span class="n">xi</span> <span class="o">+</span> <span class="n">yi</span> <span class="o">*</span> <span class="p">(</span><span class="n">xj</span><span class="o">-</span><span class="n">xi</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">yi</span> <span class="o">-</span> <span class="n">yj</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">r</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">yi</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">w</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">w</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">yi</span><span class="o">==</span><span class="mi">0</span> <span class="ow">and</span> <span class="n">xi</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">yj</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">w</span> <span class="o">+=</span> <span class="mf">0.5</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">w</span> <span class="o">-=</span> <span class="mf">0.5</span>
+                <span class="k">elif</span> <span class="n">yj</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">xj</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">yi</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">w</span> <span class="o">+=</span> <span class="mf">0.5</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">w</span> <span class="o">-=</span> <span class="mf">0.5</span>
+            <span class="k">if</span> <span class="n">w</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_quad_tree_structure</span><span class="o">.</span><span class="n">contains_point</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
+
+
+
+
+<div class="viewcode-block" id="Polygon"><a class="viewcode-back" href="../../../../generated/pysal.lib.cg.Polygon.html#pysal.lib.cg.Polygon">[docs]</a><span class="k">class</span> <span class="nc">Polygon</span><span class="p">(</span><span class="n">Geometry</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Geometric representation of polygon objects.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    vertices        : list</span>
+<span class="sd">                      List of Points with the vertices of the Polygon in</span>
+<span class="sd">                      clockwise order</span>
+<span class="sd">    len             : int</span>
+<span class="sd">                      Number of vertices including holes</span>
+<span class="sd">    perimeter       : float</span>
+<span class="sd">                      Geometric length of the perimeter of the Polygon</span>
+<span class="sd">    bounding_box    : Rectangle</span>
+<span class="sd">                      Bounding box of the polygon</span>
+<span class="sd">    bbox            : List</span>
+<span class="sd">                      [left, lower, right, upper]</span>
+<span class="sd">    area            : float</span>
+<span class="sd">                      Area enclosed by the polygon</span>
+<span class="sd">    centroid        : tuple</span>
+<span class="sd">                      The &#39;center of gravity&#39;, i.e. the mean point of the polygon.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Polygon.__init__"><a class="viewcode-back" href="../../../../generated/pysal.lib.cg.Polygon.html#pysal.lib.cg.Polygon.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">holes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a polygon created from the objects specified.</span>
+
+<span class="sd">        __init__(Point list or list of Point lists, holes list ) -&gt; Polygon</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        vertices : list -- a list of vertices or a list of lists of vertices.</span>
+<span class="sd">        holes    : list -- a list of sub-polygons to be considered as holes.</span>
+<span class="sd">        is_quad_tree_structure_built</span>
+<span class="sd">                 : bool -- record if the quad tree structure has been built for this polygon. This quad tree structure could help speed up the contains_point test</span>
+<span class="sd">				 </span>
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; p1 = Polygon([Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((0, 1))])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_part_rings</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hole_rings</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">def</span> <span class="nf">clockwise</span><span class="p">(</span><span class="n">part</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">standalone</span><span class="o">.</span><span class="n">is_clockwise</span><span class="p">(</span><span class="n">part</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">part</span><span class="p">[:]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">part</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">vl</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vl</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_part_rings</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">Ring</span><span class="p">,</span> <span class="n">vertices</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_vertices</span> <span class="o">=</span> <span class="p">[</span><span class="n">clockwise</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_part_rings</span> <span class="o">=</span> <span class="p">[</span><span class="n">Ring</span><span class="p">(</span><span class="n">vertices</span><span class="p">)]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_vertices</span> <span class="o">=</span> <span class="p">[</span><span class="n">clockwise</span><span class="p">(</span><span class="n">vertices</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">holes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">holes</span> <span class="o">!=</span> <span class="p">[]:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">holes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_hole_rings</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">Ring</span><span class="p">,</span> <span class="n">holes</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_holes</span> <span class="o">=</span> <span class="p">[</span><span class="n">clockwise</span><span class="p">(</span><span class="n">hole</span><span class="p">)</span> <span class="k">for</span> <span class="n">hole</span> <span class="ow">in</span> <span class="n">holes</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_hole_rings</span> <span class="o">=</span> <span class="p">[</span><span class="n">Ring</span><span class="p">(</span><span class="n">holes</span><span class="p">)]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_holes</span> <span class="o">=</span> <span class="p">[</span><span class="n">clockwise</span><span class="p">(</span><span class="n">holes</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_holes</span> <span class="o">=</span> <span class="p">[[]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_props</span><span class="p">()</span></div>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">__from_geo_interface__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">geo</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        While pysal does not differentiate polygons and multipolygons GEOS,Shapely and geoJSON do.</span>
+<span class="sd">        In GEOS, etc, polygons may only have a single exterior ring, all other parts are holes.</span>
+<span class="sd">        MultiPolygons are simply a list of polygons.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">geo_type</span> <span class="o">=</span> <span class="n">geo</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">geo_type</span> <span class="o">==</span> <span class="s1">&#39;multipolygon&#39;</span><span class="p">:</span>
+            <span class="n">parts</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">holes</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">polygon</span> <span class="ow">in</span> <span class="n">geo</span><span class="p">[</span><span class="s1">&#39;coordinates&#39;</span><span class="p">]:</span>
+                <span class="n">verts</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Point</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span> <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">part</span><span class="p">]</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">polygon</span><span class="p">]</span>
+                <span class="n">parts</span> <span class="o">+=</span> <span class="n">verts</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">holes</span> <span class="o">+=</span> <span class="n">verts</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">holes</span><span class="p">:</span>
+                <span class="n">holes</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="n">holes</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">verts</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Point</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span> <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">part</span><span class="p">]</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">geo</span><span class="p">[</span><span class="s1">&#39;coordinates&#39;</span><span class="p">]]</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">verts</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">],</span> <span class="n">verts</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">__geo_interface__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">geo</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;MultiPolygon&#39;</span><span class="p">,</span> <span class="s1">&#39;coordinates&#39;</span><span class="p">:</span> <span class="p">[[</span>
+                <span class="n">part</span><span class="p">]</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">]}</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_holes</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">geo</span><span class="p">[</span><span class="s1">&#39;coordinates&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_holes</span>
+            <span class="k">return</span> <span class="n">geo</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_holes</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Polygon&#39;</span><span class="p">,</span> <span class="s1">&#39;coordinates&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vertices</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_holes</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Polygon&#39;</span><span class="p">,</span> <span class="s1">&#39;coordinates&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vertices</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">_reset_props</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_perimeter</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bounding_box</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bbox</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_area</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_centroid</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_len</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">len</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">len</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the number of vertices in the polygon.</span>
+
+<span class="sd">        len -&gt; int</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; p1 = Polygon([Point((0, 0)), Point((0, 1)), Point((1, 1)), Point((1, 0))])</span>
+<span class="sd">        &gt;&gt;&gt; p1.len</span>
+<span class="sd">        4</span>
+<span class="sd">        &gt;&gt;&gt; len(p1)</span>
+<span class="sd">        4</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_len</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_len</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the vertices of the polygon in clockwise order.</span>
+
+<span class="sd">        vertices -&gt; Point list</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; p1 = Polygon([Point((0, 0)), Point((0, 1)), Point((1, 1)), Point((1, 0))])</span>
+<span class="sd">        &gt;&gt;&gt; len(p1.vertices)</span>
+<span class="sd">        4</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="n">part</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vertices</span><span class="p">],</span> <span class="p">[])</span> <span class="o">+</span> <span class="nb">sum</span><span class="p">([</span><span class="n">part</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_holes</span><span class="p">],</span> <span class="p">[])</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">holes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the holes of the polygon in clockwise order.</span>
+
+<span class="sd">        holes -&gt; Point list</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; p = Polygon([Point((0, 0)), Point((10, 0)), Point((10, 10)), Point((0, 10))], [Point((1, 2)), Point((2, 2)), Point((2, 1)), Point((1, 1))])</span>
+<span class="sd">        &gt;&gt;&gt; len(p.holes)</span>
+<span class="sd">        1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">part</span><span class="p">]</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_holes</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">parts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the parts of the polygon in clockwise order.</span>
+
+<span class="sd">        parts -&gt; Point list</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; p = Polygon([[Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((0, 1))], [Point((2,1)),Point((2,2)),Point((1,2)),Point((1,1))]])</span>
+<span class="sd">        &gt;&gt;&gt; len(p.parts)</span>
+<span class="sd">        2</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">part</span><span class="p">]</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vertices</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">perimeter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the perimeter of the polygon.</span>
+
+<span class="sd">        perimeter() -&gt; number</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; p = Polygon([Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((0, 1))])</span>
+<span class="sd">        &gt;&gt;&gt; p.perimeter</span>
+<span class="sd">        4.0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">dist</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">v1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">v2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">v2</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="k">def</span> <span class="nf">part_perimeter</span><span class="p">(</span><span class="n">part</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="n">dist</span><span class="p">(</span><span class="n">part</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">part</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)])</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_perimeter</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_perimeter</span> <span class="o">=</span> <span class="p">(</span><span class="nb">sum</span><span class="p">([</span><span class="n">part_perimeter</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vertices</span><span class="p">])</span> <span class="o">+</span>
+                               <span class="nb">sum</span><span class="p">([</span><span class="n">part_perimeter</span><span class="p">(</span><span class="n">hole</span><span class="p">)</span> <span class="k">for</span> <span class="n">hole</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_holes</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_perimeter</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">bbox</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the bounding box of the polygon as a list</span>
+
+<span class="sd">        See also bounding_box</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bbox</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_bbox</span> <span class="o">=</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounding_box</span><span class="o">.</span><span class="n">left</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">bounding_box</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">bounding_box</span><span class="o">.</span><span class="n">right</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">bounding_box</span><span class="o">.</span><span class="n">upper</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bbox</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">bounding_box</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the bounding box of the polygon.</span>
+
+<span class="sd">        bounding_box -&gt; Rectangle</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; p = Polygon([Point((0, 0)), Point((2, 0)), Point((2, 1)), Point((0, 1))])</span>
+<span class="sd">        &gt;&gt;&gt; p.bounding_box.left</span>
+<span class="sd">        0.0</span>
+<span class="sd">        &gt;&gt;&gt; p.bounding_box.lower</span>
+<span class="sd">        0.0</span>
+<span class="sd">        &gt;&gt;&gt; p.bounding_box.right</span>
+<span class="sd">        2.0</span>
+<span class="sd">        &gt;&gt;&gt; p.bounding_box.upper</span>
+<span class="sd">        1.0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bounding_box</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">vertices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_bounding_box</span> <span class="o">=</span> <span class="n">Rectangle</span><span class="p">(</span>
+                <span class="nb">min</span><span class="p">([</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]),</span> <span class="nb">min</span><span class="p">([</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]),</span>
+                <span class="nb">max</span><span class="p">([</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]),</span> <span class="nb">max</span><span class="p">([</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bounding_box</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the area of the polygon.</span>
+
+<span class="sd">        area -&gt; number</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; p = Polygon([Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((0, 1))])</span>
+<span class="sd">        &gt;&gt;&gt; p.area</span>
+<span class="sd">        1.0</span>
+<span class="sd">        &gt;&gt;&gt; p = Polygon([Point((0, 0)), Point((10, 0)), Point((10, 10)), Point((0, 10))],[Point((2,1)),Point((2,2)),Point((1,2)),Point((1,1))])</span>
+<span class="sd">        &gt;&gt;&gt; p.area</span>
+<span class="sd">        99.0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">part_area</span><span class="p">(</span><span class="n">part_verts</span><span class="p">):</span>
+            <span class="n">area</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">part_verts</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">area</span> <span class="o">+=</span> <span class="p">(</span><span class="n">part_verts</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">part_verts</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> \
+                    <span class="p">(</span><span class="n">part_verts</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">part_verts</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">area</span> <span class="o">=</span> <span class="n">area</span> <span class="o">*</span> <span class="mf">0.5</span>
+            <span class="k">if</span> <span class="n">area</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">area</span> <span class="o">=</span> <span class="o">-</span><span class="n">area</span>
+            <span class="k">return</span> <span class="n">area</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="nb">sum</span><span class="p">([</span><span class="n">part_area</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vertices</span><span class="p">])</span> <span class="o">-</span>
+                <span class="nb">sum</span><span class="p">([</span><span class="n">part_area</span><span class="p">(</span><span class="n">hole</span><span class="p">)</span> <span class="k">for</span> <span class="n">hole</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_holes</span><span class="p">]))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">centroid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the centroid of the polygon</span>
+
+<span class="sd">        centroid -&gt; Point</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The centroid returned by this method is the geometric centroid and respects multipart polygons with holes.</span>
+<span class="sd">        Also known as the &#39;center of gravity&#39; or &#39;center of mass&#39;.</span>
+
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; p = Polygon([Point((0, 0)), Point((10, 0)), Point((10, 10)), Point((0, 10))], [Point((1, 1)), Point((1, 2)), Point((2, 2)), Point((2, 1))])</span>
+<span class="sd">        &gt;&gt;&gt; p.centroid</span>
+<span class="sd">        (5.0353535353535355, 5.0353535353535355)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">CP</span> <span class="o">=</span> <span class="p">[</span><span class="n">ring</span><span class="o">.</span><span class="n">centroid</span> <span class="k">for</span> <span class="n">ring</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_part_rings</span><span class="p">]</span>
+        <span class="n">AP</span> <span class="o">=</span> <span class="p">[</span><span class="n">ring</span><span class="o">.</span><span class="n">area</span> <span class="k">for</span> <span class="n">ring</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_part_rings</span><span class="p">]</span>
+        <span class="n">CH</span> <span class="o">=</span> <span class="p">[</span><span class="n">ring</span><span class="o">.</span><span class="n">centroid</span> <span class="k">for</span> <span class="n">ring</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hole_rings</span><span class="p">]</span>
+        <span class="n">AH</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">ring</span><span class="o">.</span><span class="n">area</span> <span class="k">for</span> <span class="n">ring</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hole_rings</span><span class="p">]</span>
+
+        <span class="n">A</span> <span class="o">=</span> <span class="n">AP</span> <span class="o">+</span> <span class="n">AH</span>
+        <span class="n">cx</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">area</span> <span class="k">for</span> <span class="n">pt</span><span class="p">,</span> <span class="n">area</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">CP</span> <span class="o">+</span> <span class="n">CH</span><span class="p">,</span> <span class="n">A</span><span class="p">)])</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+        <span class="n">cy</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">area</span> <span class="k">for</span> <span class="n">pt</span><span class="p">,</span> <span class="n">area</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">CP</span> <span class="o">+</span> <span class="n">CH</span><span class="p">,</span> <span class="n">A</span><span class="p">)])</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cx</span><span class="p">,</span> <span class="n">cy</span>
+	
+    <span class="k">def</span> <span class="nf">build_quad_tree_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Build the quad tree structure for this polygon. Once the structure is built, speed for testing if a point is inside the ring will be inscreased significantly.</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">ring</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_part_rings</span><span class="p">:</span>
+            <span class="n">ring</span><span class="o">.</span><span class="n">build_quad_tree_structure</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">ring</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hole_rings</span><span class="p">:</span>
+            <span class="n">ring</span><span class="o">.</span><span class="n">build_quad_tree_structure</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_quad_tree_structure_built</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">contains_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test if polygon contains point</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; p = Polygon([Point((0,0)), Point((4,0)), Point((4,5)), Point((2,3)), Point((0,5))])</span>
+<span class="sd">        &gt;&gt;&gt; p.contains_point((3,3))</span>
+<span class="sd">        1</span>
+<span class="sd">        &gt;&gt;&gt; p.contains_point((0,6))</span>
+<span class="sd">        0</span>
+<span class="sd">        &gt;&gt;&gt; p.contains_point((2,2.9))</span>
+<span class="sd">        1</span>
+<span class="sd">        &gt;&gt;&gt; p.contains_point((4,5))</span>
+<span class="sd">        0</span>
+<span class="sd">        &gt;&gt;&gt; p.contains_point((4,0))</span>
+<span class="sd">        0</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+
+<span class="sd">        Handles holes</span>
+
+<span class="sd">        &gt;&gt;&gt; p = Polygon([Point((0, 0)), Point((0, 10)), Point((10, 10)), Point((10, 0))], [Point((2, 2)), Point((4, 2)), Point((4, 4)), Point((2, 4))])</span>
+<span class="sd">        &gt;&gt;&gt; p.contains_point((3.0,3.0))</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; p.contains_point((1.0,1.0))</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Points falling exactly on polygon edges may yield unpredictable</span>
+<span class="sd">        results</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">ring</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hole_rings</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ring</span><span class="o">.</span><span class="n">contains_point</span><span class="p">(</span><span class="n">point</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">for</span> <span class="n">ring</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_part_rings</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ring</span><span class="o">.</span><span class="n">contains_point</span><span class="p">(</span><span class="n">point</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="Rectangle"><a class="viewcode-back" href="../../../../generated/pysal.lib.cg.Rectangle.html#pysal.lib.cg.Rectangle">[docs]</a><span class="k">class</span> <span class="nc">Rectangle</span><span class="p">(</span><span class="n">Geometry</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Geometric representation of rectangle objects.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    left    : float</span>
+<span class="sd">              Minimum x-value of the rectangle</span>
+<span class="sd">    lower   : float</span>
+<span class="sd">              Minimum y-value of the rectangle</span>
+<span class="sd">    right   : float</span>
+<span class="sd">              Maximum x-value of the rectangle</span>
+<span class="sd">    upper   : float</span>
+<span class="sd">              Maximum y-value of the rectangle</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Rectangle.__init__"><a class="viewcode-back" href="../../../../generated/pysal.lib.cg.Rectangle.html#pysal.lib.cg.Rectangle.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">lower</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">upper</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a Rectangle object.</span>
+
+<span class="sd">        __init__(number, number, number, number) -&gt; Rectangle</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        left  : the minimum x-value of the rectangle</span>
+<span class="sd">        lower : the minimum y-value of the rectangle</span>
+<span class="sd">        right : the maximum x-value of the rectangle</span>
+<span class="sd">        upper : the maximum y-value of the rectangle</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; r = Rectangle(-4, 3, 10, 17)</span>
+<span class="sd">        &gt;&gt;&gt; r.left #minx</span>
+<span class="sd">        -4.0</span>
+<span class="sd">        &gt;&gt;&gt; r.lower #miny</span>
+<span class="sd">        3.0</span>
+<span class="sd">        &gt;&gt;&gt; r.right #maxx</span>
+<span class="sd">        10.0</span>
+<span class="sd">        &gt;&gt;&gt; r.upper #maxy</span>
+<span class="sd">        17.0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">right</span> <span class="o">&lt;</span> <span class="n">left</span> <span class="ow">or</span> <span class="n">upper</span> <span class="o">&lt;</span> <span class="n">lower</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ArithmeticError</span><span class="p">(</span><span class="s1">&#39;Rectangle must have positive area.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">left</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">lower</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">upper</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        ___nonzero__ is used &quot;to implement truth value testing and the built-in operation bool()&quot; -- http://docs.python.org/reference/datamodel.html</span>
+
+<span class="sd">        Rectangles will evaluate to Flase if they have Zero Area.</span>
+<span class="sd">        &gt;&gt;&gt; r = Rectangle(0,0,0,0)</span>
+<span class="sd">        &gt;&gt;&gt; bool(r)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; r = Rectangle(0,0,1,1)</span>
+<span class="sd">        &gt;&gt;&gt; bool(r)</span>
+<span class="sd">        True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">other</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">[:]</span> <span class="o">==</span> <span class="n">other</span><span class="p">[:]</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[:]</span>
+        <span class="n">x1</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">X1</span><span class="p">,</span> <span class="n">Y1</span> <span class="o">=</span> <span class="n">other</span><span class="p">[:]</span>
+        <span class="k">return</span> <span class="n">Rectangle</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">left</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">lower</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">right</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">upper</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &gt;&gt;&gt; r = Rectangle(-4, 3, 10, 17)</span>
+<span class="sd">        &gt;&gt;&gt; r[:]</span>
+<span class="sd">        [-4.0, 3.0, 10.0, 17.0]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">l</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set_centroid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_center</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Moves the rectangle center to a new specified point.</span>
+
+<span class="sd">        set_centroid(Point) -&gt; Point</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        new_center : the new location of the centroid of the polygon</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; r = Rectangle(0, 0, 4, 4)</span>
+<span class="sd">        &gt;&gt;&gt; r.set_centroid(Point((4, 4)))</span>
+<span class="sd">        &gt;&gt;&gt; r.left</span>
+<span class="sd">        2.0</span>
+<span class="sd">        &gt;&gt;&gt; r.right</span>
+<span class="sd">        6.0</span>
+<span class="sd">        &gt;&gt;&gt; r.lower</span>
+<span class="sd">        2.0</span>
+<span class="sd">        &gt;&gt;&gt; r.upper</span>
+<span class="sd">        6.0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">shift</span> <span class="o">=</span> <span class="p">(</span><span class="n">new_center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                 <span class="n">new_center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">+</span> <span class="n">shift</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">+</span> <span class="n">shift</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="o">+</span> <span class="n">shift</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">+</span> <span class="n">shift</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">set_scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scale</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Rescales the rectangle around its center.</span>
+
+<span class="sd">        set_scale(number) -&gt; number</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        scale : the ratio of the new scale to the old scale (e.g. 1.0 is current size)</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; r = Rectangle(0, 0, 4, 4)</span>
+<span class="sd">        &gt;&gt;&gt; r.set_scale(2)</span>
+<span class="sd">        &gt;&gt;&gt; r.left</span>
+<span class="sd">        -2.0</span>
+<span class="sd">        &gt;&gt;&gt; r.right</span>
+<span class="sd">        6.0</span>
+<span class="sd">        &gt;&gt;&gt; r.lower</span>
+<span class="sd">        -2.0</span>
+<span class="sd">        &gt;&gt;&gt; r.upper</span>
+<span class="sd">        6.0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">center</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">scale</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">scale</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="o">=</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">scale</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">=</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">scale</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the area of the Rectangle.</span>
+
+<span class="sd">        area -&gt; number</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; r = Rectangle(0, 0, 4, 4)</span>
+<span class="sd">        &gt;&gt;&gt; r.area</span>
+<span class="sd">        16.0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the width of the Rectangle.</span>
+
+<span class="sd">        width -&gt; number</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; r = Rectangle(0, 0, 4, 4)</span>
+<span class="sd">        &gt;&gt;&gt; r.width</span>
+<span class="sd">        4.0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">height</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the height of the Rectangle.</span>
+
+<span class="sd">        height -&gt; number</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; r = Rectangle(0, 0, 4, 4)</span>
+<span class="sd">        &gt;&gt;&gt; r.height</span>
+<span class="sd">        4.0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span></div>
+
+
+<span class="n">_geoJSON_type_to_Pysal_type</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;point&#39;</span><span class="p">:</span> <span class="n">Point</span><span class="p">,</span> <span class="s1">&#39;linestring&#39;</span><span class="p">:</span> <span class="n">Chain</span><span class="p">,</span> <span class="s1">&#39;multilinestring&#39;</span><span class="p">:</span> <span class="n">Chain</span><span class="p">,</span>
+                               <span class="s1">&#39;polygon&#39;</span><span class="p">:</span> <span class="n">Polygon</span><span class="p">,</span> <span class="s1">&#39;multipolygon&#39;</span><span class="p">:</span> <span class="n">Polygon</span><span class="p">}</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">standalone</span>  <span class="c1"># moving this to top breaks unit tests !</span>
+<span class="kn">from</span> <span class="nn">.polygonQuadTreeStructure</span> <span class="k">import</span> <span class="n">QuadTreeStructureSingleRing</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

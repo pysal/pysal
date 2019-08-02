@@ -1,0 +1,6 @@
+pysal.model.mgwr.kernels.fix\_gauss
+===================================
+
+.. currentmodule:: pysal.model.mgwr.kernels
+
+.. autofunction:: fix_gauss

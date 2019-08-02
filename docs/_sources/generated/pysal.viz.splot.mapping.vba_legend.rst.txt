@@ -1,0 +1,6 @@
+pysal.viz.splot.mapping.vba\_legend
+===================================
+
+.. currentmodule:: pysal.viz.splot.mapping
+
+.. autofunction:: vba_legend

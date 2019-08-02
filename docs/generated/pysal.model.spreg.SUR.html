@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.model.spreg.SUR &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pysal.model.spreg.SURerrorGM" href="pysal.model.spreg.SURerrorGM.html" />
+    <link rel="prev" title="pysal.model.spreg.ThreeSLS" href="pysal.model.spreg.ThreeSLS.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../installation.html">Installation</a></li>
+                <li><a href="../api.html">API</a></li>
+                <li><a href="../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">pysal.model.spreg.SUR</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="pysal-model-spreg-sur">
+<h1>pysal.model.spreg.SUR<a class="headerlink" href="#pysal-model-spreg-sur" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pysal.model.spreg.SUR">
+<em class="property">class </em><code class="sig-prename descclassname">pysal.model.spreg.</code><code class="sig-name descname">SUR</code><span class="sig-paren">(</span><em class="sig-param">bigy</em>, <em class="sig-param">bigX</em>, <em class="sig-param">w=None</em>, <em class="sig-param">regimes=None</em>, <em class="sig-param">nonspat_diag=True</em>, <em class="sig-param">spat_diag=False</em>, <em class="sig-param">vm=False</em>, <em class="sig-param">iter=False</em>, <em class="sig-param">maxiter=5</em>, <em class="sig-param">epsilon=1e-05</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">name_bigy=None</em>, <em class="sig-param">name_bigX=None</em>, <em class="sig-param">name_ds=None</em>, <em class="sig-param">name_w=None</em>, <em class="sig-param">name_regimes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/model/spreg/sur.html#SUR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.model.spreg.SUR" title="Permalink to this definition">¶</a></dt>
+<dd><p>User class for SUR estimation, both two step as well as iterated</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>bigy</strong><span class="classifier">dictionary with vector for dependent variable by equation</span></dt><dd></dd>
+<dt><strong>bigX</strong><span class="classifier">dictionary with matrix of explanatory variables by equation</span></dt><dd><p>(note, already includes constant term)</p>
+</dd>
+<dt><strong>w</strong><span class="classifier">spatial weights object, default = None</span></dt><dd></dd>
+<dt><strong>regimes</strong><span class="classifier">list; default = None</span></dt><dd><p>List of n values with the mapping of each
+observation to a regime. Assumed to be aligned with ‘x’.</p>
+</dd>
+<dt><strong>nonspat_diag</strong><span class="classifier">boolean; flag for non-spatial diagnostics, default = True</span></dt><dd></dd>
+<dt><strong>spat_diag</strong><span class="classifier">boolean; flag for spatial diagnostics, default = False</span></dt><dd></dd>
+<dt><strong>iter</strong><span class="classifier">boolean; whether or not to use iterated estimation</span></dt><dd><p>default = False</p>
+</dd>
+<dt><strong>maxiter</strong><span class="classifier">integer; maximum iterations; default = 5</span></dt><dd></dd>
+<dt><strong>epsilon</strong><span class="classifier">float; precision criterion to end iterations</span></dt><dd><p>default = 0.00001</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">boolean; flag to print out iteration number and value</span></dt><dd><p>of log det(sig) at the beginning and the end of the iteration</p>
+</dd>
+<dt><strong>name_bigy</strong><span class="classifier">dictionary with name of dependent variable for each equation</span></dt><dd><p>default = None, but should be specified
+is done when sur_stackxy is used</p>
+</dd>
+<dt><strong>name_bigX</strong><span class="classifier">dictionary with names of explanatory variables for each</span></dt><dd><p>equation
+default = None, but should be specified
+is done when sur_stackxy is used</p>
+</dd>
+<dt><strong>name_ds</strong><span class="classifier">string; name for the data set</span></dt><dd></dd>
+<dt><strong>name_w</strong><span class="classifier">string; name for the weights file</span></dt><dd></dd>
+<dt><strong>name_regimes</strong><span class="classifier">string; name of regime variable for use in the output</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>First import pysal.lib to load the spatial analysis tools.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pysal.lib</span>
+</pre></div>
+</div>
+<p>Open data on NCOVR US County Homicides (3085 areas) using pysal.lib.io.open().
+This is the DBF associated with the NAT shapefile. Note that pysal.lib.io.open()
+also reads data in CSV format.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">db</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;NAT.dbf&quot;</span><span class="p">),</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The specification of the model to be estimated can be provided as lists.
+Each equation should be listed separately. In this example, equation 1
+has HR80 as dependent variable and PS80 and UE80 as exogenous regressors.
+For equation 2, HR90 is the dependent variable, and PS90 and UE90 the
+exogenous regressors.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">y_var</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;HR80&#39;</span><span class="p">,</span><span class="s1">&#39;HR90&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x_var</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;PS80&#39;</span><span class="p">,</span><span class="s1">&#39;UE80&#39;</span><span class="p">],[</span><span class="s1">&#39;PS90&#39;</span><span class="p">,</span><span class="s1">&#39;UE90&#39;</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>Although not required for this method, we can load a weights matrix file
+to allow for spatial diagnostics.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">Queen</span><span class="o">.</span><span class="n">from_shapefile</span><span class="p">(</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;NAT.shp&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span><span class="o">.</span><span class="n">transform</span><span class="o">=</span><span class="s1">&#39;r&#39;</span>
+</pre></div>
+</div>
+<p>The SUR method requires data to be provided as dictionaries. PySAL
+provides the tool sur_dictxy to create these dictionaries from the
+list of variables. The line below will create four dictionaries
+containing respectively the dependent variables (bigy), the regressors
+(bigX), the dependent variables’ names (bigyvars) and regressors’ names
+(bigXvars). All these will be created from th database (db) and lists
+of variables (y_var and x_var) created above.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bigy</span><span class="p">,</span><span class="n">bigX</span><span class="p">,</span><span class="n">bigyvars</span><span class="p">,</span><span class="n">bigXvars</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">spreg</span><span class="o">.</span><span class="n">sur_utils</span><span class="o">.</span><span class="n">sur_dictxy</span><span class="p">(</span><span class="n">db</span><span class="p">,</span><span class="n">y_var</span><span class="p">,</span><span class="n">x_var</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can now run the regression and then have a summary of the output by typing:
+‘print(reg.summary)’</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">reg</span> <span class="o">=</span> <span class="n">SUR</span><span class="p">(</span><span class="n">bigy</span><span class="p">,</span><span class="n">bigX</span><span class="p">,</span><span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span><span class="n">name_bigy</span><span class="o">=</span><span class="n">bigyvars</span><span class="p">,</span><span class="n">name_bigX</span><span class="o">=</span><span class="n">bigXvars</span><span class="p">,</span><span class="n">spat_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">name_ds</span><span class="o">=</span><span class="s2">&quot;nat&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
+<span class="go">REGRESSION</span>
+<span class="go">----------</span>
+<span class="go">SUMMARY OF OUTPUT: SEEMINGLY UNRELATED REGRESSIONS (SUR)</span>
+<span class="go">--------------------------------------------------------</span>
+<span class="go">Data set            :         nat</span>
+<span class="go">Weights matrix      :     unknown</span>
+<span class="go">Number of Equations :           2                Number of Observations:        3085</span>
+<span class="go">Log likelihood (SUR):  -19902.966                Number of Iterations  :           1</span>
+<span class="go">----------</span>
+<span class="go">&lt;BLANKLINE&gt;</span>
+<span class="go">SUMMARY OF EQUATION 1</span>
+<span class="go">---------------------</span>
+<span class="go">Dependent Variable  :        HR80                Number of Variables   :           3</span>
+<span class="go">Mean dependent var  :      6.9276                Degrees of Freedom    :        3082</span>
+<span class="go">S.D. dependent var  :      6.8251</span>
+<span class="go">&lt;BLANKLINE&gt;</span>
+<span class="go">------------------------------------------------------------------------------------</span>
+<span class="go">            Variable     Coefficient       Std.Error     z-Statistic     Probability</span>
+<span class="go">------------------------------------------------------------------------------------</span>
+<span class="go">          Constant_1       5.1390718       0.2624673      19.5798587       0.0000000</span>
+<span class="go">                PS80       0.6776481       0.1219578       5.5564132       0.0000000</span>
+<span class="go">                UE80       0.2637240       0.0343184       7.6846277       0.0000000</span>
+<span class="go">------------------------------------------------------------------------------------</span>
+<span class="go">&lt;BLANKLINE&gt;</span>
+<span class="go">SUMMARY OF EQUATION 2</span>
+<span class="go">---------------------</span>
+<span class="go">Dependent Variable  :        HR90                Number of Variables   :           3</span>
+<span class="go">Mean dependent var  :      6.1829                Degrees of Freedom    :        3082</span>
+<span class="go">S.D. dependent var  :      6.6403</span>
+<span class="go">&lt;BLANKLINE&gt;</span>
+<span class="go">------------------------------------------------------------------------------------</span>
+<span class="go">            Variable     Coefficient       Std.Error     z-Statistic     Probability</span>
+<span class="go">------------------------------------------------------------------------------------</span>
+<span class="go">          Constant_2       3.6139403       0.2534996      14.2561949       0.0000000</span>
+<span class="go">                PS90       1.0260715       0.1121662       9.1477755       0.0000000</span>
+<span class="go">                UE90       0.3865499       0.0341996      11.3027760       0.0000000</span>
+<span class="go">------------------------------------------------------------------------------------</span>
+<span class="go">&lt;BLANKLINE&gt;</span>
+<span class="go">&lt;BLANKLINE&gt;</span>
+<span class="go">REGRESSION DIAGNOSTICS</span>
+<span class="go">                                     TEST         DF       VALUE           PROB</span>
+<span class="go">                         LM test on Sigma         1      680.168           0.0000</span>
+<span class="go">                         LR test on Sigma         1      768.385           0.0000</span>
+<span class="go">&lt;BLANKLINE&gt;</span>
+<span class="go">OTHER DIAGNOSTICS - CHOW TEST BETWEEN EQUATIONS</span>
+<span class="go">                                VARIABLES         DF       VALUE           PROB</span>
+<span class="go">                   Constant_1, Constant_2         1       26.729           0.0000</span>
+<span class="go">                               PS80, PS90         1        8.241           0.0041</span>
+<span class="go">                               UE80, UE90         1        9.384           0.0022</span>
+<span class="go">&lt;BLANKLINE&gt;</span>
+<span class="go">DIAGNOSTICS FOR SPATIAL DEPENDENCE</span>
+<span class="go">TEST                              DF       VALUE           PROB</span>
+<span class="go">Lagrange Multiplier (error)       2        1333.586        0.0000</span>
+<span class="go">Lagrange Multiplier (lag)         2        1275.821        0.0000</span>
+<span class="go">&lt;BLANKLINE&gt;</span>
+<span class="go">ERROR CORRELATION MATRIX</span>
+<span class="go">  EQUATION 1  EQUATION 2</span>
+<span class="go">    1.000000    0.469548</span>
+<span class="go">    0.469548    1.000000</span>
+<span class="go">================================ END OF REPORT =====================================</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>bigy</strong><span class="classifier">dictionary with y values</span></dt><dd></dd>
+<dt><strong>bigX</strong><span class="classifier">dictionary with X values</span></dt><dd></dd>
+<dt><strong>bigXX</strong><span class="classifier">dictionary with X_t’X_r cross-products</span></dt><dd></dd>
+<dt><strong>bigXy</strong><span class="classifier">dictionary with X_t’y_r cross-products</span></dt><dd></dd>
+<dt><strong>n_eq</strong><span class="classifier">number of equations</span></dt><dd></dd>
+<dt><strong>n</strong><span class="classifier">number of observations in each cross-section</span></dt><dd></dd>
+<dt><strong>bigK</strong><span class="classifier">vector with number of explanatory variables (including constant)</span></dt><dd><p>for each equation</p>
+</dd>
+<dt><strong>bOLS</strong><span class="classifier">dictionary with OLS regression coefficients for each equation</span></dt><dd></dd>
+<dt><strong>olsE</strong><span class="classifier">N x n_eq array with OLS residuals for each equation</span></dt><dd></dd>
+<dt><strong>bSUR</strong><span class="classifier">dictionary with SUR regression coefficients for each equation</span></dt><dd></dd>
+<dt><strong>varb</strong><span class="classifier">variance-covariance matrix</span></dt><dd></dd>
+<dt><strong>sig</strong><span class="classifier">Sigma matrix of inter-equation error covariances</span></dt><dd></dd>
+<dt><strong>ldetS1</strong><span class="classifier">log det(Sigma) for SUR model</span></dt><dd></dd>
+<dt><strong>bigE</strong><span class="classifier">n by n_eq array of residuals</span></dt><dd></dd>
+<dt><strong>sig_ols</strong><span class="classifier">Sigma matrix for OLS residuals (diagonal)</span></dt><dd></dd>
+<dt><strong>ldetS0</strong><span class="classifier">log det(Sigma) for null model (OLS by equation)</span></dt><dd></dd>
+<dt><strong>niter</strong><span class="classifier">number of iterations (=0 for iter=False)</span></dt><dd></dd>
+<dt><strong>corr</strong><span class="classifier">inter-equation error correlation matrix</span></dt><dd></dd>
+<dt><strong>llik</strong><span class="classifier">log-likelihood (including the constant pi)</span></dt><dd></dd>
+<dt><strong>sur_inf</strong><span class="classifier">dictionary with standard error, asymptotic t and p-value,</span></dt><dd><p>one for each equation</p>
+</dd>
+<dt><strong>lrtest</strong><span class="classifier">Likelihood Ratio test on off-diagonal elements of sigma</span></dt><dd><p>(tuple with test,df,p-value)</p>
+</dd>
+<dt><strong>lmtest</strong><span class="classifier">Lagrange Multipler test on off-diagonal elements of sigma</span></dt><dd><p>(tuple with test,df,p-value)</p>
+</dd>
+<dt><strong>lmEtest</strong><span class="classifier">Lagrange Multiplier test on error spatial autocorrelation in SUR</span></dt><dd><p>(tuple with test, df, p-value)</p>
+</dd>
+<dt><strong>lmlagtest</strong><span class="classifier">Lagrange Multiplier test on spatial lag autocorrelation in SUR</span></dt><dd><p>(tuple with test, df, p-value)</p>
+</dd>
+<dt><strong>surchow</strong><span class="classifier">list with tuples for Chow test on regression coefficients</span></dt><dd><p>each tuple contains test value, degrees of freedom, p-value</p>
+</dd>
+<dt><strong>name_bigy</strong><span class="classifier">dictionary with name of dependent variable for each equation</span></dt><dd></dd>
+<dt><strong>name_bigX</strong><span class="classifier">dictionary with names of explanatory variables for each</span></dt><dd><p>equation</p>
+</dd>
+<dt><strong>name_ds</strong><span class="classifier">string; name for the data set</span></dt><dd></dd>
+<dt><strong>name_w</strong><span class="classifier">string; name for the weights file</span></dt><dd></dd>
+<dt><strong>name_regimes</strong><span class="classifier">string; name of regime variable for use in the output</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pysal.model.spreg.SUR.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">bigy</em>, <em class="sig-param">bigX</em>, <em class="sig-param">w=None</em>, <em class="sig-param">regimes=None</em>, <em class="sig-param">nonspat_diag=True</em>, <em class="sig-param">spat_diag=False</em>, <em class="sig-param">vm=False</em>, <em class="sig-param">iter=False</em>, <em class="sig-param">maxiter=5</em>, <em class="sig-param">epsilon=1e-05</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">name_bigy=None</em>, <em class="sig-param">name_bigX=None</em>, <em class="sig-param">name_ds=None</em>, <em class="sig-param">name_w=None</em>, <em class="sig-param">name_regimes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/model/spreg/sur.html#SUR.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.model.spreg.SUR.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pysal.model.spreg.SUR.__init__" title="pysal.model.spreg.SUR.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self, bigy, bigX[, w, regimes, …])</p></td>
+<td><p>Initialize self.</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../_sources/generated/pysal.model.spreg.SUR.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

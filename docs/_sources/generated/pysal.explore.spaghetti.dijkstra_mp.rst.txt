@@ -1,0 +1,6 @@
+pysal.explore.spaghetti.dijkstra\_mp
+====================================
+
+.. currentmodule:: pysal.explore.spaghetti
+
+.. autofunction:: dijkstra_mp
