@@ -2,7 +2,7 @@ import unittest
 import pysal.lib
 import geopandas as gpd
 import numpy as np
-from segregation.compute_all import ComputeAllAspatialSegregation, ComputeAllSpatialSegregation, ComputeAllSegregation
+from pysal.explore.segregation.compute_all import ComputeAllAspatialSegregation, ComputeAllSpatialSegregation, ComputeAllSegregation
 
 
 class ComputeAll_Tester(unittest.TestCase):
