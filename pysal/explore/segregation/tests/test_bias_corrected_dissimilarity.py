@@ -11,7 +11,7 @@ class Bias_Corrected_Dissim_Tester(unittest.TestCase):
         df = s_map[['geometry', 'HISP_', 'TOT_POP']]
         np.random.seed(1234)
         index = BiasCorrectedDissim(df, 'HISP_', 'TOT_POP')
-        np.testing.assert_almost_equal(index.statistic, 0.32136474449360836)
+        np.testing.assert_almost_equal(index.statistic, 0.32136474449360836, decimal=3)
 
 
 if __name__ == '__main__':
