@@ -93,7 +93,7 @@ Development
 
 As of version 2.0.0, PySAL is now a collection of affiliated geographic
 data science packages. Changes to the code for any of the subpackages
-should be directed at the respective upstream repositories and not made
+should be directed at the respective `upstream repositories <https://github.com/pysal/help>`_ and not made
 here. Infrastructural changes for the meta-package, like those for
 tooling, building the package, and code standards, will be considered.
 
