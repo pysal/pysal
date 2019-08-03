@@ -13,6 +13,10 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -21,10 +25,6 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -117,7 +117,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="body col-md-12 content" role="main">
+    <div class="col-md-12 content">
       
   <div class="section" id="pysal-explore-giddy-directional-rose">
 <h1>pysal.explore.giddy.directional.Rose<a class="headerlink" href="#pysal-explore-giddy-directional-rose" title="Permalink to this headline">¶</a></h1>
@@ -175,14 +175,22 @@ the LISA vectors, their visualization, and computationally based inference.</p>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">permute</span></code>(self[, permutations, alternative])</p></td>
 <td><p>Generate ransom spatial permutations for inference on LISA vectors.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code>(self[, attribute, ax])</p></td>
-<td><p>Plot the rose diagram.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_origin</span></code>(self)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_origin</span></code>(self)</p></td>
 <td><p>Plot vectors of positional transition of LISA values starting from the same origin.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_vectors</span></code>(self[, arrows])</p></td>
-<td><p>Plot vectors of positional transition of LISA values within quadrant in scatterplot in a polar plot.</p></td>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 62%" />
+<col style="width: 38%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>plot</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>plot_vectors</strong></p></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -328,10 +336,7 @@ rose diagram conditional on the starting relative income:</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">fig1</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>(<a class="reference external" href="../generated/pysal-explore-giddy-directional-Rose-1.py">Source code</a>, <a class="reference external" href="../generated/pysal-explore-giddy-directional-Rose-1.png">png</a>, <a class="reference external" href="../generated/pysal-explore-giddy-directional-Rose-1.hires.png">hires.png</a>, <a class="reference external" href="../generated/pysal-explore-giddy-directional-Rose-1.pdf">pdf</a>)</p>
-<div class="figure align-default">
-<img alt="../_images/pysal-explore-giddy-directional-Rose-1.png" src="../_images/pysal-explore-giddy-directional-Rose-1.png" />
-</div>
+<p>(<a class="reference external" href="../generated/pysal-explore-giddy-directional-Rose-1.py">Source code</a>)</p>
 </dd></dl>
 
 <p class="rubric">Methods</p>
@@ -347,14 +352,14 @@ rose diagram conditional on the starting relative income:</p>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">permute</span></code>(self[, permutations, alternative])</p></td>
 <td><p>Generate ransom spatial permutations for inference on LISA vectors.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code>(self[, attribute, ax])</p></td>
-<td><p>Plot the rose diagram.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code>(\*args, \*\*kwargs)</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_origin</span></code>(self)</p></td>
 <td><p>Plot vectors of positional transition of LISA values starting from the same origin.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_vectors</span></code>(self[, arrows])</p></td>
-<td><p>Plot vectors of positional transition of LISA values within quadrant in scatterplot in a polar plot.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_vectors</span></code>(\*args, \*\*kwargs)</p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
@@ -382,7 +387,7 @@ rose diagram conditional on the starting relative income:</p>
     </p>
     <p>
         &copy; Copyright 2018-, pysal developers.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
     </p>
   </div>
 </footer>
