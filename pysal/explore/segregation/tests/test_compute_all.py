@@ -1,5 +1,5 @@
 import unittest
-import libpysal
+import pysal.lib
 import geopandas as gpd
 import numpy as np
 from segregation.compute_all import ComputeAllAspatialSegregation, ComputeAllSpatialSegregation, ComputeAllSegregation
