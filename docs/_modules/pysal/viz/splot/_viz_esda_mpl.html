@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.viz.splot._viz_esda_mpl &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../../installation.html">Installation</a></li>
+                <li><a href="../../../../api.html">API</a></li>
+                <li><a href="../../../../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for pysal.viz.splot._viz_esda_mpl</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pysal.lib.weights.contiguity</span> <span class="k">import</span> <span class="n">Queen</span>
+<span class="kn">from</span> <span class="nn">pysal.lib.weights.spatial_lag</span> <span class="k">import</span> <span class="n">lag_spatial</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sbn</span>
+<span class="kn">from</span> <span class="nn">pysal.explore.esda.moran</span> <span class="k">import</span> <span class="p">(</span><span class="n">Moran_Local</span><span class="p">,</span> <span class="n">Moran_Local_BV</span><span class="p">,</span>
+                        <span class="n">Moran</span><span class="p">,</span> <span class="n">Moran_BV</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">pysal.model.spreg</span> <span class="k">import</span> <span class="n">OLS</span>
+
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">patches</span><span class="p">,</span> <span class="n">colors</span>
+
+<span class="kn">from</span> <span class="nn">._viz_utils</span> <span class="k">import</span> <span class="p">(</span><span class="n">mask_local_auto</span><span class="p">,</span> <span class="n">moran_hot_cold_spots</span><span class="p">,</span>
+                         <span class="n">splot_colors</span><span class="p">)</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Lightweight visualizations for esda using Matplotlib and Geopandas</span>
+
+<span class="sd">TODO</span>
+<span class="sd">* geopandas plotting, change round shapes in legends to boxes</span>
+<span class="sd">* prototype moran_facet using `seaborn.FacetGrid`</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Stefanie Lumnitz &lt;stefanie.lumitz@gmail.com&gt;&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_create_moran_fig_ax</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">figsize</span><span class="p">,</span> <span class="n">aspect_equal</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates matplotlib figure and axes instances</span>
+<span class="sd">    for plotting moran visualizations. Adds common viz design.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">()</span>
+    
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_position</span><span class="p">((</span><span class="s1">&#39;axes&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.05</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;bottom&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_position</span><span class="p">((</span><span class="s1">&#39;axes&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.05</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">aspect_equal</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_smart_bounds</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;bottom&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_smart_bounds</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span>
+
+
+<div class="viewcode-block" id="moran_scatterplot"><a class="viewcode-back" href="../../../../generated/pysal.viz.splot.esda.moran_scatterplot.html#pysal.viz.splot.esda.moran_scatterplot">[docs]</a><span class="k">def</span> <span class="nf">moran_scatterplot</span><span class="p">(</span><span class="n">moran</span><span class="p">,</span> <span class="n">zstandard</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">aspect_equal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">scatter_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fitline_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Moran Scatterplot</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    moran : esda.moran instance</span>
+<span class="sd">        Values of Moran&#39;s I Global, Bivariate and Local</span>
+<span class="sd">        Autocorrelation Statistics</span>
+<span class="sd">    zstandard : bool, optional</span>
+<span class="sd">        If True, Moran Scatterplot will show z-standardized attribute and</span>
+<span class="sd">        spatial lag values. Default =True.</span>
+<span class="sd">    p : float, optional</span>
+<span class="sd">        If given, the p-value threshold for significance</span>
+<span class="sd">        for Local Autocorrelation analysis. Points will be colored by</span>
+<span class="sd">        significance. By default it will not be colored.</span>
+<span class="sd">        Default =None.</span>
+<span class="sd">    aspect_equal : bool, optional</span>
+<span class="sd">        If True, Axes will show the same aspect or visual proportions</span>
+<span class="sd">        for Moran Scatterplot.</span>
+<span class="sd">    ax : Matplotlib Axes instance, optional</span>
+<span class="sd">        If given, the Moran plot will be created inside this axis.</span>
+<span class="sd">        Default =None.</span>
+<span class="sd">    scatter_kwds : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the scatter points.</span>
+<span class="sd">        Default =None.</span>
+<span class="sd">    fitline_kwds : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the moran fitline.</span>
+<span class="sd">        Default =None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig : Matplotlib Figure instance</span>
+<span class="sd">        Moran scatterplot figure</span>
+<span class="sd">    ax : matplotlib Axes instance</span>
+<span class="sd">        Axes in which the figure is plotted</span>
+<span class="sd">    </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Imports</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib.weights.contiguity import Queen</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib import examples</span>
+<span class="sd">    &gt;&gt;&gt; import geopandas as gpd</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.explore.esda.moran import (Moran, Moran_BV,</span>
+<span class="sd">    ...                         Moran_Local, Moran_Local_BV)</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.viz.splot.esda import moran_scatterplot</span>
+<span class="sd">    </span>
+<span class="sd">    Load data and calculate weights</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; link_to_data = examples.get_path(&#39;Guerry.shp&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; gdf = gpd.read_file(link_to_data)</span>
+<span class="sd">    &gt;&gt;&gt; x = gdf[&#39;Suicids&#39;].values</span>
+<span class="sd">    &gt;&gt;&gt; y = gdf[&#39;Donatns&#39;].values</span>
+<span class="sd">    &gt;&gt;&gt; w = Queen.from_dataframe(gdf)</span>
+<span class="sd">    &gt;&gt;&gt; w.transform = &#39;r&#39;</span>
+<span class="sd">    </span>
+<span class="sd">    Calculate esda.moran Objects</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; moran = Moran(y, w)</span>
+<span class="sd">    &gt;&gt;&gt; moran_bv = Moran_BV(y, x, w)</span>
+<span class="sd">    &gt;&gt;&gt; moran_loc = Moran_Local(y, w)</span>
+<span class="sd">    &gt;&gt;&gt; moran_loc_bv = Moran_Local_BV(y, x, w)</span>
+<span class="sd">    </span>
+<span class="sd">    Plot</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; fig, axs = plt.subplots(2, 2, figsize=(10,10),</span>
+<span class="sd">    ...                         subplot_kw={&#39;aspect&#39;: &#39;equal&#39;})</span>
+<span class="sd">    &gt;&gt;&gt; moran_scatterplot(moran, p=0.05, ax=axs[0,0])</span>
+<span class="sd">    &gt;&gt;&gt; moran_scatterplot(moran_loc, p=0.05, ax=axs[1,0])</span>
+<span class="sd">    &gt;&gt;&gt; moran_scatterplot(moran_bv, p=0.05, ax=axs[0,1])</span>
+<span class="sd">    &gt;&gt;&gt; moran_scatterplot(moran_loc_bv, p=0.05, ax=axs[1,1])</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">moran</span><span class="p">,</span> <span class="n">Moran</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;`p` is only used for plotting `esda.moran.Moran_Local`</span><span class="se">\n</span><span class="s1">&#39;</span>
+                          <span class="s1">&#39;or `Moran_Local_BV` objects&#39;</span><span class="p">)</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_moran_global_scatterplot</span><span class="p">(</span><span class="n">moran</span><span class="o">=</span><span class="n">moran</span><span class="p">,</span> <span class="n">zstandard</span><span class="o">=</span><span class="n">zstandard</span><span class="p">,</span>
+                                            <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">aspect_equal</span><span class="o">=</span><span class="n">aspect_equal</span><span class="p">,</span>
+                                            <span class="n">scatter_kwds</span><span class="o">=</span><span class="n">scatter_kwds</span><span class="p">,</span>
+                                            <span class="n">fitline_kwds</span><span class="o">=</span><span class="n">fitline_kwds</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">moran</span><span class="p">,</span> <span class="n">Moran_BV</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;`p` is only used for plotting `esda.moran.Moran_Local`</span><span class="se">\n</span><span class="s1">&#39;</span>
+                          <span class="s1">&#39;or `Moran_Local_BV` objects&#39;</span><span class="p">)</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_moran_bv_scatterplot</span><span class="p">(</span><span class="n">moran_bv</span><span class="o">=</span><span class="n">moran</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+                                        <span class="n">aspect_equal</span><span class="o">=</span><span class="n">aspect_equal</span><span class="p">,</span>
+                                        <span class="n">scatter_kwds</span><span class="o">=</span><span class="n">scatter_kwds</span><span class="p">,</span>
+                                        <span class="n">fitline_kwds</span><span class="o">=</span><span class="n">fitline_kwds</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">moran</span><span class="p">,</span> <span class="n">Moran_Local</span><span class="p">):</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_moran_loc_scatterplot</span><span class="p">(</span><span class="n">moran_loc</span><span class="o">=</span><span class="n">moran</span><span class="p">,</span> <span class="n">zstandard</span><span class="o">=</span><span class="n">zstandard</span><span class="p">,</span>
+                                         <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">aspect_equal</span><span class="o">=</span><span class="n">aspect_equal</span><span class="p">,</span>
+                                         <span class="n">scatter_kwds</span><span class="o">=</span><span class="n">scatter_kwds</span><span class="p">,</span>
+                                         <span class="n">fitline_kwds</span><span class="o">=</span><span class="n">fitline_kwds</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">moran</span><span class="p">,</span> <span class="n">Moran_Local_BV</span><span class="p">):</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_moran_loc_bv_scatterplot</span><span class="p">(</span><span class="n">moran_loc_bv</span><span class="o">=</span><span class="n">moran</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+                                            <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">aspect_equal</span><span class="o">=</span><span class="n">aspect_equal</span><span class="p">,</span>
+                                            <span class="n">scatter_kwds</span><span class="o">=</span><span class="n">scatter_kwds</span><span class="p">,</span>
+                                            <span class="n">fitline_kwds</span><span class="o">=</span><span class="n">fitline_kwds</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="s1">&#39;bottom&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
+
+
+<span class="k">def</span> <span class="nf">_moran_global_scatterplot</span><span class="p">(</span><span class="n">moran</span><span class="p">,</span> <span class="n">zstandard</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                              <span class="n">aspect_equal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                              <span class="n">scatter_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fitline_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Global Moran&#39;s I Scatterplot.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    moran : esda.moran.Moran instance</span>
+<span class="sd">        Values of Moran&#39;s I Global Autocorrelation Statistics</span>
+<span class="sd">    zstandard : bool, optional</span>
+<span class="sd">        If True, Moran Scatterplot will show z-standardized attribute and</span>
+<span class="sd">        spatial lag values. Default =True.</span>
+<span class="sd">    aspect_equal : bool, optional</span>
+<span class="sd">        If True, Axes will show the same aspect or visual proportions.</span>
+<span class="sd">    ax : Matplotlib Axes instance, optional</span>
+<span class="sd">        If given, the Moran plot will be created inside this axis.</span>
+<span class="sd">        Default =None.</span>
+<span class="sd">    scatter_kwds : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the scatter points.</span>
+<span class="sd">        Default =None.</span>
+<span class="sd">    fitline_kwds : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the moran fitline.</span>
+<span class="sd">        Default =None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig : Matplotlib Figure instance</span>
+<span class="sd">        Moran scatterplot figure</span>
+<span class="sd">    ax : matplotlib Axes instance</span>
+<span class="sd">        Axes in which the figure is plotted</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Imports</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib.weights.contiguity import Queen</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib import examples</span>
+<span class="sd">    &gt;&gt;&gt; import geopandas as gpd</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.explore.esda.moran import Moran</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.viz.splot.esda import moran_scatterplot</span>
+<span class="sd">    </span>
+<span class="sd">    Load data and calculate weights</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; link_to_data = examples.get_path(&#39;Guerry.shp&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; gdf = gpd.read_file(link_to_data)</span>
+<span class="sd">    &gt;&gt;&gt; y = gdf[&#39;Donatns&#39;].values</span>
+<span class="sd">    &gt;&gt;&gt; w = Queen.from_dataframe(gdf)</span>
+<span class="sd">    &gt;&gt;&gt; w.transform = &#39;r&#39;</span>
+<span class="sd">    </span>
+<span class="sd">    Calculate Global Moran</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; moran = Moran(y, w)</span>
+<span class="sd">    </span>
+<span class="sd">    plot</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; moran_scatterplot(moran)</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    customize plot</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; fig, ax = moran_scatterplot(moran, zstandard=False,</span>
+<span class="sd">    ...                             fitline_kwds=dict(color=&#39;#4393c3&#39;))</span>
+<span class="sd">    &gt;&gt;&gt; ax.set_xlabel(&#39;Donations&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># to set default as an empty dictionary that is later filled with defaults</span>
+    <span class="k">if</span> <span class="n">scatter_kwds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">scatter_kwds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">fitline_kwds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fitline_kwds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="c1"># define customization defaults</span>
+    <span class="n">scatter_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">)</span>
+    <span class="n">scatter_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="n">splot_colors</span><span class="p">[</span><span class="s1">&#39;moran_base&#39;</span><span class="p">])</span>
+    <span class="n">scatter_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+    
+    <span class="n">fitline_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">)</span>
+    <span class="n">fitline_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="n">splot_colors</span><span class="p">[</span><span class="s1">&#39;moran_fit&#39;</span><span class="p">])</span>
+    
+    <span class="c1"># get fig and ax</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_create_moran_fig_ax</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span>
+                                   <span class="n">aspect_equal</span><span class="o">=</span><span class="n">aspect_equal</span><span class="p">)</span>
+    
+    <span class="c1"># set labels</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Attribute&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Spatial Lag&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Moran Scatterplot&#39;</span> <span class="o">+</span>
+                 <span class="s1">&#39; (&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">moran</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span><span class="p">)</span>
+
+    <span class="c1"># plot and set standards</span>
+    <span class="k">if</span> <span class="n">zstandard</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">lag</span> <span class="o">=</span> <span class="n">lag_spatial</span><span class="p">(</span><span class="n">moran</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="n">moran</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">fit</span> <span class="o">=</span> <span class="n">OLS</span><span class="p">(</span><span class="n">moran</span><span class="o">.</span><span class="n">z</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">lag</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])</span>
+        <span class="c1"># plot</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">moran</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="n">lag</span><span class="p">,</span> <span class="o">**</span><span class="n">scatter_kwds</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lag</span><span class="p">,</span> <span class="n">fit</span><span class="o">.</span><span class="n">predy</span><span class="p">,</span> <span class="o">**</span><span class="n">fitline_kwds</span><span class="p">)</span>
+        <span class="c1"># v- and hlines</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">lag</span> <span class="o">=</span> <span class="n">lag_spatial</span><span class="p">(</span><span class="n">moran</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="n">moran</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">moran</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">lag</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># plot</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">moran</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">lag</span><span class="p">,</span> <span class="o">**</span><span class="n">scatter_kwds</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">moran</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="o">*</span><span class="n">moran</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">fitline_kwds</span><span class="p">)</span>
+        <span class="c1"># dashed vert at mean of the attribute</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">moran</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">lag</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">lag</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                  <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+        <span class="c1"># dashed horizontal at mean of lagged attribute</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">hlines</span><span class="p">(</span><span class="n">lag</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">moran</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">moran</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                  <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span>
+
+
+<div class="viewcode-block" id="plot_moran_simulation"><a class="viewcode-back" href="../../../../generated/pysal.viz.splot.esda.plot_moran_simulation.html#pysal.viz.splot.esda.plot_moran_simulation">[docs]</a><span class="k">def</span> <span class="nf">plot_moran_simulation</span><span class="p">(</span><span class="n">moran</span><span class="p">,</span> <span class="n">aspect_equal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                          <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fitline_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                          <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Global Moran&#39;s I simulated reference distribution.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    moran : esda.moran.Moran instance</span>
+<span class="sd">        Values of Moran&#39;s I Global Autocorrelation Statistics</span>
+<span class="sd">    aspect_equal : bool, optional</span>
+<span class="sd">        If True, Axes of Moran Scatterplot will show the same</span>
+<span class="sd">        aspect or visual proportions.</span>
+<span class="sd">    ax : Matplotlib Axes instance, optional</span>
+<span class="sd">        If given, the Moran plot will be created inside this axis.</span>
+<span class="sd">        Default =None.</span>
+<span class="sd">    fitline_kwds : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the</span>
+<span class="sd">        vertical moran fitline. Default =None.</span>
+<span class="sd">    **kwargs : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the figure,</span>
+<span class="sd">        passed to seaborn.kdeplot.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig : Matplotlib Figure instance</span>
+<span class="sd">        Simulated reference distribution figure</span>
+<span class="sd">    ax : matplotlib Axes instance</span>
+<span class="sd">        Axes in which the figure is plotted</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Imports</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib.weights.contiguity import Queen</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib import examples</span>
+<span class="sd">    &gt;&gt;&gt; import geopandas as gpd</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.explore.esda.moran import Moran</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.viz.splot.esda import plot_moran_simulation</span>
+<span class="sd">    </span>
+<span class="sd">    Load data and calculate weights</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; link_to_data = examples.get_path(&#39;Guerry.shp&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; gdf = gpd.read_file(link_to_data)</span>
+<span class="sd">    &gt;&gt;&gt; y = gdf[&#39;Donatns&#39;].values</span>
+<span class="sd">    &gt;&gt;&gt; w = Queen.from_dataframe(gdf)</span>
+<span class="sd">    &gt;&gt;&gt; w.transform = &#39;r&#39;</span>
+<span class="sd">    </span>
+<span class="sd">    Calculate Global Moran</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; moran = Moran(y, w)</span>
+<span class="sd">    </span>
+<span class="sd">    plot</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; plot_moran_simulation(moran)</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    customize plot</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; plot_moran_simulation(moran, fitline_kwds=dict(color=&#39;#4393c3&#39;))</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># to set default as an empty dictionary that is later filled with defaults</span>
+    <span class="k">if</span> <span class="n">fitline_kwds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fitline_kwds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="n">figsize</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;figsize&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+    
+    <span class="c1"># get fig and ax</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_create_moran_fig_ax</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">figsize</span><span class="p">,</span>
+                                   <span class="n">aspect_equal</span><span class="o">=</span><span class="n">aspect_equal</span><span class="p">)</span>
+
+    <span class="c1"># plot distribution</span>
+    <span class="n">shade</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;shade&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="n">splot_colors</span><span class="p">[</span><span class="s1">&#39;moran_base&#39;</span><span class="p">])</span>
+    <span class="n">sbn</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">moran</span><span class="o">.</span><span class="n">sim</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="n">shade</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="c1"># customize plot</span>
+    <span class="n">fitline_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="n">splot_colors</span><span class="p">[</span><span class="s1">&#39;moran_fit&#39;</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">moran</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">fitline_kwds</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">moran</span><span class="o">.</span><span class="n">EI</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Reference Distribution&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Moran I: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">moran</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
+
+
+<div class="viewcode-block" id="plot_moran"><a class="viewcode-back" href="../../../../generated/pysal.viz.splot.esda.plot_moran.html#pysal.viz.splot.esda.plot_moran">[docs]</a><span class="k">def</span> <span class="nf">plot_moran</span><span class="p">(</span><span class="n">moran</span><span class="p">,</span> <span class="n">zstandard</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">aspect_equal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+               <span class="n">scatter_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fitline_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Global Moran&#39;s I simulated reference distribution and scatterplot.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    moran : esda.moran.Moran instance</span>
+<span class="sd">        Values of Moran&#39;s I Global Autocorrelation Statistics</span>
+<span class="sd">    zstandard : bool, optional</span>
+<span class="sd">        If True, Moran Scatterplot will show z-standardized attribute and</span>
+<span class="sd">        spatial lag values. Default =True.</span>
+<span class="sd">    aspect_equal : bool, optional</span>
+<span class="sd">        If True, Axes of Moran Scatterplot will show the same</span>
+<span class="sd">        aspect or visual proportions.</span>
+<span class="sd">    scatter_kwds : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the scatter points.</span>
+<span class="sd">        Default =None.</span>
+<span class="sd">    fitline_kwds : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the moran fitline</span>
+<span class="sd">        and vertical fitline. Default =None.</span>
+<span class="sd">    **kwargs : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the figure,</span>
+<span class="sd">        passed to seaborne.kdeplot.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig : Matplotlib Figure instance</span>
+<span class="sd">        Moran scatterplot and reference distribution figure</span>
+<span class="sd">    ax : matplotlib Axes instance</span>
+<span class="sd">        Axes in which the figure is plotted</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Imports</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib.weights.contiguity import Queen</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib import examples</span>
+<span class="sd">    &gt;&gt;&gt; import geopandas as gpd</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.explore.esda.moran import Moran</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.viz.splot.esda import plot_moran</span>
+<span class="sd">    </span>
+<span class="sd">    Load data and calculate weights</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; link_to_data = examples.get_path(&#39;Guerry.shp&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; gdf = gpd.read_file(link_to_data)</span>
+<span class="sd">    &gt;&gt;&gt; y = gdf[&#39;Donatns&#39;].values</span>
+<span class="sd">    &gt;&gt;&gt; w = Queen.from_dataframe(gdf)</span>
+<span class="sd">    &gt;&gt;&gt; w.transform = &#39;r&#39;</span>
+<span class="sd">    </span>
+<span class="sd">    Calculate Global Moran</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; moran = Moran(y, w)</span>
+<span class="sd">    </span>
+<span class="sd">    plot</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; plot_moran(moran)</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    customize plot</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; plot_moran(moran, zstandard=False,</span>
+<span class="sd">    ...            fitline_kwds=dict(color=&#39;#4393c3&#39;))</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">figsize</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;figsize&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span>
+                            <span class="n">subplot_kw</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;aspect&#39;</span><span class="p">:</span> <span class="s1">&#39;equal&#39;</span><span class="p">})</span>
+    <span class="n">plot_moran_simulation</span><span class="p">(</span><span class="n">moran</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">fitline_kwds</span><span class="o">=</span><span class="n">fitline_kwds</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">moran_scatterplot</span><span class="p">(</span><span class="n">moran</span><span class="p">,</span> <span class="n">zstandard</span><span class="o">=</span><span class="n">zstandard</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                      <span class="n">scatter_kwds</span><span class="o">=</span><span class="n">scatter_kwds</span><span class="p">,</span> <span class="n">fitline_kwds</span><span class="o">=</span><span class="n">fitline_kwds</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">aspect</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">aspect_equal</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">,</span> <span class="s2">&quot;datalim&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span> 
+        <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span></div>
+
+
+<span class="k">def</span> <span class="nf">_moran_bv_scatterplot</span><span class="p">(</span><span class="n">moran_bv</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aspect_equal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                          <span class="n">scatter_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fitline_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Bivariate Moran Scatterplot.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    moran_bv : esda.moran.Moran_BV instance</span>
+<span class="sd">        Values of Bivariate Moran&#39;s I Autocorrelation Statistics</span>
+<span class="sd">    ax : Matplotlib Axes instance, optional</span>
+<span class="sd">        If given, the Moran plot will be created inside this axis.</span>
+<span class="sd">        Default =None.</span>
+<span class="sd">    aspect_equal : bool, optional</span>
+<span class="sd">        If True, Axes of Moran Scatterplot will show the same</span>
+<span class="sd">        aspect or visual proportions.</span>
+<span class="sd">    scatter_kwds : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the scatter points.</span>
+<span class="sd">        Default =None.</span>
+<span class="sd">    fitline_kwds : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the moran fitline.</span>
+<span class="sd">        Default =None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig : Matplotlib Figure instance</span>
+<span class="sd">        Bivariate moran scatterplot figure</span>
+<span class="sd">    ax : matplotlib Axes instance</span>
+<span class="sd">        Axes in which the figure is plotted</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Imports</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib.weights.contiguity import Queen</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib import examples</span>
+<span class="sd">    &gt;&gt;&gt; import geopandas as gpd</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.explore.esda.moran import Moran_BV</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.viz.splot.esda import moran_scatterplot</span>
+<span class="sd">    </span>
+<span class="sd">    Load data and calculate weights</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; link_to_data = examples.get_path(&#39;Guerry.shp&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; gdf = gpd.read_file(link_to_data)</span>
+<span class="sd">    &gt;&gt;&gt; x = gdf[&#39;Suicids&#39;].values</span>
+<span class="sd">    &gt;&gt;&gt; y = gdf[&#39;Donatns&#39;].values</span>
+<span class="sd">    &gt;&gt;&gt; w = Queen.from_dataframe(gdf)</span>
+<span class="sd">    &gt;&gt;&gt; w.transform = &#39;r&#39;</span>
+<span class="sd">    </span>
+<span class="sd">    Calculate Bivariate Moran</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; moran_bv = Moran_BV(x, y, w)</span>
+<span class="sd">    </span>
+<span class="sd">    plot</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; moran_scatterplot(moran_bv)</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    customize plot</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; moran_scatterplot(moran_bv,</span>
+<span class="sd">    ...                      fitline_kwds=dict(color=&#39;#4393c3&#39;))</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># to set default as an empty dictionary that is later filled with defaults</span>
+    <span class="k">if</span> <span class="n">scatter_kwds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">scatter_kwds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">fitline_kwds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fitline_kwds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="c1"># define customization</span>
+    <span class="n">scatter_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">)</span>
+    <span class="n">scatter_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="n">splot_colors</span><span class="p">[</span><span class="s1">&#39;moran_base&#39;</span><span class="p">])</span>
+    <span class="n">scatter_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+    
+    <span class="n">fitline_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">)</span>
+    <span class="n">fitline_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="n">splot_colors</span><span class="p">[</span><span class="s1">&#39;moran_fit&#39;</span><span class="p">])</span>
+
+    <span class="c1"># get fig and ax</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_create_moran_fig_ax</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">7</span><span class="p">),</span>
+                                   <span class="n">aspect_equal</span><span class="o">=</span><span class="n">aspect_equal</span><span class="p">)</span>
+    
+    <span class="c1"># set labels</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Attribute X&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Spatial Lag of Y&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Bivariate Moran Scatterplot&#39;</span> <span class="o">+</span>
+                 <span class="s1">&#39; (&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">moran_bv</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span><span class="p">)</span>
+
+    <span class="c1"># plot and set standards</span>
+    <span class="n">lag</span> <span class="o">=</span> <span class="n">lag_spatial</span><span class="p">(</span><span class="n">moran_bv</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="n">moran_bv</span><span class="o">.</span><span class="n">zy</span><span class="p">)</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">OLS</span><span class="p">(</span><span class="n">moran_bv</span><span class="o">.</span><span class="n">zy</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">lag</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])</span>
+    <span class="c1"># plot</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">moran_bv</span><span class="o">.</span><span class="n">zx</span><span class="p">,</span> <span class="n">lag</span><span class="p">,</span> <span class="o">**</span><span class="n">scatter_kwds</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lag</span><span class="p">,</span> <span class="n">fit</span><span class="o">.</span><span class="n">predy</span><span class="p">,</span> <span class="o">**</span><span class="n">fitline_kwds</span><span class="p">)</span>
+    <span class="c1"># v- and hlines</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span>
+
+
+<div class="viewcode-block" id="plot_moran_bv_simulation"><a class="viewcode-back" href="../../../../generated/pysal.viz.splot.esda.plot_moran_bv_simulation.html#pysal.viz.splot.esda.plot_moran_bv_simulation">[docs]</a><span class="k">def</span> <span class="nf">plot_moran_bv_simulation</span><span class="p">(</span><span class="n">moran_bv</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aspect_equal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                             <span class="n">fitline_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Bivariate Moran&#39;s I simulated reference distribution.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    moran_bv : esda.moran.Moran_BV instance</span>
+<span class="sd">        Values of Bivariate Moran&#39;s I Autocorrelation Statistics</span>
+<span class="sd">    ax : Matplotlib Axes instance, optional</span>
+<span class="sd">        If given, the Moran plot will be created inside this axis.</span>
+<span class="sd">        Default =None.</span>
+<span class="sd">    aspect_equal : bool, optional</span>
+<span class="sd">        If True, Axes of Moran Scatterplot will show the same</span>
+<span class="sd">        aspect or visual proportions.</span>
+<span class="sd">    fitline_kwds : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the</span>
+<span class="sd">        vertical moran fitline. Default =None.</span>
+<span class="sd">    **kwargs : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the figure,</span>
+<span class="sd">        passed to seaborne.kdeplot.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig : Matplotlib Figure instance</span>
+<span class="sd">        Bivariate moran reference distribution figure</span>
+<span class="sd">    ax : matplotlib Axes instance</span>
+<span class="sd">        Axes in which the figure is plotted</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Imports</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib.weights.contiguity import Queen</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib import examples</span>
+<span class="sd">    &gt;&gt;&gt; import geopandas as gpd</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.explore.esda.moran import Moran_BV</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.viz.splot.esda import plot_moran_bv_simulation</span>
+<span class="sd">    </span>
+<span class="sd">    Load data and calculate weights</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; link_to_data = examples.get_path(&#39;Guerry.shp&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; gdf = gpd.read_file(link_to_data)</span>
+<span class="sd">    &gt;&gt;&gt; x = gdf[&#39;Suicids&#39;].values</span>
+<span class="sd">    &gt;&gt;&gt; y = gdf[&#39;Donatns&#39;].values</span>
+<span class="sd">    &gt;&gt;&gt; w = Queen.from_dataframe(gdf)</span>
+<span class="sd">    &gt;&gt;&gt; w.transform = &#39;r&#39;</span>
+<span class="sd">    </span>
+<span class="sd">    Calculate Bivariate Moran</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; moran_bv = Moran_BV(x, y, w)</span>
+<span class="sd">    </span>
+<span class="sd">    plot</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; plot_moran_bv_simulation(moran_bv)</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    customize plot</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; plot_moran_bv_simulation(moran_bv,</span>
+<span class="sd">        ...                      fitline_kwds=dict(color=&#39;#4393c3&#39;))</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># to set default as an empty dictionary that is later filled with defaults</span>
+    <span class="k">if</span> <span class="n">fitline_kwds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fitline_kwds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="n">figsize</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;figsize&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+
+    <span class="c1"># get fig and ax</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_create_moran_fig_ax</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">figsize</span><span class="p">,</span>
+                                   <span class="n">aspect_equal</span><span class="o">=</span><span class="n">aspect_equal</span><span class="p">)</span>
+
+    <span class="c1"># plot distribution</span>
+    <span class="n">shade</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;shade&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="n">splot_colors</span><span class="p">[</span><span class="s1">&#39;moran_base&#39;</span><span class="p">])</span>
+    <span class="n">sbn</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">moran_bv</span><span class="o">.</span><span class="n">sim</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="n">shade</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="c1"># customize plot</span>
+    <span class="n">fitline_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="n">splot_colors</span><span class="p">[</span><span class="s1">&#39;moran_fit&#39;</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">moran_bv</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">fitline_kwds</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">moran_bv</span><span class="o">.</span><span class="n">EI_sim</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Reference Distribution&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Bivariate Moran I: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">moran_bv</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
+
+
+<div class="viewcode-block" id="plot_moran_bv"><a class="viewcode-back" href="../../../../generated/pysal.viz.splot.esda.plot_moran_bv.html#pysal.viz.splot.esda.plot_moran_bv">[docs]</a><span class="k">def</span> <span class="nf">plot_moran_bv</span><span class="p">(</span><span class="n">moran_bv</span><span class="p">,</span> <span class="n">aspect_equal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                  <span class="n">scatter_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fitline_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Bivariate Moran&#39;s I simulated reference distribution and scatterplot.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    moran_bv : esda.moran.Moran_BV instance</span>
+<span class="sd">        Values of Bivariate Moran&#39;s I Autocorrelation Statistics</span>
+<span class="sd">    aspect_equal : bool, optional</span>
+<span class="sd">        If True, Axes of Moran Scatterplot will show the same</span>
+<span class="sd">        aspect or visual proportions.</span>
+<span class="sd">    scatter_kwds : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the scatter points.</span>
+<span class="sd">        Default =None.</span>
+<span class="sd">    fitline_kwds : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the moran fitline</span>
+<span class="sd">        and vertical fitline. Default =None.</span>
+<span class="sd">    **kwargs : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the figure,</span>
+<span class="sd">        passed to seaborne.kdeplot.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig : Matplotlib Figure instance</span>
+<span class="sd">        Bivariate moran scatterplot and reference distribution figure</span>
+<span class="sd">    ax : matplotlib Axes instance</span>
+<span class="sd">        Axes in which the figure is plotted</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Imports</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib.weights.contiguity import Queen</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib import examples</span>
+<span class="sd">    &gt;&gt;&gt; import geopandas as gpd</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.explore.esda.moran import Moran_BV</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.viz.splot.esda import plot_moran_bv</span>
+<span class="sd">    </span>
+<span class="sd">    Load data and calculate weights</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; link_to_data = examples.get_path(&#39;Guerry.shp&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; gdf = gpd.read_file(link_to_data)</span>
+<span class="sd">    &gt;&gt;&gt; x = gdf[&#39;Suicids&#39;].values</span>
+<span class="sd">    &gt;&gt;&gt; y = gdf[&#39;Donatns&#39;].values</span>
+<span class="sd">    &gt;&gt;&gt; w = Queen.from_dataframe(gdf)</span>
+<span class="sd">    &gt;&gt;&gt; w.transform = &#39;r&#39;</span>
+<span class="sd">    </span>
+<span class="sd">    Calculate Bivariate Moran</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; moran_bv = Moran_BV(x, y, w)</span>
+<span class="sd">    </span>
+<span class="sd">    plot</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; plot_moran_bv(moran_bv)</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    customize plot</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; plot_moran_bv(moran_bv, fitline_kwds=dict(color=&#39;#4393c3&#39;))</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">figsize</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;figsize&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span>
+                            <span class="n">subplot_kw</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;aspect&#39;</span><span class="p">:</span> <span class="s1">&#39;equal&#39;</span><span class="p">})</span>
+    <span class="n">plot_moran_bv_simulation</span><span class="p">(</span><span class="n">moran_bv</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">fitline_kwds</span><span class="o">=</span><span class="n">fitline_kwds</span><span class="p">,</span>
+                             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">moran_scatterplot</span><span class="p">(</span><span class="n">moran_bv</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">aspect_equal</span><span class="o">=</span><span class="n">aspect_equal</span><span class="p">,</span>
+                      <span class="n">scatter_kwds</span><span class="o">=</span><span class="n">scatter_kwds</span><span class="p">,</span> <span class="n">fitline_kwds</span><span class="o">=</span><span class="n">fitline_kwds</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">aspect</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">aspect_equal</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">,</span> <span class="s2">&quot;datalim&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">aspect</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span></div>
+
+
+<span class="k">def</span> <span class="nf">_moran_loc_scatterplot</span><span class="p">(</span><span class="n">moran_loc</span><span class="p">,</span> <span class="n">zstandard</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aspect_equal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scatter_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fitline_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Moran Scatterplot with option of coloring of Local Moran Statistics</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    moran_loc : esda.moran.Moran_Local instance</span>
+<span class="sd">        Values of Moran&#39;s I Local Autocorrelation Statistics</span>
+<span class="sd">    p : float, optional</span>
+<span class="sd">        If given, the p-value threshold for significance. Points will</span>
+<span class="sd">        be colored by significance. By default it will not be colored.</span>
+<span class="sd">        Default =None.</span>
+<span class="sd">    aspect_equal : bool, optional</span>
+<span class="sd">        If True, Axes of Moran Scatterplot will show the same</span>
+<span class="sd">        aspect or visual proportions.</span>
+<span class="sd">    ax : Matplotlib Axes instance, optional</span>
+<span class="sd">        If given, the Moran plot will be created inside this axis.</span>
+<span class="sd">        Default =None.</span>
+<span class="sd">    scatter_kwds : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the scatter points.</span>
+<span class="sd">        Default =None.</span>
+<span class="sd">    fitline_kwds : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the moran fitline.</span>
+<span class="sd">        Default =None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig : Matplotlib Figure instance</span>
+<span class="sd">        Moran Local scatterplot figure</span>
+<span class="sd">    ax : matplotlib Axes instance</span>
+<span class="sd">        Axes in which the figure is plotted</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Imports</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">    &gt;&gt;&gt; import geopandas as gpd</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib.weights.contiguity import Queen</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib import examples</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.explore.esda.moran import Moran_Local</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.viz.splot.esda import moran_scatterplot</span>
+<span class="sd">    </span>
+<span class="sd">    Load data and calculate Moran Local statistics</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; link = examples.get_path(&#39;Guerry.shp&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; gdf = gpd.read_file(link)</span>
+<span class="sd">    &gt;&gt;&gt; y = gdf[&#39;Donatns&#39;].values</span>
+<span class="sd">    &gt;&gt;&gt; w = Queen.from_dataframe(gdf)</span>
+<span class="sd">    &gt;&gt;&gt; w.transform = &#39;r&#39;</span>
+<span class="sd">    &gt;&gt;&gt; m = Moran_Local(y, w)</span>
+<span class="sd">    </span>
+<span class="sd">    plot</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; moran_scatterplot(m)</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    customize plot</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; moran_scatterplot(m, p=0.05,</span>
+<span class="sd">    ...                   fitline_kwds=dict(color=&#39;#4393c3&#39;))</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># to set default as an empty dictionary that is later filled with defaults</span>
+    <span class="k">if</span> <span class="n">scatter_kwds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">scatter_kwds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">fitline_kwds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fitline_kwds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">moran_loc</span><span class="p">,</span> <span class="n">Moran_Local</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`moran_loc` is not a</span><span class="se">\n</span><span class="s2"> &quot;</span> <span class="o">+</span>
+                             <span class="s2">&quot;esda.moran.Moran_Local instance&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;color&#39;</span> <span class="ow">in</span> <span class="n">scatter_kwds</span> <span class="ow">or</span> <span class="s1">&#39;c&#39;</span> <span class="ow">in</span> <span class="n">scatter_kwds</span> <span class="ow">or</span> <span class="s1">&#39;cmap&#39;</span> <span class="ow">in</span> <span class="n">scatter_kwds</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;To change the color use cmap with a colormap of 5,</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                          <span class="s1">&#39; color defines the LISA category&#39;</span><span class="p">)</span>
+
+        <span class="c1"># colors</span>
+        <span class="n">spots</span> <span class="o">=</span> <span class="n">moran_hot_cold_spots</span><span class="p">(</span><span class="n">moran_loc</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+        <span class="n">hmap</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">([</span><span class="s1">&#39;#bababa&#39;</span><span class="p">,</span> <span class="s1">&#39;#d7191c&#39;</span><span class="p">,</span> <span class="s1">&#39;#abd9e9&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;#2c7bb6&#39;</span><span class="p">,</span> <span class="s1">&#39;#fdae61&#39;</span><span class="p">])</span>
+
+    <span class="c1"># define customization</span>
+    <span class="n">scatter_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">)</span>
+    <span class="n">scatter_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="n">fitline_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">)</span>
+
+    <span class="c1"># get fig and ax</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_create_moran_fig_ax</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">7</span><span class="p">),</span>
+                                   <span class="n">aspect_equal</span><span class="o">=</span><span class="n">aspect_equal</span><span class="p">)</span>
+    
+    <span class="c1"># set labels</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Attribute&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Spatial Lag&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Moran Local Scatterplot&#39;</span><span class="p">)</span>
+
+    <span class="c1"># plot and set standards</span>
+    <span class="k">if</span> <span class="n">zstandard</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">lag</span> <span class="o">=</span> <span class="n">lag_spatial</span><span class="p">(</span><span class="n">moran_loc</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="n">moran_loc</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">fit</span> <span class="o">=</span> <span class="n">OLS</span><span class="p">(</span><span class="n">moran_loc</span><span class="o">.</span><span class="n">z</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">lag</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])</span>
+        <span class="c1"># v- and hlines</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fitline_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+            <span class="n">scatter_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;cmap&#39;</span><span class="p">,</span> <span class="n">hmap</span><span class="p">)</span>
+            <span class="n">scatter_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">spots</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lag</span><span class="p">,</span> <span class="n">fit</span><span class="o">.</span><span class="n">predy</span><span class="p">,</span> <span class="o">**</span><span class="n">fitline_kwds</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">moran_loc</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="n">fit</span><span class="o">.</span><span class="n">predy</span><span class="p">,</span>
+                       <span class="o">**</span><span class="n">scatter_kwds</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">scatter_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="n">splot_colors</span><span class="p">[</span><span class="s1">&#39;moran_base&#39;</span><span class="p">])</span>
+            <span class="n">fitline_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="n">splot_colors</span><span class="p">[</span><span class="s1">&#39;moran_fit&#39;</span><span class="p">])</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lag</span><span class="p">,</span> <span class="n">fit</span><span class="o">.</span><span class="n">predy</span><span class="p">,</span> <span class="o">**</span><span class="n">fitline_kwds</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">moran_loc</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="n">fit</span><span class="o">.</span><span class="n">predy</span><span class="p">,</span> <span class="o">**</span><span class="n">scatter_kwds</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">lag</span> <span class="o">=</span> <span class="n">lag_spatial</span><span class="p">(</span><span class="n">moran_loc</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="n">moran_loc</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">moran_loc</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">lag</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># dashed vert at mean of the attribute</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">moran_loc</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">lag</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">lag</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                  <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+        <span class="c1"># dashed horizontal at mean of lagged attribute</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">hlines</span><span class="p">(</span><span class="n">lag</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">moran_loc</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">moran_loc</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                  <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fitline_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+            <span class="n">scatter_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;cmap&#39;</span><span class="p">,</span> <span class="n">hmap</span><span class="p">)</span>
+            <span class="n">scatter_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">spots</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">moran_loc</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="o">*</span><span class="n">moran_loc</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">fitline_kwds</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">moran_loc</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">lag</span><span class="p">,</span> <span class="o">**</span><span class="n">scatter_kwds</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">scatter_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">splot_colors</span><span class="p">[</span><span class="s1">&#39;moran_base&#39;</span><span class="p">])</span>
+            <span class="n">fitline_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="n">splot_colors</span><span class="p">[</span><span class="s1">&#39;moran_fit&#39;</span><span class="p">])</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">moran_loc</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="o">*</span><span class="n">moran_loc</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">fitline_kwds</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">moran_loc</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">lag</span><span class="p">,</span> <span class="o">**</span><span class="n">scatter_kwds</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span>
+
+
+<div class="viewcode-block" id="lisa_cluster"><a class="viewcode-back" href="../../../../generated/pysal.viz.splot.esda.lisa_cluster.html#pysal.viz.splot.esda.lisa_cluster">[docs]</a><span class="k">def</span> <span class="nf">lisa_cluster</span><span class="p">(</span><span class="n">moran_loc</span><span class="p">,</span> <span class="n">gdf</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">legend_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a LISA Cluster map</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    moran_loc : esda.moran.Moran_Local or Moran_Local_BV instance</span>
+<span class="sd">        Values of Moran&#39;s Local Autocorrelation Statistic</span>
+<span class="sd">    gdf : geopandas dataframe instance</span>
+<span class="sd">        The Dataframe containing information to plot. Note that `gdf` will be</span>
+<span class="sd">        modified, so calling functions should use a copy of the user</span>
+<span class="sd">        provided `gdf`. (either using gdf.assign() or gdf.copy())</span>
+<span class="sd">    p : float, optional</span>
+<span class="sd">        The p-value threshold for significance. Points will</span>
+<span class="sd">        be colored by significance.</span>
+<span class="sd">    ax : matplotlib Axes instance, optional</span>
+<span class="sd">        Axes in which to plot the figure in multiple Axes layout.</span>
+<span class="sd">        Default = None</span>
+<span class="sd">    legend : boolean, optional</span>
+<span class="sd">        If True, legend for maps will be depicted. Default = True</span>
+<span class="sd">    legend_kwds : dict, optional</span>
+<span class="sd">        Dictionary to control legend formatting options. Example:</span>
+<span class="sd">        ``legend_kwds={&#39;loc&#39;: &#39;upper left&#39;, &#39;bbox_to_anchor&#39;: (0.92, 1.05)}``</span>
+<span class="sd">        Default = None</span>
+<span class="sd">    **kwargs : keyword arguments, optional</span>
+<span class="sd">        Keywords designing and passed to geopandas.GeoDataFrame.plot().</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig : matplotlip Figure instance</span>
+<span class="sd">        Figure of LISA cluster map</span>
+<span class="sd">    ax : matplotlib Axes instance</span>
+<span class="sd">        Axes in which the figure is plotted</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Imports</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib.weights.contiguity import Queen</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib import examples</span>
+<span class="sd">    &gt;&gt;&gt; import geopandas as gpd</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.explore.esda.moran import Moran_Local</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.viz.splot.esda import lisa_cluster</span>
+
+<span class="sd">    Data preparation and statistical analysis</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; link = examples.get_path(&#39;Guerry.shp&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; gdf = gpd.read_file(link)</span>
+<span class="sd">    &gt;&gt;&gt; y = gdf[&#39;Donatns&#39;].values</span>
+<span class="sd">    &gt;&gt;&gt; w = Queen.from_dataframe(gdf)</span>
+<span class="sd">    &gt;&gt;&gt; w.transform = &#39;r&#39;</span>
+<span class="sd">    &gt;&gt;&gt; moran_loc = Moran_Local(y, w)</span>
+
+<span class="sd">    Plotting</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; fig = lisa_cluster(moran_loc, gdf)</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># retrieve colors5 and labels from mask_local_auto</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">colors5</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">mask_local_auto</span><span class="p">(</span><span class="n">moran_loc</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
+
+    <span class="c1"># define ListedColormap</span>
+    <span class="n">hmap</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">(</span><span class="n">colors5</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">figsize</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;figsize&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">()</span>
+
+    <span class="n">gdf</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">cl</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s1">&#39;cl&#39;</span><span class="p">,</span> <span class="n">categorical</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                               <span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">hmap</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+                               <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="n">legend</span><span class="p">,</span>
+                               <span class="n">legend_kwds</span><span class="o">=</span><span class="n">legend_kwds</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
+
+
+<div class="viewcode-block" id="plot_local_autocorrelation"><a class="viewcode-back" href="../../../../generated/pysal.viz.splot.esda.plot_local_autocorrelation.html#pysal.viz.splot.esda.plot_local_autocorrelation">[docs]</a><span class="k">def</span> <span class="nf">plot_local_autocorrelation</span><span class="p">(</span><span class="n">moran_loc</span><span class="p">,</span> <span class="n">gdf</span><span class="p">,</span> <span class="n">attribute</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+                               <span class="n">region_column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                               <span class="n">mask_color</span><span class="o">=</span><span class="s1">&#39;#636363&#39;</span><span class="p">,</span> <span class="n">quadrant</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                               <span class="n">aspect_equal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                               <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="s1">&#39;Quantiles&#39;</span><span class="p">,</span>
+                               <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;YlGnBu&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+                               <span class="n">scatter_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fitline_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Produce three-plot visualisation of Moran Scatteprlot, LISA cluster</span>
+<span class="sd">    and Choropleth maps, with Local Moran region and quadrant masking</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    moran_loc : esda.moran.Moran_Local or Moran_Local_BV instance</span>
+<span class="sd">        Values of Moran&#39;s Local Autocorrelation Statistic</span>
+<span class="sd">    gdf : geopandas dataframe</span>
+<span class="sd">        The Dataframe containing information to plot the two maps.</span>
+<span class="sd">    attribute : str</span>
+<span class="sd">        Column name of attribute which should be depicted in Choropleth map.</span>
+<span class="sd">    p : float, optional</span>
+<span class="sd">        The p-value threshold for significance. Points and polygons will</span>
+<span class="sd">        be colored by significance. Default = 0.05.</span>
+<span class="sd">    region_column: string, optional</span>
+<span class="sd">        Column name containing mask region of interest. Default = None</span>
+<span class="sd">    mask: str, optional</span>
+<span class="sd">        Identifier or name of the region to highlight. Default = None</span>
+<span class="sd">    mask_color: str, optional</span>
+<span class="sd">        Color of mask. Default = &#39;#636363&#39;</span>
+<span class="sd">    quadrant : int, optional</span>
+<span class="sd">        Quadrant 1-4 in scatterplot masking values in LISA cluster and</span>
+<span class="sd">        Choropleth maps. Default = None</span>
+<span class="sd">    aspect_equal : bool, optional</span>
+<span class="sd">        If True, Axes of Moran Scatterplot will show the same</span>
+<span class="sd">        aspect or visual proportions.</span>
+<span class="sd">    figsize: tuple, optional</span>
+<span class="sd">        W, h of figure. Default = (15,4)</span>
+<span class="sd">    legend: boolean, optional</span>
+<span class="sd">        If True, legend for maps will be depicted. Default = True</span>
+<span class="sd">    scheme: str, optional</span>
+<span class="sd">        Name of PySAL classifier to be used. Default = &#39;Quantiles&#39;</span>
+<span class="sd">    cmap: str, optional</span>
+<span class="sd">        Name of matplotlib colormap used for plotting the Choropleth.</span>
+<span class="sd">        Default = &#39;YlGnBu&#39;</span>
+<span class="sd">    scatter_kwds : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the scatter points.</span>
+<span class="sd">        Default =None.</span>
+<span class="sd">    fitline_kwds : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the moran fitline</span>
+<span class="sd">        in the scatterplot. Default =None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig : Matplotlib figure instance</span>
+<span class="sd">        Moran Scatterplot, LISA cluster map and Choropleth.</span>
+<span class="sd">    axs : list of Matplotlib axes</span>
+<span class="sd">        Lisat of Matplotlib axes plotted.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Imports</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib.weights.contiguity import Queen</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib import examples</span>
+<span class="sd">    &gt;&gt;&gt; import geopandas as gpd</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.explore.esda.moran import Moran_Local</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.viz.splot.esda import plot_local_autocorrelation</span>
+
+<span class="sd">    Data preparation and analysis</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; link = examples.get_path(&#39;Guerry.shp&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; gdf = gpd.read_file(link)</span>
+<span class="sd">    &gt;&gt;&gt; y = gdf[&#39;Donatns&#39;].values</span>
+<span class="sd">    &gt;&gt;&gt; w = Queen.from_dataframe(gdf)</span>
+<span class="sd">    &gt;&gt;&gt; w.transform = &#39;r&#39;</span>
+<span class="sd">    &gt;&gt;&gt; moran_loc = Moran_Local(y, w)</span>
+
+<span class="sd">    Plotting with quadrant mask and region mask</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; fig = plot_local_autocorrelation(moran_loc, gdf, &#39;Donatns&#39;, p=0.05,</span>
+<span class="sd">    ...                                  region_column=&#39;Dprtmnt&#39;,</span>
+<span class="sd">    ...                                  mask=[&#39;Ain&#39;], quadrant=1)</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span>
+                            <span class="n">subplot_kw</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;aspect&#39;</span><span class="p">:</span> <span class="s1">&#39;equal&#39;</span><span class="p">,</span> <span class="s1">&#39;adjustable&#39;</span><span class="p">:</span><span class="s1">&#39;datalim&#39;</span><span class="p">})</span>
+    <span class="c1"># Moran Scatterplot</span>
+    <span class="n">moran_scatterplot</span><span class="p">(</span><span class="n">moran_loc</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                      <span class="n">scatter_kwds</span><span class="o">=</span><span class="n">scatter_kwds</span><span class="p">,</span> <span class="n">fitline_kwds</span><span class="o">=</span><span class="n">fitline_kwds</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">aspect_equal</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">,</span> <span class="s1">&#39;datalim&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Lisa cluster map</span>
+    <span class="c1"># TODO: Fix legend_kwds: display boxes instead of points</span>
+    <span class="n">lisa_cluster</span><span class="p">(</span><span class="n">moran_loc</span><span class="p">,</span> <span class="n">gdf</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">legend</span><span class="o">=</span><span class="n">legend</span><span class="p">,</span>
+                 <span class="n">legend_kwds</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;loc&#39;</span><span class="p">:</span> <span class="s1">&#39;upper left&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;bbox_to_anchor&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.92</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">)})</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Choropleth for attribute</span>
+    <span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="n">attribute</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="n">scheme</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+             <span class="n">legend</span><span class="o">=</span><span class="n">legend</span><span class="p">,</span> <span class="n">legend_kwds</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;loc&#39;</span><span class="p">:</span> <span class="s1">&#39;upper left&#39;</span><span class="p">,</span>
+                                         <span class="s1">&#39;bbox_to_anchor&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.92</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">)},</span>
+             <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+
+    <span class="c1"># MASKING QUADRANT VALUES</span>
+    <span class="k">if</span> <span class="n">quadrant</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Quadrant masking in Scatterplot</span>
+        <span class="n">mask_angles</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="mi">270</span><span class="p">}</span>   <span class="c1"># rectangle angles</span>
+        <span class="c1"># We don&#39;t want to change the axis data limits, so use the current ones</span>
+        <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
+        <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+        <span class="c1"># We are rotating, so we start from 0 degrees and</span>
+        <span class="c1"># figured out the right dimensions for the rectangles for other angles</span>
+        <span class="n">mask_width</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">xmax</span><span class="p">),</span>
+                      <span class="mi">2</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ymax</span><span class="p">),</span>
+                      <span class="mi">3</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">xmin</span><span class="p">),</span>
+                      <span class="mi">4</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ymin</span><span class="p">)}</span>
+        <span class="n">mask_height</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ymax</span><span class="p">),</span>
+                       <span class="mi">2</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">xmin</span><span class="p">),</span>
+                       <span class="mi">3</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ymin</span><span class="p">),</span>
+                       <span class="mi">4</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">xmax</span><span class="p">)}</span>
+        <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">patches</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="n">mask_width</span><span class="p">[</span><span class="n">quadrant</span><span class="p">],</span>
+                                           <span class="n">height</span><span class="o">=</span><span class="n">mask_height</span><span class="p">[</span><span class="n">quadrant</span><span class="p">],</span>
+                                           <span class="n">angle</span><span class="o">=</span><span class="n">mask_angles</span><span class="p">[</span><span class="n">quadrant</span><span class="p">],</span>
+                                           <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#E5E5E5&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">))</span>
+        <span class="c1"># quadrant selection in maps</span>
+        <span class="n">non_quadrant</span> <span class="o">=</span> <span class="o">~</span><span class="p">(</span><span class="n">moran_loc</span><span class="o">.</span><span class="n">q</span> <span class="o">==</span> <span class="n">quadrant</span><span class="p">)</span>
+        <span class="n">mask_quadrant</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="n">non_quadrant</span><span class="p">]</span>
+        <span class="n">df_quadrant</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">~</span><span class="n">non_quadrant</span><span class="p">]</span>
+        <span class="n">union2</span> <span class="o">=</span> <span class="n">df_quadrant</span><span class="o">.</span><span class="n">unary_union</span><span class="o">.</span><span class="n">boundary</span>
+
+        <span class="c1"># LISA Cluster mask and cluster boundary</span>
+        <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>  <span class="c1"># temorarily surpress geopandas warning</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>
+            <span class="n">mask_quadrant</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="n">attribute</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="n">scheme</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span>
+                               <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">gpd</span><span class="o">.</span><span class="n">GeoSeries</span><span class="p">([</span><span class="n">union2</span><span class="p">])</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#E5E5E5&#39;</span><span class="p">)</span>
+
+        <span class="c1"># CHOROPLETH MASK</span>
+        <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>  <span class="c1"># temorarily surpress geopandas warning</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>
+            <span class="n">mask_quadrant</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="n">attribute</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="n">scheme</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span>
+                           <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">gpd</span><span class="o">.</span><span class="n">GeoSeries</span><span class="p">([</span><span class="n">union2</span><span class="p">])</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#E5E5E5&#39;</span><span class="p">)</span>
+
+    <span class="c1"># REGION MASKING</span>
+    <span class="k">if</span> <span class="n">region_column</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># masking inside axs[0] or Moran Scatterplot</span>
+        <span class="n">ix</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="n">region_column</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+        <span class="n">df_mask</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="n">ix</span><span class="p">]</span>
+        <span class="n">x_mask</span> <span class="o">=</span> <span class="n">moran_loc</span><span class="o">.</span><span class="n">z</span><span class="p">[</span><span class="n">ix</span><span class="p">]</span>
+        <span class="n">y_mask</span> <span class="o">=</span> <span class="n">lag_spatial</span><span class="p">(</span><span class="n">moran_loc</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="n">moran_loc</span><span class="o">.</span><span class="n">z</span><span class="p">)[</span><span class="n">ix</span><span class="p">]</span>
+        <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_mask</span><span class="p">,</span> <span class="n">y_mask</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">mask_color</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span>
+                    <span class="n">markersize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=.</span><span class="mi">8</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># masking inside axs[1] or Lisa cluster map</span>
+        <span class="n">union</span> <span class="o">=</span> <span class="n">df_mask</span><span class="o">.</span><span class="n">unary_union</span><span class="o">.</span><span class="n">boundary</span>
+        <span class="n">gpd</span><span class="o">.</span><span class="n">GeoSeries</span><span class="p">([</span><span class="n">union</span><span class="p">])</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">mask_color</span><span class="p">)</span>
+
+        <span class="c1"># masking inside axs[2] or Chloropleth</span>
+        <span class="n">gpd</span><span class="o">.</span><span class="n">GeoSeries</span><span class="p">([</span><span class="n">union</span><span class="p">])</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">mask_color</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span></div>
+
+
+<span class="k">def</span> <span class="nf">_moran_loc_bv_scatterplot</span><span class="p">(</span><span class="n">moran_loc_bv</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                              <span class="n">aspect_equal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                              <span class="n">scatter_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                              <span class="n">fitline_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Moran Bivariate Scatterplot with option of coloring of Local Moran Statistics</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    moran_loc : esda.moran.Moran_Local_BV instance</span>
+<span class="sd">        Values of Moran&#39;s I Local Autocorrelation Statistics</span>
+<span class="sd">    p : float, optional</span>
+<span class="sd">        If given, the p-value threshold for significance. Points will</span>
+<span class="sd">        be colored by significance. By default it will not be colored.</span>
+<span class="sd">        Default =None.</span>
+<span class="sd">    aspect_equal : bool, optional</span>
+<span class="sd">        If True, Axes of Moran Scatterplot will show the same</span>
+<span class="sd">        aspect or visual proportions.</span>
+<span class="sd">    ax : Matplotlib Axes instance, optional</span>
+<span class="sd">        If given, the Moran plot will be created inside this axis.</span>
+<span class="sd">        Default =None.</span>
+<span class="sd">    scatter_kwds : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the scatter points.</span>
+<span class="sd">        Default =None.</span>
+<span class="sd">    fitline_kwds : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the moran fitline.</span>
+<span class="sd">        Default =None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig : Matplotlib Figure instance</span>
+<span class="sd">        Bivariate Moran Local scatterplot figure</span>
+<span class="sd">    ax : matplotlib Axes instance</span>
+<span class="sd">        Axes in which the figure is plotted</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Imports</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">    &gt;&gt;&gt; import geopandas as gpd</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib.weights.contiguity import Queen</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib import examples</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.explore.esda.moran import Moran_Local_BV</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.viz.splot.esda import moran_scatterplot</span>
+<span class="sd">    </span>
+<span class="sd">    Load data and calculate Moran Local statistics</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; link = examples.get_path(&#39;Guerry.shp&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; gdf = gpd.read_file(link)</span>
+<span class="sd">    &gt;&gt;&gt; x = gdf[&#39;Suicids&#39;].values</span>
+<span class="sd">    &gt;&gt;&gt; y = gdf[&#39;Donatns&#39;].values</span>
+<span class="sd">    &gt;&gt;&gt; w = Queen.from_dataframe(gdf)</span>
+<span class="sd">    &gt;&gt;&gt; w.transform = &#39;r&#39;</span>
+<span class="sd">    &gt;&gt;&gt; m = Moran_Local_BV(x, y, w)</span>
+<span class="sd">    </span>
+<span class="sd">    Plot</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; moran_scatterplot(m)</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    Customize plot</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; moran_scatterplot(m, p=0.05,</span>
+<span class="sd">    ...                          fitline_kwds=dict(color=&#39;#4393c3&#39;)))</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># to set default as an empty dictionary that is later filled with defaults</span>
+    <span class="k">if</span> <span class="n">scatter_kwds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">scatter_kwds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">fitline_kwds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fitline_kwds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">moran_loc_bv</span><span class="p">,</span> <span class="n">Moran_Local_BV</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`moran_loc_bv` is not a</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+                             <span class="s2">&quot;esda.moran.Moran_Local_BV instance&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;color&#39;</span> <span class="ow">in</span> <span class="n">scatter_kwds</span> <span class="ow">or</span> <span class="s1">&#39;c&#39;</span> <span class="ow">in</span> <span class="n">scatter_kwds</span> <span class="ow">or</span> <span class="s1">&#39;cmap&#39;</span> <span class="ow">in</span> <span class="n">scatter_kwds</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;To change the color use cmap with a colormap of 5,</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+                          <span class="s2">&quot;c defines the LISA category, color will interfere with c&quot;</span><span class="p">)</span>
+
+        <span class="c1"># colors</span>
+        <span class="n">spots_bv</span> <span class="o">=</span> <span class="n">moran_hot_cold_spots</span><span class="p">(</span><span class="n">moran_loc_bv</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+        <span class="n">hmap</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">([</span><span class="s1">&#39;#bababa&#39;</span><span class="p">,</span> <span class="s1">&#39;#d7191c&#39;</span><span class="p">,</span> <span class="s1">&#39;#abd9e9&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;#2c7bb6&#39;</span><span class="p">,</span> <span class="s1">&#39;#fdae61&#39;</span><span class="p">])</span>
+
+    <span class="c1"># define customization</span>
+    <span class="n">scatter_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">)</span>
+    <span class="n">scatter_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="n">fitline_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">)</span>
+
+    <span class="c1"># get fig and ax</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_create_moran_fig_ax</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">7</span><span class="p">),</span>
+                                   <span class="n">aspect_equal</span><span class="o">=</span><span class="n">aspect_equal</span><span class="p">)</span>
+    
+    <span class="c1"># set labels</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Attribute&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Spatial Lag&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Moran BV Local Scatterplot&#39;</span><span class="p">)</span>
+
+    <span class="c1"># plot and set standards</span>
+    <span class="n">lag</span> <span class="o">=</span> <span class="n">lag_spatial</span><span class="p">(</span><span class="n">moran_loc_bv</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="n">moran_loc_bv</span><span class="o">.</span><span class="n">zy</span><span class="p">)</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">OLS</span><span class="p">(</span><span class="n">moran_loc_bv</span><span class="o">.</span><span class="n">zy</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">lag</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])</span>
+    <span class="c1"># v- and hlines</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fitline_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+        <span class="n">scatter_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;cmap&#39;</span><span class="p">,</span> <span class="n">hmap</span><span class="p">)</span>
+        <span class="n">scatter_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">spots_bv</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lag</span><span class="p">,</span> <span class="n">fit</span><span class="o">.</span><span class="n">predy</span><span class="p">,</span> <span class="o">**</span><span class="n">fitline_kwds</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">moran_loc_bv</span><span class="o">.</span><span class="n">zx</span><span class="p">,</span> <span class="n">fit</span><span class="o">.</span><span class="n">predy</span><span class="p">,</span>
+                   <span class="o">**</span><span class="n">scatter_kwds</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">scatter_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="n">splot_colors</span><span class="p">[</span><span class="s1">&#39;moran_base&#39;</span><span class="p">])</span>
+        <span class="n">fitline_kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="n">splot_colors</span><span class="p">[</span><span class="s1">&#39;moran_fit&#39;</span><span class="p">])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lag</span><span class="p">,</span> <span class="n">fit</span><span class="o">.</span><span class="n">predy</span><span class="p">,</span> <span class="o">**</span><span class="n">fitline_kwds</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">moran_loc_bv</span><span class="o">.</span><span class="n">zy</span><span class="p">,</span> <span class="n">fit</span><span class="o">.</span><span class="n">predy</span><span class="p">,</span> <span class="o">**</span><span class="n">scatter_kwds</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span>
+
+
+<div class="viewcode-block" id="moran_facet"><a class="viewcode-back" href="../../../../generated/pysal.viz.splot.esda.moran_facet.html#pysal.viz.splot.esda.moran_facet">[docs]</a><span class="k">def</span> <span class="nf">moran_facet</span><span class="p">(</span><span class="n">moran_matrix</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">12</span><span class="p">),</span>
+                <span class="n">scatter_bv_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fitline_bv_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">scatter_glob_kwds</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;#737373&#39;</span><span class="p">),</span> <span class="n">fitline_glob_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Moran Facet visualization.</span>
+<span class="sd">    Includes BV Morans and Global Morans on the diagonal.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    moran_matrix : esda.moran.Moran_BV_matrix instance</span>
+<span class="sd">        Dictionary of Moran_BV objects</span>
+<span class="sd">    figsize : tuple, optional</span>
+<span class="sd">        W, h of figure. Default =(16,12)</span>
+<span class="sd">    scatter_bv_kwds : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the scatter points of</span>
+<span class="sd">        off-diagonal Moran_BV plots.</span>
+<span class="sd">        Default =None.</span>
+<span class="sd">    fitline_bv_kwds : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the moran fitline of</span>
+<span class="sd">        off-diagonal Moran_BV plots.</span>
+<span class="sd">        Default =None.</span>
+<span class="sd">    scatter_glob_kwds : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the scatter points of</span>
+<span class="sd">        diagonal Moran plots.</span>
+<span class="sd">        Default =None.</span>
+<span class="sd">    fitline_glob_kwds : keyword arguments, optional</span>
+<span class="sd">        Keywords used for creating and designing the moran fitline of</span>
+<span class="sd">        diagonal Moran plots.</span>
+<span class="sd">        Default =None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig : Matplotlib Figure instance</span>
+<span class="sd">        Bivariate Moran Local scatterplot figure</span>
+<span class="sd">    axarr : matplotlib Axes instance</span>
+<span class="sd">        Axes in which the figure is plotted</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Imports</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">    &gt;&gt;&gt; import pysal.lib as lp</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; import geopandas as gpd</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.explore.esda.moran import Moran_BV_matrix</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.viz.splot.esda import moran_facet</span>
+<span class="sd">    </span>
+<span class="sd">    Load data and calculate Moran Local statistics</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; f = gpd.read_file(lp.examples.get_path(&quot;sids2.dbf&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; varnames = [&#39;SIDR74&#39;,  &#39;SIDR79&#39;,  &#39;NWR74&#39;,  &#39;NWR79&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; vars = [np.array(f[var]) for var in varnames]</span>
+<span class="sd">    &gt;&gt;&gt; w = lp.io.open(lp.examples.get_path(&quot;sids2.gal&quot;)).read()</span>
+<span class="sd">    &gt;&gt;&gt; moran_matrix = Moran_BV_matrix(vars,  w,  varnames = varnames)</span>
+<span class="sd">    </span>
+<span class="sd">    Plot</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; fig, axarr = moran_facet(moran_matrix)</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    Customize plot</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; fig, axarr = moran_facet(moran_matrix,</span>
+<span class="sd">    ...                          fitline_bv_kwds=dict(color=&#39;#4393c3&#39;))</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nrows</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">moran_matrix</span><span class="p">)))</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">ncols</span> <span class="o">=</span> <span class="n">nrows</span>
+    
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axarr</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span>
+                              <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Moran Facet&#39;</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nrows</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ncols</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">row</span> <span class="o">==</span> <span class="n">col</span><span class="p">:</span>
+                <span class="n">global_m</span> <span class="o">=</span> <span class="n">Moran</span><span class="p">(</span><span class="n">moran_matrix</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="p">(</span><span class="n">row</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">zy</span><span class="p">,</span>
+                                 <span class="n">moran_matrix</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="p">(</span><span class="n">row</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
+                <span class="n">_moran_global_scatterplot</span><span class="p">(</span><span class="n">global_m</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span> <span class="n">axarr</span><span class="p">[</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">],</span>
+                                  <span class="n">scatter_kwds</span><span class="o">=</span><span class="n">scatter_glob_kwds</span><span class="p">,</span>
+                                  <span class="n">fitline_kwds</span><span class="o">=</span><span class="n">fitline_glob_kwds</span><span class="p">)</span>
+                <span class="n">axarr</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s1">&#39;#d9d9d9&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_moran_bv_scatterplot</span><span class="p">(</span><span class="n">moran_matrix</span><span class="p">[</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">],</span>
+                                  <span class="n">ax</span><span class="o">=</span><span class="n">axarr</span><span class="p">[</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">],</span> 
+                                  <span class="n">scatter_kwds</span><span class="o">=</span><span class="n">scatter_bv_kwds</span><span class="p">,</span>
+                                  <span class="n">fitline_kwds</span><span class="o">=</span><span class="n">fitline_bv_kwds</span><span class="p">)</span>
+    
+            <span class="n">axarr</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;bottom&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">axarr</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">row</span> <span class="o">==</span> <span class="n">nrows</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">axarr</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span>
+                    <span class="n">moran_matrix</span><span class="p">[(</span><span class="n">col</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="mi">4</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">varnames</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">col</span><span class="p">))</span>
+                <span class="n">axarr</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;bottom&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">axarr</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                
+            <span class="k">if</span> <span class="n">col</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">axarr</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">((</span><span class="s1">&#39;Spatial Lag of &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span>
+                    <span class="n">moran_matrix</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="p">(</span><span class="n">row</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">varnames</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]))</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">row</span><span class="p">))</span>
+                <span class="n">axarr</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">axarr</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                
+            <span class="n">axarr</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span> 
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axarr</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+pysal.explore.segregation.inference.TwoValueTest
+================================================
+
+.. currentmodule:: pysal.explore.segregation.inference
+
+.. autoclass:: TwoValueTest
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TwoValueTest.__init__
+      ~TwoValueTest.plot
+   
+   
+
+   
+   
+   

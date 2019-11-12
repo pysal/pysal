@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.lib.weights.DistanceBand &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../installation.html">Installation</a></li>
+                <li><a href="../api.html">API</a></li>
+                <li><a href="../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">pysal.lib.weights.DistanceBand</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="pysal-lib-weights-distanceband">
+<h1>pysal.lib.weights.DistanceBand<a class="headerlink" href="#pysal-lib-weights-distanceband" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pysal.lib.weights.DistanceBand">
+<em class="property">class </em><code class="sig-prename descclassname">pysal.lib.weights.</code><code class="sig-name descname">DistanceBand</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">threshold</em>, <em class="sig-param">p=2</em>, <em class="sig-param">alpha=-1.0</em>, <em class="sig-param">binary=True</em>, <em class="sig-param">ids=None</em>, <em class="sig-param">build_sp=True</em>, <em class="sig-param">silence_warnings=False</em>, <em class="sig-param">distance_metric='euclidean'</em>, <em class="sig-param">radius=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/lib/weights/distance.html#DistanceBand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.lib.weights.DistanceBand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spatial weights based on distance band.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>data</strong><span class="classifier">array</span></dt><dd><p>(n,k) or KDTree where KDtree.data is array (n,k)
+n observations on k characteristics used to measure
+distances between the n objects</p>
+</dd>
+<dt><strong>threshold</strong><span class="classifier">float</span></dt><dd><p>distance band</p>
+</dd>
+<dt><strong>p</strong><span class="classifier">float</span></dt><dd><p>Minkowski p-norm distance metric parameter:
+1&lt;=p&lt;=infinity
+2: Euclidean distance
+1: Manhattan distance</p>
+</dd>
+<dt><strong>binary</strong><span class="classifier">boolean</span></dt><dd><p>If true w_{ij}=1 if d_{i,j}&lt;=threshold, otherwise w_{i,j}=0
+If false wij=dij^{alpha}</p>
+</dd>
+<dt><strong>alpha</strong><span class="classifier">float</span></dt><dd><p>distance decay parameter for weight (default -1.0)
+if alpha is positive the weights will not decline with
+distance. If binary is True, alpha is ignored</p>
+</dd>
+<dt><strong>ids</strong><span class="classifier">list</span></dt><dd><p>values to use for keys of the neighbors and weights dicts</p>
+</dd>
+<dt><strong>build_sp</strong><span class="classifier">boolean</span></dt><dd><p>True to build sparse distance matrix and false to build dense
+distance matrix; significant speed gains may be obtained
+dending on the sparsity of the of distance_matrix and
+threshold that is applied</p>
+</dd>
+<dt><strong>silent</strong><span class="classifier">boolean</span></dt><dd><p>By default pysal.lib will print a warning if the
+dataset contains any disconnected observations or
+islands. To silence this warning set this
+parameter to True.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This was initially implemented running scipy 0.8.0dev (in epd 6.1).
+earlier versions of scipy (0.7.0) have a logic bug in scipy/sparse/dok.py
+so serge changed line 221 of that file on sal-dev to fix the logic bug.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pysal.lib</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">points</span><span class="o">=</span><span class="p">[(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wcheck</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">W</span><span class="p">({</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="mi">1</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="mi">2</span><span class="p">:</span> <span class="p">[],</span> <span class="mi">3</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">4</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="mi">5</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">]})</span>
+</pre></div>
+</div>
+<p>WARNING: there is one disconnected observation (no neighbors)
+Island id:  [2]
+&gt;&gt;&gt; w=pysal.lib.weights.DistanceBand(points,threshold=11.2)</p>
+<p>WARNING: there is one disconnected observation (no neighbors)
+Island id:  [2]
+&gt;&gt;&gt; pysal.lib.weights.util.neighbor_equality(w, wcheck)
+True
+&gt;&gt;&gt; w=pysal.lib.weights.DistanceBand(points,threshold=14.2)
+&gt;&gt;&gt; wcheck = pysal.lib.weights.W({0: [1, 3], 1: [0, 3, 4], 2: [4], 3: [1, 0], 4: [5, 2, 1], 5: [4]})
+&gt;&gt;&gt; pysal.lib.weights.util.neighbor_equality(w, wcheck)
+True</p>
+<p>inverse distance weights</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">w</span><span class="o">=</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">DistanceBand</span><span class="p">(</span><span class="n">points</span><span class="p">,</span><span class="n">threshold</span><span class="o">=</span><span class="mf">11.2</span><span class="p">,</span><span class="n">binary</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>WARNING: there is one disconnected observation (no neighbors)
+Island id:  [2]
+&gt;&gt;&gt; w.weights[0]
+[0.1, 0.08944271909999159]
+&gt;&gt;&gt; w.neighbors[0].tolist()
+[1, 3]</p>
+<p>gravity weights</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">w</span><span class="o">=</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">DistanceBand</span><span class="p">(</span><span class="n">points</span><span class="p">,</span><span class="n">threshold</span><span class="o">=</span><span class="mf">11.2</span><span class="p">,</span><span class="n">binary</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">alpha</span><span class="o">=-</span><span class="mf">2.</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>WARNING: there is one disconnected observation (no neighbors)
+Island id:  [2]
+&gt;&gt;&gt; w.weights[0]
+[0.01, 0.007999999999999998]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>weights</strong><span class="classifier">dict</span></dt><dd><p>of neighbor weights keyed by observation id</p>
+</dd>
+<dt><strong>neighbors</strong><span class="classifier">dict</span></dt><dd><p>of neighbors keyed by observation id</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">asymmetry</span></code>(self[, intrinsic])</p></td>
+<td><p>Asymmetry check.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_adjlist</span></code>(adjlist[, focal_col, …])</p></td>
+<td><p>Return an adjacency list representation of a weights object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_array</span></code>(array, threshold, \*\*kwargs)</p></td>
+<td><p>Construct a DistanceBand weights from an array.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_dataframe</span></code>(df, threshold[, geom_col, ids])</p></td>
+<td><p>Make DistanceBand weights from a dataframe.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_networkx</span></code>(graph[, weight_col])</p></td>
+<td><p>Convert a networkx graph to a PySAL W object.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_shapefile</span></code>(filepath, threshold[, idVariable])</p></td>
+<td><p>Distance-band based weights from shapefile</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">full</span></code>(self)</p></td>
+<td><p>Generate a full numpy array.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_transform</span></code>(self)</p></td>
+<td><p>Getter for transform property.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code>(self, gdf[, indexed_on, ax, color, …])</p></td>
+<td><p>Plot spatial weights objects.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">remap_ids</span></code>(self, new_ids)</p></td>
+<td><p>In place modification throughout <cite>W</cite> of id values from <cite>w.id_order</cite> to <cite>new_ids</cite> in all</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_shapefile</span></code>(self, shapefile[, idVariable, …])</p></td>
+<td><p>Adding meta data for writing headers of gal and gwt files.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_transform</span></code>(self[, value])</p></td>
+<td><p>Transformations of weights.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">symmetrize</span></code>(self[, inplace])</p></td>
+<td><p>Construct a symmetric KNN weight.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_WSP</span></code>(self)</p></td>
+<td><p>Generate a WSP object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_adjlist</span></code>(self[, remove_symmetric, …])</p></td>
+<td><p>Compute an adjacency list representation of a weights object.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_networkx</span></code>(self)</p></td>
+<td><p>Convert a weights object to a networkx graph</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 57%" />
+<col style="width: 43%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>from_WSP</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>from_file</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pysal.lib.weights.DistanceBand.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">data</em>, <em class="sig-param">threshold</em>, <em class="sig-param">p=2</em>, <em class="sig-param">alpha=-1.0</em>, <em class="sig-param">binary=True</em>, <em class="sig-param">ids=None</em>, <em class="sig-param">build_sp=True</em>, <em class="sig-param">silence_warnings=False</em>, <em class="sig-param">distance_metric='euclidean'</em>, <em class="sig-param">radius=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/lib/weights/distance.html#DistanceBand.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.lib.weights.DistanceBand.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Casting to floats is a work around for a bug in scipy.spatial.
+See detail in pysal issue #126.</p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pysal.lib.weights.DistanceBand.__init__" title="pysal.lib.weights.DistanceBand.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self, data, threshold[, p, alpha, …])</p></td>
+<td><p>Casting to floats is a work around for a bug in scipy.spatial.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">asymmetry</span></code>(self[, intrinsic])</p></td>
+<td><p>Asymmetry check.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_WSP</span></code>(WSP[, silence_warnings])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_adjlist</span></code>(adjlist[, focal_col, …])</p></td>
+<td><p>Return an adjacency list representation of a weights object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_array</span></code>(array, threshold, \*\*kwargs)</p></td>
+<td><p>Construct a DistanceBand weights from an array.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_dataframe</span></code>(df, threshold[, geom_col, ids])</p></td>
+<td><p>Make DistanceBand weights from a dataframe.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_file</span></code>([path, format])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_networkx</span></code>(graph[, weight_col])</p></td>
+<td><p>Convert a networkx graph to a PySAL W object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_shapefile</span></code>(filepath, threshold[, idVariable])</p></td>
+<td><p>Distance-band based weights from shapefile</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">full</span></code>(self)</p></td>
+<td><p>Generate a full numpy array.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_transform</span></code>(self)</p></td>
+<td><p>Getter for transform property.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code>(self, gdf[, indexed_on, ax, color, …])</p></td>
+<td><p>Plot spatial weights objects.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">remap_ids</span></code>(self, new_ids)</p></td>
+<td><p>In place modification throughout <cite>W</cite> of id values from <cite>w.id_order</cite> to <cite>new_ids</cite> in all</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_shapefile</span></code>(self, shapefile[, idVariable, …])</p></td>
+<td><p>Adding meta data for writing headers of gal and gwt files.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_transform</span></code>(self[, value])</p></td>
+<td><p>Transformations of weights.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">symmetrize</span></code>(self[, inplace])</p></td>
+<td><p>Construct a symmetric KNN weight.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_WSP</span></code>(self)</p></td>
+<td><p>Generate a WSP object.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_adjlist</span></code>(self[, remove_symmetric, …])</p></td>
+<td><p>Compute an adjacency list representation of a weights object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_networkx</span></code>(self)</p></td>
+<td><p>Convert a weights object to a networkx graph</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">asymmetries</span></code></p></td>
+<td><p>List of id pairs with asymmetric weights.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cardinalities</span></code></p></td>
+<td><p>Number of neighbors for each observation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">component_labels</span></code></p></td>
+<td><p>Store the graph component in which each observation falls.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">diagW2</span></code></p></td>
+<td><p>Diagonal of <span class="math notranslate nohighlight">\(WW\)</span>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">diagWtW</span></code></p></td>
+<td><p>Diagonal of <span class="math notranslate nohighlight">\(W^{'}W\)</span>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">diagWtW_WW</span></code></p></td>
+<td><p>Diagonal of <span class="math notranslate nohighlight">\(W^{'}W + WW\)</span>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">histogram</span></code></p></td>
+<td><p>Cardinality histogram as a dictionary where key is the id and value is the number of neighbors for that unit.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">id2i</span></code></p></td>
+<td><p>Dictionary where the key is an ID and the value is that ID’s index in W.id_order.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">id_order</span></code></p></td>
+<td><p>Returns the ids for the observations in the order in which they would be encountered if iterating over the weights.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">id_order_set</span></code></p></td>
+<td><p>Returns True if user has set id_order, False if not.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">islands</span></code></p></td>
+<td><p>List of ids without any neighbors.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">max_neighbors</span></code></p></td>
+<td><p>Largest number of neighbors.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean_neighbors</span></code></p></td>
+<td><p>Average number of neighbors.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">min_neighbors</span></code></p></td>
+<td><p>Minimum number of neighbors.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">n</span></code></p></td>
+<td><p>Number of units.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_components</span></code></p></td>
+<td><p>Store whether the adjacency matrix is fully connected.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">neighbor_offsets</span></code></p></td>
+<td><p>Given the current id_order, neighbor_offsets[id] is the offsets of the id’s neighbors in id_order.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">nonzero</span></code></p></td>
+<td><p>Number of nonzero weights.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pct_nonzero</span></code></p></td>
+<td><p>Percentage of nonzero weights.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">s0</span></code></p></td>
+<td><p>s0 is defined as</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">s1</span></code></p></td>
+<td><p>s1 is defined as</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">s2</span></code></p></td>
+<td><p>s2 is defined as</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">s2array</span></code></p></td>
+<td><p>Individual elements comprising s2.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sd</span></code></p></td>
+<td><p>Standard deviation of number of neighbors.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sparse</span></code></p></td>
+<td><p>Sparse matrix object.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform</span></code></p></td>
+<td><p>Getter for transform property.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">trcW2</span></code></p></td>
+<td><p>Trace of <span class="math notranslate nohighlight">\(WW\)</span>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">trcWtW</span></code></p></td>
+<td><p>Trace of <span class="math notranslate nohighlight">\(W^{'}W\)</span>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">trcWtW_WW</span></code></p></td>
+<td><p>Trace of <span class="math notranslate nohighlight">\(W^{'}W + WW\)</span>.</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../_sources/generated/pysal.lib.weights.DistanceBand.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

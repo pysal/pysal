@@ -1,2 +1,11 @@
-scipy>=0.11
-numpy>=1.3
+scipy
+pandas
+seaborn
+matplotlib
+descartes
+palettable
+scikit-learn
+geopandas
+deprecated
+rtree
+tqdm

@@ -1,0 +1,173 @@
+*****************************************************************************
+*             Semiparametric Geographically Weighted Regression             *
+*                         Release 1.0.90 (GWR 4.0.90)                       *
+*                               12 May 2015                                 *
+*                 (Originally coded by T. Nakaya: 1 Nov 2009)               *
+*                                                                           *
+*              Tomoki Nakaya(1), Martin Charlton(2), Chris Brunsdon (2)     *
+*              Paul Lewis (2), Jing Yao (3), A Stewart Fotheringham (4)     *
+*                       (c) GWR4 development team                           *
+* (1) Ritsumeikan University, (2) National University of Ireland, Maynooth, *
+*         (3) University of Glasgow, (4) Arizona State University           *
+*****************************************************************************
+
+Program began at 7/25/2016 2:12:16 AM
+
+*****************************************************************************
+Session: 
+Session control file: C:\Users\IEUser\Desktop\clearwater_BS_F.ctl
+*****************************************************************************
+Data filename: C:\Users\IEUser\Desktop\clearwater\clearwater\landslides.csv
+Number of areas/points: 239
+
+Model settings---------------------------------
+Model type: Logistic
+Geographic kernel: fixed bi-square
+Method for optimal bandwidth search: Golden section search
+Criterion for optimal bandwidth: AICc
+Number of varying coefficients: 7
+Number of fixed coefficients:   0
+
+Modelling options---------------------------------
+Standardisation of independent variables: OFF
+Testing geographical variability of local coefficients: OFF
+Local to Global Variable selection: OFF
+Global to Local Variable selection: OFF
+Prediction at non-regression points: OFF
+
+Variable settings---------------------------------
+Area key: field1: UserID
+Easting (x-coord): field2 : X
+Northing (y-coord): field3: Y
+Cartesian coordinates: Euclidean distance
+Dependent variable: field9: Landslid
+Offset variable is not specified
+Intercept: varying (Local) intercept
+Independent variable with varying (Local) coefficient: field4: Elev
+Independent variable with varying (Local) coefficient: field5: Slope
+Independent variable with varying (Local) coefficient: field6: SinAspct
+Independent variable with varying (Local) coefficient: field7: CosAspct
+Independent variable with varying (Local) coefficient: field8: AbsSouth
+Independent variable with varying (Local) coefficient: field10: DistStrm
+*****************************************************************************
+
+*****************************************************************************
+  Global regression result
+*****************************************************************************
+  < Diagnostic information >
+Number of parameters:                   7
+Deviance:                            264.959861
+Classic AIC:                         278.959861
+AICc:                                279.444709
+BIC/MDL:                             303.295106
+Percent deviance explained             0.186174
+
+Variable                  Estimate    Standard Error      z(Est/SE)        Exp(Est)  
+-------------------- --------------- --------------- --------------- --------------- 
+Intercept                   0.491477        2.249648        0.218469        1.634730
+Elev                       -0.002408        0.000548       -4.394976        0.997595
+Slope                       0.076097        0.019801        3.842994        1.079067
+SinAspct                    0.083827        0.213948        0.391807        1.087440
+CosAspct                   -1.191339        1.747013       -0.681929        0.303814
+AbsSouth                    0.008819        0.023743        0.371420        1.008858
+DistStrm                   -0.001732        0.001605       -1.078779        0.998270
+
+*****************************************************************************
+  GWR (Geographically weighted regression) bandwidth selection
+*****************************************************************************
+
+Bandwidth search <golden section search>
+  Limits: 7414.12203822248,  39427.5660570219
+ Golden section search begins...
+ Initial values
+  pL            Bandwidth:  7414.122 Criterion:    286.000
+  p1            Bandwidth: 19642.170 Criterion:    275.989
+  p2            Bandwidth: 27199.519 Criterion:    277.538
+  pU            Bandwidth: 39427.566 Criterion:    278.558
+ iter    1 (p1) Bandwidth: 19642.170 Criterion:    275.989 Diff:   7557.349
+ iter    2 (p2) Bandwidth: 19642.170 Criterion:    275.989 Diff:   4670.699
+ iter    3 (p1) Bandwidth: 19642.170 Criterion:    275.989 Diff:   2886.650
+ iter    4 (p2) Bandwidth: 19642.170 Criterion:    275.989 Diff:   1784.048
+Best bandwidth size 19642.170
+Minimum AICc      275.989
+
+*****************************************************************************
+  GWR (Geographically weighted regression) result
+*****************************************************************************
+  Bandwidth and geographic ranges
+Bandwidth size:                19642.169556
+Coordinate                Min              Max           Range
+--------------- --------------- --------------- ---------------
+X-coord           599444.687500   632987.750000    33543.062500
+Y-coord          5172366.500000  5201169.128000    28802.628000
+
+  Diagnostic information
+Effective number of parameters (model: trace(S)):                         22.450210
+Effective number of parameters (variance: trace(S'WSW^-1)):                0.276740
+Degree of freedom (model: n - trace(S)):                                 216.549790
+Degree of freedom (residual: n - 2trace(S) + trace(S'WSW^-1)):           194.376319
+Deviance:                            226.203496
+Classic AIC:                         271.103916
+AICc:                                275.988747
+BIC/MDL:                             349.151253
+Percent deviance explained             0.305215
+
+***********************************************************
+ << Geographically varying (Local) coefficients >>
+***********************************************************
+Estimates of varying coefficients have been saved in the following file.
+    Listwise output file: C:\Users\IEUser\Desktop\clearwater_BS_F_listwise.csv
+
+Summary statistics for varying (Local) coefficients 
+Variable                      Mean             STD 
+-------------------- --------------- ---------------
+Intercept                   1.419798        1.209409
+Elev                       -0.002684        0.001269
+Slope                       0.067124        0.033621
+SinAspct                    0.126945        0.320483
+CosAspct                   -0.850236        1.475146
+AbsSouth                    0.004802        0.017283
+DistStrm                   -0.000926        0.001670
+
+Variable                       Min              Max           Range
+-------------------- --------------- --------------- ---------------
+Intercept                  -1.875538        5.601441        7.476978
+Elev                       -0.010165       -0.000721        0.009444
+Slope                       0.003541        0.140436        0.136895
+SinAspct                   -1.401238        1.019611        2.420849
+CosAspct                   -5.802768        2.280865        8.083634
+AbsSouth                   -0.040024        0.053497        0.093521
+DistStrm                   -0.005188        0.008572        0.013760
+
+Variable               Lwr Quartile          Median    Upr Quartile
+-------------------- --------------- --------------- ---------------
+Intercept                   0.518742        1.413040        2.277932
+Elev                       -0.003166       -0.002238       -0.001852
+Slope                       0.035822        0.070416        0.087936
+SinAspct                    0.019086        0.149218        0.343557
+CosAspct                   -1.602258       -0.745542        0.254795
+AbsSouth                   -0.007011        0.003997        0.015836
+DistStrm                   -0.001969       -0.000893       -0.000285
+
+Variable             Interquartile R     Robust STD
+-------------------- --------------- ---------------
+Intercept                   1.759190        1.304070
+Elev                        0.001314        0.000974
+Slope                       0.052114        0.038632
+SinAspct                    0.324471        0.240527
+CosAspct                    1.857054        1.376615
+AbsSouth                    0.022847        0.016936
+DistStrm                    0.001683        0.001248
+ (Note: Robust STD is given by (interquartile range / 1.349) )
+
+*****************************************************************************
+ GWR Analysis of Deviance Table
+*****************************************************************************
+Source                 Deviance        DOF     Deviance/DOF
+------------ ------------------- ---------- ----------------
+Global model              264.960    232.000             1.142
+GWR model                 226.203    194.376             1.164
+Difference                 38.756     37.624             1.030
+
+*****************************************************************************
+Program terminated at 7/25/2016 2:12:25 AM

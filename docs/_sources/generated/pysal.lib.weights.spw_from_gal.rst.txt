@@ -1,0 +1,6 @@
+pysal.lib.weights.spw\_from\_gal
+================================
+
+.. currentmodule:: pysal.lib.weights
+
+.. autofunction:: spw_from_gal

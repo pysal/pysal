@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.model.mgwr.sel_bw.Sel_BW &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="pysal.model.mgwr.kernels.local_cdist" href="pysal.model.mgwr.kernels.local_cdist.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../installation.html">Installation</a></li>
+                <li><a href="../api.html">API</a></li>
+                <li><a href="../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">pysal.model.mgwr.sel_bw.Sel_BW</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="pysal-model-mgwr-sel-bw-sel-bw">
+<h1>pysal.model.mgwr.sel_bw.Sel_BW<a class="headerlink" href="#pysal-model-mgwr-sel-bw-sel-bw" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pysal.model.mgwr.sel_bw.Sel_BW">
+<em class="property">class </em><code class="sig-prename descclassname">pysal.model.mgwr.sel_bw.</code><code class="sig-name descname">Sel_BW</code><span class="sig-paren">(</span><em class="sig-param">coords</em>, <em class="sig-param">y</em>, <em class="sig-param">X_loc</em>, <em class="sig-param">X_glob=None</em>, <em class="sig-param">family=&lt;pysal.model.spglm.family.Gaussian object&gt;</em>, <em class="sig-param">offset=None</em>, <em class="sig-param">kernel='bisquare'</em>, <em class="sig-param">fixed=False</em>, <em class="sig-param">multi=False</em>, <em class="sig-param">constant=True</em>, <em class="sig-param">spherical=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/model/mgwr/sel_bw.html#Sel_BW"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.model.mgwr.sel_bw.Sel_BW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select bandwidth for kernel</p>
+<p>Methods: p211 - p213, bandwidth selection</p>
+<p><a class="reference internal" href="../references.html#fotheringham-geographically-2002" id="id1">[FBC02]</a>: Fotheringham, A. S., Brunsdon, C., &amp; Charlton, M. (2002).
+Geographically weighted regression: the analysis of spatially varying relationships.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>n*1, dependent variable.</p>
+</dd>
+<dt><strong>X_glob</strong><span class="classifier">array</span></dt><dd><p>n*k1, fixed independent variable.</p>
+</dd>
+<dt><strong>X_loc</strong><span class="classifier">array</span></dt><dd><p>n*k2, local independent variable, including constant.</p>
+</dd>
+<dt><strong>coords</strong><span class="classifier">list of tuples</span></dt><dd><p>(x,y) of points used in bandwidth selection</p>
+</dd>
+<dt><strong>family</strong><span class="classifier">family object/instance, optional</span></dt><dd><p>underlying probability model: Gaussian(), Poisson(),
+Binomial(). Default is Gaussian().</p>
+</dd>
+<dt><strong>offset</strong><span class="classifier">array</span></dt><dd><p>n*1, the offset variable at the ith location. For Poisson model
+this term is often the size of the population at risk or
+the expected size of the outcome in spatial epidemiology
+Default is None where Ni becomes 1.0 for all locations</p>
+</dd>
+<dt><strong>kernel</strong><span class="classifier">string, optional</span></dt><dd><p>kernel function: ‘gaussian’, ‘bisquare’, ‘exponential’.
+Default is ‘bisquare’.</p>
+</dd>
+<dt><strong>fixed</strong><span class="classifier">boolean</span></dt><dd><p>True for fixed bandwidth and False for adaptive (NN)</p>
+</dd>
+<dt><strong>multi</strong><span class="classifier">True for multiple (covaraite-specific) bandwidths</span></dt><dd><p>False for a traditional (same for  all covariates)
+bandwdith; defualt is False.</p>
+</dd>
+<dt><strong>constant</strong><span class="classifier">boolean</span></dt><dd><p>True to include intercept (default) in model and False to exclude
+intercept.</p>
+</dd>
+<dt><strong>spherical</strong><span class="classifier">boolean</span></dt><dd><p>True for shperical coordinates (long-lat),
+False for projected coordinates (defalut).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pysal.lib</span> <span class="k">as</span> <span class="nn">ps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">mgwr.sel_bw</span> <span class="k">import</span> <span class="n">Sel_BW</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;GData_utm.csv&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">coords</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">),</span> <span class="n">data</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="s1">&#39;Y&#39;</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="s1">&#39;PctBach&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rural</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="s1">&#39;PctRural&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="s1">&#39;PctPov&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">african_amer</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="s1">&#39;PctBlack&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">rural</span><span class="p">,</span> <span class="n">pov</span><span class="p">,</span> <span class="n">african_amer</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Golden section search AICc - adaptive bisquare</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bw</span> <span class="o">=</span> <span class="n">Sel_BW</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;AICc&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bw</span><span class="p">)</span>
+<span class="go">93.0</span>
+</pre></div>
+</div>
+<p>Golden section search AIC - adaptive Gaussian</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bw</span> <span class="o">=</span> <span class="n">Sel_BW</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;gaussian&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;AIC&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bw</span><span class="p">)</span>
+<span class="go">50.0</span>
+</pre></div>
+</div>
+<p>Golden section search BIC - adaptive Gaussian</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bw</span> <span class="o">=</span> <span class="n">Sel_BW</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;gaussian&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;BIC&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bw</span><span class="p">)</span>
+<span class="go">62.0</span>
+</pre></div>
+</div>
+<p>Golden section search CV - adaptive Gaussian</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bw</span> <span class="o">=</span> <span class="n">Sel_BW</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;gaussian&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;CV&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bw</span><span class="p">)</span>
+<span class="go">68.0</span>
+</pre></div>
+</div>
+<p>Interval AICc - fixed bisquare</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sel</span> <span class="o">=</span> <span class="n">Sel_BW</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">fixed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bw</span> <span class="o">=</span> <span class="n">sel</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">search_method</span><span class="o">=</span><span class="s1">&#39;interval&#39;</span><span class="p">,</span> <span class="n">bw_min</span><span class="o">=</span><span class="mf">211001.0</span><span class="p">,</span> <span class="n">bw_max</span><span class="o">=</span><span class="mf">211035.0</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bw</span><span class="p">)</span>
+<span class="go">211025.0</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>n*1, dependent variable.</p>
+</dd>
+<dt><strong>X_glob</strong><span class="classifier">array</span></dt><dd><p>n*k1, fixed independent variable.</p>
+</dd>
+<dt><strong>X_loc</strong><span class="classifier">array</span></dt><dd><p>n*k2, local independent variable, including constant.</p>
+</dd>
+<dt><strong>coords</strong><span class="classifier">list of tuples</span></dt><dd><p>(x,y) of points used in bandwidth selection</p>
+</dd>
+<dt><strong>family</strong><span class="classifier">string</span></dt><dd><p>GWR model type: ‘Gaussian’, ‘logistic, ‘Poisson’’</p>
+</dd>
+<dt><strong>kernel</strong><span class="classifier">string</span></dt><dd><p>type of kernel used and wether fixed or adaptive</p>
+</dd>
+<dt><strong>fixed</strong><span class="classifier">boolean</span></dt><dd><p>True for fixed bandwidth and False for adaptive (NN)</p>
+</dd>
+<dt><strong>criterion</strong><span class="classifier">string</span></dt><dd><p>bw selection criterion: ‘AICc’, ‘AIC’, ‘BIC’, ‘CV’</p>
+</dd>
+<dt><strong>search_method</strong><span class="classifier">string</span></dt><dd><p>bw search method: ‘golden’, ‘interval’</p>
+</dd>
+<dt><strong>bw_min</strong><span class="classifier">float</span></dt><dd><p>min value used in bandwidth search</p>
+</dd>
+<dt><strong>bw_max</strong><span class="classifier">float</span></dt><dd><p>max value used in bandwidth search</p>
+</dd>
+<dt><strong>interval</strong><span class="classifier">float</span></dt><dd><p>interval increment used in interval search</p>
+</dd>
+<dt><strong>tol</strong><span class="classifier">float</span></dt><dd><p>tolerance used to determine convergence</p>
+</dd>
+<dt><strong>max_iter</strong><span class="classifier">integer</span></dt><dd><p>max interations if no convergence to tol</p>
+</dd>
+<dt><strong>multi</strong><span class="classifier">True for multiple (covaraite-specific) bandwidths</span></dt><dd><p>False for a traditional (same for  all covariates)
+bandwdith; defualt is False.</p>
+</dd>
+<dt><strong>constant</strong><span class="classifier">boolean</span></dt><dd><p>True to include intercept (default) in model and False to exclude
+intercept.</p>
+</dd>
+<dt><strong>offset</strong><span class="classifier">array</span></dt><dd><p>n*1, the offset variable at the ith location. For Poisson model
+this term is often the size of the population at risk or
+the expected size of the outcome in spatial epidemiology
+Default is None where Ni becomes 1.0 for all locations</p>
+</dd>
+<dt><strong>spherical</strong><span class="classifier">boolean</span></dt><dd><p>True for shperical coordinates (long-lat),
+False for projected coordinates (defalut).</p>
+</dd>
+<dt><strong>search_params</strong><span class="classifier">dict</span></dt><dd><p>stores search arguments</p>
+</dd>
+<dt><strong>int_score</strong><span class="classifier">boolan</span></dt><dd><p>True if adaptive bandwidth is being used and bandwdith
+selection should be discrete. False
+if fixed bandwidth is being used and bandwidth does not have
+to be discrete.</p>
+</dd>
+<dt><strong>bw</strong><span class="classifier">scalar or array-like</span></dt><dd><p>Derived optimal bandwidth(s). Will be a scalar for GWR
+(multi=False) and a list of scalars for MGWR (multi=True)
+with one bandwidth for each covariate.</p>
+</dd>
+<dt><strong>S</strong><span class="classifier">array</span></dt><dd><p>n*n, hat matrix derived from the iterative backfitting
+algorthim for MGWR during bandwidth selection</p>
+</dd>
+<dt><strong>R</strong><span class="classifier">array</span></dt><dd><p>n*n*k, partial hat matrices derived from the iterative
+backfitting algoruthm for MGWR during bandwidth selection.
+There is one n*n matrix for each of the k covariates.</p>
+</dd>
+<dt><strong>params</strong><span class="classifier">array</span></dt><dd><p>n*k, calibrated parameter estimates for MGWR based on the
+iterative backfitting algorithm - computed and saved here to
+avoid having to do it again in the MGWR object.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">search</span></code>(self[, search_method, criterion, …])</p></td>
+<td><p>Method to select one unique bandwidth for a gwr model or a bandwidth vector for a mgwr model.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pysal.model.mgwr.sel_bw.Sel_BW.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">coords</em>, <em class="sig-param">y</em>, <em class="sig-param">X_loc</em>, <em class="sig-param">X_glob=None</em>, <em class="sig-param">family=&lt;pysal.model.spglm.family.Gaussian object at 0x7fe380c84a90&gt;</em>, <em class="sig-param">offset=None</em>, <em class="sig-param">kernel='bisquare'</em>, <em class="sig-param">fixed=False</em>, <em class="sig-param">multi=False</em>, <em class="sig-param">constant=True</em>, <em class="sig-param">spherical=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/model/mgwr/sel_bw.html#Sel_BW.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.model.mgwr.sel_bw.Sel_BW.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pysal.model.mgwr.sel_bw.Sel_BW.__init__" title="pysal.model.mgwr.sel_bw.Sel_BW.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self, coords, y, X_loc[, X_glob, …])</p></td>
+<td><p>Initialize self.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">search</span></code>(self[, search_method, criterion, …])</p></td>
+<td><p>Method to select one unique bandwidth for a gwr model or a bandwidth vector for a mgwr model.</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../_sources/generated/pysal.model.mgwr.sel_bw.Sel_BW.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

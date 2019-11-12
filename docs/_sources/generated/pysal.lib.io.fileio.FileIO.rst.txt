@@ -1,0 +1,42 @@
+pysal.lib.io.fileio.FileIO
+==========================
+
+.. currentmodule:: pysal.lib.io.fileio
+
+.. autoclass:: FileIO
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FileIO.__init__
+      ~FileIO.cast
+      ~FileIO.check
+      ~FileIO.close
+      ~FileIO.flush
+      ~FileIO.get
+      ~FileIO.getType
+      ~FileIO.open
+      ~FileIO.read
+      ~FileIO.seek
+      ~FileIO.tell
+      ~FileIO.truncate
+      ~FileIO.write
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~FileIO.by_row
+      ~FileIO.ids
+      ~FileIO.rIds
+   
+   

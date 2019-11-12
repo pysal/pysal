@@ -1,0 +1,6 @@
+pysal.explore.spaghetti.gfunction
+=================================
+
+.. currentmodule:: pysal.explore.spaghetti
+
+.. autofunction:: gfunction

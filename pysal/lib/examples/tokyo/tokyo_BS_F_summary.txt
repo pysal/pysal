@@ -1,0 +1,183 @@
+*****************************************************************************
+*             Semiparametric Geographically Weighted Regression             *
+*                         Release 1.0.90 (GWR 4.0.90)                       *
+*                               12 May 2015                                 *
+*                 (Originally coded by T. Nakaya: 1 Nov 2009)               *
+*                                                                           *
+*              Tomoki Nakaya(1), Martin Charlton(2), Chris Brunsdon (2)     *
+*              Paul Lewis (2), Jing Yao (3), A Stewart Fotheringham (4)     *
+*                       (c) GWR4 development team                           *
+* (1) Ritsumeikan University, (2) National University of Ireland, Maynooth, *
+*         (3) University of Glasgow, (4) Arizona State University           *
+*****************************************************************************
+
+Program began at 7/25/2016 8:23:34 AM
+
+*****************************************************************************
+Session: 
+Session control file: C:\Users\IEUser\Desktop\tokyo\tokyo_results_no_off\tokyo_BS_F.ctl
+*****************************************************************************
+Data filename: C:\Users\IEUser\Desktop\tokyo\tokyo\Tokyomortality.txt
+Number of areas/points: 262
+
+Model settings---------------------------------
+Model type: Poisson
+Geographic kernel: fixed bi-square
+Method for optimal bandwidth search: Golden section search
+Criterion for optimal bandwidth: AICc
+Number of varying coefficients: 5
+Number of fixed coefficients:   0
+
+Modelling options---------------------------------
+Standardisation of independent variables: OFF
+Testing geographical variability of local coefficients: OFF
+Local to Global Variable selection: OFF
+Global to Local Variable selection: OFF
+Prediction at non-regression points: OFF
+
+Variable settings---------------------------------
+Area key: field1: IDnum0
+Easting (x-coord): field2 : X_CENTROID
+Northing (y-coord): field3: Y_CENTROID
+Cartesian coordinates: Euclidean distance
+Dependent variable: field4: db2564
+Offset variable is not specified
+Intercept: varying (Local) intercept
+Independent variable with varying (Local) coefficient: field6: OCC_TEC
+Independent variable with varying (Local) coefficient: field7: OWNH
+Independent variable with varying (Local) coefficient: field8: POP65
+Independent variable with varying (Local) coefficient: field9: UNEMP
+*****************************************************************************
+
+*****************************************************************************
+  Global regression result
+*****************************************************************************
+  < Diagnostic information >
+Number of parameters:                   5
+Deviance:                          24597.455544
+Classic AIC:                       24607.455544
+AICc:                              24607.689919
+BIC/MDL:                           24625.297266
+Percent deviance explained             0.526746
+
+Variable                  Estimate    Standard Error      z(Est/SE)        Exp(Est)  
+-------------------- --------------- --------------- --------------- --------------- 
+Intercept                   8.432403        0.061613      136.859875     4593.526955
+OCC_TEC                    -4.270431        0.156467      -27.292831        0.013976
+OWNH                       -4.789311        0.046070     -103.957933        0.008318
+POP65                      -1.252659        0.178384       -7.022265        0.285744
+UNEMP                       0.061305        0.010099        6.070542        1.063223
+
+*****************************************************************************
+  GWR (Geographically weighted regression) bandwidth selection
+*****************************************************************************
+
+Bandwidth search <golden section search>
+  Limits: 17528.9489150947,  134660.843497798
+ Golden section search begins...
+ Initial values
+  pL            Bandwidth: 26029.625 Criterion:  13294.025
+  p1            Bandwidth: 28341.975 Criterion:  14337.915
+  p2            Bandwidth: 29771.086 Criterion:  14934.143
+  pU            Bandwidth: 32083.436 Criterion:  15739.259
+ iter    1 (p1) Bandwidth: 28341.975 Criterion:  14337.915 Diff:   1429.111
+ iter    2 (p1) Bandwidth: 27458.736 Criterion:  13940.360 Diff:    883.239
+ iter    3 (p1) Bandwidth: 26912.864 Criterion:  13690.874 Diff:    545.872
+ iter    4 (p1) Bandwidth: 26575.497 Criterion:  13538.151 Diff:    337.367
+ iter    5 (p1) Bandwidth: 26366.993 Criterion:  13445.104 Diff:    208.504
+ iter    6 (p1) Bandwidth: 26238.130 Criterion:  13387.798 Diff:    128.863
+ iter    7 (p1) Bandwidth: 26158.488 Criterion:  13352.102 Diff:     79.642
+ iter    8 (p1) Bandwidth: 26109.267 Criterion:  13329.966 Diff:     49.221
+ iter    9 (p1) Bandwidth: 26078.847 Criterion:  13316.257 Diff:     30.420
+ iter   10 (p1) Bandwidth: 26060.046 Criterion:  13307.773 Diff:     18.801
+ iter   11 (p1) Bandwidth: 26048.426 Criterion:  13302.525 Diff:     11.620
+ iter   12 (p1) Bandwidth: 26041.245 Criterion:  13299.279 Diff:      7.181
+ iter   13 (p1) Bandwidth: 26036.807 Criterion:  13297.273 Diff:      4.438
+ iter   14 (p1) Bandwidth: 26034.064 Criterion:  13296.032 Diff:      2.743
+ iter   15 (p1) Bandwidth: 26032.368 Criterion:  13295.266 Diff:      1.695
+ iter   16 (p1) Bandwidth: 26031.321 Criterion:  13294.792 Diff:      1.048
+ iter   17 (p1) Bandwidth: 26030.673 Criterion:  13294.499 Diff:      0.648
+ iter   18 (p1) Bandwidth: 26030.273 Criterion:  13294.318 Diff:      0.400
+ iter   19 (p1) Bandwidth: 26030.026 Criterion:  13294.206 Diff:      0.247
+ iter   20 (p1) Bandwidth: 26029.873 Criterion:  13294.137 Diff:      0.153
+ iter   21 (p1) Bandwidth: 26029.778 Criterion:  13294.094 Diff:      0.094
+ iter   22 (p1) Bandwidth: 26029.720 Criterion:  13294.067 Diff:      0.058
+ iter   23 (p1) Bandwidth: 26029.684 Criterion:  13294.051 Diff:      0.036
+ iter   24 (p1) Bandwidth: 26029.661 Criterion:  13294.041 Diff:      0.022
+The lower limit in your search has been selected as the optimal bandwidth size.
+A new sesssion is recommended to try with a smaller lowest limit of the bandwidth search.
+Best bandwidth size 26029.625
+Minimum AICc    13294.025
+
+*****************************************************************************
+  GWR (Geographically weighted regression) result
+*****************************************************************************
+  Bandwidth and geographic ranges
+Bandwidth size:                26029.625402
+Coordinate                Min              Max           Range
+--------------- --------------- --------------- ---------------
+X-coord           276385.400000   408226.180000   131840.780000
+Y-coord           -86587.480000    33538.420000   120125.900000
+
+  Diagnostic information
+Effective number of parameters (model: trace(S)):                         66.434760
+Effective number of parameters (variance: trace(S'WSW^-1)):               51.742762
+Degree of freedom (model: n - trace(S)):                                 195.565240
+Degree of freedom (residual: n - 2trace(S) + trace(S'WSW^-1)):           180.873243
+Deviance:                          13115.103705
+Classic AIC:                       13247.973224
+AICc:                              13294.024739
+BIC/MDL:                           13485.035334
+Percent deviance explained             0.747666
+
+***********************************************************
+ << Geographically varying (Local) coefficients >>
+***********************************************************
+Estimates of varying coefficients have been saved in the following file.
+    Listwise output file: C:\Users\IEUser\Desktop\tokyo\tokyo_results_no_off\tokyo_BS_F_listwise.csv
+
+Summary statistics for varying (Local) coefficients 
+Variable                      Mean             STD 
+-------------------- --------------- ---------------
+Intercept                   6.956437        3.585435
+OCC_TEC                     2.808094       16.199511
+OWNH                       -4.025297        2.176207
+POP65                       0.709104       13.441155
+UNEMP                       0.083338        0.534893
+
+Variable                       Min              Max           Range
+-------------------- --------------- --------------- ---------------
+Intercept                  -4.698846       29.167648       33.866494
+OCC_TEC                  -127.606495       60.091449      187.697944
+OWNH                      -12.474311        3.217910       15.692220
+POP65                     -98.487455       39.324447      137.811902
+UNEMP                      -2.869207        1.771710        4.640917
+
+Variable               Lwr Quartile          Median    Upr Quartile
+-------------------- --------------- --------------- ---------------
+Intercept                   5.487963        7.375409        8.489884
+OCC_TEC                    -4.826044        1.873720        7.407511
+OWNH                       -5.189891       -4.171458       -2.506044
+POP65                      -5.189369       -0.656530        6.532191
+UNEMP                      -0.277246        0.052468        0.483072
+
+Variable             Interquartile R     Robust STD
+-------------------- --------------- ---------------
+Intercept                   3.001921        2.225294
+OCC_TEC                    12.233554        9.068610
+OWNH                        2.683847        1.989508
+POP65                      11.721560        8.689074
+UNEMP                       0.760318        0.563616
+ (Note: Robust STD is given by (interquartile range / 1.349) )
+
+*****************************************************************************
+ GWR Analysis of Deviance Table
+*****************************************************************************
+Source                 Deviance        DOF     Deviance/DOF
+------------ ------------------- ---------- ----------------
+Global model            24597.456    257.000            95.710
+GWR model               13115.104    180.873            72.510
+Difference              11482.352     76.127           150.832
+
+*****************************************************************************
+Program terminated at 7/25/2016 8:23:42 AM

@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.lib.cg.alpha_shapes &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../../installation.html">Installation</a></li>
+                <li><a href="../../../../api.html">API</a></li>
+                <li><a href="../../../../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for pysal.lib.cg.alpha_shapes</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Computation of alpha shape algorithm in 2-D based on original implementation</span>
+<span class="sd">by Tim Kittel (@timkittel) available at:</span>
+
+<span class="sd">    https://github.com/timkittel/alpha-shapes</span>
+
+<span class="sd">Author(s):</span>
+<span class="sd">    Dani Arribas-Bel daniel.arribas.bel@gmail.com</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">numba</span> <span class="k">import</span> <span class="n">jit</span>
+    <span class="n">HAS_JIT</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">warnings</span> <span class="k">import</span> <span class="n">warn</span>
+    <span class="k">def</span> <span class="nf">jit</span><span class="p">(</span><span class="n">function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">original_args</span><span class="p">,</span> <span class="o">**</span><span class="n">original_kw</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">original_args</span><span class="p">,</span> <span class="o">**</span><span class="n">original_kw</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">wrapped</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">def</span> <span class="nf">partial_inner</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">jit</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">partial_inner</span>
+    <span class="n">HAS_JIT</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.spatial</span> <span class="k">as</span> <span class="nn">spat</span>
+
+<span class="n">EPS</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;alpha_shape&#39;</span><span class="p">,</span> <span class="s1">&#39;alpha_shape_auto&#39;</span><span class="p">]</span>
+
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">nb_dist</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    numba implementation of distance between points `x` and `y`</span>
+<span class="sd">    ...</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    x       : ndarray</span>
+<span class="sd">              Coordinates of point `x`</span>
+<span class="sd">    y       : ndarray</span>
+<span class="sd">              Coordinates of point `y`</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dist    : float</span>
+<span class="sd">              Distance between `x` and `y`</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    &gt;&gt;&gt; x = np.array([0, 0])</span>
+<span class="sd">    &gt;&gt;&gt; y = np.array([1, 1])</span>
+<span class="sd">    &gt;&gt;&gt; dist = nb_dist(x, y)</span>
+<span class="sd">    &gt;&gt;&gt; dist</span>
+<span class="sd">    1.4142135623730951</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">x_i</span><span class="p">,</span> <span class="n">y_i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="nb">sum</span> <span class="o">+=</span> <span class="p">(</span><span class="n">x_i</span> <span class="o">-</span> <span class="n">y_i</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">sum</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dist</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">r_circumcircle_triangle_single</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Computation of the circumcircle of a single triangle</span>
+<span class="sd">    ...</span>
+
+<span class="sd">    Source for equations:</span>
+
+<span class="sd">    &gt; https://www.mathopenref.com/trianglecircumcircle.html</span>
+
+<span class="sd">    [Last accessed July 11th. 2018]</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    a       : ndarray</span>
+<span class="sd">              (2,) Array with coordinates of vertex `a` of the triangle</span>
+<span class="sd">    b       : ndarray</span>
+<span class="sd">              (2,) Array with coordinates of vertex `b` of the triangle</span>
+<span class="sd">    c       : ndarray</span>
+<span class="sd">              (2,) Array with coordinates of vertex `c` of the triangle</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    r       : float</span>
+<span class="sd">              Circumcircle of the triangle</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    &gt;&gt;&gt; a = np.array([0, 0])</span>
+<span class="sd">    &gt;&gt;&gt; b = np.array([0.5, 0])</span>
+<span class="sd">    &gt;&gt;&gt; c = np.array([0.25, 0.25])</span>
+<span class="sd">    &gt;&gt;&gt; r = r_circumcircle_triangle_single(a, b, c)</span>
+<span class="sd">    &gt;&gt;&gt; r</span>
+<span class="sd">    0.2500000000000001</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">ab</span> <span class="o">=</span> <span class="n">nb_dist</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="n">bc</span> <span class="o">=</span> <span class="n">nb_dist</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+    <span class="n">ca</span> <span class="o">=</span> <span class="n">nb_dist</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+
+    <span class="n">num</span> <span class="o">=</span> <span class="n">ab</span> <span class="o">*</span> <span class="n">bc</span> <span class="o">*</span> <span class="n">ca</span>
+    <span class="n">den</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="p">(</span><span class="n">ab</span> <span class="o">+</span> <span class="n">bc</span> <span class="o">+</span> <span class="n">ca</span><span class="p">)</span> <span class="o">*</span> \
+                   <span class="p">(</span><span class="n">bc</span> <span class="o">+</span> <span class="n">ca</span> <span class="o">-</span> <span class="n">ab</span><span class="p">)</span> <span class="o">*</span> \
+                   <span class="p">(</span><span class="n">ca</span> <span class="o">+</span> <span class="n">ab</span> <span class="o">-</span> <span class="n">bc</span><span class="p">)</span> <span class="o">*</span> \
+                   <span class="p">(</span><span class="n">ab</span> <span class="o">+</span> <span class="n">bc</span> <span class="o">-</span> <span class="n">ca</span><span class="p">)</span> <span class="p">)</span>
+    <span class="k">if</span> <span class="n">den</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">ab</span><span class="p">,</span> <span class="n">bc</span><span class="p">,</span> <span class="n">ca</span><span class="p">])</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="mf">2.0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">num</span> <span class="o">/</span> <span class="n">den</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">r_circumcircle_triangle</span><span class="p">(</span><span class="n">a_s</span><span class="p">,</span> <span class="n">b_s</span><span class="p">,</span> <span class="n">c_s</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Computation of circumcircles for a series of triangles</span>
+<span class="sd">    ...</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    a_s     : ndarray</span>
+<span class="sd">              (N, 2) array with coordinates of vertices `a` of the triangles</span>
+<span class="sd">    b_s     : ndarray</span>
+<span class="sd">              (N, 2) array with coordinates of vertices `b` of the triangles</span>
+<span class="sd">    c_s     : ndarray</span>
+<span class="sd">              (N, 2) array with coordinates of vertices `c` of the triangles</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    radii   : ndarray</span>
+<span class="sd">              (N,) array with circumcircles for every triangle</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    &gt;&gt;&gt; a_s = np.array([[0, 0], [2, 1], [3, 2]])</span>
+<span class="sd">    &gt;&gt;&gt; b_s = np.array([[1, 0], [5, 1], [2, 4]])</span>
+<span class="sd">    &gt;&gt;&gt; c_s = np.array([[0, 7], [1, 3], [4, 2]])</span>
+<span class="sd">    &gt;&gt;&gt; rs = r_circumcircle_triangle(a_s, b_s, c_s)</span>
+<span class="sd">    &gt;&gt;&gt; rs</span>
+<span class="sd">    array([3.53553391, 2.5       , 1.58113883])</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">len_a</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">a_s</span><span class="p">)</span>
+    <span class="n">r2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="p">(</span><span class="n">len_a</span><span class="p">,)</span> <span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">len_a</span><span class="p">):</span>
+        <span class="n">r2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">r_circumcircle_triangle_single</span><span class="p">(</span><span class="n">a_s</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> 
+                                               <span class="n">b_s</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> 
+                                               <span class="n">c_s</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">r2</span>
+
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">get_faces</span><span class="p">(</span><span class="n">triangle</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Extract faces from a single triangle</span>
+<span class="sd">    ...</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    triangles       : ndarray</span>
+<span class="sd">                      (3,) array with the vertex indices for a triangle</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    faces           : ndarray</span>
+<span class="sd">                      (3, 2) array with a row for each face containing the</span>
+<span class="sd">                      indices of the two points that make up the face</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; triangle = np.array([3, 1, 4], dtype=np.int32)</span>
+<span class="sd">    &gt;&gt;&gt; faces = get_faces(triangle)</span>
+<span class="sd">    &gt;&gt;&gt; faces</span>
+<span class="sd">    array([[3., 1.],</span>
+<span class="sd">           [1., 4.],</span>
+<span class="sd">           [4., 3.]])</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">faces</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">i0</span><span class="p">,</span> <span class="n">i1</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]):</span>
+        <span class="n">faces</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">triangle</span><span class="p">[</span><span class="n">i0</span><span class="p">],</span> <span class="n">triangle</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">faces</span>
+
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">build_faces</span><span class="p">(</span><span class="n">faces</span><span class="p">,</span> <span class="n">triangles_is</span><span class="p">,</span> 
+        <span class="n">num_triangles</span><span class="p">,</span> <span class="n">num_faces_single</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Build facing triangles</span>
+
+<span class="sd">    ...</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    faces               : ndarray</span>
+<span class="sd">                          (num_triangles * num_faces_single, 2) array of</span>
+<span class="sd">                          zeroes in int form</span>
+<span class="sd">    triangles_is        : ndarray</span>
+<span class="sd">                          (D, 3) array, where D is the number of Delaunay</span>
+<span class="sd">                          triangles, with the vertex indices for each</span>
+<span class="sd">                          triangle</span>
+<span class="sd">    num_triangles       : int</span>
+<span class="sd">                          Number of triangles</span>
+<span class="sd">    num_faces_single    : int</span>
+<span class="sd">                          Number of faces a triangle has (i.e. 3)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    faces               : ndarray</span>
+<span class="sd">                          Two dimensional array with a row for every facing</span>
+<span class="sd">                          segment containing the indices of the coordinate points</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; import scipy.spatial as spat</span>
+<span class="sd">    &gt;&gt;&gt; pts = np.array([[0, 1], [3, 5], [4, 1], [6, 7], [9, 3]])</span>
+<span class="sd">    &gt;&gt;&gt; triangulation = spat.Delaunay(pts)</span>
+<span class="sd">    &gt;&gt;&gt; triangulation.simplices</span>
+<span class="sd">    array([[3, 1, 4],</span>
+<span class="sd">           [1, 2, 4],</span>
+<span class="sd">           [2, 1, 0]], dtype=int32)</span>
+<span class="sd">    &gt;&gt;&gt; num_faces_single = 3</span>
+<span class="sd">    &gt;&gt;&gt; num_triangles = triangulation.simplices.shape[0]</span>
+<span class="sd">    &gt;&gt;&gt; num_faces = num_triangles * num_faces_single</span>
+<span class="sd">    &gt;&gt;&gt; faces = np.zeros((num_faces, 2), dtype=np.int_)</span>
+<span class="sd">    &gt;&gt;&gt; mask = np.ones((num_faces,), dtype=np.bool_)</span>
+<span class="sd">    &gt;&gt;&gt; faces = build_faces(faces, triangulation.simplices, num_triangles, num_faces_single)</span>
+<span class="sd">    &gt;&gt;&gt; faces</span>
+<span class="sd">    array([[3, 1],</span>
+<span class="sd">           [1, 4],</span>
+<span class="sd">           [4, 3],</span>
+<span class="sd">           [1, 2],</span>
+<span class="sd">           [2, 4],</span>
+<span class="sd">           [4, 1],</span>
+<span class="sd">           [2, 1],</span>
+<span class="sd">           [1, 0],</span>
+<span class="sd">           [0, 2]])</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_triangles</span><span class="p">):</span>
+        <span class="n">from_i</span> <span class="o">=</span> <span class="n">num_faces_single</span> <span class="o">*</span> <span class="n">i</span>
+        <span class="n">to_i</span> <span class="o">=</span> <span class="n">num_faces_single</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">faces</span><span class="p">[</span><span class="n">from_i</span><span class="p">:</span> <span class="n">to_i</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_faces</span><span class="p">(</span><span class="n">triangles_is</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">faces</span>
+
+<span class="nd">@jit</span>
+<span class="k">def</span> <span class="nf">nb_mask_faces</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">faces</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Run over each row in `faces`, if the face in the following row is the</span>
+<span class="sd">    same, then mark both as False on `mask` </span>
+<span class="sd">    ...</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    mask    : ndarray</span>
+<span class="sd">              One-dimensional boolean array set to True with as many</span>
+<span class="sd">              observations as rows in `faces`</span>
+<span class="sd">    faces   : ndarray</span>
+<span class="sd">              Sorted sequence of faces for all triangles (ie. triangles split</span>
+<span class="sd">              by each segment)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    masked  : ndarray</span>
+<span class="sd">              Sequence of outward-facing faces</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; faces = np.array([[0, 1], [0, 2], [1, 2], [1, 2], [1, 3], [1, 4], [1, 4], [2, 4], [3, 4]])</span>
+<span class="sd">    &gt;&gt;&gt; mask = np.ones((faces.shape[0], ), dtype=np.bool_)</span>
+<span class="sd">    &gt;&gt;&gt; masked = nb_mask_faces(mask, faces)</span>
+<span class="sd">    &gt;&gt;&gt; masked</span>
+<span class="sd">    array([[0, 1],</span>
+<span class="sd">           [0, 2],</span>
+<span class="sd">           [1, 3],</span>
+<span class="sd">           [2, 4],</span>
+<span class="sd">           [3, 4]])</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">faces</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">mask</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">faces</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">faces</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="n">mask</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">mask</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="n">faces</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">get_single_faces</span><span class="p">(</span><span class="n">triangles_is</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Extract outward facing edges from collection of triangles</span>
+<span class="sd">    ...</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    triangles_is    : ndarray</span>
+<span class="sd">                      (D, 3) array, where D is the number of Delaunay triangles,</span>
+<span class="sd">                      with the vertex indices for each triangle</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    single_faces    : ndarray</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; import scipy.spatial as spat</span>
+<span class="sd">    &gt;&gt;&gt; pts = np.array([[0, 1], [3, 5], [4, 1], [6, 7], [9, 3]])</span>
+<span class="sd">    &gt;&gt;&gt; alpha = 0.33</span>
+<span class="sd">    &gt;&gt;&gt; triangulation = spat.Delaunay(pts)</span>
+<span class="sd">    &gt;&gt;&gt; triangulation.simplices</span>
+<span class="sd">    array([[3, 1, 4],</span>
+<span class="sd">           [1, 2, 4],</span>
+<span class="sd">           [2, 1, 0]], dtype=int32)</span>
+<span class="sd">    &gt;&gt;&gt; get_single_faces(triangulation.simplices)</span>
+<span class="sd">    array([[0, 1],</span>
+<span class="sd">           [0, 2],</span>
+<span class="sd">           [1, 3],</span>
+<span class="sd">           [2, 4],</span>
+<span class="sd">           [3, 4]])</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">num_faces_single</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">num_triangles</span> <span class="o">=</span> <span class="n">triangles_is</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">num_faces</span> <span class="o">=</span> <span class="n">num_triangles</span> <span class="o">*</span> <span class="n">num_faces_single</span>
+    <span class="n">faces</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_faces</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">num_faces</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">)</span>
+
+    <span class="n">faces</span> <span class="o">=</span> <span class="n">build_faces</span><span class="p">(</span><span class="n">faces</span><span class="p">,</span> <span class="n">triangles_is</span><span class="p">,</span> 
+                        <span class="n">num_triangles</span><span class="p">,</span> <span class="n">num_faces_single</span><span class="p">)</span>
+
+    <span class="n">orderlist</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">faces</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+    <span class="n">dtype_list</span> <span class="o">=</span> <span class="p">[(</span><span class="n">el</span><span class="p">,</span> <span class="n">faces</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">orderlist</span><span class="p">]</span>
+    <span class="c1"># Arranging each face so smallest vertex is first</span>
+    <span class="n">faces</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>                  
+    <span class="c1"># Arranging faces in ascending way</span>
+    <span class="n">faces</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">dtype_list</span><span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># Masking</span>
+    <span class="n">single_faces</span> <span class="o">=</span> <span class="n">nb_mask_faces</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">faces</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">single_faces</span>
+
+<span class="k">def</span> <span class="nf">alpha_geoms</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">triangles</span><span class="p">,</span> <span class="n">radii</span><span class="p">,</span> <span class="n">xys</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Generate alpha-shape polygon(s) from `alpha` value, vertices of `triangles`,</span>
+<span class="sd">    the `radii` for all points, and the points themselves</span>
+<span class="sd">    ...</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    alpha       : float</span>
+<span class="sd">                  Alpha value to delineate the alpha-shape</span>
+<span class="sd">    triangles   : ndarray</span>
+<span class="sd">                  (D, 3) array, where D is the number of Delaunay triangles,</span>
+<span class="sd">                  with the vertex indices for each triangle</span>
+<span class="sd">    radii       : ndarray</span>
+<span class="sd">                  (N,) array with circumcircles for every triangle</span>
+<span class="sd">    xys         : ndarray</span>
+<span class="sd">                  (N, 2) array with one point per row and coordinates structured</span>
+<span class="sd">                  as X and Y</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    geoms       : GeoSeries</span>
+<span class="sd">                  Polygon(s) resulting from the alpha shape algorithm. The</span>
+<span class="sd">                  GeoSeries object remains so even if only a single polygon is</span>
+<span class="sd">                  returned. There is no CRS included in the object.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; import scipy.spatial as spat</span>
+<span class="sd">    &gt;&gt;&gt; pts = np.array([[0, 1], [3, 5], [4, 1], [6, 7], [9, 3]])</span>
+<span class="sd">    &gt;&gt;&gt; alpha = 0.33</span>
+<span class="sd">    &gt;&gt;&gt; triangulation = spat.Delaunay(pts)</span>
+<span class="sd">    &gt;&gt;&gt; triangles = pts[triangulation.simplices]</span>
+<span class="sd">    &gt;&gt;&gt; triangles</span>
+<span class="sd">    array([[[6, 7],</span>
+<span class="sd">            [3, 5],</span>
+<span class="sd">            [9, 3]],</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">           [[3, 5],</span>
+<span class="sd">            [4, 1],</span>
+<span class="sd">            [9, 3]],</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">           [[4, 1],</span>
+<span class="sd">            [3, 5],</span>
+<span class="sd">            [0, 1]]])</span>
+<span class="sd">    &gt;&gt;&gt; a_pts = triangles[:, 0, :]</span>
+<span class="sd">    &gt;&gt;&gt; b_pts = triangles[:, 1, :]</span>
+<span class="sd">    &gt;&gt;&gt; c_pts = triangles[:, 2, :]</span>
+<span class="sd">    &gt;&gt;&gt; radii = r_circumcircle_triangle(a_pts, b_pts, c_pts)</span>
+<span class="sd">    &gt;&gt;&gt; geoms = alpha_geoms(alpha, triangulation.simplices, radii, pts)</span>
+<span class="sd">    &gt;&gt;&gt; geoms</span>
+<span class="sd">    0    POLYGON ((0 1, 3 5, 4 1, 0 1))</span>
+<span class="sd">    dtype: object</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="k">import</span> <span class="n">LineString</span>
+        <span class="kn">from</span> <span class="nn">shapely.ops</span> <span class="k">import</span> <span class="n">polygonize</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;Shapely is a required package to use alpha_shapes&quot;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">geopandas</span> <span class="k">import</span> <span class="n">GeoSeries</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;Geopandas is a required package to use alpha_shapes&quot;</span><span class="p">)</span>
+
+    <span class="n">triangles_reduced</span> <span class="o">=</span> <span class="n">triangles</span><span class="p">[</span><span class="n">radii</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="o">/</span><span class="n">alpha</span><span class="p">]</span>
+    <span class="n">outer_triangulation</span> <span class="o">=</span> <span class="n">get_single_faces</span><span class="p">(</span><span class="n">triangles_reduced</span><span class="p">)</span>
+    <span class="n">face_pts</span> <span class="o">=</span> <span class="n">xys</span><span class="p">[</span><span class="n">outer_triangulation</span><span class="p">]</span>
+    <span class="n">geoms</span> <span class="o">=</span> <span class="n">GeoSeries</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">polygonize</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">LineString</span><span class="p">,</span> 
+                                               <span class="n">face_pts</span><span class="p">)))))</span>
+    <span class="k">return</span> <span class="n">geoms</span>
+
+<div class="viewcode-block" id="alpha_shape"><a class="viewcode-back" href="../../../../generated/pysal.lib.cg.alpha_shape.html#pysal.lib.cg.alpha_shape">[docs]</a><span class="k">def</span> <span class="nf">alpha_shape</span><span class="p">(</span><span class="n">xys</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Alpha-shape delineation (Edelsbrunner, Kirkpatrick &amp;</span>
+<span class="sd">    Seidel, 1983) from a collection of points</span>
+<span class="sd">    ...</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    xys     : ndarray</span>
+<span class="sd">              (N, 2) array with one point per row and coordinates structured as X</span>
+<span class="sd">              and Y</span>
+<span class="sd">    alpha   : float</span>
+<span class="sd">              Alpha value to delineate the alpha-shape</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    shapes  : GeoSeries</span>
+<span class="sd">              Polygon(s) resulting from the alpha shape algorithm. The</span>
+<span class="sd">              GeoSeries object remains so even if only a single polygon is</span>
+<span class="sd">              returned. There is no CRS included in the object.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    &gt;&gt;&gt; pts = np.array([[0, 1], [3, 5], [4, 1], [6, 7], [9, 3]])</span>
+<span class="sd">    &gt;&gt;&gt; alpha = 0.1</span>
+<span class="sd">    &gt;&gt;&gt; poly = alpha_shape(pts, alpha)</span>
+<span class="sd">    &gt;&gt;&gt; poly</span>
+<span class="sd">    0    POLYGON ((0 1, 3 5, 6 7, 9 3, 4 1, 0 1))</span>
+<span class="sd">    dtype: object</span>
+<span class="sd">    &gt;&gt;&gt; poly.centroid</span>
+<span class="sd">    0    POINT (4.690476190476191 3.452380952380953)</span>
+<span class="sd">    dtype: object</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    Edelsbrunner, H., Kirkpatrick, D., &amp; Seidel, R. (1983). On the shape of</span>
+<span class="sd">        a set of points in the plane. IEEE Transactions on information theory, </span>
+<span class="sd">        29(4), 551-559.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">HAS_JIT</span><span class="p">:</span>
+        <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Numba not imported, so alpha shape construction may be slower than expected.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">xys</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">shapely</span> <span class="k">import</span> <span class="n">ops</span><span class="p">,</span> <span class="n">geometry</span> <span class="k">as</span> <span class="n">geom</span>
+        <span class="k">return</span> <span class="n">ops</span><span class="o">.</span><span class="n">cascaded_union</span><span class="p">([</span><span class="n">geom</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span> 
+                                   <span class="k">for</span> <span class="n">xy</span> <span class="ow">in</span> <span class="n">xys</span><span class="p">])</span>\
+                  <span class="o">.</span><span class="n">convex_hull</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">triangulation</span> <span class="o">=</span> <span class="n">spat</span><span class="o">.</span><span class="n">Delaunay</span><span class="p">(</span><span class="n">xys</span><span class="p">)</span>
+    <span class="n">triangles</span> <span class="o">=</span> <span class="n">xys</span><span class="p">[</span><span class="n">triangulation</span><span class="o">.</span><span class="n">simplices</span><span class="p">]</span>
+    <span class="n">a_pts</span> <span class="o">=</span> <span class="n">triangles</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">b_pts</span> <span class="o">=</span> <span class="n">triangles</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">c_pts</span> <span class="o">=</span> <span class="n">triangles</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">radii</span> <span class="o">=</span> <span class="n">r_circumcircle_triangle</span><span class="p">(</span><span class="n">a_pts</span><span class="p">,</span> <span class="n">b_pts</span><span class="p">,</span> <span class="n">c_pts</span><span class="p">)</span>
+    <span class="k">del</span> <span class="n">triangles</span><span class="p">,</span> <span class="n">a_pts</span><span class="p">,</span> <span class="n">b_pts</span><span class="p">,</span> <span class="n">c_pts</span>
+    <span class="n">geoms</span> <span class="o">=</span> <span class="n">alpha_geoms</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">triangulation</span><span class="o">.</span><span class="n">simplices</span><span class="p">,</span> <span class="n">radii</span><span class="p">,</span> <span class="n">xys</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">geoms</span></div>
+
+<div class="viewcode-block" id="alpha_shape_auto"><a class="viewcode-back" href="../../../../generated/pysal.lib.cg.alpha_shape_auto.html#pysal.lib.cg.alpha_shape_auto">[docs]</a><span class="k">def</span> <span class="nf">alpha_shape_auto</span><span class="p">(</span><span class="n">xys</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Computation of alpha-shape delineation with automated selection of alpha.</span>
+<span class="sd">    ...</span>
+
+<span class="sd">    This method uses the algorithm proposed by  Edelsbrunner, Kirkpatrick &amp;</span>
+<span class="sd">    Seidel (1983) to return the tightest polygon that contains all points in</span>
+<span class="sd">    `xys`. The algorithm ranks every point based on its radious and iterates</span>
+<span class="sd">    over each point, checking whether the maximum alpha that would keep the</span>
+<span class="sd">    point and all the other ones in the set with smaller radii results in a</span>
+<span class="sd">    single polygon. If that is the case, it moves to the next point;</span>
+<span class="sd">    otherwise, it retains the previous alpha value and returns the polygon</span>
+<span class="sd">    as `shapely` geometry.</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    xys     : ndarray</span>
+<span class="sd">              Nx2 array with one point per row and coordinates structured as X</span>
+<span class="sd">              and Y</span>
+<span class="sd">    step    : int</span>
+<span class="sd">              [Optional. Default=1]</span>
+<span class="sd">              Number of points in `xys` to jump ahead after checking whether the</span>
+<span class="sd">              largest possible alpha that includes the point and all the</span>
+<span class="sd">              other ones with smaller radii</span>
+<span class="sd">    verbose : Boolean</span>
+<span class="sd">              [Optional. Default=False] If True, it prints alpha values being</span>
+<span class="sd">              tried at every step.</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    poly    : shapely.Polygon</span>
+<span class="sd">              Tightest alpha-shape polygon containing all points in `xys`</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    &gt;&gt;&gt; pts = np.array([[0, 1], [3, 5], [4, 1], [6, 7], [9, 3]])</span>
+<span class="sd">    &gt;&gt;&gt; poly = alpha_shape_auto(pts)</span>
+<span class="sd">    &gt;&gt;&gt; poly.bounds</span>
+<span class="sd">    (0.0, 1.0, 9.0, 7.0)</span>
+<span class="sd">    &gt;&gt;&gt; poly.centroid.x, poly.centroid.y</span>
+<span class="sd">    (4.690476190476191, 3.4523809523809526)</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    Edelsbrunner, H., Kirkpatrick, D., &amp; Seidel, R. (1983). On the shape of</span>
+<span class="sd">        a set of points in the plane. IEEE Transactions on information theory, </span>
+<span class="sd">        29(4), 551-559.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">HAS_JIT</span><span class="p">:</span>
+        <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Numba not imported, so alpha shape construction may be slower than expected.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">xys</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">shapely</span> <span class="k">import</span> <span class="n">ops</span><span class="p">,</span> <span class="n">geometry</span> <span class="k">as</span> <span class="n">geom</span>
+        <span class="k">return</span> <span class="n">ops</span><span class="o">.</span><span class="n">cascaded_union</span><span class="p">([</span><span class="n">geom</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span> 
+                                   <span class="k">for</span> <span class="n">xy</span> <span class="ow">in</span> <span class="n">xys</span><span class="p">])</span>\
+                  <span class="o">.</span><span class="n">convex_hull</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">triangulation</span> <span class="o">=</span> <span class="n">spat</span><span class="o">.</span><span class="n">Delaunay</span><span class="p">(</span><span class="n">xys</span><span class="p">)</span>
+    <span class="n">triangulation</span> <span class="o">=</span> <span class="n">spat</span><span class="o">.</span><span class="n">Delaunay</span><span class="p">(</span><span class="n">xys</span><span class="p">)</span>
+    <span class="n">triangles</span> <span class="o">=</span> <span class="n">xys</span><span class="p">[</span><span class="n">triangulation</span><span class="o">.</span><span class="n">simplices</span><span class="p">]</span>
+    <span class="n">a_pts</span> <span class="o">=</span> <span class="n">triangles</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">b_pts</span> <span class="o">=</span> <span class="n">triangles</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">c_pts</span> <span class="o">=</span> <span class="n">triangles</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">radii</span> <span class="o">=</span> <span class="n">r_circumcircle_triangle</span><span class="p">(</span><span class="n">a_pts</span><span class="p">,</span> <span class="n">b_pts</span><span class="p">,</span> <span class="n">c_pts</span><span class="p">)</span>
+    <span class="n">radii</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">radii</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># &quot;Line&quot; triangles to be kept for sure</span>
+    <span class="k">del</span> <span class="n">triangles</span><span class="p">,</span> <span class="n">a_pts</span><span class="p">,</span> <span class="n">b_pts</span><span class="p">,</span> <span class="n">c_pts</span>
+    <span class="n">radii_sorted_i</span> <span class="o">=</span> <span class="n">radii</span><span class="o">.</span><span class="n">argsort</span><span class="p">()</span>
+    <span class="n">triangles</span> <span class="o">=</span> <span class="n">triangulation</span><span class="o">.</span><span class="n">simplices</span><span class="p">[</span><span class="n">radii_sorted_i</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">radii</span> <span class="o">=</span> <span class="n">radii</span><span class="p">[</span><span class="n">radii_sorted_i</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">geoms_prev</span> <span class="o">=</span> <span class="n">alpha_geoms</span><span class="p">((</span><span class="mi">1</span><span class="o">/</span><span class="n">radii</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="o">-</span><span class="n">EPS</span><span class="p">,</span> <span class="n">triangles</span><span class="p">,</span> <span class="n">radii</span><span class="p">,</span> <span class="n">xys</span><span class="p">)</span>
+    <span class="n">xys_bb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">*</span><span class="n">xys</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="o">*</span><span class="n">xys</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)])</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Step set to </span><span class="si">%i</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">step</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">radii</span><span class="p">),</span> <span class="n">step</span><span class="p">):</span>
+        <span class="n">radi</span> <span class="o">=</span> <span class="n">radii</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">radi</span><span class="p">)</span> <span class="o">-</span> <span class="n">EPS</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%.2f%%</span><span class="s1"> | Trying a = </span><span class="si">%f</span><span class="s1">&#39;</span>\
+		  <span class="o">%</span><span class="p">((</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">radii</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">alpha</span><span class="p">))</span>
+        <span class="n">geoms</span> <span class="o">=</span> <span class="n">alpha_geoms</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">triangles</span><span class="p">,</span> <span class="n">radii</span><span class="p">,</span> <span class="n">xys</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">geoms</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">xys_bb</span> <span class="o">==</span> <span class="n">geoms</span><span class="o">.</span><span class="n">total_bounds</span><span class="p">)):</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">geoms_prev</span> <span class="o">=</span> <span class="n">geoms</span>
+    <span class="k">return</span> <span class="n">geoms_prev</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># Return a shapely polygon</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <span class="kn">import</span> <span class="nn">time</span>
+    <span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+    <span class="n">xys</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">geoms</span> <span class="o">=</span> <span class="n">alpha_shape_auto</span><span class="p">(</span><span class="n">xys</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%.2f</span><span class="s1"> Seconds to run algorithm&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">t1</span><span class="o">-</span><span class="n">t0</span><span class="p">))</span>
+    <span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">({</span><span class="s1">&#39;geometry&#39;</span><span class="p">:[</span><span class="n">geoms</span><span class="p">]})</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xys</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">xys</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+pysal.explore.pointpats.PointProcess
+====================================
+
+.. currentmodule:: pysal.explore.pointpats
+
+.. autoclass:: PointProcess
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PointProcess.__init__
+      ~PointProcess.draw
+      ~PointProcess.realize
+      ~PointProcess.setup
+   
+   
+
+   
+   
+   

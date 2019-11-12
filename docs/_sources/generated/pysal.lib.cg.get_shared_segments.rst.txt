@@ -1,0 +1,6 @@
+pysal.lib.cg.get\_shared\_segments
+==================================
+
+.. currentmodule:: pysal.lib.cg
+
+.. autofunction:: get_shared_segments

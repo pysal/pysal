@@ -1,0 +1,6 @@
+pysal.explore.spaghetti.squared\_distance\_point\_segment
+=========================================================
+
+.. currentmodule:: pysal.explore.spaghetti
+
+.. autofunction:: squared_distance_point_segment

@@ -1,2 +1,3 @@
-include authors.txt INSTALL.txt LICENSE.txt THANKS.txt CHANGELOG.txt MANIFEST.in pysal/COPYING requirements_dev.txt requirements_plus.txt requirements.txt
-
+exclude rtd.txt
+include *.txt pysal/COPYING
+include README.md

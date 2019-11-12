@@ -1,0 +1,6 @@
+pysal.lib.weights.vecW
+======================
+
+.. currentmodule:: pysal.lib.weights
+
+.. autofunction:: vecW

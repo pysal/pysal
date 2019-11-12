@@ -1,0 +1,22 @@
+pysal.explore.inequality.gini.Gini
+==================================
+
+.. currentmodule:: pysal.explore.inequality.gini
+
+.. autoclass:: Gini
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Gini.__init__
+   
+   
+
+   
+   
+   

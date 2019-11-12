@@ -1,0 +1,22 @@
+pysal.explore.segregation.aspatial.SimpsonsInteraction
+======================================================
+
+.. currentmodule:: pysal.explore.segregation.aspatial
+
+.. autoclass:: SimpsonsInteraction
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SimpsonsInteraction.__init__
+   
+   
+
+   
+   
+   

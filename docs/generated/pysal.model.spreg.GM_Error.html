@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.model.spreg.GM_Error &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pysal.model.spreg.GM_Error_Het" href="pysal.model.spreg.GM_Error_Het.html" />
+    <link rel="prev" title="pysal.model.spreg.GM_Lag" href="pysal.model.spreg.GM_Lag.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../installation.html">Installation</a></li>
+                <li><a href="../api.html">API</a></li>
+                <li><a href="../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">pysal.model.spreg.GM_Error</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="pysal-model-spreg-gm-error">
+<h1>pysal.model.spreg.GM_Error<a class="headerlink" href="#pysal-model-spreg-gm-error" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pysal.model.spreg.GM_Error">
+<em class="property">class </em><code class="sig-prename descclassname">pysal.model.spreg.</code><code class="sig-name descname">GM_Error</code><span class="sig-paren">(</span><em class="sig-param">y</em>, <em class="sig-param">x</em>, <em class="sig-param">w</em>, <em class="sig-param">vm=False</em>, <em class="sig-param">name_y=None</em>, <em class="sig-param">name_x=None</em>, <em class="sig-param">name_w=None</em>, <em class="sig-param">name_ds=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/model/spreg/error_sp.html#GM_Error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.model.spreg.GM_Error" title="Permalink to this definition">¶</a></dt>
+<dd><p>GMM method for a spatial error model, with results and diagnostics; based
+on Kelejian and Prucha (1998, 1999) <a class="reference internal" href="../references.html#kelejian1998" id="id1">[KP98]</a> <a class="reference internal" href="../references.html#kelejian1999" id="id2">[KP99]</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>nx1 array for dependent variable</p>
+</dd>
+<dt><strong>x</strong><span class="classifier">array</span></dt><dd><p>Two dimensional array with n rows and one column for each
+independent (exogenous) variable, excluding the constant</p>
+</dd>
+<dt><strong>w</strong><span class="classifier">pysal W object</span></dt><dd><p>Spatial weights object (always needed)</p>
+</dd>
+<dt><strong>vm</strong><span class="classifier">boolean</span></dt><dd><p>If True, include variance-covariance matrix in summary
+results</p>
+</dd>
+<dt><strong>name_y</strong><span class="classifier">string</span></dt><dd><p>Name of dependent variable for use in output</p>
+</dd>
+<dt><strong>name_x</strong><span class="classifier">list of strings</span></dt><dd><p>Names of independent variables for use in output</p>
+</dd>
+<dt><strong>name_w</strong><span class="classifier">string</span></dt><dd><p>Name of weights matrix for use in output</p>
+</dd>
+<dt><strong>name_ds</strong><span class="classifier">string</span></dt><dd><p>Name of dataset for use in output</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>We first need to import the needed modules, namely numpy to convert the
+data we read into arrays that <code class="docutils literal notranslate"><span class="pre">spreg</span></code> understands and <code class="docutils literal notranslate"><span class="pre">pysal</span></code> to
+perform all the analysis.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pysal.lib</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+<p>Open data on Columbus neighborhood crime (49 areas) using pysal.lib.io.open().
+This is the DBF associated with the Columbus shapefile.  Note that
+pysal.lib.io.open() also reads data in CSV format; since the actual class
+requires data to be passed in as numpy arrays, the user can read their
+data in using any method.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dbf</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;columbus.dbf&#39;</span><span class="p">),</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Extract the HOVAL column (home values) from the DBF file and make it the
+dependent variable for the regression. Note that PySAL requires this to be
+an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
+that other packages accept.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">dbf</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="s1">&#39;HOVAL&#39;</span><span class="p">)])</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+<p>Extract CRIME (crime) and INC (income) vectors from the DBF to be used as
+independent variables in the regression.  Note that PySAL requires this to
+be an nxj numpy array, where j is the number of independent variables (not
+including a constant). By default this class adds a vector of ones to the
+independent variables passed in.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">names_to_extract</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;INC&#39;</span><span class="p">,</span> <span class="s1">&#39;CRIME&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">dbf</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names_to_extract</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+<p>Since we want to run a spatial error model, we need to specify the spatial
+weights matrix that includes the spatial configuration of the observations
+into the error component of the model. To do that, we can open an already
+existing gal file or create a new one. In this case, we will use
+<code class="docutils literal notranslate"><span class="pre">columbus.gal</span></code>, which contains contiguity relationships between the
+observations in the Columbus dataset we are using throughout this example.
+Note that, in order to read the file, not only to open it, we need to
+append ‘.read()’ at the end of the command.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;columbus.gal&quot;</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span> 
+</pre></div>
+</div>
+<p>Unless there is a good reason not to do it, the weights have to be
+row-standardized so every row of the matrix sums to one. Among other
+things, his allows to interpret the spatial lag of a variable as the
+average value of the neighboring observations. In PySAL, this can be
+easily performed in the following way:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">w</span><span class="o">.</span><span class="n">transform</span><span class="o">=</span><span class="s1">&#39;r&#39;</span>
+</pre></div>
+</div>
+<p>We are all set with the preliminars, we are good to run the model. In this
+case, we will need the variables and the weights matrix. If we want to
+have the names of the variables printed in the output summary, we will
+have to pass them in as well, although this is optional.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">GM_Error</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">name_y</span><span class="o">=</span><span class="s1">&#39;hoval&#39;</span><span class="p">,</span> <span class="n">name_x</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;income&#39;</span><span class="p">,</span> <span class="s1">&#39;crime&#39;</span><span class="p">],</span> <span class="n">name_ds</span><span class="o">=</span><span class="s1">&#39;columbus&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Once we have run the model, we can explore a little bit the output. The
+regression object we have created has many attributes so take your time to
+discover them. Note that because we are running the classical GMM error
+model from 1998/99, the spatial parameter is obtained as a point estimate, so
+although you get a value for it (there are for coefficients under
+model.betas), you cannot perform inference on it (there are only three
+values in model.se_betas).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">model</span><span class="o">.</span><span class="n">name_x</span>
+<span class="go">[&#39;CONSTANT&#39;, &#39;income&#39;, &#39;crime&#39;, &#39;lambda&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">betas</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">array([[ 47.6946],</span>
+<span class="go">       [  0.7105],</span>
+<span class="go">       [ -0.5505],</span>
+<span class="go">       [  0.3257]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">std_err</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">array([ 12.412 ,   0.5044,   0.1785])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">z_stat</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span> <span class="c1">#doctest: +SKIP</span>
+<span class="go">array([[  3.84261100e+00,   1.22000000e-04],</span>
+<span class="go">       [  1.40839200e+00,   1.59015000e-01],</span>
+<span class="go">       [ -3.08424700e+00,   2.04100000e-03]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">round</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">sig2</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">198.5596</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>summary</strong><span class="classifier">string</span></dt><dd><p>Summary of regression results and diagnostics (note: use in
+conjunction with the print command)</p>
+</dd>
+<dt><strong>betas</strong><span class="classifier">array</span></dt><dd><p>kx1 array of estimated coefficients</p>
+</dd>
+<dt><strong>u</strong><span class="classifier">array</span></dt><dd><p>nx1 array of residuals</p>
+</dd>
+<dt><strong>e_filtered</strong><span class="classifier">array</span></dt><dd><p>nx1 array of spatially filtered residuals</p>
+</dd>
+<dt><strong>predy</strong><span class="classifier">array</span></dt><dd><p>nx1 array of predicted y values</p>
+</dd>
+<dt><strong>n</strong><span class="classifier">integer</span></dt><dd><p>Number of observations</p>
+</dd>
+<dt><strong>k</strong><span class="classifier">integer</span></dt><dd><p>Number of variables for which coefficients are estimated
+(including the constant)</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>nx1 array for dependent variable</p>
+</dd>
+<dt><strong>x</strong><span class="classifier">array</span></dt><dd><p>Two dimensional array with n rows and one column for each
+independent (exogenous) variable, including the constant</p>
+</dd>
+<dt><strong>mean_y</strong><span class="classifier">float</span></dt><dd><p>Mean of dependent variable</p>
+</dd>
+<dt><strong>std_y</strong><span class="classifier">float</span></dt><dd><p>Standard deviation of dependent variable</p>
+</dd>
+<dt><strong>pr2</strong><span class="classifier">float</span></dt><dd><p>Pseudo R squared (squared correlation between y and ypred)</p>
+</dd>
+<dt><strong>vm</strong><span class="classifier">array</span></dt><dd><p>Variance covariance matrix (kxk)</p>
+</dd>
+<dt><strong>sig2</strong><span class="classifier">float</span></dt><dd><p>Sigma squared used in computations</p>
+</dd>
+<dt><strong>std_err</strong><span class="classifier">array</span></dt><dd><p>1xk array of standard errors of the betas</p>
+</dd>
+<dt><strong>z_stat</strong><span class="classifier">list of tuples</span></dt><dd><p>z statistic; each tuple contains the pair (statistic,
+p-value), where each is a float</p>
+</dd>
+<dt><strong>name_y</strong><span class="classifier">string</span></dt><dd><p>Name of dependent variable for use in output</p>
+</dd>
+<dt><strong>name_x</strong><span class="classifier">list of strings</span></dt><dd><p>Names of independent variables for use in output</p>
+</dd>
+<dt><strong>name_w</strong><span class="classifier">string</span></dt><dd><p>Name of weights matrix for use in output</p>
+</dd>
+<dt><strong>name_ds</strong><span class="classifier">string</span></dt><dd><p>Name of dataset for use in output</p>
+</dd>
+<dt><strong>title</strong><span class="classifier">string</span></dt><dd><p>Name of the regression method used</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pysal.model.spreg.GM_Error.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">y</em>, <em class="sig-param">x</em>, <em class="sig-param">w</em>, <em class="sig-param">vm=False</em>, <em class="sig-param">name_y=None</em>, <em class="sig-param">name_x=None</em>, <em class="sig-param">name_w=None</em>, <em class="sig-param">name_ds=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/model/spreg/error_sp.html#GM_Error.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.model.spreg.GM_Error.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pysal.model.spreg.GM_Error.__init__" title="pysal.model.spreg.GM_Error.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self, y, x, w[, vm, name_y, …])</p></td>
+<td><p>Initialize self.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean_y</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">std_y</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../_sources/generated/pysal.model.spreg.GM_Error.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

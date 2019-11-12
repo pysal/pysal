@@ -1,0 +1,6 @@
+pysal.lib.weights.comb
+======================
+
+.. currentmodule:: pysal.lib.weights
+
+.. autofunction:: comb

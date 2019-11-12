@@ -1,0 +1,6 @@
+pysal.explore.spaghetti.Network.compute\_distance\_to\_vertices
+===============================================================
+
+.. currentmodule:: pysal.explore.spaghetti
+
+.. automethod:: Network.compute_distance_to_vertices

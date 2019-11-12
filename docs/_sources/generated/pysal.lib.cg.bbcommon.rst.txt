@@ -1,0 +1,6 @@
+pysal.lib.cg.bbcommon
+=====================
+
+.. currentmodule:: pysal.lib.cg
+
+.. autofunction:: bbcommon

@@ -1,0 +1,6 @@
+pysal.explore.spaghetti.Network.split\_arcs
+===========================================
+
+.. currentmodule:: pysal.explore.spaghetti
+
+.. automethod:: Network.split_arcs

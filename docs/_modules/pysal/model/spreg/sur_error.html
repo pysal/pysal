@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.model.spreg.sur_error &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../../installation.html">Installation</a></li>
+                <li><a href="../../../../api.html">API</a></li>
+                <li><a href="../../../../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for pysal.model.spreg.sur_error</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Spatial Error SUR estimation</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span><span class="o">=</span> <span class="s2">&quot;Luc Anselin lanselin@gmail.com,    </span><span class="se">\</span>
+<span class="s2">             Pedro V. Amaral pedrovma@gmail.com&quot;</span>
+            
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy.linalg</span> <span class="k">as</span> <span class="nn">la</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="k">import</span> <span class="n">stats</span>
+<span class="n">stats</span><span class="o">.</span><span class="n">chisqprob</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">chi2</span><span class="o">.</span><span class="n">sf</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">summary_output</span> <span class="k">as</span> <span class="n">SUMMARY</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">user_output</span> <span class="k">as</span> <span class="n">USER</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">regimes</span> <span class="k">as</span> <span class="n">REGI</span>
+<span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="k">import</span> <span class="n">splu</span> <span class="k">as</span> <span class="n">SuperLU</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">minimize_scalar</span><span class="p">,</span> <span class="n">minimize</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="k">import</span> <span class="n">sparse</span> <span class="k">as</span> <span class="n">sp</span>
+
+<span class="kn">from</span> <span class="nn">.ml_error</span> <span class="k">import</span> <span class="n">err_c_loglik_sp</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">optim_moments</span>
+<span class="kn">from</span> <span class="nn">.sur_utils</span> <span class="k">import</span> <span class="n">sur_dictxy</span><span class="p">,</span><span class="n">sur_corr</span><span class="p">,</span><span class="n">sur_dict2mat</span><span class="p">,</span>\
+               <span class="n">sur_crossprod</span><span class="p">,</span><span class="n">sur_est</span><span class="p">,</span><span class="n">sur_resids</span><span class="p">,</span><span class="n">filter_dict</span><span class="p">,</span>\
+               <span class="n">check_k</span>
+<span class="kn">from</span> <span class="nn">.sur</span> <span class="k">import</span> <span class="n">BaseSUR</span><span class="p">,</span> <span class="n">_sur_ols</span>
+<span class="kn">from</span> <span class="nn">.diagnostics_sur</span> <span class="k">import</span> <span class="n">sur_setp</span><span class="p">,</span> <span class="n">lam_setp</span><span class="p">,</span> <span class="n">sur_chow</span>
+<span class="kn">from</span> <span class="nn">.regimes</span> <span class="k">import</span> <span class="n">buildR</span><span class="p">,</span><span class="n">wald_test</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;BaseSURerrorGM&quot;</span><span class="p">,</span><span class="s2">&quot;SURerrorGM&quot;</span><span class="p">,</span><span class="s2">&quot;BaseSURerrorML&quot;</span><span class="p">,</span><span class="s2">&quot;SURerrorML&quot;</span><span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">BaseSURerrorGM</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Base class for SUR Error estimation by Generalized Moment Estimation</span>
+<span class="sd">                 </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bigy       : dictionary with vectors of dependent variable, one for</span>
+<span class="sd">                 each equation</span>
+<span class="sd">    bigX       : dictionary with matrices of explanatory variables,</span>
+<span class="sd">                 one for each equation</span>
+<span class="sd">    w          : spatial weights object</span>
+<span class="sd">       </span>
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n          : number of observations in each cross-section</span>
+<span class="sd">    n_eq       : number of equations</span>
+<span class="sd">    bigy       : dictionary with vectors of dependent variable, one for</span>
+<span class="sd">                 each equation</span>
+<span class="sd">    bigX       : dictionary with matrices of explanatory variables,</span>
+<span class="sd">                 one for each equation</span>
+<span class="sd">    bigK       : n_eq x 1 array with number of explanatory variables</span>
+<span class="sd">                 by equation</span>
+<span class="sd">    bigylag    : spatially lagged dependent variable</span>
+<span class="sd">    bigXlag    : spatially lagged explanatory variable</span>
+<span class="sd">    lamsur     : spatial autoregressive coefficient in GM SUR Error</span>
+<span class="sd">    bSUR       : beta coefficients in GM SUR Error</span>
+<span class="sd">    varb       : variance of beta coefficients in GM SUR Error</span>
+<span class="sd">    sig        : error variance-covariance matrix in GM SUR Error</span>
+<span class="sd">    corr       : error correlation matrix</span>
+<span class="sd">    bigE       : n by n_eq matrix of vectors of residuals for each equation</span>
+<span class="sd">      </span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bigy</span><span class="p">,</span><span class="n">bigX</span><span class="p">,</span><span class="n">w</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">n</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bigy</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">WS</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">sparse</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
+        <span class="c1"># variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bigy</span> <span class="o">=</span> <span class="n">bigy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bigX</span> <span class="o">=</span> <span class="n">bigX</span>
+        <span class="c1"># number of variables by equation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bigK</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bigK</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bigX</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+      
+        <span class="c1"># OLS</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bigXX</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bigXy</span> <span class="o">=</span> <span class="n">sur_crossprod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bigX</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bigy</span><span class="p">)</span>
+        <span class="n">reg0</span> <span class="o">=</span> <span class="n">_sur_ols</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># Moments</span>
+        <span class="n">moments</span> <span class="o">=</span> <span class="n">_momentsGM_sur_Error</span><span class="p">(</span><span class="n">WS</span><span class="p">,</span> <span class="n">reg0</span><span class="o">.</span><span class="n">olsE</span><span class="p">)</span>
+        <span class="n">lam</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">):</span>
+            <span class="n">lam</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">optim_moments</span><span class="p">(</span><span class="n">moments</span><span class="p">[</span><span class="n">r</span><span class="p">])</span>
+                
+        <span class="c1"># spatially lagged variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bigylag</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bigylag</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">WS</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">bigy</span><span class="p">[</span><span class="n">r</span><span class="p">]</span>
+        <span class="c1"># note: unlike WX as instruments, this includes the constant</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bigXlag</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bigXlag</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">WS</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">bigX</span><span class="p">[</span><span class="n">r</span><span class="p">]</span>
+
+        <span class="c1"># spatially filtered variables           </span>
+        <span class="n">sply</span> <span class="o">=</span> <span class="n">filter_dict</span><span class="p">(</span><span class="n">lam</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bigy</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bigylag</span><span class="p">)</span>
+        <span class="n">splX</span> <span class="o">=</span> <span class="n">filter_dict</span><span class="p">(</span><span class="n">lam</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bigX</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bigXlag</span><span class="p">)</span>
+        <span class="n">WbigE</span> <span class="o">=</span> <span class="n">WS</span> <span class="o">*</span> <span class="n">reg0</span><span class="o">.</span><span class="n">olsE</span>
+        <span class="n">splbigE</span> <span class="o">=</span> <span class="n">reg0</span><span class="o">.</span><span class="n">olsE</span> <span class="o">-</span> <span class="n">WbigE</span> <span class="o">*</span> <span class="n">lam</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">splXX</span><span class="p">,</span><span class="n">splXy</span> <span class="o">=</span> <span class="n">sur_crossprod</span><span class="p">(</span><span class="n">splX</span><span class="p">,</span><span class="n">sply</span><span class="p">)</span>
+        <span class="n">b1</span><span class="p">,</span><span class="n">varb1</span><span class="p">,</span><span class="n">sig1</span> <span class="o">=</span> <span class="n">sur_est</span><span class="p">(</span><span class="n">splXX</span><span class="p">,</span><span class="n">splXy</span><span class="p">,</span><span class="n">splbigE</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bigK</span><span class="p">)</span>
+        <span class="n">bigE</span> <span class="o">=</span> <span class="n">sur_resids</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bigy</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bigX</span><span class="p">,</span><span class="n">b1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lamsur</span> <span class="o">=</span> <span class="n">lam</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bSUR</span> <span class="o">=</span> <span class="n">b1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">varb</span> <span class="o">=</span> <span class="n">varb1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sig</span> <span class="o">=</span> <span class="n">sig1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">corr</span> <span class="o">=</span> <span class="n">sur_corr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bigE</span> <span class="o">=</span> <span class="n">bigE</span>
+        
+        
+<span class="k">def</span> <span class="nf">_momentsGM_sur_Error</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">u2</span> <span class="o">=</span> <span class="p">(</span><span class="n">u</span> <span class="o">*</span> <span class="n">u</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">wu</span> <span class="o">=</span> <span class="n">w</span> <span class="o">*</span> <span class="n">u</span>
+    <span class="n">uwu</span> <span class="o">=</span> <span class="p">(</span><span class="n">u</span> <span class="o">*</span> <span class="n">wu</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">wu2</span> <span class="o">=</span> <span class="p">(</span><span class="n">wu</span> <span class="o">*</span> <span class="n">wu</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">wwu</span> <span class="o">=</span> <span class="n">w</span> <span class="o">*</span> <span class="n">wu</span>
+    <span class="n">uwwu</span> <span class="o">=</span> <span class="p">(</span><span class="n">u</span> <span class="o">*</span> <span class="n">wwu</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">wwu2</span> <span class="o">=</span> <span class="p">(</span><span class="n">wwu</span> <span class="o">*</span> <span class="n">wwu</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">wwuwu</span> <span class="o">=</span> <span class="p">(</span><span class="n">wwu</span> <span class="o">*</span> <span class="n">wu</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">trWtW</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">moments</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>        
+        <span class="n">g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">u2</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="n">wu2</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="n">uwu</span><span class="p">[</span><span class="n">r</span><span class="p">]]])</span><span class="o">.</span><span class="n">T</span> <span class="o">/</span> <span class="n">n</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">uwu</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="o">-</span><span class="n">wu2</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="n">n</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">wwuwu</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="o">-</span><span class="n">wwu2</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="n">trWtW</span><span class="p">],</span>
+             <span class="p">[</span><span class="n">uwwu</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">+</span> <span class="n">wu2</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="o">-</span><span class="n">wwuwu</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="mf">0.</span><span class="p">]])</span> <span class="o">/</span> <span class="n">n</span>
+        <span class="n">moments</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">G</span><span class="p">,</span> <span class="n">g</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">moments</span>
+
+<div class="viewcode-block" id="SURerrorGM"><a class="viewcode-back" href="../../../../generated/pysal.model.spreg.SURerrorGM.html#pysal.model.spreg.SURerrorGM">[docs]</a><span class="k">class</span> <span class="nc">SURerrorGM</span><span class="p">(</span><span class="n">BaseSURerrorGM</span><span class="p">,</span> <span class="n">REGI</span><span class="o">.</span><span class="n">Regimes_Frame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;User class for SUR Error estimation by Maximum Likelihood</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bigy         : dictionary with vectors of dependent variable, one for</span>
+<span class="sd">                   each equation</span>
+<span class="sd">    bigX         : dictionary with matrices of explanatory variables,</span>
+<span class="sd">                   one for each equation</span>
+<span class="sd">    w            : spatial weights object</span>
+<span class="sd">    regimes      : list</span>
+<span class="sd">                   List of n values with the mapping of each</span>
+<span class="sd">                   observation to a regime. Assumed to be aligned with &#39;x&#39;.</span>
+<span class="sd">    nonspat_diag : boolean; flag for non-spatial diagnostics, default = False</span>
+<span class="sd">    spat_diag    : boolean; flag for spatial diagnostics, default = False (to be implemented)</span>
+<span class="sd">    vm           : boolean; flag for asymptotic variance for lambda and Sigma,</span>
+<span class="sd">                   default = False (to be implemented)</span>
+<span class="sd">    name_bigy    : dictionary with name of dependent variable for each equation</span>
+<span class="sd">                     default = None, but should be specified</span>
+<span class="sd">                     is done when sur_stackxy is used</span>
+<span class="sd">    name_bigX    : dictionary with names of explanatory variables for each</span>
+<span class="sd">                     equation</span>
+<span class="sd">                     default = None, but should be specified</span>
+<span class="sd">                     is done when sur_stackxy is used</span>
+<span class="sd">    name_ds      : string; name for the data set</span>
+<span class="sd">    name_w       : string; name for the weights file</span>
+<span class="sd">    name_regimes : string; name of regime variable for use in the output</span>
+<span class="sd">       </span>
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n          : number of observations in each cross-section</span>
+<span class="sd">    n_eq       : number of equations</span>
+<span class="sd">    bigy       : dictionary with vectors of dependent variable, one for</span>
+<span class="sd">                 each equation</span>
+<span class="sd">    bigX       : dictionary with matrices of explanatory variables,</span>
+<span class="sd">                 one for each equation</span>
+<span class="sd">    bigK       : n_eq x 1 array with number of explanatory variables</span>
+<span class="sd">                 by equation</span>
+<span class="sd">    bigylag    : spatially lagged dependent variable</span>
+<span class="sd">    bigXlag    : spatially lagged explanatory variable</span>
+<span class="sd">    lamsur     : spatial autoregressive coefficient in ML SUR Error</span>
+<span class="sd">    bSUR       : beta coefficients in ML SUR Error</span>
+<span class="sd">    varb       : variance of beta coefficients in ML SUR Error</span>
+<span class="sd">    sig        : error variance-covariance matrix in ML SUR Error</span>
+<span class="sd">    bigE       : n by n_eq matrix of vectors of residuals for each equation</span>
+<span class="sd">    sur_inf    : inference for regression coefficients, stand. error, t, p</span>
+<span class="sd">    surchow    : list with tuples for Chow test on regression coefficients</span>
+<span class="sd">                 each tuple contains test value, degrees of freedom, p-value</span>
+<span class="sd">    name_bigy  : dictionary with name of dependent variable for each equation</span>
+<span class="sd">    name_bigX  : dictionary with names of explanatory variables for each</span>
+<span class="sd">                 equation</span>
+<span class="sd">    name_ds    : string; name for the data set</span>
+<span class="sd">    name_w     : string; name for the weights file      </span>
+<span class="sd">    name_regimes : string; name of regime variable for use in the output</span>
+
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    First import pysal to load the spatial analysis tools.</span>
+
+<span class="sd">    &gt;&gt;&gt; import pysal</span>
+
+<span class="sd">    Open data on NCOVR US County Homicides (3085 areas) using pysal.open(). </span>
+<span class="sd">    This is the DBF associated with the NAT shapefile. Note that pysal.open() </span>
+<span class="sd">    also reads data in CSV format.</span>
+
+<span class="sd">    &gt;&gt;&gt; db = pysal.open(pysal.examples.get_path(&quot;NAT.dbf&quot;),&#39;r&#39;)</span>
+
+<span class="sd">    The specification of the model to be estimated can be provided as lists.</span>
+<span class="sd">    Each equation should be listed separately. Equation 1 has HR80 as dependent </span>
+<span class="sd">    variable, and PS80 and UE80 as exogenous regressors. </span>
+<span class="sd">    For equation 2, HR90 is the dependent variable, and PS90 and UE90 the</span>
+<span class="sd">    exogenous regressors.</span>
+
+<span class="sd">    &gt;&gt;&gt; y_var = [&#39;HR80&#39;,&#39;HR90&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; x_var = [[&#39;PS80&#39;,&#39;UE80&#39;],[&#39;PS90&#39;,&#39;UE90&#39;]]</span>
+<span class="sd">    &gt;&gt;&gt; yend_var = [[&#39;RD80&#39;],[&#39;RD90&#39;]]</span>
+<span class="sd">    &gt;&gt;&gt; q_var = [[&#39;FP79&#39;],[&#39;FP89&#39;]]</span>
+
+<span class="sd">    The SUR method requires data to be provided as dictionaries. PySAL</span>
+<span class="sd">    provides the tool sur_dictxy to create these dictionaries from the</span>
+<span class="sd">    list of variables. The line below will create four dictionaries</span>
+<span class="sd">    containing respectively the dependent variables (bigy), the regressors</span>
+<span class="sd">    (bigX), the dependent variables&#39; names (bigyvars) and regressors&#39; names</span>
+<span class="sd">    (bigXvars). All these will be created from th database (db) and lists</span>
+<span class="sd">    of variables (y_var and x_var) created above.</span>
+
+<span class="sd">    &gt;&gt;&gt; bigy,bigX,bigyvars,bigXvars = pysal.model.spreg.sur_utils.sur_dictxy(db,y_var,x_var)</span>
+
+<span class="sd">    To run a spatial error model, we need to specify the spatial weights matrix. </span>
+<span class="sd">    To do that, we can open an already existing gal file or create a new one.</span>
+<span class="sd">    In this example, we will create a new one from NAT.shp and transform it to</span>
+<span class="sd">    row-standardized.</span>
+
+<span class="sd">    &gt;&gt;&gt; w = pysal.queen_from_shapefile(pysal.examples.get_path(&quot;NAT.shp&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; w.transform=&#39;r&#39;</span>
+
+<span class="sd">    We can now run the regression and then have a summary of the output by typing:</span>
+<span class="sd">    print(reg.summary)</span>
+
+<span class="sd">    Alternatively, we can just check the betas and standard errors, asymptotic t </span>
+<span class="sd">    and p-value of the parameters:        </span>
+
+<span class="sd">    &gt;&gt;&gt; reg = SURerrorGM(bigy,bigX,w=w,name_bigy=bigyvars,name_bigX=bigXvars,name_ds=&quot;NAT&quot;,name_w=&quot;nat_queen&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; reg.bSUR</span>
+<span class="sd">    {0: array([[ 3.9774686 ],</span>
+<span class="sd">           [ 0.8902122 ],</span>
+<span class="sd">           [ 0.43050364]]), 1: array([[ 2.93679118],</span>
+<span class="sd">           [ 1.11002827],</span>
+<span class="sd">           [ 0.48761542]])}</span>
+<span class="sd">    &gt;&gt;&gt; reg.sur_inf</span>
+<span class="sd">    {0: array([[  0.37251477,  10.67734473,   0.        ],</span>
+<span class="sd">           [  0.14224297,   6.25839157,   0.        ],</span>
+<span class="sd">           [  0.04322388,   9.95985619,   0.        ]]), 1: array([[  0.33694902,   8.71583239,   0.        ],</span>
+<span class="sd">           [  0.13413626,   8.27537784,   0.        ],</span>
+<span class="sd">           [  0.04033105,  12.09032295,   0.        ]])}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SURerrorGM.__init__"><a class="viewcode-back" href="../../../../generated/pysal.model.spreg.SURerrorGM.html#pysal.model.spreg.SURerrorGM.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bigy</span><span class="p">,</span><span class="n">bigX</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">regimes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">nonspat_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">spat_diag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">vm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>\
+        <span class="n">name_bigy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">name_bigX</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">name_ds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">name_w</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">name_regimes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="c1"># check on variable names for listing results</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name_ds</span> <span class="o">=</span> <span class="n">USER</span><span class="o">.</span><span class="n">set_name_ds</span><span class="p">(</span><span class="n">name_ds</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name_w</span> <span class="o">=</span> <span class="n">USER</span><span class="o">.</span><span class="n">set_name_w</span><span class="p">(</span><span class="n">name_w</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+        <span class="c1">#initialize names - should be generated by sur_stack</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bigy</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>        
+        <span class="k">if</span> <span class="n">name_bigy</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name_bigy</span> <span class="o">=</span> <span class="n">name_bigy</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># need to construct y names</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name_bigy</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">):</span>
+                <span class="n">yn</span> <span class="o">=</span> <span class="s1">&#39;dep_var_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">name_bigy</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">yn</span>               
+        <span class="k">if</span> <span class="n">name_bigX</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">name_bigX</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">):</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="n">bigX</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">name_x</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;var_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">)]</span>
+                <span class="n">ct</span> <span class="o">=</span> <span class="s1">&#39;Constant_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># NOTE: constant always included in X</span>
+                <span class="n">name_x</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ct</span><span class="p">)</span>
+                <span class="n">name_bigX</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">name_x</span>
+
+        <span class="k">if</span> <span class="n">regimes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">constant_regi</span> <span class="o">=</span> <span class="s1">&#39;many&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cols2regi</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regime_err_sep</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name_regimes</span> <span class="o">=</span> <span class="n">USER</span><span class="o">.</span><span class="n">set_name_ds</span><span class="p">(</span><span class="n">name_regimes</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regimes_set</span> <span class="o">=</span> <span class="n">REGI</span><span class="o">.</span><span class="n">_get_regimes_set</span><span class="p">(</span><span class="n">regimes</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regimes</span> <span class="o">=</span> <span class="n">regimes</span>
+            <span class="n">cols2regi_dic</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name_bigX</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name_x_r</span> <span class="o">=</span> <span class="n">name_bigX</span>
+
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">):</span>
+                <span class="n">cols2regi_dic</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">REGI</span><span class="o">.</span><span class="n">check_cols2regi</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">constant_regi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols2regi</span><span class="p">,</span> <span class="n">bigX</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="n">add_cons</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">USER</span><span class="o">.</span><span class="n">check_regimes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regimes_set</span><span class="p">,</span> <span class="n">bigy</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bigX</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">bigX</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_bigX</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">REGI</span><span class="o">.</span><span class="n">Regimes_Frame</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bigX</span><span class="p">[</span><span class="n">r</span><span class="p">],</span>\
+                 <span class="n">regimes</span><span class="p">,</span> <span class="n">constant_regi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cols2regi</span><span class="o">=</span><span class="n">cols2regi_dic</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="n">names</span><span class="o">=</span><span class="n">name_bigX</span><span class="p">[</span><span class="n">r</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name_bigX</span> <span class="o">=</span> <span class="n">name_bigX</span>
+
+        <span class="n">BaseSURerrorGM</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bigy</span><span class="o">=</span><span class="n">bigy</span><span class="p">,</span><span class="n">bigX</span><span class="o">=</span><span class="n">bigX</span><span class="p">,</span><span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">)</span>
+
+        <span class="c1">#inference</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sur_inf</span> <span class="o">=</span> <span class="n">sur_setp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bSUR</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">varb</span><span class="p">)</span>
+
+        <span class="c1"># test on constancy of regression coefficients across equations</span>
+        <span class="k">if</span> <span class="n">check_k</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bigK</span><span class="p">):</span>   <span class="c1"># only for equal number of variables</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">surchow</span> <span class="o">=</span> <span class="n">sur_chow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bigK</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bSUR</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">varb</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">surchow</span> <span class="o">=</span> <span class="kc">None</span>          
+                    
+        <span class="c1"># listing of results</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;SEEMINGLY UNRELATED REGRESSIONS (SUR) - GM SPATIAL ERROR MODEL&quot;</span>
+
+        <span class="k">if</span> <span class="n">regimes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;SUR - GM SPATIAL ERROR MODEL WITH REGIMES&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">chow_regimes</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">varb_counter</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">):</span>
+                <span class="n">counter_end</span> <span class="o">=</span> <span class="n">varb_counter</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">bSUR</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">chow_regimes</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">REGI</span><span class="o">.</span><span class="n">_chow_run</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cols2regi_dic</span><span class="p">[</span><span class="n">r</span><span class="p">]),</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regimes_set</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">bSUR</span><span class="p">[</span><span class="n">r</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">varb</span><span class="p">[</span><span class="n">varb_counter</span><span class="p">:</span><span class="n">counter_end</span><span class="p">,</span><span class="n">varb_counter</span><span class="p">:</span><span class="n">counter_end</span><span class="p">])</span>
+                <span class="n">varb_counter</span> <span class="o">=</span> <span class="n">counter_end</span>     
+            <span class="n">regimes</span><span class="o">=</span><span class="kc">True</span>   
+               
+        <span class="n">SUMMARY</span><span class="o">.</span><span class="n">SUR</span><span class="p">(</span><span class="n">reg</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">nonspat_diag</span><span class="o">=</span><span class="n">nonspat_diag</span><span class="p">,</span> <span class="n">spat_diag</span><span class="o">=</span><span class="n">spat_diag</span><span class="p">,</span> <span class="n">lambd</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ml</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">regimes</span><span class="o">=</span><span class="n">regimes</span><span class="p">)</span></div></div>
+
+
+
+<span class="k">class</span> <span class="nc">BaseSURerrorML</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Base class for SUR Error estimation by Maximum Likelihood</span>
+<span class="sd">    </span>
+<span class="sd">       requires: scipy.optimize.minimize_scalar and </span>
+<span class="sd">                 scipy.optimize.minimize</span>
+<span class="sd">                 </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bigy       : dictionary with vectors of dependent variable, one for</span>
+<span class="sd">                 each equation</span>
+<span class="sd">    bigX       : dictionary with matrices of explanatory variables,</span>
+<span class="sd">                 one for each equation</span>
+<span class="sd">    w          : spatial weights object</span>
+<span class="sd">    epsilon    : convergence criterion for ML iterations</span>
+<span class="sd">                 default 0.0000001</span>
+<span class="sd">       </span>
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n          : number of observations in each cross-section</span>
+<span class="sd">    n2         : n/2</span>
+<span class="sd">    n_eq       : number of equations</span>
+<span class="sd">    bigy       : dictionary with vectors of dependent variable, one for</span>
+<span class="sd">                 each equation</span>
+<span class="sd">    bigX       : dictionary with matrices of explanatory variables,</span>
+<span class="sd">                 one for each equation</span>
+<span class="sd">    bigK       : n_eq x 1 array with number of explanatory variables</span>
+<span class="sd">                 by equation</span>
+<span class="sd">    bigylag    : spatially lagged dependent variable</span>
+<span class="sd">    bigXlag    : spatially lagged explanatory variable</span>
+<span class="sd">    lamols     : spatial autoregressive coefficients from equation by</span>
+<span class="sd">                 equation ML-Error estimation</span>
+<span class="sd">    clikerr    : concentrated log-likelihood from equation by equation</span>
+<span class="sd">                 ML-Error estimation (no constant)</span>
+<span class="sd">    bSUR0      : SUR estimation for betas without spatial autocorrelation</span>
+<span class="sd">    llik       : log-likelihood for classic SUR estimation (includes constant)</span>
+<span class="sd">    lamsur     : spatial autoregressive coefficient in ML SUR Error</span>
+<span class="sd">    bSUR       : beta coefficients in ML SUR Error</span>
+<span class="sd">    varb       : variance of beta coefficients in ML SUR Error</span>
+<span class="sd">    sig        : error variance-covariance matrix in ML SUR Error</span>
+<span class="sd">    corr       : error correlation matrix</span>
+<span class="sd">    bigE       : n by n_eq matrix of vectors of residuals for each equation</span>
+<span class="sd">    cliksurerr : concentrated log-likelihood from ML SUR Error (no constant) </span>
+<span class="sd">      </span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bigy</span><span class="p">,</span><span class="n">bigX</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">epsilon</span><span class="o">=</span><span class="mf">0.0000001</span><span class="p">):</span>
+        <span class="c1"># setting up constants</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">n</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">/</span> <span class="mf">2.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bigy</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">WS</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">sparse</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
+        <span class="c1"># variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bigy</span> <span class="o">=</span> <span class="n">bigy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bigX</span> <span class="o">=</span> <span class="n">bigX</span>
+        <span class="c1"># number of variables by equation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bigK</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bigK</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bigX</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># spatially lagged variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bigylag</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bigylag</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">WS</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">bigy</span><span class="p">[</span><span class="n">r</span><span class="p">]</span>
+        <span class="c1"># note: unlike WX as instruments, this includes the constant</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bigXlag</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bigXlag</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">WS</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">bigX</span><span class="p">[</span><span class="n">r</span><span class="p">]</span>
+            
+        <span class="c1"># spatial parameter starting values</span>
+        <span class="n">lam</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>  <span class="c1"># initialize as an array</span>
+        <span class="n">fun0</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">fun1</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">):</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">minimize_scalar</span><span class="p">(</span><span class="n">err_c_loglik_sp</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">),</span>
+                        <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bigy</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">bigylag</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> 
+                        <span class="bp">self</span><span class="o">.</span><span class="n">bigX</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">bigXlag</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="n">I</span><span class="p">,</span> <span class="n">WS</span><span class="p">),</span>
+                        <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bounded&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;xatol&#39;</span><span class="p">:</span><span class="n">epsilon</span><span class="p">})</span>
+            <span class="n">lam</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">fun1</span> <span class="o">+=</span> <span class="n">res</span><span class="o">.</span><span class="n">fun</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lamols</span> <span class="o">=</span> <span class="n">lam</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clikerr</span> <span class="o">=</span> <span class="o">-</span><span class="n">fun1</span>  <span class="c1">#negative because use in min</span>
+        
+        <span class="c1"># SUR starting values</span>
+        <span class="n">reg0</span> <span class="o">=</span> <span class="n">BaseSUR</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bigy</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bigX</span><span class="p">,</span><span class="nb">iter</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">bigE</span> <span class="o">=</span> <span class="n">reg0</span><span class="o">.</span><span class="n">bigE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bSUR0</span> <span class="o">=</span> <span class="n">reg0</span><span class="o">.</span><span class="n">bSUR</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">llik</span> <span class="o">=</span> <span class="n">reg0</span><span class="o">.</span><span class="n">llik</span>  <span class="c1"># as is, includes constant</span>
+        
+        <span class="c1"># iteration</span>
+        <span class="n">lambdabounds</span> <span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="o">+</span><span class="mf">1.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">)]</span>
+        <span class="k">while</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fun0</span> <span class="o">-</span> <span class="n">fun1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">epsilon</span><span class="p">:</span>
+            <span class="n">fun0</span> <span class="o">=</span> <span class="n">fun1</span>
+            <span class="n">sply</span> <span class="o">=</span> <span class="n">filter_dict</span><span class="p">(</span><span class="n">lam</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bigy</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bigylag</span><span class="p">)</span>
+            <span class="n">splX</span> <span class="o">=</span> <span class="n">filter_dict</span><span class="p">(</span><span class="n">lam</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bigX</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bigXlag</span><span class="p">)</span>
+            <span class="n">WbigE</span> <span class="o">=</span> <span class="n">WS</span> <span class="o">*</span> <span class="n">bigE</span>
+            <span class="n">splbigE</span> <span class="o">=</span> <span class="n">bigE</span> <span class="o">-</span> <span class="n">WbigE</span> <span class="o">*</span> <span class="n">lam</span><span class="o">.</span><span class="n">T</span>
+            <span class="n">splXX</span><span class="p">,</span><span class="n">splXy</span> <span class="o">=</span> <span class="n">sur_crossprod</span><span class="p">(</span><span class="n">splX</span><span class="p">,</span><span class="n">sply</span><span class="p">)</span>
+            <span class="n">b1</span><span class="p">,</span><span class="n">varb1</span><span class="p">,</span><span class="n">sig1</span> <span class="o">=</span> <span class="n">sur_est</span><span class="p">(</span><span class="n">splXX</span><span class="p">,</span><span class="n">splXy</span><span class="p">,</span><span class="n">splbigE</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bigK</span><span class="p">)</span>
+            <span class="n">bigE</span> <span class="o">=</span> <span class="n">sur_resids</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bigy</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bigX</span><span class="p">,</span><span class="n">b1</span><span class="p">)</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">clik</span><span class="p">,</span><span class="n">lam</span><span class="p">,</span><span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">n2</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">,</span>\
+                            <span class="n">bigE</span><span class="p">,</span><span class="n">I</span><span class="p">,</span><span class="n">WS</span><span class="p">),</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;L-BFGS-B&#39;</span><span class="p">,</span>\
+                            <span class="n">bounds</span><span class="o">=</span><span class="n">lambdabounds</span><span class="p">)</span>
+            <span class="n">lam</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">lam</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">fun1</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">fun</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lamsur</span> <span class="o">=</span> <span class="n">lam</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bSUR</span> <span class="o">=</span> <span class="n">b1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">varb</span> <span class="o">=</span> <span class="n">varb1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sig</span> <span class="o">=</span> <span class="n">sig1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">corr</span> <span class="o">=</span> <span class="n">sur_corr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bigE</span> <span class="o">=</span> <span class="n">bigE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cliksurerr</span> <span class="o">=</span> <span class="o">-</span><span class="n">fun1</span>  <span class="c1">#negative because use in min, no constant</span>
+        
+<div class="viewcode-block" id="SURerrorML"><a class="viewcode-back" href="../../../../generated/pysal.model.spreg.SURerrorML.html#pysal.model.spreg.SURerrorML">[docs]</a><span class="k">class</span> <span class="nc">SURerrorML</span><span class="p">(</span><span class="n">BaseSURerrorML</span><span class="p">,</span> <span class="n">REGI</span><span class="o">.</span><span class="n">Regimes_Frame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;User class for SUR Error estimation by Maximum Likelihood</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bigy         : dictionary with vectors of dependent variable, one for</span>
+<span class="sd">                   each equation</span>
+<span class="sd">    bigX         : dictionary with matrices of explanatory variables,</span>
+<span class="sd">                   one for each equation</span>
+<span class="sd">    w            : spatial weights object</span>
+<span class="sd">    regimes      : list; default = None</span>
+<span class="sd">                   List of n values with the mapping of each</span>
+<span class="sd">                   observation to a regime. Assumed to be aligned with &#39;x&#39;.</span>
+<span class="sd">    epsilon      : convergence criterion for ML iterations</span>
+<span class="sd">                   default 0.0000001</span>
+<span class="sd">    nonspat_diag : boolean; flag for non-spatial diagnostics, default = True</span>
+<span class="sd">    spat_diag    : boolean; flag for spatial diagnostics, default = False</span>
+<span class="sd">    vm           : boolean; flag for asymptotic variance for lambda and Sigma,</span>
+<span class="sd">                   default = False</span>
+<span class="sd">    name_bigy    : dictionary with name of dependent variable for each equation</span>
+<span class="sd">                     default = None, but should be specified</span>
+<span class="sd">                     is done when sur_stackxy is used</span>
+<span class="sd">    name_bigX    : dictionary with names of explanatory variables for each</span>
+<span class="sd">                     equation</span>
+<span class="sd">                     default = None, but should be specified</span>
+<span class="sd">                     is done when sur_stackxy is used</span>
+<span class="sd">    name_ds      : string; name for the data set</span>
+<span class="sd">    name_w       : string; name for the weights file</span>
+<span class="sd">    name_regimes : string; name of regime variable for use in the output</span>
+<span class="sd">       </span>
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n          : number of observations in each cross-section</span>
+<span class="sd">    n2         : n/2</span>
+<span class="sd">    n_eq       : number of equations</span>
+<span class="sd">    bigy       : dictionary with vectors of dependent variable, one for</span>
+<span class="sd">                 each equation</span>
+<span class="sd">    bigX       : dictionary with matrices of explanatory variables,</span>
+<span class="sd">                 one for each equation</span>
+<span class="sd">    bigK       : n_eq x 1 array with number of explanatory variables</span>
+<span class="sd">                 by equation</span>
+<span class="sd">    bigylag    : spatially lagged dependent variable</span>
+<span class="sd">    bigXlag    : spatially lagged explanatory variable</span>
+<span class="sd">    lamols     : spatial autoregressive coefficients from equation by</span>
+<span class="sd">                 equation ML-Error estimation</span>
+<span class="sd">    clikerr    : concentrated log-likelihood from equation by equation</span>
+<span class="sd">                 ML-Error estimation (no constant)</span>
+<span class="sd">    bSUR0      : SUR estimation for betas without spatial autocorrelation</span>
+<span class="sd">    llik       : log-likelihood for classic SUR estimation (includes constant)</span>
+<span class="sd">    lamsur     : spatial autoregressive coefficient in ML SUR Error</span>
+<span class="sd">    bSUR       : beta coefficients in ML SUR Error</span>
+<span class="sd">    varb       : variance of beta coefficients in ML SUR Error</span>
+<span class="sd">    sig        : error variance-covariance matrix in ML SUR Error</span>
+<span class="sd">    bigE       : n by n_eq matrix of vectors of residuals for each equation</span>
+<span class="sd">    cliksurerr : concentrated log-likelihood from ML SUR Error (no constant) </span>
+<span class="sd">    sur_inf    : inference for regression coefficients, stand. error, t, p</span>
+<span class="sd">    errllik    : log-likelihood for error model without SUR (with constant)</span>
+<span class="sd">    surerrllik : log-likelihood for SUR error model (with constant)</span>
+<span class="sd">    lrtest     : likelihood ratio test for off-diagonal Sigma elements</span>
+<span class="sd">    likrlambda : likelihood ratio test on spatial autoregressive coefficients</span>
+<span class="sd">    vm         : asymptotic variance matrix for lambda and Sigma (only for vm=True)</span>
+<span class="sd">    lamsetp    : inference for lambda, stand. error, t, p (only for vm=True)</span>
+<span class="sd">    lamtest    : tuple with test for constancy of lambda across equations</span>
+<span class="sd">                 (test value, degrees of freedom, p-value)</span>
+<span class="sd">    joinlam    : tuple with test for joint significance of lambda across </span>
+<span class="sd">                 equations (test value, degrees of freedom, p-value)</span>
+<span class="sd">    surchow    : list with tuples for Chow test on regression coefficients</span>
+<span class="sd">                 each tuple contains test value, degrees of freedom, p-value</span>
+<span class="sd">    name_bigy  : dictionary with name of dependent variable for each equation</span>
+<span class="sd">    name_bigX  : dictionary with names of explanatory variables for each</span>
+<span class="sd">                 equation</span>
+<span class="sd">    name_ds    : string; name for the data set</span>
+<span class="sd">    name_w     : string; name for the weights file      </span>
+<span class="sd">    name_regimes : string; name of regime variable for use in the output</span>
+
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    First import pysal.lib to load the spatial analysis tools.</span>
+
+<span class="sd">    &gt;&gt;&gt; import pysal.lib</span>
+
+<span class="sd">    Open data on NCOVR US County Homicides (3085 areas) using pysal.lib.io.open(). </span>
+<span class="sd">    This is the DBF associated with the NAT shapefile. Note that pysal.lib.io.open() </span>
+<span class="sd">    also reads data in CSV format.</span>
+
+<span class="sd">    &gt;&gt;&gt; db = pysal.lib.io.open(pysal.lib.examples.get_path(&quot;NAT.dbf&quot;),&#39;r&#39;)</span>
+
+<span class="sd">    The specification of the model to be estimated can be provided as lists.</span>
+<span class="sd">    Each equation should be listed separately. Equation 1 has HR80 as dependent </span>
+<span class="sd">    variable, and PS80 and UE80 as exogenous regressors. </span>
+<span class="sd">    For equation 2, HR90 is the dependent variable, and PS90 and UE90 the</span>
+<span class="sd">    exogenous regressors.</span>
+
+<span class="sd">    &gt;&gt;&gt; y_var = [&#39;HR80&#39;,&#39;HR90&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; x_var = [[&#39;PS80&#39;,&#39;UE80&#39;],[&#39;PS90&#39;,&#39;UE90&#39;]]</span>
+<span class="sd">    &gt;&gt;&gt; yend_var = [[&#39;RD80&#39;],[&#39;RD90&#39;]]</span>
+<span class="sd">    &gt;&gt;&gt; q_var = [[&#39;FP79&#39;],[&#39;FP89&#39;]]</span>
+
+<span class="sd">    The SUR method requires data to be provided as dictionaries. PySAL</span>
+<span class="sd">    provides the tool sur_dictxy to create these dictionaries from the</span>
+<span class="sd">    list of variables. The line below will create four dictionaries</span>
+<span class="sd">    containing respectively the dependent variables (bigy), the regressors</span>
+<span class="sd">    (bigX), the dependent variables&#39; names (bigyvars) and regressors&#39; names</span>
+<span class="sd">    (bigXvars). All these will be created from th database (db) and lists</span>
+<span class="sd">    of variables (y_var and x_var) created above.</span>
+
+<span class="sd">    &gt;&gt;&gt; bigy,bigX,bigyvars,bigXvars = pysal.model.spreg.sur_utils.sur_dictxy(db,y_var,x_var)</span>
+
+<span class="sd">    To run a spatial error model, we need to specify the spatial weights matrix. </span>
+<span class="sd">    To do that, we can open an already existing gal file or create a new one.</span>
+<span class="sd">    In this example, we will create a new one from NAT.shp and transform it to</span>
+<span class="sd">    row-standardized.</span>
+
+<span class="sd">    &gt;&gt;&gt; w = pysal.lib.weights.Queen.from_shapefile(pysal.lib.examples.get_path(&quot;NAT.shp&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; w.transform=&#39;r&#39;</span>
+
+<span class="sd">    We can now run the regression and then have a summary of the output by typing:</span>
+<span class="sd">    print(reg.summary)</span>
+
+<span class="sd">    Alternatively, we can just check the betas and standard errors, asymptotic t </span>
+<span class="sd">    and p-value of the parameters:        </span>
+
+<span class="sd">    &gt;&gt;&gt; reg = SURerrorML(bigy,bigX,w=w,name_bigy=bigyvars,name_bigX=bigXvars,name_ds=&quot;NAT&quot;,name_w=&quot;nat_queen&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; reg.bSUR</span>
+<span class="sd">    {0: array([[ 4.0222855 ],</span>
+<span class="sd">           [ 0.88489646],</span>
+<span class="sd">           [ 0.42402853]]), 1: array([[ 3.04923009],</span>
+<span class="sd">           [ 1.10972634],</span>
+<span class="sd">           [ 0.47075682]])}</span>
+
+<span class="sd">    &gt;&gt;&gt; reg.sur_inf</span>
+<span class="sd">    {0: array([[  0.36692181,  10.96224141,   0.        ],</span>
+<span class="sd">           [  0.14129077,   6.26294579,   0.        ],</span>
+<span class="sd">           [  0.04267954,   9.93517021,   0.        ]]), 1: array([[  0.33139969,   9.20106497,   0.        ],</span>
+<span class="sd">           [  0.13352591,   8.31094371,   0.        ],</span>
+<span class="sd">           [  0.04004097,  11.756878  ,   0.        ]])}</span>
+<span class="sd">           </span>
+<span class="sd">    &quot;&quot;&quot;</span>        
+<div class="viewcode-block" id="SURerrorML.__init__"><a class="viewcode-back" href="../../../../generated/pysal.model.spreg.SURerrorML.html#pysal.model.spreg.SURerrorML.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bigy</span><span class="p">,</span><span class="n">bigX</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">regimes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">nonspat_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">spat_diag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>\
+        <span class="n">vm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.0000001</span><span class="p">,</span>\
+        <span class="n">name_bigy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">name_bigX</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">name_ds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">name_w</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">name_regimes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        
+        <span class="c1">#need checks on match between bigy, bigX dimensions</span>
+        <span class="c1"># check on variable names for listing results</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name_ds</span> <span class="o">=</span> <span class="n">USER</span><span class="o">.</span><span class="n">set_name_ds</span><span class="p">(</span><span class="n">name_ds</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name_w</span> <span class="o">=</span> <span class="n">USER</span><span class="o">.</span><span class="n">set_name_w</span><span class="p">(</span><span class="n">name_w</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bigy</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>        
+        <span class="c1">#initialize names - should be generated by sur_stack</span>
+        <span class="k">if</span> <span class="n">name_bigy</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name_bigy</span> <span class="o">=</span> <span class="n">name_bigy</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># need to construct y names</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name_bigy</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">):</span>
+                <span class="n">yn</span> <span class="o">=</span> <span class="s1">&#39;dep_var_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">name_bigy</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">yn</span>               
+        <span class="k">if</span> <span class="n">name_bigX</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">name_bigX</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">):</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="n">bigX</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">name_x</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;var_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">)]</span>
+                <span class="n">ct</span> <span class="o">=</span> <span class="s1">&#39;Constant_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># NOTE: constant always included in X</span>
+                <span class="n">name_x</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ct</span><span class="p">)</span>
+                <span class="n">name_bigX</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">name_x</span>
+
+        <span class="k">if</span> <span class="n">regimes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">constant_regi</span> <span class="o">=</span> <span class="s1">&#39;many&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cols2regi</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regime_err_sep</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name_regimes</span> <span class="o">=</span> <span class="n">USER</span><span class="o">.</span><span class="n">set_name_ds</span><span class="p">(</span><span class="n">name_regimes</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regimes_set</span> <span class="o">=</span> <span class="n">REGI</span><span class="o">.</span><span class="n">_get_regimes_set</span><span class="p">(</span><span class="n">regimes</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regimes</span> <span class="o">=</span> <span class="n">regimes</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name_x_r</span> <span class="o">=</span> <span class="n">name_bigX</span>     
+            <span class="n">cols2regi_dic</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name_bigX</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">):</span>
+                <span class="n">cols2regi_dic</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">REGI</span><span class="o">.</span><span class="n">check_cols2regi</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">constant_regi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols2regi</span><span class="p">,</span> <span class="n">bigX</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="n">add_cons</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">USER</span><span class="o">.</span><span class="n">check_regimes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regimes_set</span><span class="p">,</span> <span class="n">bigy</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bigX</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">bigX</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_bigX</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">REGI</span><span class="o">.</span><span class="n">Regimes_Frame</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bigX</span><span class="p">[</span><span class="n">r</span><span class="p">],</span>\
+                 <span class="n">regimes</span><span class="p">,</span> <span class="n">constant_regi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cols2regi</span><span class="o">=</span><span class="n">cols2regi_dic</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="n">names</span><span class="o">=</span><span class="n">name_bigX</span><span class="p">[</span><span class="n">r</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name_bigX</span> <span class="o">=</span> <span class="n">name_bigX</span>
+
+
+        <span class="c1"># moved init here</span>
+        <span class="n">BaseSURerrorML</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bigy</span><span class="o">=</span><span class="n">bigy</span><span class="p">,</span><span class="n">bigX</span><span class="o">=</span><span class="n">bigX</span><span class="p">,</span><span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span><span class="n">epsilon</span><span class="o">=</span><span class="n">epsilon</span><span class="p">)</span>
+ 
+        <span class="c1">#inference</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sur_inf</span> <span class="o">=</span> <span class="n">sur_setp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bSUR</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">varb</span><span class="p">)</span>
+        
+        <span class="c1"># adjust concentrated log lik for constant</span>
+        <span class="n">const</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">n2</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">errllik</span> <span class="o">=</span> <span class="n">const</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">clikerr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">surerrllik</span> <span class="o">=</span> <span class="n">const</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">cliksurerr</span>
+                
+        <span class="c1"># LR test on off-diagonal sigma</span>
+        <span class="k">if</span> <span class="n">nonspat_diag</span><span class="p">:</span>
+            <span class="n">M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mf">2.0</span>
+            <span class="n">likrodiag</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">surerrllik</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">errllik</span><span class="p">)</span>
+            <span class="n">plik1</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">chisqprob</span><span class="p">(</span><span class="n">likrodiag</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lrtest</span> <span class="o">=</span> <span class="p">(</span><span class="n">likrodiag</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="n">M</span><span class="p">),</span><span class="n">plik1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lrtest</span> <span class="o">=</span> <span class="kc">None</span>
+        
+        <span class="c1"># LR test on spatial autoregressive coefficients</span>
+        <span class="k">if</span> <span class="n">spat_diag</span><span class="p">:</span>
+            <span class="n">liklambda</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">surerrllik</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">llik</span><span class="p">)</span>
+            <span class="n">plik2</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">chisqprob</span><span class="p">(</span><span class="n">liklambda</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">likrlambda</span> <span class="o">=</span> <span class="p">(</span><span class="n">liklambda</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">,</span><span class="n">plik2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">likrlambda</span> <span class="o">=</span> <span class="kc">None</span>
+        
+        <span class="c1"># asymptotic variance for spatial coefficient</span>
+        <span class="k">if</span> <span class="n">vm</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vm</span> <span class="o">=</span> <span class="n">surerrvm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">lamsur</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="p">)</span>
+            <span class="n">vlam</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vm</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">,:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lamsetp</span> <span class="o">=</span> <span class="n">lam_setp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lamsur</span><span class="p">,</span><span class="n">vlam</span><span class="p">)</span>
+            <span class="c1"># test on constancy of lambdas</span>
+            <span class="n">R</span> <span class="o">=</span> <span class="n">REGI</span><span class="o">.</span><span class="n">buildR</span><span class="p">(</span><span class="n">kr</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">kf</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">nr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">)</span>
+            <span class="n">w</span><span class="p">,</span><span class="n">p</span> <span class="o">=</span> <span class="n">REGI</span><span class="o">.</span><span class="n">wald_test</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lamsur</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">)),</span><span class="n">vlam</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lamtest</span> <span class="o">=</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">p</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">spat_diag</span><span class="p">:</span>  <span class="c1"># test on joint significance of lambdas</span>
+                <span class="n">Rj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">)</span>
+                <span class="n">wj</span><span class="p">,</span><span class="n">pj</span> <span class="o">=</span> <span class="n">REGI</span><span class="o">.</span><span class="n">wald_test</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lamsur</span><span class="p">,</span><span class="n">Rj</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">Rj</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">)),</span><span class="n">vlam</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">joinlam</span> <span class="o">=</span> <span class="p">(</span><span class="n">wj</span><span class="p">,</span><span class="n">Rj</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">pj</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">joinlam</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vm</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lamsetp</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lamtest</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">joinlam</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># test on constancy of regression coefficients across equations</span>
+        <span class="k">if</span> <span class="n">check_k</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bigK</span><span class="p">):</span>   <span class="c1"># only for equal number of variables</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">surchow</span> <span class="o">=</span> <span class="n">sur_chow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bigK</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bSUR</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">varb</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">surchow</span> <span class="o">=</span> <span class="kc">None</span>          
+                    
+        <span class="c1"># listing of results</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;SEEMINGLY UNRELATED REGRESSIONS (SUR) - ML SPATIAL ERROR MODEL&quot;</span>
+        <span class="k">if</span> <span class="n">regimes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;SUR - ML SPATIAL ERROR MODEL - REGIMES&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">chow_regimes</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">varb_counter</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_eq</span><span class="p">):</span>
+                <span class="n">counter_end</span> <span class="o">=</span> <span class="n">varb_counter</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">bSUR</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">chow_regimes</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">REGI</span><span class="o">.</span><span class="n">_chow_run</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cols2regi_dic</span><span class="p">[</span><span class="n">r</span><span class="p">]),</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regimes_set</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">bSUR</span><span class="p">[</span><span class="n">r</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">varb</span><span class="p">[</span><span class="n">varb_counter</span><span class="p">:</span><span class="n">counter_end</span><span class="p">,</span><span class="n">varb_counter</span><span class="p">:</span><span class="n">counter_end</span><span class="p">])</span>
+                <span class="n">varb_counter</span> <span class="o">=</span> <span class="n">counter_end</span>     
+            <span class="n">regimes</span><span class="o">=</span><span class="kc">True</span>   
+    
+        <span class="n">SUMMARY</span><span class="o">.</span><span class="n">SUR</span><span class="p">(</span><span class="n">reg</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">nonspat_diag</span><span class="o">=</span><span class="n">nonspat_diag</span><span class="p">,</span> <span class="n">spat_diag</span><span class="o">=</span><span class="n">spat_diag</span><span class="p">,</span> <span class="n">lambd</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">regimes</span><span class="o">=</span><span class="n">regimes</span><span class="p">)</span></div></div>
+
+
+
+<span class="k">def</span> <span class="nf">jacob</span><span class="p">(</span><span class="n">lam</span><span class="p">,</span><span class="n">n_eq</span><span class="p">,</span><span class="n">I</span><span class="p">,</span><span class="n">WS</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Log-Jacobian for SUR Error model</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    lam      : n_eq by 1 array of spatial autoregressive parameters</span>
+<span class="sd">    n_eq     : number of equations</span>
+<span class="sd">    I        : sparse Identity matrix</span>
+<span class="sd">    WS       : sparse spatial weights matrix</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    logjac   : the log Jacobian</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logjac</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_eq</span><span class="p">):</span>
+        <span class="n">lami</span> <span class="o">=</span> <span class="n">lam</span><span class="p">[</span><span class="n">r</span><span class="p">]</span>
+        <span class="n">lamWS</span> <span class="o">=</span> <span class="n">WS</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">lami</span><span class="p">)</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="p">(</span><span class="n">I</span> <span class="o">-</span> <span class="n">lamWS</span><span class="p">)</span><span class="o">.</span><span class="n">tocsc</span><span class="p">()</span>
+        <span class="n">LU</span> <span class="o">=</span> <span class="n">SuperLU</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+        <span class="n">jj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">LU</span><span class="o">.</span><span class="n">U</span><span class="o">.</span><span class="n">diagonal</span><span class="p">())))</span>
+        <span class="n">logjac</span> <span class="o">+=</span> <span class="n">jj</span>
+    <span class="k">return</span> <span class="n">logjac</span>
+
+<span class="k">def</span> <span class="nf">clik</span><span class="p">(</span><span class="n">lam</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">n2</span><span class="p">,</span><span class="n">n_eq</span><span class="p">,</span><span class="n">bigE</span><span class="p">,</span><span class="n">I</span><span class="p">,</span><span class="n">WS</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Concentrated (negative) log-likelihood for SUR Error model</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    lam         : n_eq x 1 array of spatial autoregressive parameters</span>
+<span class="sd">    n           : number of observations in each cross-section</span>
+<span class="sd">    n2          : n/2</span>
+<span class="sd">    n_eq        : number of equations</span>
+<span class="sd">    bigE        : n by n_eq matrix with vectors of residuals for </span>
+<span class="sd">                  each equation</span>
+<span class="sd">    I           : sparse Identity matrix</span>
+<span class="sd">    WS          : sparse spatial weights matrix</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    -clik       : negative (for minimize) of the concentrated</span>
+<span class="sd">                  log-likelihood function</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">WbigE</span> <span class="o">=</span> <span class="n">WS</span> <span class="o">*</span> <span class="n">bigE</span>
+    <span class="n">spfbigE</span> <span class="o">=</span> <span class="n">bigE</span> <span class="o">-</span> <span class="n">WbigE</span> <span class="o">*</span> <span class="n">lam</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">spfbigE</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">spfbigE</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+    <span class="n">ldet</span> <span class="o">=</span> <span class="n">la</span><span class="o">.</span><span class="n">slogdet</span><span class="p">(</span><span class="n">sig</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">logjac</span> <span class="o">=</span> <span class="n">jacob</span><span class="p">(</span><span class="n">lam</span><span class="p">,</span><span class="n">n_eq</span><span class="p">,</span><span class="n">I</span><span class="p">,</span><span class="n">WS</span><span class="p">)</span>
+    <span class="n">clik</span> <span class="o">=</span> <span class="o">-</span> <span class="n">n2</span> <span class="o">*</span> <span class="n">ldet</span> <span class="o">+</span> <span class="n">logjac</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">clik</span>  <span class="c1"># negative for minimize</span>
+
+<span class="k">def</span> <span class="nf">surerrvm</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">n_eq</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">lam</span><span class="p">,</span><span class="n">sig</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Asymptotic variance matrix for lambda and Sigma in</span>
+<span class="sd">       ML SUR Error estimation</span>
+<span class="sd">       </span>
+<span class="sd">       Source: Anselin (1988), Chapter 10.</span>
+<span class="sd">       </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n         : scalar, number of cross-sectional observations</span>
+<span class="sd">    n_eq      : scalar, number of equations</span>
+<span class="sd">    w         : spatial weights object</span>
+<span class="sd">    lam       : n_eq by 1 vector with spatial autoregressive coefficients</span>
+<span class="sd">    sig       : n_eq by n_eq matrix with cross-equation error covariances</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    vm        : asymptotic variance-covariance matrix for spatial autoregressive</span>
+<span class="sd">                coefficients and the upper triangular elements of Sigma</span>
+<span class="sd">                n_eq + n_eq x (n_eq + 1) / 2 coefficients</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># inverse Sigma</span>
+    <span class="n">sigi</span> <span class="o">=</span> <span class="n">la</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span>
+    <span class="n">sisi</span> <span class="o">=</span> <span class="n">sigi</span> <span class="o">*</span> <span class="n">sig</span>
+    <span class="c1"># elements of Psi_lam,lam</span>
+    <span class="c1"># trace terms</span>
+    <span class="n">trDi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_eq</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">trDDi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_eq</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">trDTDi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_eq</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">trDTiDj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_eq</span><span class="p">,</span><span class="n">n_eq</span><span class="p">))</span>
+    <span class="n">WS</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">sparse</span>
+    <span class="n">I</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_eq</span><span class="p">):</span>
+        <span class="n">lami</span> <span class="o">=</span> <span class="n">lam</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">lamWS</span> <span class="o">=</span> <span class="n">WS</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">lami</span><span class="p">)</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="p">(</span><span class="n">I</span> <span class="o">-</span> <span class="n">lamWS</span><span class="p">)</span>
+        <span class="n">bb</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">todense</span><span class="p">()</span>
+        <span class="n">Bi</span> <span class="o">=</span> <span class="n">la</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">bb</span><span class="p">)</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="n">WS</span> <span class="o">*</span> <span class="n">Bi</span>
+        <span class="n">trDi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+        <span class="n">DD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">D</span><span class="p">,</span><span class="n">D</span><span class="p">)</span>
+        <span class="n">trDDi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">DD</span><span class="p">)</span>
+        <span class="n">DD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">D</span><span class="p">)</span>
+        <span class="n">trDTDi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">DD</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">n_eq</span><span class="p">):</span>
+            <span class="n">lamj</span> <span class="o">=</span> <span class="n">lam</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">lamWS</span> <span class="o">=</span> <span class="n">WS</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">lamj</span><span class="p">)</span>
+            <span class="n">B</span> <span class="o">=</span> <span class="p">(</span><span class="n">I</span> <span class="o">-</span> <span class="n">lamWS</span><span class="p">)</span>
+            <span class="n">bb</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">todense</span><span class="p">()</span>
+            <span class="n">Bi</span> <span class="o">=</span> <span class="n">la</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">bb</span><span class="p">)</span>
+            <span class="n">Dj</span> <span class="o">=</span> <span class="n">WS</span> <span class="o">*</span> <span class="n">Bi</span>
+            <span class="n">DD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">Dj</span><span class="p">)</span>
+            <span class="n">trDTiDj</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">DD</span><span class="p">)</span>
+            <span class="n">trDTiDj</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">trDTiDj</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">trDTiDj</span><span class="p">,</span><span class="n">trDTDi</span><span class="p">)</span>   
+    
+    <span class="n">sisjT</span> <span class="o">=</span> <span class="n">sisi</span> <span class="o">*</span> <span class="n">trDTiDj</span>
+    <span class="n">Vll</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diagflat</span><span class="p">(</span><span class="n">trDDi</span><span class="p">)</span> <span class="o">+</span> <span class="n">sisjT</span>
+    
+    <span class="c1"># elements of Psi_lam_sig</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_eq</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_eq</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="c1">#force ints to be ints</span>
+    <span class="n">tlist</span> <span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_eq</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">n_eq</span><span class="p">)</span> <span class="p">]</span>
+    <span class="n">zog</span> <span class="o">=</span> <span class="n">sigi</span> <span class="o">*</span> <span class="n">trDi</span>
+    <span class="n">Vlsig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_eq</span><span class="p">,</span><span class="n">P</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_eq</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_eq</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">j</span><span class="p">:</span>
+                <span class="n">jj</span> <span class="o">=</span> <span class="n">tlist</span><span class="o">.</span><span class="n">index</span><span class="p">((</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">jj</span> <span class="o">=</span> <span class="n">tlist</span><span class="o">.</span><span class="n">index</span><span class="p">((</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">))</span>
+            <span class="n">Vlsig</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">jj</span><span class="p">]</span> <span class="o">=</span> <span class="n">zog</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
+            
+    <span class="c1"># top of Psi</span>
+    <span class="n">vtop</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">Vll</span><span class="p">,</span><span class="n">Vlsig</span><span class="p">))</span>
+    
+    <span class="c1"># elements of Psi_sig_sig</span>
+    
+    <span class="n">Vsig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">P</span><span class="p">,</span><span class="n">P</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">ij</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">P</span><span class="p">):</span>
+        <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="o">=</span> <span class="n">tlist</span><span class="p">[</span><span class="n">ij</span><span class="p">]</span>    
+        <span class="k">for</span> <span class="n">hk</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">P</span><span class="p">):</span>
+            <span class="n">h</span><span class="p">,</span><span class="n">k</span> <span class="o">=</span> <span class="n">tlist</span><span class="p">[</span><span class="n">hk</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">h</span> <span class="o">==</span> <span class="n">k</span><span class="p">:</span>
+                    <span class="n">Vsig</span><span class="p">[</span><span class="n">ij</span><span class="p">,</span><span class="n">hk</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">sigi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">h</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># h not equal to k</span>
+                    <span class="n">Vsig</span><span class="p">[</span><span class="n">ij</span><span class="p">,</span><span class="n">hk</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">h</span><span class="p">]</span><span class="o">*</span><span class="n">sigi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">k</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># i not equal to j</span>
+                <span class="k">if</span> <span class="n">h</span> <span class="o">==</span> <span class="n">k</span><span class="p">:</span>
+                    <span class="n">Vsig</span><span class="p">[</span><span class="n">ij</span><span class="p">,</span><span class="n">hk</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">h</span><span class="p">]</span><span class="o">*</span><span class="n">sigi</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">h</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># h not equal to k</span>
+                    <span class="n">Vsig</span><span class="p">[</span><span class="n">ij</span><span class="p">,</span><span class="n">hk</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">h</span><span class="p">]</span><span class="o">*</span><span class="n">sigi</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">sigi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">*</span><span class="n">sigi</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">h</span><span class="p">]</span>
+    <span class="n">Vsig</span> <span class="o">=</span> <span class="n">n</span> <span class="o">*</span> <span class="n">Vsig</span> 
+    
+    <span class="c1"># bottom of Psi</span>
+    <span class="n">vbottom</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">Vlsig</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">Vsig</span><span class="p">))</span>
+    
+    <span class="c1"># all of Psi</span>
+    <span class="n">vbig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">vtop</span><span class="p">,</span><span class="n">vbottom</span><span class="p">))</span>
+    
+    <span class="c1"># inverse of Psi</span>
+    <span class="n">vm</span> <span class="o">=</span> <span class="n">la</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">vbig</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">vm</span>
+        
+<span class="k">def</span> <span class="nf">_test</span><span class="p">():</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="n">start_suppress</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">get_printoptions</span><span class="p">()[</span><span class="s1">&#39;suppress&#39;</span><span class="p">]</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">suppress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">suppress</span><span class="o">=</span><span class="n">start_suppress</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">_test</span><span class="p">()</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">import</span> <span class="nn">pysal.lib</span>
+    <span class="kn">from</span> <span class="nn">.sur_utils</span> <span class="k">import</span> <span class="n">sur_dictxy</span><span class="p">,</span><span class="n">sur_dictZ</span>
+
+    <span class="n">db</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;NAT.dbf&#39;</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">y_var</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;HR80&#39;</span><span class="p">,</span><span class="s1">&#39;HR90&#39;</span><span class="p">]</span>
+    <span class="n">x_var</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;PS80&#39;</span><span class="p">,</span><span class="s1">&#39;UE80&#39;</span><span class="p">],[</span><span class="s1">&#39;PS90&#39;</span><span class="p">,</span><span class="s1">&#39;UE90&#39;</span><span class="p">]]</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">Queen</span><span class="o">.</span><span class="n">from_shapefile</span><span class="p">(</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;NAT.shp&quot;</span><span class="p">))</span>
+    <span class="n">w</span><span class="o">.</span><span class="n">transform</span><span class="o">=</span><span class="s1">&#39;r&#39;</span>
+    <span class="n">bigy0</span><span class="p">,</span><span class="n">bigX0</span><span class="p">,</span><span class="n">bigyvars0</span><span class="p">,</span><span class="n">bigXvars0</span> <span class="o">=</span> <span class="n">sur_dictxy</span><span class="p">(</span><span class="n">db</span><span class="p">,</span><span class="n">y_var</span><span class="p">,</span><span class="n">x_var</span><span class="p">)</span>
+    <span class="n">reg0</span> <span class="o">=</span> <span class="n">SURerrorML</span><span class="p">(</span><span class="n">bigy0</span><span class="p">,</span><span class="n">bigX0</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">regimes</span><span class="o">=</span><span class="n">regimes</span><span class="p">,</span><span class="n">name_bigy</span><span class="o">=</span><span class="n">bigyvars0</span><span class="p">,</span><span class="n">name_bigX</span><span class="o">=</span><span class="n">bigXvars0</span><span class="p">,</span>\
+        <span class="n">name_w</span><span class="o">=</span><span class="s2">&quot;natqueen&quot;</span><span class="p">,</span><span class="n">name_ds</span><span class="o">=</span><span class="s2">&quot;natregimes&quot;</span><span class="p">,</span><span class="n">vm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">nonspat_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">spat_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1">#    reg0 = SURerrorGM(bigy0,bigX0,w,regimes=regimes,name_bigy=bigyvars0,name_bigX=bigXvars0,\</span>
+<span class="c1">#        name_w=&quot;natqueen&quot;,name_ds=&quot;natregimes&quot;,vm=False,nonspat_diag=True,spat_diag=False)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">reg0</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span> 
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,22 @@
+pysal.explore.segregation.aspatial.MultiGiniSeg
+===============================================
+
+.. currentmodule:: pysal.explore.segregation.aspatial
+
+.. autoclass:: MultiGiniSeg
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MultiGiniSeg.__init__
+   
+   
+
+   
+   
+   

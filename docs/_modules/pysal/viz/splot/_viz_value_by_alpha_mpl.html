@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.viz.splot._viz_value_by_alpha_mpl &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../../installation.html">Installation</a></li>
+                <li><a href="../../../../api.html">API</a></li>
+                <li><a href="../../../../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for pysal.viz.splot._viz_value_by_alpha_mpl</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">colors</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">patches</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">matplotlib.cm</span> <span class="k">as</span> <span class="nn">cm</span>
+<span class="kn">import</span> <span class="nn">pysal.viz.mapclassify</span> <span class="k">as</span> <span class="nn">classify</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">._viz_utils</span> <span class="k">import</span> <span class="n">_classifiers</span><span class="p">,</span> <span class="n">format_legend</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Creating Maps with splot</span>
+<span class="sd">* Value-by-Alpha maps</span>
+<span class="sd">* Mapclassify wrapper</span>
+<span class="sd">* Color utilities</span>
+
+<span class="sd">TODO:</span>
+<span class="sd">* add Choropleth functionality with one input variable</span>
+<span class="sd">* merge all alpha keywords in one keyword dictionary</span>
+<span class="sd">for vba_choropleth</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Stefanie Lumnitz &lt;stefanie.lumitz@gmail.com&gt;&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="value_by_alpha_cmap"><a class="viewcode-back" href="../../../../generated/pysal.viz.splot.mapping.value_by_alpha_cmap.html#pysal.viz.splot.mapping.value_by_alpha_cmap">[docs]</a><span class="k">def</span> <span class="nf">value_by_alpha_cmap</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;GnBu&#39;</span><span class="p">,</span> <span class="n">revert_alpha</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">divergent</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates Value by Alpha rgba values</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : array</span>
+<span class="sd">        Variable determined by color</span>
+<span class="sd">    y : array</span>
+<span class="sd">        Variable determining alpha value</span>
+<span class="sd">    cmap : str or list of str</span>
+<span class="sd">        Matplotlib Colormap or list of colors used</span>
+<span class="sd">        to create vba_layer</span>
+<span class="sd">    revert_alpha : bool, optional</span>
+<span class="sd">        If True, high y values will have a</span>
+<span class="sd">        low alpha and low values will be transparent.</span>
+<span class="sd">        Default =False.</span>
+<span class="sd">    divergent : bool, optional</span>
+<span class="sd">        Creates a divergent alpha array with high values</span>
+<span class="sd">        at the extremes and low, transparent values</span>
+<span class="sd">        in the middle of the input values.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    rgba : ndarray (n,4)</span>
+<span class="sd">        RGBA colormap, where the alpha channel represents one</span>
+<span class="sd">        attribute (x) and the rgb color the other attribute (y)</span>
+<span class="sd">    cmap : str or list of str</span>
+<span class="sd">        Original Matplotlib Colormap or list of colors used</span>
+<span class="sd">        to create vba_layer</span>
+<span class="sd">    </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    </span>
+<span class="sd">    Imports</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib import examples</span>
+<span class="sd">    &gt;&gt;&gt; import geopandas as gpd</span>
+<span class="sd">    &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">    &gt;&gt;&gt; import matplotlib</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.viz.splot.mapping import value_by_alpha_cmap</span>
+<span class="sd">    </span>
+<span class="sd">    Load Example Data</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; link_to_data = examples.get_path(&#39;columbus.shp&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; gdf = gpd.read_file(link_to_data)</span>
+<span class="sd">    &gt;&gt;&gt; x = gdf[&#39;HOVAL&#39;].values</span>
+<span class="sd">    &gt;&gt;&gt; y = gdf[&#39;CRIME&#39;].values</span>
+<span class="sd">    </span>
+<span class="sd">    Create rgba values</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; rgba, _ = value_by_alpha_cmap(x, y)</span>
+<span class="sd">    </span>
+<span class="sd">    Create divergent rgba and change Colormap</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; div_rgba, _ = value_by_alpha_cmap(x, y, cmap=&#39;seismic&#39;, divergent=True)</span>
+<span class="sd">    </span>
+<span class="sd">    Create rgba values with reverted alpha values</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; rev_rgba, _  = value_by_alpha_cmap(x, y, cmap=&#39;RdBu&#39;, revert_alpha=True)</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># option for cmap or colorlist input</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cmap</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cmap</span><span class="p">,</span> <span class="n">collections</span><span class="o">.</span><span class="n">Sequence</span><span class="p">):</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">LinearSegmentedColormap</span><span class="o">.</span><span class="n">from_list</span><span class="p">(</span><span class="s1">&#39;newmap&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="p">)</span>
+
+    <span class="n">rgba</span> <span class="o">=</span> <span class="n">cmap</span><span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">()))</span>
+    <span class="k">if</span> <span class="n">revert_alpha</span><span class="p">:</span>
+        <span class="n">rgba</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span><span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">y</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">y</span><span class="o">.</span><span class="n">min</span><span class="p">()))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rgba</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">y</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">y</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">divergent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">a_under_0p5</span> <span class="o">=</span> <span class="n">rgba</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.5</span>
+        <span class="n">rgba</span><span class="p">[</span><span class="n">a_under_0p5</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">rgba</span><span class="p">[</span><span class="n">a_under_0p5</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+        <span class="n">rgba</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">rgba</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="n">rgba</span><span class="p">,</span> <span class="n">cmap</span></div>
+
+
+<div class="viewcode-block" id="vba_choropleth"><a class="viewcode-back" href="../../../../generated/pysal.viz.splot.mapping.vba_choropleth.html#pysal.viz.splot.mapping.vba_choropleth">[docs]</a><span class="k">def</span> <span class="nf">vba_choropleth</span><span class="p">(</span><span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">,</span> <span class="n">gdf</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;GnBu&#39;</span><span class="p">,</span> 
+                   <span class="n">divergent</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">revert_alpha</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                   <span class="n">alpha_mapclassify</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">rgb_mapclassify</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Value by Alpha Choropleth </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x_var : string or array</span>
+<span class="sd">        The name of variable in gdf determined by color or an array </span>
+<span class="sd">        of values determined by color.</span>
+<span class="sd">    y_var : string or array</span>
+<span class="sd">        The name of variable in gdf determining alpha value or an array </span>
+<span class="sd">        of values determined by color.</span>
+<span class="sd">    gdf : geopandas dataframe instance</span>
+<span class="sd">        The Dataframe containing information to plot.</span>
+<span class="sd">    cmap : str or list of str</span>
+<span class="sd">        Matplotlib Colormap or list of colors used</span>
+<span class="sd">        to create vba_layer</span>
+<span class="sd">    divergent : bool, optional</span>
+<span class="sd">        Creates a divergent alpha array with high values at</span>
+<span class="sd">        the extremes and low, transparent values in the</span>
+<span class="sd">        middle of the input values.</span>
+<span class="sd">    revert_alpha : bool, optional</span>
+<span class="sd">        If True, high y values will have a</span>
+<span class="sd">        low alpha and low values will be transparent.</span>
+<span class="sd">        Default = False.</span>
+<span class="sd">    alpha_mapclassify : dict</span>
+<span class="sd">        Keywords used for binning input values and</span>
+<span class="sd">        classifying alpha values with `mapclassify`.</span>
+<span class="sd">        Note: valid keywords are eg. dict(classifier=&#39;quantiles&#39;, k=5,</span>
+<span class="sd">        hinge=1.5). For other options check `splot.mapping.mapclassify_bin`.</span>
+<span class="sd">    rgb_mapclassify : dict</span>
+<span class="sd">        Keywords used for binning input values and</span>
+<span class="sd">        classifying rgb values with `mapclassify`.</span>
+<span class="sd">        Note: valid keywords are eg.g dict(classifier=&#39;quantiles&#39;, k=5,</span>
+<span class="sd">        hinge=1.5).For other options check `splot.mapping.mapclassify_bin`.</span>
+<span class="sd">    ax : matplotlib Axes instance, optional</span>
+<span class="sd">        Axes in which to plot the figure in multiple Axes layout.</span>
+<span class="sd">        Default = None</span>
+<span class="sd">    legend : bool, optional</span>
+<span class="sd">        Adds a legend.</span>
+<span class="sd">        Note: currently only available if data is classified,</span>
+<span class="sd">        hence if `alpha_mapclassify` and `rgb_mapclassify` are used.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig : matplotlip Figure instance</span>
+<span class="sd">        Figure of Value by Alpha choropleth</span>
+<span class="sd">    ax : matplotlib Axes instance</span>
+<span class="sd">        Axes in which the figure is plotted</span>
+<span class="sd">    </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    </span>
+<span class="sd">    Imports</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib import examples</span>
+<span class="sd">    &gt;&gt;&gt; import geopandas as gpd</span>
+<span class="sd">    &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">    &gt;&gt;&gt; import matplotlib</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.viz.splot.mapping import vba_choropleth</span>
+<span class="sd">    </span>
+<span class="sd">    Load Example Data</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; link_to_data = examples.get_path(&#39;columbus.shp&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; gdf = gpd.read_file(link_to_data)</span>
+<span class="sd">    </span>
+<span class="sd">    Plot a Value-by-Alpha map</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; fig, _ = vba_choropleth(&#39;HOVAL&#39;, &#39;CRIME&#39;, gdf)</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    Plot a Value-by-Alpha map with reverted alpha values</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; fig, _ = vba_choropleth(&#39;HOVAL&#39;, &#39;CRIME&#39;, gdf, cmap=&#39;RdBu&#39;,</span>
+<span class="sd">    ...                         revert_alpha=True)</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    Plot a Value-by-Alpha map with classified alpha and rgb values</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; fig, axs = plt.subplots(2,2, figsize=(20,10))</span>
+<span class="sd">    &gt;&gt;&gt; vba_choropleth(&#39;HOVAL&#39;, &#39;CRIME&#39;, gdf, cmap=&#39;viridis&#39;, ax = axs[0,0],</span>
+<span class="sd">    ...                rgb_mapclassify=dict(classifier=&#39;quantiles&#39;, k=3), </span>
+<span class="sd">    ...                alpha_mapclassify=dict(classifier=&#39;quantiles&#39;, k=3))</span>
+<span class="sd">    &gt;&gt;&gt; vba_choropleth(&#39;HOVAL&#39;, &#39;CRIME&#39;, gdf, cmap=&#39;viridis&#39;, ax = axs[0,1],</span>
+<span class="sd">    ...                rgb_mapclassify=dict(classifier=&#39;natural_breaks&#39;), </span>
+<span class="sd">    ...                alpha_mapclassify=dict(classifier=&#39;natural_breaks&#39;))</span>
+<span class="sd">    &gt;&gt;&gt; vba_choropleth(&#39;HOVAL&#39;, &#39;CRIME&#39;, gdf, cmap=&#39;viridis&#39;, ax = axs[1,0],</span>
+<span class="sd">    ...                rgb_mapclassify=dict(classifier=&#39;std_mean&#39;), </span>
+<span class="sd">    ...                alpha_mapclassify=dict(classifier=&#39;std_mean&#39;))</span>
+<span class="sd">    &gt;&gt;&gt; vba_choropleth(&#39;HOVAL&#39;, &#39;CRIME&#39;, gdf, cmap=&#39;viridis&#39;, ax = axs[1,1],</span>
+<span class="sd">    ...                rgb_mapclassify=dict(classifier=&#39;fisher_jenks&#39;, k=3), </span>
+<span class="sd">    ...                alpha_mapclassify=dict(classifier=&#39;fisher_jenks&#39;, k=3))</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    Pass in a list of colors instead of a cmap</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; color_list = [&#39;#a1dab4&#39;,&#39;#41b6c4&#39;,&#39;#225ea8&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; vba_choropleth(&#39;HOVAL&#39;, &#39;CRIME&#39;, gdf, cmap=color_list,</span>
+<span class="sd">    ...                rgb_mapclassify=dict(classifier=&#39;quantiles&#39;, k=3), </span>
+<span class="sd">    ...                alpha_mapclassify=dict(classifier=&#39;quantiles&#39;))</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    Add a legend and use divergent alpha values</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; fig = plt.figure(figsize=(15,10))</span>
+<span class="sd">    &gt;&gt;&gt; ax = fig.add_subplot(111)</span>
+<span class="sd">    &gt;&gt;&gt; vba_choropleth(&#39;HOVAL&#39;, &#39;CRIME&#39;, gdf, divergent=True,</span>
+<span class="sd">    ...                alpha_mapclassify=dict(classifier=&#39;quantiles&#39;, k=5),</span>
+<span class="sd">    ...                rgb_mapclassify=dict(classifier=&#39;quantiles&#39;, k=5),</span>
+<span class="sd">    ...                legend=True, ax=ax)</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x_var</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span> 
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="n">x_var</span><span class="p">])</span> 
+    <span class="k">else</span><span class="p">:</span> 
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x_var</span>
+    
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y_var</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span> 
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="n">y_var</span><span class="p">])</span> 
+    <span class="k">else</span><span class="p">:</span> 
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y_var</span>
+
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="n">rgb_mapclassify</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">rgb_mapclassify</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="n">rgb_mapclassify</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;hinge&#39;</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
+        <span class="n">rgb_mapclassify</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;multiples&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">rgb_mapclassify</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;mindiff&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">rgb_mapclassify</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;initial&#39;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="n">rgb_mapclassify</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;bins&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">)])</span>
+        <span class="n">classifier</span> <span class="o">=</span> <span class="n">rgb_mapclassify</span><span class="p">[</span><span class="s1">&#39;classifier&#39;</span><span class="p">]</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">rgb_mapclassify</span><span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">]</span>
+        <span class="n">hinge</span> <span class="o">=</span> <span class="n">rgb_mapclassify</span><span class="p">[</span><span class="s1">&#39;hinge&#39;</span><span class="p">]</span>
+        <span class="n">multiples</span> <span class="o">=</span> <span class="n">rgb_mapclassify</span><span class="p">[</span><span class="s1">&#39;multiples&#39;</span><span class="p">]</span>
+        <span class="n">mindiff</span> <span class="o">=</span> <span class="n">rgb_mapclassify</span><span class="p">[</span><span class="s1">&#39;mindiff&#39;</span><span class="p">]</span>
+        <span class="n">initial</span> <span class="o">=</span> <span class="n">rgb_mapclassify</span><span class="p">[</span><span class="s1">&#39;initial&#39;</span><span class="p">]</span>
+        <span class="n">bins</span> <span class="o">=</span> <span class="n">rgb_mapclassify</span><span class="p">[</span><span class="s1">&#39;bins&#39;</span><span class="p">]</span>
+        <span class="n">rgb_bins</span> <span class="o">=</span> <span class="n">mapclassify_bin</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">classifier</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">hinge</span><span class="o">=</span><span class="n">hinge</span><span class="p">,</span>
+                                   <span class="n">multiples</span><span class="o">=</span><span class="n">multiples</span><span class="p">,</span>
+                                   <span class="n">mindiff</span><span class="o">=</span><span class="n">mindiff</span><span class="p">,</span>
+                                   <span class="n">initial</span><span class="o">=</span><span class="n">initial</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">rgb_bins</span><span class="o">.</span><span class="n">yb</span>
+
+    <span class="k">if</span> <span class="n">alpha_mapclassify</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">alpha_mapclassify</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="n">alpha_mapclassify</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;hinge&#39;</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
+        <span class="n">alpha_mapclassify</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;multiples&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">alpha_mapclassify</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;mindiff&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">alpha_mapclassify</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;initial&#39;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="n">alpha_mapclassify</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;bins&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">y</span><span class="p">)])</span>
+        <span class="n">classifier</span> <span class="o">=</span> <span class="n">alpha_mapclassify</span><span class="p">[</span><span class="s1">&#39;classifier&#39;</span><span class="p">]</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">alpha_mapclassify</span><span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">]</span>
+        <span class="n">hinge</span> <span class="o">=</span> <span class="n">alpha_mapclassify</span><span class="p">[</span><span class="s1">&#39;hinge&#39;</span><span class="p">]</span>
+        <span class="n">multiples</span> <span class="o">=</span> <span class="n">alpha_mapclassify</span><span class="p">[</span><span class="s1">&#39;multiples&#39;</span><span class="p">]</span>
+        <span class="n">mindiff</span> <span class="o">=</span> <span class="n">alpha_mapclassify</span><span class="p">[</span><span class="s1">&#39;mindiff&#39;</span><span class="p">]</span>
+        <span class="n">initial</span> <span class="o">=</span> <span class="n">alpha_mapclassify</span><span class="p">[</span><span class="s1">&#39;initial&#39;</span><span class="p">]</span>
+        <span class="n">bins</span> <span class="o">=</span> <span class="n">alpha_mapclassify</span><span class="p">[</span><span class="s1">&#39;bins&#39;</span><span class="p">]</span>
+        <span class="c1">#TODO: use the pct keyword here</span>
+        <span class="n">alpha_bins</span> <span class="o">=</span> <span class="n">mapclassify_bin</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">classifier</span><span class="p">,</span>
+                                     <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">hinge</span><span class="o">=</span><span class="n">hinge</span><span class="p">,</span>
+                                     <span class="n">multiples</span><span class="o">=</span><span class="n">multiples</span><span class="p">,</span>
+                                     <span class="n">mindiff</span><span class="o">=</span><span class="n">mindiff</span><span class="p">,</span>
+                                     <span class="n">initial</span><span class="o">=</span><span class="n">initial</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">alpha_bins</span><span class="o">.</span><span class="n">yb</span>
+
+    <span class="n">rgba</span><span class="p">,</span> <span class="n">vba_cmap</span> <span class="o">=</span> <span class="n">value_by_alpha_cmap</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+                                         <span class="n">divergent</span><span class="o">=</span><span class="n">divergent</span><span class="p">,</span>
+                                         <span class="n">revert_alpha</span><span class="o">=</span><span class="n">revert_alpha</span><span class="p">)</span>
+    <span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">rgba</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">legend</span><span class="p">:</span>
+        <span class="n">left</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">]</span>
+        <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="n">left</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">])</span>
+        <span class="n">vba_legend</span><span class="p">(</span><span class="n">rgb_bins</span><span class="p">,</span> <span class="n">alpha_bins</span><span class="p">,</span> <span class="n">vba_cmap</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
+
+
+<div class="viewcode-block" id="vba_legend"><a class="viewcode-back" href="../../../../generated/pysal.viz.splot.mapping.vba_legend.html#pysal.viz.splot.mapping.vba_legend">[docs]</a><span class="k">def</span> <span class="nf">vba_legend</span><span class="p">(</span><span class="n">rgb_bins</span><span class="p">,</span> <span class="n">alpha_bins</span><span class="p">,</span> <span class="n">cmap</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates Value by Alpha heatmap used as choropleth legend.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    rgb_bins : pysal.mapclassify instance</span>
+<span class="sd">        Object of classified values used for rgb.</span>
+<span class="sd">        Can be created with `mapclassify_bin()`</span>
+<span class="sd">        or `pysal.mapclassify`.</span>
+<span class="sd">    alpha_bins : pysal.mapclassify instance</span>
+<span class="sd">        Object of classified values used for alpha.</span>
+<span class="sd">        Can be created with `mapclassify_bin()`</span>
+<span class="sd">        or `pysal.mapclassify`.</span>
+<span class="sd">    ax : matplotlib Axes instance, optional</span>
+<span class="sd">        Axes in which to plot the figure in multiple Axes layout.</span>
+<span class="sd">        Default = None</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig : matplotlip Figure instance</span>
+<span class="sd">        Figure of Value by Alpha heatmap</span>
+<span class="sd">    ax : matplotlib Axes instance</span>
+<span class="sd">        Axes in which the figure is plotted</span>
+<span class="sd">    </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Imports</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib import examples</span>
+<span class="sd">    &gt;&gt;&gt; import geopandas as gpd</span>
+<span class="sd">    &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">    &gt;&gt;&gt; import matplotlib</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.viz.splot.mapping import vba_legend, mapclassify_bin</span>
+<span class="sd">    </span>
+<span class="sd">    Load Example Data</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; link_to_data = examples.get_path(&#39;columbus.shp&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; gdf = gpd.read_file(link_to_data)</span>
+<span class="sd">    &gt;&gt;&gt; x = gdf[&#39;HOVAL&#39;].values</span>
+<span class="sd">    &gt;&gt;&gt; y = gdf[&#39;CRIME&#39;].values</span>
+<span class="sd">    </span>
+<span class="sd">    Classify your data</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; rgb_bins = mapclassify_bin(x, &#39;quantiles&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; alpha_bins = mapclassify_bin(y, &#39;quantiles&#39;)</span>
+<span class="sd">    </span>
+<span class="sd">    Plot your legend</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; fig, _ = vba_legend(rgb_bins, alpha_bins, cmap=&#39;RdBu&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># VALUES</span>
+    <span class="n">rgba</span><span class="p">,</span> <span class="n">legend_cmap</span> <span class="o">=</span> <span class="n">value_by_alpha_cmap</span><span class="p">(</span><span class="n">rgb_bins</span><span class="o">.</span><span class="n">yb</span><span class="p">,</span> <span class="n">alpha_bins</span><span class="o">.</span><span class="n">yb</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="c1"># separate rgb and alpha values</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="n">rgba</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span>
+    <span class="c1"># extract unique values for alpha and rgb</span>
+    <span class="n">alpha_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+    <span class="n">rgb_vals</span> <span class="o">=</span> <span class="n">legend_cmap</span><span class="p">((</span><span class="n">rgb_bins</span><span class="o">.</span><span class="n">bins</span> <span class="o">-</span> <span class="n">rgb_bins</span><span class="o">.</span><span class="n">bins</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span>
+            <span class="n">rgb_bins</span><span class="o">.</span><span class="n">bins</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">rgb_bins</span><span class="o">.</span><span class="n">bins</span><span class="o">.</span><span class="n">min</span><span class="p">()))[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+    
+    <span class="c1"># PLOTTING</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">irow</span><span class="p">,</span> <span class="n">alpha_val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">alpha_vals</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">icol</span><span class="p">,</span> <span class="n">rgb_val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rgb_vals</span><span class="p">):</span>
+            <span class="n">rect</span> <span class="o">=</span> <span class="n">patches</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">((</span><span class="n">irow</span><span class="p">,</span> <span class="n">icol</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                                     <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
+                                     <span class="n">facecolor</span><span class="o">=</span><span class="n">rgb_val</span><span class="p">,</span>
+                                     <span class="n">alpha</span><span class="o">=</span><span class="n">alpha_val</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">rect</span><span class="p">)</span>
+
+    <span class="n">values_alpha</span><span class="p">,</span> <span class="n">x_in_thousand</span> <span class="o">=</span> <span class="n">format_legend</span><span class="p">(</span><span class="n">alpha_bins</span><span class="o">.</span><span class="n">bins</span><span class="p">)</span>
+    <span class="n">values_rgb</span><span class="p">,</span> <span class="n">y_in_thousand</span> <span class="o">=</span> <span class="n">format_legend</span><span class="p">(</span><span class="n">rgb_bins</span><span class="o">.</span><span class="n">bins</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([],</span> <span class="p">[])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">irow</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">icol</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">irow</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">icol</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([</span><span class="s1">&#39;&lt; </span><span class="si">%1.1f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">val</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">values_alpha</span><span class="p">],</span>
+                       <span class="n">rotation</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([</span><span class="s1">&#39;$&lt;$</span><span class="si">%1.1f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">val</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">values_rgb</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">x_in_thousand</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;alpha variable ($10^3$)&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">y_in_thousand</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;rgb variable ($10^3$)&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;alpha variable&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;rgb variable&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;bottom&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
+
+
+<div class="viewcode-block" id="mapclassify_bin"><a class="viewcode-back" href="../../../../generated/pysal.viz.splot.mapping.mapclassify_bin.html#pysal.viz.splot.mapping.mapclassify_bin">[docs]</a><span class="k">def</span> <span class="nf">mapclassify_bin</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">classifier</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">pct</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">90</span><span class="p">,</span><span class="mi">99</span><span class="p">,</span><span class="mi">100</span><span class="p">],</span>
+                    <span class="n">hinge</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">multiples</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">mindiff</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                    <span class="n">initial</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Classify your data with `pysal.mapclassify`</span>
+<span class="sd">    Note: Input parameters are dependent on classifier used.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y : array</span>
+<span class="sd">        (n,1), values to classify</span>
+<span class="sd">    classifier : str</span>
+<span class="sd">        pysal.mapclassify classification scheme</span>
+<span class="sd">    k : int, optional</span>
+<span class="sd">        The number of classes. Default=5.</span>
+<span class="sd">    pct  : array, optional</span>
+<span class="sd">        Percentiles used for classification with `percentiles`.</span>
+<span class="sd">        Default=[1,10,50,90,99,100]</span>
+<span class="sd">    hinge : float, optional</span>
+<span class="sd">        Multiplier for IQR when `Box_Plot` classifier used.</span>
+<span class="sd">        Default=1.5.</span>
+<span class="sd">    multiples : array, optional</span>
+<span class="sd">        The multiples of the standard deviation to add/subtract from</span>
+<span class="sd">        the sample mean to define the bins using `std_mean`.</span>
+<span class="sd">        Default=[-2,-1,1,2].</span>
+<span class="sd">    mindiff : float, optional</span>
+<span class="sd">        The minimum difference between class breaks</span>
+<span class="sd">        if using `maximum_breaks` classifier. Deafult =0.</span>
+<span class="sd">    initial : int</span>
+<span class="sd">        Number of initial solutions to generate or number of runs</span>
+<span class="sd">        when using `natural_breaks` or `max_p_classifier`.</span>
+<span class="sd">        Default =100.</span>
+<span class="sd">        Note: setting initial to 0 will result in the quickest</span>
+<span class="sd">        calculation of bins.</span>
+<span class="sd">    bins : array, optional</span>
+<span class="sd">        (k,1), upper bounds of classes (have to be monotically  </span>
+<span class="sd">        increasing) if using `user_defined` classifier.</span>
+<span class="sd">        Default =None, Example =[20, max(y)].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bins : pysal.mapclassify instance</span>
+<span class="sd">        Object containing bin ids for each observation (.yb),</span>
+<span class="sd">        upper bounds of each class (.bins), number of classes (.k)</span>
+<span class="sd">        and number of onservations falling in each class (.counts)</span>
+<span class="sd">    </span>
+<span class="sd">    Note: Supported classifiers include: quantiles, box_plot, euqal_interval,</span>
+<span class="sd">        fisher_jenks, headtail_breaks, jenks_caspall, jenks_caspall_forced,</span>
+<span class="sd">        max_p_classifier, maximum_breaks, natural_breaks, percentiles, std_mean,</span>
+<span class="sd">        user_defined</span>
+<span class="sd">    </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    Imports</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; from pysal.lib import examples</span>
+<span class="sd">    &gt;&gt;&gt; import geopandas as gpd</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.viz.splot.mapping import pysal.viz.mapclassify_bin</span>
+<span class="sd">    </span>
+<span class="sd">    Load Example Data</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; link_to_data = examples.get_path(&#39;columbus.shp&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; gdf = gpd.read_file(link_to_data)</span>
+<span class="sd">    &gt;&gt;&gt; x = gdf[&#39;HOVAL&#39;].values</span>
+<span class="sd">    </span>
+<span class="sd">    Classify values by quantiles</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; quantiles = mapclassify_bin(x, &#39;quantiles&#39;)</span>
+<span class="sd">    </span>
+<span class="sd">    Classify values by box_plot and set hinge to 2</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; box_plot = mapclassify_bin(x, &#39;box_plot&#39;, hinge=2)</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">classifier</span> <span class="o">=</span> <span class="n">classifier</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">classifier</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_classifiers</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid scheme. Scheme must be in the&quot;</span>
+                         <span class="s2">&quot; set: </span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">_classifiers</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="k">elif</span> <span class="n">classifier</span> <span class="o">==</span> <span class="s1">&#39;box_plot&#39;</span><span class="p">:</span>
+        <span class="n">bins</span> <span class="o">=</span> <span class="n">_classifiers</span><span class="p">[</span><span class="n">classifier</span><span class="p">](</span><span class="n">y</span><span class="p">,</span> <span class="n">hinge</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">classifier</span> <span class="o">==</span> <span class="s1">&#39;headtail_breaks&#39;</span><span class="p">:</span>
+        <span class="n">bins</span> <span class="o">=</span> <span class="n">_classifiers</span><span class="p">[</span><span class="n">classifier</span><span class="p">](</span><span class="n">y</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">classifier</span> <span class="o">==</span> <span class="s1">&#39;percentiles&#39;</span><span class="p">:</span>
+        <span class="n">bins</span> <span class="o">=</span> <span class="n">_classifiers</span><span class="p">[</span><span class="n">classifier</span><span class="p">](</span><span class="n">y</span><span class="p">,</span> <span class="n">pct</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">classifier</span> <span class="o">==</span> <span class="s1">&#39;std_mean&#39;</span><span class="p">:</span>
+        <span class="n">bins</span> <span class="o">=</span> <span class="n">_classifiers</span><span class="p">[</span><span class="n">classifier</span><span class="p">](</span><span class="n">y</span><span class="p">,</span> <span class="n">multiples</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">classifier</span> <span class="o">==</span> <span class="s1">&#39;maximum_breaks&#39;</span><span class="p">:</span>
+        <span class="n">bins</span> <span class="o">=</span> <span class="n">_classifiers</span><span class="p">[</span><span class="n">classifier</span><span class="p">](</span><span class="n">y</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">mindiff</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">classifier</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;natural_breaks&#39;</span><span class="p">,</span> <span class="s1">&#39;max_p_classifier&#39;</span><span class="p">]:</span>
+        <span class="n">bins</span> <span class="o">=</span> <span class="n">_classifiers</span><span class="p">[</span><span class="n">classifier</span><span class="p">](</span><span class="n">y</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">initial</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">classifier</span> <span class="o">==</span> <span class="s1">&#39;user_defined&#39;</span><span class="p">:</span>
+        <span class="n">bins</span> <span class="o">=</span> <span class="n">_classifiers</span><span class="p">[</span><span class="n">classifier</span><span class="p">](</span><span class="n">y</span><span class="p">,</span> <span class="n">bins</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">bins</span> <span class="o">=</span> <span class="n">_classifiers</span><span class="p">[</span><span class="n">classifier</span><span class="p">](</span><span class="n">y</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">bins</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

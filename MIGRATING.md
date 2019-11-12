@@ -1,8 +1,5 @@
 # Migrating to PySAL 2.0 
 
-<div align='left'>
-![https://gitter.im/pysal/pysal](https://badges.gitter.im/pysal/pysal.svg)
-</div>
 
 PySAL, the Python spatial analysis library, will be changing its package structure. 
 
@@ -238,7 +235,7 @@ model2 = spreg.ML_Lag.from_formula('HOVAL ~ CRIME + INC',
 import pysal
 file_handler = pysal.open(pysal.examples.get_path('columbus.dbf'))
 y = np.asarray(file_handler.by_col('HOVAL'))
-graph = pysal.open(pysal.examples.get_path('columbus.gal')).read()
+graph = pysal.opPySALen(pysal.examples.get_path('columbus.gal')).read()
 moran_stat = pysal.Moran(y,graph)
 print(moran_stat.I, moran_stat.p_z_sim)
 ```
@@ -273,6 +270,6 @@ print(moran_stat.I, moran_stat.p_z_sim)
 
 <font color='red'><bf>This is not recommended.</bf></font>
 
-For a longer change window, feel free to `import pysal._legacy as pysal`. We urge you to not do this, since we plan on deprecating this as well. If you can make the changes described above, you will have a much more stable and future-proof API. We feel these changes are reasonable and will greatly enhance how easy it is for us to maintain `pysal`  and move new functionality forward. 
+You can stay on  [1.14.4](https://github.com/pysal/pysal/releases/tag/v1.14.4). However, that is the last Python 2.0 compatible release and it will only be receiving bug fixes. All new enhancements to PySAL will be made in the 2.0+ releases.
 
 ### Please contact us on [gitter](https://gitter.com/pysal/pysal) if there are any remaining concerns or questions, and for help or advice.  

@@ -1,0 +1,29 @@
+pysal.viz.mapclassify.MaximumBreaks
+===================================
+
+.. currentmodule:: pysal.viz.mapclassify
+
+.. autoclass:: MaximumBreaks
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MaximumBreaks.__init__
+      ~MaximumBreaks.find_bin
+      ~MaximumBreaks.get_adcm
+      ~MaximumBreaks.get_gadf
+      ~MaximumBreaks.get_tss
+      ~MaximumBreaks.make
+      ~MaximumBreaks.plot
+      ~MaximumBreaks.update
+   
+   
+
+   
+   
+   

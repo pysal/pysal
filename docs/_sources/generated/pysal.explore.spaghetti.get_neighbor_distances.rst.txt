@@ -1,0 +1,6 @@
+pysal.explore.spaghetti.get\_neighbor\_distances
+================================================
+
+.. currentmodule:: pysal.explore.spaghetti
+
+.. autofunction:: get_neighbor_distances

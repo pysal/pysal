@@ -1,0 +1,6 @@
+pysal.model.mgwr.kernels.adapt\_gauss
+=====================================
+
+.. currentmodule:: pysal.model.mgwr.kernels
+
+.. autofunction:: adapt_gauss

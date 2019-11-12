@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pysal.explore.segregation.local.local_indexes &#8212; pysal v2.1.0 Manual</title>
+    <link rel="stylesheet" href="../../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../../../../../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../../../installation.html">Installation</a></li>
+                <li><a href="../../../../../api.html">API</a></li>
+                <li><a href="../../../../../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for pysal.explore.segregation.local.local_indexes</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Local based Segregation Metrics</span>
+
+<span class="sd">Important: all classes that start with &quot;Multi_&quot; expects a specific type of input of multigroups since the index will be calculated using many groups.</span>
+<span class="sd">On the other hand, other classes expects a single group for calculation of the metrics.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Renan X. Cortes &lt;renanc@ucr.edu&gt;, Elijah Knaap &lt;elijah.knaap@ucr.edu&gt; and Sergio J. Rey &lt;sergio.rey@ucr.edu&gt;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pysal.lib</span> <span class="k">as</span> <span class="nn">lps</span>
+
+<span class="kn">from</span> <span class="nn">pysal.explore.segregation.spatial</span> <span class="k">import</span> <span class="n">RelativeCentralization</span>
+
+<span class="kn">from</span> <span class="nn">pysal.explore.segregation.util.util</span> <span class="k">import</span> <span class="n">_dep_message</span><span class="p">,</span> <span class="n">DeprecationHelper</span>
+
+<span class="c1"># Including old and new api in __all__ so users can use both</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;Multi_Location_Quotient&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;MultiLocationQuotient&#39;</span><span class="p">,</span>
+    
+    <span class="s1">&#39;Multi_Local_Diversity&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;MultiLocalDiversity&#39;</span><span class="p">,</span>
+    
+    <span class="s1">&#39;Multi_Local_Entropy&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;MultiLocalEntropy&#39;</span><span class="p">,</span>
+    
+    <span class="s1">&#39;Multi_Local_Simpson_Interaction&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;MultiLocalSimpsonInteraction&#39;</span><span class="p">,</span>
+    
+    <span class="s1">&#39;Multi_Local_Simpson_Concentration&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;MultiLocalSimpsonConcentration&#39;</span><span class="p">,</span>
+    
+    <span class="s1">&#39;Local_Relative_Centralization&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;LocalRelativeCentralization&#39;</span>
+<span class="p">]</span>
+
+<span class="c1"># The Deprecation calls of the classes are located in the end of this script #</span>
+
+
+
+
+<span class="c1"># suppress numpy divide by zero warnings because it occurs a lot during the</span>
+<span class="c1"># calculation of many indices</span>
+<span class="n">np</span><span class="o">.</span><span class="n">seterr</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_multi_location_quotient</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">groups</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculation of Location Quotient index for each group and unit</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    data   : a pandas DataFrame of n rows</span>
+<span class="sd">    </span>
+<span class="sd">    groups : list of strings of length k.</span>
+<span class="sd">             The variables names in data of the groups of interest of the analysis.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    statistics : np.array(n,k)</span>
+<span class="sd">                 Location Quotient values for each group and unit.</span>
+<span class="sd">                 Column k has the Location Quotient of position k in groups.</span>
+<span class="sd">                </span>
+<span class="sd">    core_data  : a pandas DataFrame</span>
+<span class="sd">                 A pandas DataFrame that contains the columns used to perform the estimate.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Based on Isard, Walter. Methods of regional analysis. Vol. 4. Рипол Классик, 1967.</span>
+<span class="sd">    </span>
+<span class="sd">    Reference: :cite:`isard1967methods`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">core_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">groups</span><span class="p">]</span>
+    
+    <span class="n">df</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">core_data</span><span class="p">)</span>
+    
+    <span class="n">n</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    
+    <span class="n">T</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    
+    <span class="n">ti</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">Xk</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="n">multi_LQ</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">ti</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">K</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">Xk</span> <span class="o">/</span> <span class="n">T</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">multi_LQ</span><span class="p">,</span> <span class="n">core_data</span>
+
+
+<div class="viewcode-block" id="MultiLocationQuotient"><a class="viewcode-back" href="../../../../../generated/pysal.explore.segregation.local.MultiLocationQuotient.html#pysal.explore.segregation.local.MultiLocationQuotient">[docs]</a><span class="k">class</span> <span class="nc">MultiLocationQuotient</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculation of Location Quotient index for each group and unit</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    data   : a pandas DataFrame of n rows</span>
+<span class="sd">    </span>
+<span class="sd">    groups : list of strings of length k.</span>
+<span class="sd">             The variables names in data of the groups of interest of the analysis.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    statistics : np.array(n,k)</span>
+<span class="sd">                 Location Quotient values for each group and unit.</span>
+<span class="sd">                 Column k has the Location Quotient of position k in groups.</span>
+<span class="sd">                </span>
+<span class="sd">    core_data  : a pandas DataFrame</span>
+<span class="sd">                 A pandas DataFrame that contains the columns used to perform the estimate.</span>
+<span class="sd">                 </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    In this example, we are going to use 2000 Census Tract Data for Sacramento MSA, CA. The groups of interest are White, Black, Asian and Hispanic population.</span>
+<span class="sd">    </span>
+<span class="sd">    Firstly, we need to perform some import the modules and the respective function.</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; import pysal.lib</span>
+<span class="sd">    &gt;&gt;&gt; import geopandas as gpd</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.explore.segregation.local import MultiLocationQuotient</span>
+<span class="sd">    </span>
+<span class="sd">    Then, we read the data and create an auxiliary list with only the necessary columns for fitting the index.</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; input_df = gpd.read_file(pysal.lib.examples.get_path(&quot;sacramentot2.shp&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; groups_list = [&#39;WHITE_&#39;, &#39;BLACK_&#39;, &#39;ASIAN_&#39;,&#39;HISP_&#39;]</span>
+<span class="sd">    </span>
+<span class="sd">    The value is estimated below.</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; index = MultiLocationQuotient(input_df, groups_list)</span>
+<span class="sd">    &gt;&gt;&gt; index.statistics[0:3,0:3]</span>
+<span class="sd">    array([[1.36543221, 0.07478049, 0.16245651],</span>
+<span class="sd">           [1.18002164, 0.        , 0.14836683],</span>
+<span class="sd">           [0.68072696, 0.03534425, 0.        ]])</span>
+
+<span class="sd">    Important to note that column k has the Location Quotient (LQ) of position k in groups. Therefore, the LQ of the first unit of &#39;WHITE_&#39; is 1.36543221.</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Based on Isard, Walter. Methods of regional analysis. Vol. 4. Рипол Классик, 1967.</span>
+<span class="sd">    </span>
+<span class="sd">    Reference: :cite:`isard1967methods`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="MultiLocationQuotient.__init__"><a class="viewcode-back" href="../../../../../generated/pysal.explore.segregation.local.MultiLocationQuotient.html#pysal.explore.segregation.local.MultiLocationQuotient.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">groups</span><span class="p">):</span>
+        
+        <span class="n">aux</span> <span class="o">=</span> <span class="n">_multi_location_quotient</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">groups</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">statistics</span> <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">core_data</span>  <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_function</span>  <span class="o">=</span> <span class="n">_multi_location_quotient</span></div></div>
+        
+        
+        
+
+<span class="k">def</span> <span class="nf">_multi_local_diversity</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">groups</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculation of Local Diversity index for each group and unit</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    data   : a pandas DataFrame of n rows</span>
+<span class="sd">    </span>
+<span class="sd">    groups : list of strings of length k.</span>
+<span class="sd">             The variables names in data of the groups of interest of the analysis.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    statistics : np.array(n,k)</span>
+<span class="sd">                 Local Diversity values for each group and unit</span>
+<span class="sd">                </span>
+<span class="sd">    core_data  : a pandas DataFrame</span>
+<span class="sd">                 A pandas DataFrame that contains the columns used to perform the estimate.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Based on Theil, Henry. Statistical decomposition analysis; with applications in the social and administrative sciences. No. 04; HA33, T4.. 1972.</span>
+<span class="sd">    </span>
+<span class="sd">    Reference: :cite:`theil1972statistical`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">core_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">groups</span><span class="p">]</span>
+    
+    <span class="n">df</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">core_data</span><span class="p">)</span>
+    
+    <span class="n">ti</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">pik</span> <span class="o">=</span> <span class="n">df</span><span class="o">/</span><span class="n">ti</span><span class="p">[:,</span><span class="kc">None</span><span class="p">]</span>
+    
+    <span class="n">multi_LD</span> <span class="o">=</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">pik</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">pik</span><span class="p">),</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">multi_LD</span><span class="p">,</span> <span class="n">core_data</span>
+
+
+<div class="viewcode-block" id="MultiLocalDiversity"><a class="viewcode-back" href="../../../../../generated/pysal.explore.segregation.local.MultiLocalDiversity.html#pysal.explore.segregation.local.MultiLocalDiversity">[docs]</a><span class="k">class</span> <span class="nc">MultiLocalDiversity</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculation of Local Diversity index for each group and unit</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    data   : a pandas DataFrame of n rows</span>
+<span class="sd">    </span>
+<span class="sd">    groups : list of strings of length k.</span>
+<span class="sd">             The variables names in data of the groups of interest of the analysis.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    statistics : np.array(n,k)</span>
+<span class="sd">                 Local Diversity values for each group and unit</span>
+<span class="sd">                </span>
+<span class="sd">    core_data  : a pandas DataFrame</span>
+<span class="sd">                 A pandas DataFrame that contains the columns used to perform the estimate.</span>
+<span class="sd">                 </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    In this example, we are going to use 2000 Census Tract Data for Sacramento MSA, CA. The groups of interest are White, Black, Asian and Hispanic population.</span>
+<span class="sd">    </span>
+<span class="sd">    Firstly, we need to perform some import the modules and the respective function.</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; import pysal.lib</span>
+<span class="sd">    &gt;&gt;&gt; import geopandas as gpd</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.explore.segregation.local import MultiLocalDiversity</span>
+<span class="sd">    </span>
+<span class="sd">    Then, we read the data and create an auxiliary list with only the necessary columns for fitting the index.</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; input_df = gpd.read_file(pysal.lib.examples.get_path(&quot;sacramentot2.shp&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; groups_list = [&#39;WHITE_&#39;, &#39;BLACK_&#39;, &#39;ASIAN_&#39;,&#39;HISP_&#39;]</span>
+<span class="sd">    </span>
+<span class="sd">    The value is estimated below.</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; index = MultiLocalDiversity(input_df, groups_list)</span>
+<span class="sd">    &gt;&gt;&gt; index.statistics[0:10] # Values of first 10 units</span>
+<span class="sd">    array([0.34332326, 0.56109229, 0.70563225, 0.29713472, 0.22386084,</span>
+<span class="sd">           0.29742517, 0.12322789, 0.11274579, 0.09402405, 0.25129616])</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Based on Theil, Henry. Statistical decomposition analysis; with applications in the social and administrative sciences. No. 04; HA33, T4.. 1972.</span>
+<span class="sd">    </span>
+<span class="sd">    Reference: :cite:`theil1972statistical`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="MultiLocalDiversity.__init__"><a class="viewcode-back" href="../../../../../generated/pysal.explore.segregation.local.MultiLocalDiversity.html#pysal.explore.segregation.local.MultiLocalDiversity.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">groups</span><span class="p">):</span>
+        
+        <span class="n">aux</span> <span class="o">=</span> <span class="n">_multi_local_diversity</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">groups</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">statistics</span> <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">core_data</span>  <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_function</span>  <span class="o">=</span> <span class="n">_multi_local_diversity</span></div></div>
+        
+        
+<span class="k">def</span> <span class="nf">_multi_local_entropy</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">groups</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculation of Local Entropy index for each unit</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    data   : a pandas DataFrame of n rows</span>
+<span class="sd">    </span>
+<span class="sd">    groups : list of strings.</span>
+<span class="sd">             The variables names in data of the groups of interest of the analysis.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    statistics : np.array(n)</span>
+<span class="sd">                 Local Entropy values for each unit</span>
+<span class="sd">                </span>
+<span class="sd">    core_data  : a pandas DataFrame</span>
+<span class="sd">                 A pandas DataFrame that contains the columns used to perform the estimate.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Based on Eq. 6 of pg. 139 (individual unit case) of Reardon, Sean F., and David O’Sullivan. &quot;Measures of spatial segregation.&quot; Sociological methodology 34.1 (2004): 121-162.</span>
+<span class="sd">    </span>
+<span class="sd">    Reference: :cite:`reardon2004measures`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">core_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">groups</span><span class="p">]</span>
+    
+    <span class="n">df</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">core_data</span><span class="p">)</span>
+    
+    <span class="n">K</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    
+    <span class="n">ti</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">pik</span> <span class="o">=</span> <span class="n">df</span><span class="o">/</span><span class="n">ti</span><span class="p">[:,</span><span class="kc">None</span><span class="p">]</span>
+    
+    <span class="n">multi_LE</span> <span class="o">=</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">((</span><span class="n">pik</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">pik</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">K</span><span class="p">),</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">multi_LE</span><span class="p">,</span> <span class="n">core_data</span>
+
+
+<div class="viewcode-block" id="MultiLocalEntropy"><a class="viewcode-back" href="../../../../../generated/pysal.explore.segregation.local.MultiLocalEntropy.html#pysal.explore.segregation.local.MultiLocalEntropy">[docs]</a><span class="k">class</span> <span class="nc">MultiLocalEntropy</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculation of Local Entropy index for each unit</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    data   : a pandas DataFrame of n rows</span>
+<span class="sd">    </span>
+<span class="sd">    groups : list of strings.</span>
+<span class="sd">             The variables names in data of the groups of interest of the analysis.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    statistics : np.array(n)</span>
+<span class="sd">                 Local Entropy values for each unit</span>
+<span class="sd">                </span>
+<span class="sd">    core_data  : a pandas DataFrame</span>
+<span class="sd">                 A pandas DataFrame that contains the columns used to perform the estimate.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    In this example, we are going to use 2000 Census Tract Data for Sacramento MSA, CA. The groups of interest are White, Black, Asian and Hispanic population.</span>
+<span class="sd">    </span>
+<span class="sd">    Firstly, we need to perform some import the modules and the respective function.</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; import pysal.lib</span>
+<span class="sd">    &gt;&gt;&gt; import geopandas as gpd</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.explore.segregation.local import MultiLocalEntropy</span>
+<span class="sd">    </span>
+<span class="sd">    Then, we read the data and create an auxiliary list with only the necessary columns for fitting the index.</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; input_df = gpd.read_file(pysal.lib.examples.get_path(&quot;sacramentot2.shp&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; groups_list = [&#39;WHITE_&#39;, &#39;BLACK_&#39;, &#39;ASIAN_&#39;,&#39;HISP_&#39;]</span>
+<span class="sd">    </span>
+<span class="sd">    The value is estimated below.</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; index = MultiLocalEntropy(input_df, groups_list)</span>
+<span class="sd">    &gt;&gt;&gt; index.statistics[0:10] # Values of first 10 units</span>
+<span class="sd">    array([0.24765538, 0.40474253, 0.50900607, 0.21433739, 0.16148146,</span>
+<span class="sd">           0.21454691, 0.08889013, 0.08132889, 0.06782401, 0.18127186])</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Based on Eq. 6 of pg. 139 (individual unit case) of Reardon, Sean F., and David O’Sullivan. &quot;Measures of spatial segregation.&quot; Sociological methodology 34.1 (2004): 121-162.</span>
+<span class="sd">    </span>
+<span class="sd">    Reference: :cite:`reardon2004measures`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="MultiLocalEntropy.__init__"><a class="viewcode-back" href="../../../../../generated/pysal.explore.segregation.local.MultiLocalEntropy.html#pysal.explore.segregation.local.MultiLocalEntropy.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">groups</span><span class="p">):</span>
+        
+        <span class="n">aux</span> <span class="o">=</span> <span class="n">_multi_local_entropy</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">groups</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">statistics</span> <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">core_data</span>  <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_function</span>  <span class="o">=</span> <span class="n">_multi_local_entropy</span></div></div>
+        
+
+
+<span class="k">def</span> <span class="nf">_multi_local_simpson_interaction</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">groups</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculation of Local Simpson Interaction index for each unit</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    data   : a pandas DataFrame of n rows</span>
+<span class="sd">    </span>
+<span class="sd">    groups : list of strings.</span>
+<span class="sd">             The variables names in data of the groups of interest of the analysis.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    statistics : np.array(n)</span>
+<span class="sd">                 Local Simpson Interaction values for each unit</span>
+<span class="sd">                </span>
+<span class="sd">    core_data  : a pandas DataFrame</span>
+<span class="sd">                 A pandas DataFrame that contains the columns used to perform the estimate.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Based on the local version of Equation 1 of page 37 of Reardon, Sean F., and Glenn Firebaugh. &quot;Measures of multigroup segregation.&quot; Sociological methodology 32.1 (2002): 33-67.</span>
+<span class="sd">    </span>
+<span class="sd">    Simpson&#39;s interaction index can be simply interpreted as the probability that two individuals chosen at random and independently from the population will be found to not belong to the same group.</span>
+
+<span class="sd">    Higher values means lesser segregation.</span>
+<span class="sd">    </span>
+<span class="sd">    Simpson&#39;s Concentration + Simpson&#39;s Interaction = 1</span>
+<span class="sd">    </span>
+<span class="sd">    Reference: :cite:`reardon2002measures`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">core_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">groups</span><span class="p">]</span>
+    
+    <span class="n">df</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">core_data</span><span class="p">)</span>
+    
+    <span class="n">ti</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">pik</span> <span class="o">=</span> <span class="n">df</span><span class="o">/</span><span class="n">ti</span><span class="p">[:,</span><span class="kc">None</span><span class="p">]</span>
+    
+    <span class="n">local_SI</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">pik</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pik</span><span class="p">),</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">local_SI</span><span class="p">,</span> <span class="n">core_data</span>
+
+
+<div class="viewcode-block" id="MultiLocalSimpsonInteraction"><a class="viewcode-back" href="../../../../../generated/pysal.explore.segregation.local.MultiLocalSimpsonInteraction.html#pysal.explore.segregation.local.MultiLocalSimpsonInteraction">[docs]</a><span class="k">class</span> <span class="nc">MultiLocalSimpsonInteraction</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculation of Local Simpson Interaction index for each unit</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    data   : a pandas DataFrame of n rows</span>
+<span class="sd">    </span>
+<span class="sd">    groups : list of strings.</span>
+<span class="sd">             The variables names in data of the groups of interest of the analysis.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    statistics : np.array(n)</span>
+<span class="sd">                 Local Simpson Interaction values for each unit</span>
+<span class="sd">                </span>
+<span class="sd">    core_data  : a pandas DataFrame</span>
+<span class="sd">                 A pandas DataFrame that contains the columns used to perform the estimate.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    In this example, we are going to use 2000 Census Tract Data for Sacramento MSA, CA. The groups of interest are White, Black, Asian and Hispanic population.</span>
+<span class="sd">    </span>
+<span class="sd">    Firstly, we need to perform some import the modules and the respective function.</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; import pysal.lib</span>
+<span class="sd">    &gt;&gt;&gt; import geopandas as gpd</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.explore.segregation.local import MultiLocalSimpsonInteraction</span>
+<span class="sd">    </span>
+<span class="sd">    Then, we read the data and create an auxiliary list with only the necessary columns for fitting the index.</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; input_df = gpd.read_file(pysal.lib.examples.get_path(&quot;sacramentot2.shp&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; groups_list = [&#39;WHITE_&#39;, &#39;BLACK_&#39;, &#39;ASIAN_&#39;,&#39;HISP_&#39;]</span>
+<span class="sd">    </span>
+<span class="sd">    The value is estimated below.</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; index = MultiLocalSimpsonInteraction(input_df, groups_list)</span>
+<span class="sd">    &gt;&gt;&gt; index.statistics[0:10] # Values of first 10 units</span>
+<span class="sd">    array([0.15435993, 0.33391595, 0.49909747, 0.1299449 , 0.09805056,</span>
+<span class="sd">           0.13128178, 0.04447356, 0.0398933 , 0.03723054, 0.11758548])</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Based on the local version of Equation 1 of page 37 of Reardon, Sean F., and Glenn Firebaugh. &quot;Measures of multigroup segregation.&quot; Sociological methodology 32.1 (2002): 33-67.</span>
+<span class="sd">    </span>
+<span class="sd">    Simpson&#39;s interaction index can be simply interpreted as the probability that two individuals chosen at random and independently from the population will be found to not belong to the same group.</span>
+
+<span class="sd">    Higher values means lesser segregation.</span>
+<span class="sd">    </span>
+<span class="sd">    Simpson&#39;s Concentration + Simpson&#39;s Interaction = 1</span>
+<span class="sd">    </span>
+<span class="sd">    Reference: :cite:`reardon2002measures`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="MultiLocalSimpsonInteraction.__init__"><a class="viewcode-back" href="../../../../../generated/pysal.explore.segregation.local.MultiLocalSimpsonInteraction.html#pysal.explore.segregation.local.MultiLocalSimpsonInteraction.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">groups</span><span class="p">):</span>
+        
+        <span class="n">aux</span> <span class="o">=</span> <span class="n">_multi_local_simpson_interaction</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">groups</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">statistics</span> <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">core_data</span>  <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_function</span>  <span class="o">=</span> <span class="n">_multi_local_simpson_interaction</span></div></div>
+        
+        
+<span class="k">def</span> <span class="nf">_multi_local_simpson_concentration</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">groups</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculation of Local Simpson concentration index for each unit</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    data   : a pandas DataFrame of n rows</span>
+<span class="sd">    </span>
+<span class="sd">    groups : list of strings.</span>
+<span class="sd">             The variables names in data of the groups of interest of the analysis.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    statistics : np.array(n)</span>
+<span class="sd">                 Local Simpson concentration values for each unit</span>
+<span class="sd">                </span>
+<span class="sd">    core_data  : a pandas DataFrame</span>
+<span class="sd">                 A pandas DataFrame that contains the columns used to perform the estimate.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Based on the local version of Equation 1 of page 37 of Reardon, Sean F., and Glenn Firebaugh. &quot;Measures of multigroup segregation.&quot; Sociological methodology 32.1 (2002): 33-67.</span>
+<span class="sd">    </span>
+<span class="sd">    Simpson&#39;s concentration index can be simply interpreted as the probability that two individuals chosen at random and independently from the population will be found to belong to the same group.</span>
+
+<span class="sd">    Higher values means lesser segregation.</span>
+<span class="sd">    </span>
+<span class="sd">    Simpson&#39;s Concentration + Simpson&#39;s Interaction = 1</span>
+<span class="sd">    </span>
+<span class="sd">    Reference: :cite:`reardon2002measures`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">core_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">groups</span><span class="p">]</span>
+    
+    <span class="n">df</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">core_data</span><span class="p">)</span>
+    
+    <span class="n">ti</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">pik</span> <span class="o">=</span> <span class="n">df</span><span class="o">/</span><span class="n">ti</span><span class="p">[:,</span><span class="kc">None</span><span class="p">]</span>
+    
+    <span class="n">local_SC</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">pik</span> <span class="o">*</span> <span class="n">pik</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">local_SC</span><span class="p">,</span> <span class="n">core_data</span>
+
+
+<div class="viewcode-block" id="MultiLocalSimpsonConcentration"><a class="viewcode-back" href="../../../../../generated/pysal.explore.segregation.local.MultiLocalSimpsonConcentration.html#pysal.explore.segregation.local.MultiLocalSimpsonConcentration">[docs]</a><span class="k">class</span> <span class="nc">MultiLocalSimpsonConcentration</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculation of Local Simpson concentration index for each unit</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    data   : a pandas DataFrame of n rows</span>
+<span class="sd">    </span>
+<span class="sd">    groups : list of strings.</span>
+<span class="sd">             The variables names in data of the groups of interest of the analysis.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    statistics : np.array(n)</span>
+<span class="sd">                 Local Simpson concentration values for each unit</span>
+<span class="sd">                </span>
+<span class="sd">    core_data  : a pandas DataFrame</span>
+<span class="sd">                 A pandas DataFrame that contains the columns used to perform the estimate.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    In this example, we are going to use 2000 Census Tract Data for Sacramento MSA, CA. The groups of interest are White, Black, Asian and Hispanic population.</span>
+<span class="sd">    </span>
+<span class="sd">    Firstly, we need to perform some import the modules and the respective function.</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; import pysal.lib</span>
+<span class="sd">    &gt;&gt;&gt; import geopandas as gpd</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.explore.segregation.local import MultiLocalSimpsonConcentration</span>
+<span class="sd">    </span>
+<span class="sd">    Then, we read the data and create an auxiliary list with only the necessary columns for fitting the index.</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; input_df = gpd.read_file(pysal.lib.examples.get_path(&quot;sacramentot2.shp&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; groups_list = [&#39;WHITE_&#39;, &#39;BLACK_&#39;, &#39;ASIAN_&#39;,&#39;HISP_&#39;]</span>
+<span class="sd">    </span>
+<span class="sd">    The value is estimated below.</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; index = MultiLocalSimpsonConcentration(input_df, groups_list)</span>
+<span class="sd">    &gt;&gt;&gt; index.statistics[0:10] # Values of first 10 units</span>
+<span class="sd">    array([0.84564007, 0.66608405, 0.50090253, 0.8700551 , 0.90194944,</span>
+<span class="sd">           0.86871822, 0.95552644, 0.9601067 , 0.96276946, 0.88241452])</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Based on the local version of Equation 1 of page 37 of Reardon, Sean F., and Glenn Firebaugh. &quot;Measures of multigroup segregation.&quot; Sociological methodology 32.1 (2002): 33-67.</span>
+<span class="sd">    </span>
+<span class="sd">    Simpson&#39;s concentration index can be simply interpreted as the probability that two individuals chosen at random and independently from the population will be found to belong to the same group.</span>
+
+<span class="sd">    Higher values means lesser segregation.</span>
+<span class="sd">    </span>
+<span class="sd">    Simpson&#39;s Concentration + Simpson&#39;s Interaction = 1</span>
+<span class="sd">    </span>
+<span class="sd">    Reference: :cite:`reardon2002measures`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="MultiLocalSimpsonConcentration.__init__"><a class="viewcode-back" href="../../../../../generated/pysal.explore.segregation.local.MultiLocalSimpsonConcentration.html#pysal.explore.segregation.local.MultiLocalSimpsonConcentration.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">groups</span><span class="p">):</span>
+        
+        <span class="n">aux</span> <span class="o">=</span> <span class="n">_multi_local_simpson_concentration</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">groups</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">statistics</span> <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">core_data</span>  <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_function</span>  <span class="o">=</span> <span class="n">_multi_local_simpson_concentration</span></div></div>
+        
+        
+<span class="k">def</span> <span class="nf">_local_relative_centralization</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">group_pop_var</span><span class="p">,</span> <span class="n">total_pop_var</span><span class="p">,</span> <span class="n">k_neigh</span> <span class="o">=</span> <span class="mi">5</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculation of Local Relative Centralization index for each unit</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    data          : a geopandas DataFrame with a geometry column.</span>
+<span class="sd">    </span>
+<span class="sd">    group_pop_var : string</span>
+<span class="sd">                    The name of variable in data that contains the population size of the group of interest</span>
+<span class="sd">                    </span>
+<span class="sd">    total_pop_var : string</span>
+<span class="sd">                    The name of variable in data that contains the total population of the unit</span>
+<span class="sd">    </span>
+<span class="sd">    k_neigh       : integer greater than 0. Default is 5.</span>
+<span class="sd">                    Number of assumed neighbors for local context (it uses k-nearest algorithm method)</span>
+<span class="sd">                    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    statistics : np.array(n)</span>
+<span class="sd">                 Local Relative Centralization values for each unit</span>
+<span class="sd">                </span>
+<span class="sd">    core_data  : a pandas DataFrame</span>
+<span class="sd">                 A pandas DataFrame that contains the columns used to perform the estimate.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Based on Folch, David C., and Sergio J. Rey. &quot;The centralization index: A measure of local spatial segregation.&quot; Papers in Regional Science 95.3 (2016): 555-576.</span>
+<span class="sd">    </span>
+<span class="sd">    Reference: :cite:`folch2016centralization`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    
+    <span class="n">core_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="n">group_pop_var</span><span class="p">,</span> <span class="n">total_pop_var</span><span class="p">,</span> <span class="s1">&#39;geometry&#39;</span><span class="p">]]</span>
+
+    <span class="n">c_lons</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">centroid</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">c_lats</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">centroid</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+    
+    <span class="n">points</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">c_lons</span><span class="p">,</span> <span class="n">c_lats</span><span class="p">))</span>
+    <span class="n">kd</span> <span class="o">=</span> <span class="n">lps</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">kdtree</span><span class="o">.</span><span class="n">KDTree</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">points</span><span class="p">))</span>
+    <span class="n">wnnk</span> <span class="o">=</span> <span class="n">lps</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">KNN</span><span class="p">(</span><span class="n">kd</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">k_neigh</span><span class="p">)</span>
+    
+    <span class="n">local_RCEs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)):</span>
+    
+        <span class="n">x</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">wnnk</span><span class="o">.</span><span class="n">neighbors</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">wnnk</span><span class="o">.</span><span class="n">neighbors</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="n">i</span><span class="p">])</span> <span class="c1"># Append in the end the current unit i inside the local context</span>
+
+        <span class="n">local_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">x</span><span class="p">,:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        
+        <span class="c1"># The center is given by the last position (i.e. the current unit i)</span>
+        <span class="n">local_RCE</span> <span class="o">=</span> <span class="n">RelativeCentralization</span><span class="p">(</span><span class="n">local_data</span><span class="p">,</span> <span class="n">group_pop_var</span><span class="p">,</span> <span class="n">total_pop_var</span><span class="p">,</span> <span class="n">center</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">local_data</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        
+        <span class="n">local_RCEs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">local_RCE</span><span class="o">.</span><span class="n">statistic</span>
+        
+    <span class="k">return</span> <span class="n">local_RCEs</span><span class="p">,</span> <span class="n">core_data</span>
+
+
+<div class="viewcode-block" id="LocalRelativeCentralization"><a class="viewcode-back" href="../../../../../generated/pysal.explore.segregation.local.LocalRelativeCentralization.html#pysal.explore.segregation.local.LocalRelativeCentralization">[docs]</a><span class="k">class</span> <span class="nc">LocalRelativeCentralization</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculation of Local Relative Centralization index for each unit</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    data          : a geopandas DataFrame with a geometry column.</span>
+<span class="sd">    </span>
+<span class="sd">    group_pop_var : string</span>
+<span class="sd">                    The name of variable in data that contains the population size of the group of interest</span>
+<span class="sd">                    </span>
+<span class="sd">    total_pop_var : string</span>
+<span class="sd">                    The name of variable in data that contains the total population of the unit</span>
+<span class="sd">    </span>
+<span class="sd">    k_neigh       : integer greater than 0. Default is 5.</span>
+<span class="sd">                    Number of assumed neighbors for local context (it uses k-nearest algorithm method)</span>
+<span class="sd">                    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    statistics : np.array(n)</span>
+<span class="sd">                 Local Relative Centralization values for each unit</span>
+<span class="sd">                </span>
+<span class="sd">    core_data  : a pandas DataFrame</span>
+<span class="sd">                 A pandas DataFrame that contains the columns used to perform the estimate.</span>
+<span class="sd">                 </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    In this example, we are going to use 2000 Census Tract Data for Sacramento MSA, CA. The group of interest is Black population.</span>
+<span class="sd">    </span>
+<span class="sd">    Firstly, we need to perform some import the modules and the respective function.</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; import pysal.lib</span>
+<span class="sd">    &gt;&gt;&gt; import geopandas as gpd</span>
+<span class="sd">    &gt;&gt;&gt; from pysal.explore.segregation.local import LocalRelativeCentralization</span>
+<span class="sd">    </span>
+<span class="sd">    Then, we read the data and create an auxiliary list with only the necessary columns for fitting the index.</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; input_df = gpd.read_file(pysal.lib.examples.get_path(&quot;sacramentot2.shp&quot;))</span>
+<span class="sd">    </span>
+<span class="sd">    The value is estimated below.</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; index = LocalRelativeCentralization(input_df, &#39;BLACK_&#39;, &#39;TOT_POP&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; index.statistics[0:10] # Values of first 10 units</span>
+<span class="sd">    array([ 0.03443055, -0.29063264, -0.19110976,  0.24978919,  0.01252249,</span>
+<span class="sd">            0.61152941,  0.78917647,  0.53129412,  0.04436346, -0.20216325])</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Based on Folch, David C., and Sergio J. Rey. &quot;The centralization index: A measure of local spatial segregation.&quot; Papers in Regional Science 95.3 (2016): 555-576.</span>
+<span class="sd">    </span>
+<span class="sd">    Reference: :cite:`folch2016centralization`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="LocalRelativeCentralization.__init__"><a class="viewcode-back" href="../../../../../generated/pysal.explore.segregation.local.LocalRelativeCentralization.html#pysal.explore.segregation.local.LocalRelativeCentralization.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">group_pop_var</span><span class="p">,</span> <span class="n">total_pop_var</span><span class="p">,</span> <span class="n">k_neigh</span> <span class="o">=</span> <span class="mi">5</span><span class="p">):</span>
+        
+        <span class="n">aux</span> <span class="o">=</span> <span class="n">_local_relative_centralization</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">group_pop_var</span><span class="p">,</span> <span class="n">total_pop_var</span><span class="p">,</span> <span class="n">k_neigh</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">statistics</span> <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">core_data</span>  <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_function</span>  <span class="o">=</span> <span class="n">_local_relative_centralization</span></div></div>
+        
+        
+        
+
+
+
+
+<span class="c1"># Deprecation Calls</span>
+
+<span class="n">msg</span> <span class="o">=</span> <span class="n">_dep_message</span><span class="p">(</span><span class="s2">&quot;Multi_Location_Quotient&quot;</span><span class="p">,</span> <span class="s2">&quot;MultiLocationQuotient&quot;</span><span class="p">)</span>
+<span class="n">Multi_Location_Quotient</span> <span class="o">=</span> <span class="n">DeprecationHelper</span><span class="p">(</span><span class="n">MultiLocationQuotient</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+
+<span class="n">msg</span> <span class="o">=</span> <span class="n">_dep_message</span><span class="p">(</span><span class="s2">&quot;Multi_Local_Diversity&quot;</span><span class="p">,</span> <span class="s2">&quot;MultiLocalDiversity&quot;</span><span class="p">)</span>
+<span class="n">Multi_Local_Diversity</span> <span class="o">=</span> <span class="n">DeprecationHelper</span><span class="p">(</span><span class="n">MultiLocalDiversity</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+
+<span class="n">msg</span> <span class="o">=</span> <span class="n">_dep_message</span><span class="p">(</span><span class="s2">&quot;Multi_Local_Entropy&quot;</span><span class="p">,</span> <span class="s2">&quot;MultiLocalEntropy&quot;</span><span class="p">)</span>
+<span class="n">Multi_Local_Entropy</span> <span class="o">=</span> <span class="n">DeprecationHelper</span><span class="p">(</span><span class="n">MultiLocalEntropy</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+
+<span class="n">msg</span> <span class="o">=</span> <span class="n">_dep_message</span><span class="p">(</span><span class="s2">&quot;Multi_Local_Simpson_Interaction&quot;</span><span class="p">,</span> <span class="s2">&quot;MultiLocalSimpsonInteraction&quot;</span><span class="p">)</span>
+<span class="n">Multi_Local_Simpson_Interaction</span> <span class="o">=</span> <span class="n">DeprecationHelper</span><span class="p">(</span><span class="n">MultiLocalSimpsonInteraction</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+
+<span class="n">msg</span> <span class="o">=</span> <span class="n">_dep_message</span><span class="p">(</span><span class="s2">&quot;Multi_Local_Simpson_Concentration&quot;</span><span class="p">,</span> <span class="s2">&quot;MultiLocalSimpsonConcentration&quot;</span><span class="p">)</span>
+<span class="n">Multi_Local_Simpson_Concentration</span> <span class="o">=</span> <span class="n">DeprecationHelper</span><span class="p">(</span><span class="n">MultiLocalSimpsonConcentration</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+
+<span class="n">msg</span> <span class="o">=</span> <span class="n">_dep_message</span><span class="p">(</span><span class="s2">&quot;Local_Relative_Centralization&quot;</span><span class="p">,</span> <span class="s2">&quot;LocalRelativeCentralization&quot;</span><span class="p">)</span>
+<span class="n">Local_Relative_Centralization</span> <span class="o">=</span> <span class="n">DeprecationHelper</span><span class="p">(</span><span class="n">LocalRelativeCentralization</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

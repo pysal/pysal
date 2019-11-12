@@ -1,0 +1,10 @@
+name: docs
+channels:
+  - conda-forge
+dependencies:
+  - python=3.7
+  - rtree
+  - sphinxcontrib-bibtex
+  - sphinx_bootstrap_theme
+  - numpydoc
+  - matplotlib

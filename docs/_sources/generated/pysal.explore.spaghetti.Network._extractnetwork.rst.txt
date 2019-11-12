@@ -1,0 +1,6 @@
+pysal.explore.spaghetti.Network.\_extractnetwork
+================================================
+
+.. currentmodule:: pysal.explore.spaghetti
+
+.. automethod:: Network._extractnetwork

@@ -2,6 +2,12 @@
 # 
 .PHONY: clean
 
+download:
+	python gitreleases.py
+
+convert:
+	python convert.py
+
 test:
 	nosetests 
 
@@ -17,9 +23,19 @@ src:
 win:
 	python setup.py bdist_wininst >/dev/null
 
+prep:
+	rm -rf pysal/lib
+	mkdir pysal/lib
+
+docs:
+	python convert_docs.py
+	cd doc; make clean; make html
+
 clean: 
 	find . -name "*.pyc" -exec rm '{}' ';'
 	find pysal -name "__pycache__" -exec rm -rf '{}' ';'
 	rm -rf dist
 	rm -rf build
 	rm -rf PySAL.egg-info
+	rm -rf tmp
+
