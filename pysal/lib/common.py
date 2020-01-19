@@ -1,61 +1,58 @@
-
-# external imports
-
-try:
-    import numpy as np
-    import numpy.linalg as la
-except:
-    print('numpy 1.3 is required')
-    raise
-try:
-    import scipy as sp
-    import scipy.stats as stats
-    from .cg.kdtree import KDTree
-    from scipy.spatial.distance import pdist, cdist
-except:
-    print('scipy 0.7+ is required')
-    raise
-
-RTOL = .00001
-ATOL = 1e-7
-
 import copy
 import sys
 import time
+
+# external imports
+import numpy as np
+import numpy.linalg as la
+
+import scipy as sp
+import scipy.stats as stats
+from .cg.kdtree import KDTree
+from scipy.spatial.distance import pdist, cdist
+
+import pandas
+
 try:
     from patsy import PatsyError
 except ImportError:
     PatsyError = Exception
-try:
-    import pandas
-except ImportError:
-    pandas = None
 
+RTOL = .00001
+ATOL = 1e-7
 MISSINGVALUE = None
-
-#################
-# Compatibility #
-#################
-
-def iteritems(d, **kwargs):
-    """
-    Implements six compatibility library's iteritems function
-
-    appropriately calls either d.iteritems() or d.items() depending on the
-    version of python being used. 
-    """
-    if sys.version_info.major < 3:
-        return d.iteritems(**kwargs)
-    else:
-        return iter(d.items(**kwargs))
 
 ######################
 # Decorators/Utils   #
 ######################
 
+# import numba.jit OR create mimic decorator and set existence flag
+try:
+    from numba import jit
+    HAS_JIT = True
+except ImportError:
+    def jit(function=None, **kwargs):
+        """Mimic numba.jit() with synthetic wrapper
+        """
+        if function is not None:
+            def wrapped(*original_args, **original_kw):
+                """Case 1 - structure of a standard decorator
+                i.e., jit(function)(*args, **kwargs)
+                """
+                return function(*original_args, **original_kw)
+            return wrapped
+        else:
+            def partial_inner(func):
+                """Case 2 - returns Case 1
+                i.e., jit()(function)(*args, **kwargs)
+                """
+                return jit(func)
+            return partial_inner
+    HAS_JIT = False
+
 def simport(modname):
     """
-    Safely import a module without raising an error. 
+    Safely import a module without raising an error.
 
     Parameters
     -----------
@@ -111,7 +108,7 @@ def requires(*args, **kwargs):
     Returns
     -------
     Original function is all arg in args are importable, otherwise returns a
-    function that passes. 
+    function that passes.
     """
     v = kwargs.pop('verbose', True)
     wanted = copy.deepcopy(args)
@@ -127,5 +124,5 @@ def requires(*args, **kwargs):
                     print(('not running {}'.format(function.__name__)))
                 else:
                     pass
-            return passer 
+            return passer
     return inner
