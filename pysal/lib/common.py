@@ -8,7 +8,7 @@ import numpy.linalg as la
 
 import scipy as sp
 import scipy.stats as stats
-from .cg.kdtree import KDTree
+from libpysal.cg.kdtree import KDTree
 from scipy.spatial.distance import pdist, cdist
 
 import pandas
