@@ -1,0 +1,28 @@
+name: test
+channels:
+  - conda-forge
+dependencies:
+  - python=3.6
+  - six
+  - nose
+  - codecov
+  - matplotlib
+  - geopandas
+  - zstd
+  - esda
+  - giddy
+  - pointpats
+  - spaghetti
+  - segregation
+  - mapclassify
+  - splot
+  - mgwr
+  - spglm
+  - spint
+  - spreg
+  - tobler
+  - urllib3<1.25
+  - python-dateutil<=2.8.0
+  - pip:
+      - spvcm
+      - inequality
