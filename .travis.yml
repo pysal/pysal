@@ -30,7 +30,7 @@ before_install:
     conda info --all
 
 install:
-  - pip install -e . --no-deps --force-reinstall
+  - pip install -e . --force-reinstall
 
 script:
   - if [[ $TRAVIS_JOB_NAME == python-* ]]; then
