@@ -14,4 +14,3 @@ spvcm
 tobler
 urllib3<1.25
 python-dateutil<=2.8.0
-urbanaccess
