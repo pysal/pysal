@@ -34,6 +34,8 @@ install:
 
 script:
   - if [[ $TRAVIS_JOB_NAME == python-* ]]; then
+      python setup.py sdist > /dev/null;
+      python setup.py install;
       travis_wait 45 nosetests --verbose --with-coverage --cover-package=pysal ;
     fi
 
