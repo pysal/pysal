@@ -1,4 +1,6 @@
-language: minimal
+language: python
+dist: xenial
+sudo: true
 
 sudo: false
 
