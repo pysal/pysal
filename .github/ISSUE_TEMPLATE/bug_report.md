@@ -1,3 +1,12 @@
+---
+name: Bug report
+about: Create a report to help us improve
+title: ''
+labels: ''
+assignees: ''
+
+---
+
 Thank you for filing this issue! To help troubleshoot this issue, please follow
 the following directions to the best of your ability before submitting an issue.
 Feel free to delete this text once you've filled out the relevant requests. 
@@ -8,23 +17,21 @@ Feel free to delete the commands after you've filled out each bullet.
 
 - Platform information:
 ```python
->>> import os; print(os.name, os.sys.platform)
+>>> import os; print(os.name, os.sys.platform);print(os.uname())
 ```
 - Python version: 
 ```python
 >>> import sys; print(sys.version)
 ```
-- SciPy version:
+- PySAL version:
 ```python
->>> import scipy; print(scipy.__version__)
-```
-- NumPy version:
-```python
->>> import numpy; print(numpy.__version__)
+>>> import pysal; print(pysal.__version__)
 ```
 
-Also, please upload any relevant data as [a file
+Also, please copy and paste the full [traceback](https://docs.python.org/3/library/traceback.html).
+
+Finally, please upload any relevant data as [a file
 attachment](https://help.github.com/articles/file-attachments-on-issues-and-pull-requests/). Please **do not** upload pickled objects, since it's nearly impossible to troubleshoot them without replicating your exact namespace. Instead, provide the minimal subset of the data required to replicate the problem. If it makes you more comfortable submitting the issue, feel free to:
 
 1. remove personally identifying information from data or code
-2. provide only the required subset of the full data or code 
+2. provide only the required subset of the full data or code
