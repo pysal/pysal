@@ -3,26 +3,41 @@ channels:
   - conda-forge
 dependencies:
   - python=3.6
-  - six
-  - nose
-  - codecov
+   - pip
+  - numpy>=1.17.0
+  - rtree
+  - sphinxcontrib-bibtex
+  - sphinx_bootstrap_theme
+  - numpydoc
   - matplotlib
-  - geopandas
-  - zstd
-  - esda
-  - giddy
-  - pointpats
-  - spaghetti
-  - segregation
-  - mapclassify
-  - splot
-  - mgwr
-  - spglm
-  - spint
-  - spreg
-  - tobler
-  - urllib3<1.25
   - python-dateutil<=2.8.0
+  - scipy
+  - pandas
+  - seaborn
+  - matplotlib
+  - descartes
+  - palettable
+  - statsmodels
+  - scikit-learn
+  - geopandas
+  - quantecon
+  - rtree
+  - tqdm
+  - quilt3
+  - rasterio
+  - rasterstats
+  - pytest
+  - coverage
+  - coveralls
+  - ipywidgets
+  - twine
+  - urbanaccess
+  - urllib3<1.25
+  - wheel
+  - dill
+  - pytest
+  - pytest-cov
+  - codecov
+  - bokeh
   - pip:
-      - spvcm
-      - inequality
+      - doc2dash
