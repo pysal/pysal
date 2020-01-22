@@ -3,7 +3,7 @@ channels:
   - conda-forge
 dependencies:
   - python=3.6
-   - pip
+  - pip
   - numpy>=1.17.0
   - rtree
   - sphinxcontrib-bibtex
@@ -39,5 +39,19 @@ dependencies:
   - pytest-cov
   - codecov
   - bokeh
+  - libpysal
+  - esda
+  - spaghetti
+  - tobler
+  - spint
+  - spreg
+  - mgwr
+  - segregation
+  - pointpats
+  - giddy
+  - mapclassify
+  - splot
   - pip:
       - doc2dash
+      - spvcm
+      - inequality
