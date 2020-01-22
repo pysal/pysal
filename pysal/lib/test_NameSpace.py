@@ -1,5 +1,13 @@
 import os
 import unittest
+import pytest
+
+def test_import():
+    from pysal.model import tobler
+    from pysal.model import mgwr
+    from pysal.explore import segregation
+    from pysal.viz import mapclassify
+
 
 @unittest.skip('Skipping unittest for namespace')
 class TestNameSpace(unittest.TestCase):
