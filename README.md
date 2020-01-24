@@ -1,6 +1,11 @@
 # Python Spatial Analysis Library
 
-[![image](https://travis-ci.org/pysal/pysal.svg)](https://travis-ci.org/pysal) [![image](https://coveralls.io/repos/pysal/pysal/badge.svg?branch=master)](https://coveralls.io/r/pysal/pysal?branch=master) [![image](https://badges.gitter.im/pysal/pysal.svg)](https://gitter.im/pysal/pysal) [![image](https://readthedocs.org/projects/pip/badge/?version=latest)](http://pysal.readthedocs.io/en/latest/index.html) [![DOI](https://zenodo.org/badge/8295380.svg)](https://zenodo.org/badge/latestdoi/8295380)
+![Travis (.org)](https://img.shields.io/travis/pysal/pysal)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pysal)
+![PyPI](https://img.shields.io/pypi/v/pysal)
+![Conda (channel only)](https://img.shields.io/conda/vn/conda-forge/pysal) 
+![Gitter](https://img.shields.io/gitter/room/pysal/pysal)
+[![DOI](https://zenodo.org/badge/8295380.svg)](https://zenodo.org/badge/latestdoi/8295380)
 
 <img align=center height=300 src='https://user-images.githubusercontent.com/8590583/71189099-4515b500-2250-11ea-868a-46ba5ccca42a.png'>
 
