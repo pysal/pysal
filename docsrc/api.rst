@@ -4,59 +4,36 @@
 API Reference
 =============
 
-This is the class and function reference of pysal.
 
 :mod:`pysal.lib`: PySAL Core 
 =============================
 
-Weights
-+++++++
+* `weights: Spatial Weights <https://pysal.org/libpysal/api.html#spatial-weights>`_
+* `cg: Computational Geometry <https://pysal.org/libpysal/api.html#cg-computational-geometry>`_
+* `io: Input-Output <https://pysal.org/libpysal/api.html#io>`_ 
+* `examples: Example datasets <https://pysal.org/libpysal/api.html#io>`_
 
-Spatial Weights
----------------
-
-:py:class:`libpysal.weights.W`
-:py:class:`libpysal.weights.WSP`
-
-Contiguity Weights
-------------------
-
-:py:class:`libpysal.weights.Queen`
-:py:class:`libpysal.weights.Rook`
-:py:class:`libpysal.weights.Voronoi`
+:mod:`pysal.explore`: Exploratory Spatial Data Analysis
+=======================================================
+* `esda: Spatial Autocorrelation Analysis <https://pysal.org/esda/api.html>`_
+* `giddy: Geospatial Distribution Dynamics <https://giddy.readthedocs.io/en/latest/api.html>`_
+* `inequality: Spatial Inequality Analysis <https://inequality.readthedocs.io/en/latest/api.html>`_
+* `pointpats: Planar Point Pattern Analysis <https://pointpats.readthedocs.io/en/latest/api.html>`_
+* `segregation: Segregation Analysis <https://segregation.readthedocs.io/en/latest/api.html>`_
+* `spaghetti: Spatial Analysis on Networks <https://pysal.org/spaghetti/api.html>`_
 
 
-Distance Weights
-----------------
+:mod:`pysal.model`: Spatial Statistical Models
+==============================================
+* `mgwr: Multiscale Geographically Weighted Regression <https://mgwr.readthedocs.io/en/latest/api.html>`_ 
+* `spglm: Sparse Generalized Linear Models <https://spglm.readthedocs.io/en/latest/api.html>`_
+* `spint: Spatial Interaction Modeling <https://spint.readthedocs.io/en/latest/api.html>`_
+* `spreg: Spatial Regression and Econometrics <https://spreg.readthedocs.io/en/latest/api.html>`_
+* `spvcm: Spatial Varying Component Models <https://github.com/pysal/spvcm>`_
+* `tobler: Areal Interpolation and Dasymetric Mapping <https://pysal.org/tobler/api.html>`_
 
-:py:class:`libpysal.weights.DistanceBand`
-:py:class:`libpysal.weights.Kernel`
-:py:class:`libpysal.weights.KNN`
-
-Spatial Interaction Weights
----------------------------
-
-:py:func:`libpysal.weights.netW`
-:py:func:`libpysal.weights.mat2L`
-:py:func:`libpysal.weights.ODW`
-:py:func:`libpysal.weights.vecW`
-
-
-Weights Utilities
------------------
-
-:py:func:`libpysal.weights.block_weights`
-:py:func:`libpysal.weights.lat2W`
-:py:func:`libpysal.weights.comb`
-:py:func:`libpysal.weights.order`
-:py:func:`libpysal.weights.higher_order`
-:py:func:`libpysal.weights.shimbel`
-:py:func:`libpysal.weights.remap_ids`
-:py:func:`libpysal.weights.full2W`
-:py:func:`libpysal.weights.full`
-:py:func:`libpysal.weights.WSP2W`
-:py:func:`libpysal.weights.get_ids`
-:py:func:`libpysal.weights.get_points_array_from_shapefile`
-
-
+:mod:`pysal.viz`: Geovisualization
+==================================
+* `mapclassify: Choropleth Map Classification Schemes <https://pysal.org/mapclassify/api.html>`_
+* `splot: Lightweight Visualization Interface for PySAL Analytics <https://splot.readthedocs.io/en/latest/api.html#>`_
 
