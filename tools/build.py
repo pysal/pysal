@@ -1,7 +1,7 @@
 """
 Build requirements file for meta package from latest stable subpackages on pypi
-
 """
+
 import os
 from yolk.pypi import CheeseShop
 
@@ -57,6 +57,7 @@ def get_frozen():
                        for line in version_file.readlines()])
     return frozen
 
+
 def build_base():
     base = os.path.join(os.pardir, 'pysal', 'base.py')
     content = f'"""\nFrozen subpackages for meta release.\n"""\n\n'
@@ -72,16 +73,16 @@ def build_base():
         target_file.write(lines)
         target_file.write("\n}")
 
-
 def build_requirements():
     """
     Write out requirements.txt file with pinning information
+
     """
     lines = []
     frozen = get_frozen()
     for package in frozen.keys():
         version = frozen[package]
-        print(package, version )
+        print(package, version)
         if package != 'spvcm':
             lines.append(f'{package}>={version}')
         else:
@@ -92,4 +93,3 @@ def build_requirements():
 
     with open('requirements.txt', 'w') as req:
         req.write("\n".join(lines))
-
