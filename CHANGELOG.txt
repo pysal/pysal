@@ -1,3 +1,654 @@
+v<2.2.0>, 2020-01-31
+
+PySAL 2.2.0represents 6 months of enhancements, bug-fixes, widening of test coverage, and improved documentation. All users are encouraged to upgrade to this version as there are numerous optimizations as well as new features (see below) that have been implemented.
+
+## Major Highlights of PySAL 2.2.0
+
+### Meta-package looses some serious weight
+PySAL is no longer a source release meta-package, but instead specifies the packages in the PySAL ecosystem as dependencies. This means that installing the `pysal` meta-package will ensure that all the subpackages are installed.
+
+### Entirely New Packages
+
+In this release, the PySAL family has expanded to include:
+
+- `tobler`  **Areal interpolation and dasymetric mapping**.
+
+### Enhancements to Existing Packages
+
+* Refactoring of [pysal/libpysal](https://github.com/pysal/libpysal) to use remote example data sets which reduces the footprint of the source install from 25mb to under 3mb. Remote examples can now be examined with interactive maps if being run in Jupyter Notebookss.
+* [pysal/mapclassify](https://github.com/pysal/mapclassify): Choropleth legend formatting has been enhanced to permit more granular control of legends.
+* others here
+* and here
+* and here
+
+
+## Changes by Package
+
+Overall, there were 646 commits that closed 163 issues, together with 105 pull requests since our last release on 2019-07-29.
+
+
+<a name="libpysal"></a>
+### libpysal
+* [#216:](https://github.com/pysal/libpysal/issues/216) alpha_shapes docs not rendering 
+* [#217:](https://github.com/pysal/libpysal/pull/217) corrected docstrings in cg.alpha_shapes.py 
+* [#211:](https://github.com/pysal/libpysal/pull/211) Updating requirements 
+* [#174:](https://github.com/pysal/libpysal/issues/174) Big tarball 
+* [#176:](https://github.com/pysal/libpysal/pull/176) Fetch 
+* [#125:](https://github.com/pysal/libpysal/pull/125) metadata for examples  
+* [#209:](https://github.com/pysal/libpysal/pull/209) DOC: math rendering in sphinx, and members included for W 
+* [#210:](https://github.com/pysal/libpysal/pull/210) (docs) automatically generate docstrings for class members 
+* [#207:](https://github.com/pysal/libpysal/pull/207) (docs) keep file .nojekyll in docs when syncing between docs/ and docsrc/_build/html/ 
+* [#206:](https://github.com/pysal/libpysal/pull/206) (bug) replace silent_island_warning with silence_warnings for weights 
+* [#205:](https://github.com/pysal/libpysal/issues/205) Documentation does not work 
+* [#203:](https://github.com/pysal/libpysal/pull/203) updating cg.standalone.distance_matrix docs 
+* [#195:](https://github.com/pysal/libpysal/issues/195) error message in cg.standalone.distance_matrix() 
+* [#202:](https://github.com/pysal/libpysal/pull/202) improved docs in io.util.shapefile 
+* [#201:](https://github.com/pysal/libpysal/pull/201) [ENH] moving jit import to common.py / improve documentation 
+* [#199:](https://github.com/pysal/libpysal/issues/199) rearrange shapely import in cg.alpha_shapes 
+* [#200:](https://github.com/pysal/libpysal/pull/200) fix quasi-redundant import of shapely 
+* [#196:](https://github.com/pysal/libpysal/pull/196) Remove more relics (from pre-reorg PySAL) 
+* [#197:](https://github.com/pysal/libpysal/issues/197) [BUG] alpha_shapes/shapely import error 
+* [#198:](https://github.com/pysal/libpysal/pull/198) [BUG] correcting shapely import bug 
+* [#194:](https://github.com/pysal/libpysal/issues/194) README.txt refers to pre-reorg PySAL 
+* [#147:](https://github.com/pysal/libpysal/issues/147) remove `distribute_setup.py`? 
+* [#128:](https://github.com/pysal/libpysal/issues/128) requires() decorator for libpysal.cg.alpha_shapes 
+* [#129:](https://github.com/pysal/libpysal/pull/129) decorating functions with requires() 
+* [#193:](https://github.com/pysal/libpysal/pull/193) [WIP] removing unused relics 
+* [#191:](https://github.com/pysal/libpysal/issues/191) necessity of libpysal.common.iteritems()? 
+* [#192:](https://github.com/pysal/libpysal/pull/192) removing iteritems decorator 
+* [#189:](https://github.com/pysal/libpysal/issues/189) Voronoi results in weights of different shape than input points 
+* [#190:](https://github.com/pysal/libpysal/pull/190) BUG: alpha_shape_auto can fail to contain all points in the set. 
+* [#185:](https://github.com/pysal/libpysal/issues/185) WSP(sparse).to_W() has `array`s in weights,neighbors dictionaries, rather than lists.  
+* [#186:](https://github.com/pysal/libpysal/pull/186) Cast arrays as lists (Issue 185)  
+* [#188:](https://github.com/pysal/libpysal/pull/188) BUG: Update for geopandas use of GeometryArray 
+* [#187:](https://github.com/pysal/libpysal/pull/187) Updated documentation error (link incorrectly specified) in README.rst  
+* [#182:](https://github.com/pysal/libpysal/pull/182) Docs: badges for pypi 
+* [#178:](https://github.com/pysal/libpysal/issues/178) development guidelines link failure 
+* [#181:](https://github.com/pysal/libpysal/pull/181) DOCS: moving off rtd 
+* [#180:](https://github.com/pysal/libpysal/pull/180) REL 4.1.1 bf release 
+* [#179:](https://github.com/pysal/libpysal/pull/179) BUG: Updating manifest for additional requirements files 
+* [#169:](https://github.com/pysal/libpysal/issues/169) libpysal 4.1.0 is not released on pypi or conda-forge 
+* [#131:](https://github.com/pysal/libpysal/issues/131) addressing DeprecationWarning: fromstring() 
+* [#175:](https://github.com/pysal/libpysal/pull/175) ENH: fromstring has been deprecated 
+* [#132:](https://github.com/pysal/libpysal/pull/132) addressing DeprecationWarning: fromstring() 
+* [#172:](https://github.com/pysal/libpysal/pull/172) Ci 
+
+
+<a name="esda"></a>
+### esda
+* [#87:](https://github.com/pysal/esda/issues/87) development guidelines link in README.md and README.rst 
+* [#92:](https://github.com/pysal/esda/issues/92) `PYSAL_PYPI` is not defined in `.travis.yml` 
+* [#93:](https://github.com/pysal/esda/pull/93) addressing #92 -- .travis.yml issue 
+* [#88:](https://github.com/pysal/esda/pull/88) resolving dev guidelines link 
+* [#80:](https://github.com/pysal/esda/issues/80) Update officially supported Python versions 
+* [#74:](https://github.com/pysal/esda/pull/74) ENH - Join count tails 
+* [#83:](https://github.com/pysal/esda/pull/83) DOC: Have notebooks show output in the src 
+* [#82:](https://github.com/pysal/esda/issues/82) no output in documentation notebooks 
+
+
+<a name="giddy"></a>
+### giddy
+* [#126:](https://github.com/pysal/giddy/pull/126) travis CI: pip install from git clone 
+* [#125:](https://github.com/pysal/giddy/pull/125) rewrite utility function "get_lower" using numpy's more efficient functionality 
+* [#121:](https://github.com/pysal/giddy/issues/121) Release version 2.2.2 for bug fix  
+* [#123:](https://github.com/pysal/giddy/pull/123) prepare for new release: version 2.2.2  
+* [#122:](https://github.com/pysal/giddy/pull/122) remove the parameter in plt.show() due to the API change in Matplotlib (deprecation) 
+* [#119:](https://github.com/pysal/giddy/issues/119) development guidelines link in README.md 
+* [#118:](https://github.com/pysal/giddy/pull/118) BUG: Fix for correct handling of ties in Tau 
+* [#120:](https://github.com/pysal/giddy/pull/120) resolving broken dev link 
+* [#117:](https://github.com/pysal/giddy/issues/117) initialization of ECount parameter in Kendall's Tau 
+* [#116:](https://github.com/pysal/giddy/pull/116) (bug) debug travis-ci  
+
+
+<a name="inequality"></a>
+### inequality
+
+
+<a name="pointpats"></a>
+### pointpats
+
+
+<a name="segregation"></a>
+### segregation
+
+
+<a name="spaghetti"></a>
+### spaghetti
+* [#350:](https://github.com/pysal/spaghetti/pull/350) Revert "order analysis.py classes/functions alphabetically" 
+* [#349:](https://github.com/pysal/spaghetti/pull/349) order analysis.py classes/functions alphabetically 
+* [#347:](https://github.com/pysal/spaghetti/pull/347) updating requirement_dev.txt 
+* [#348:](https://github.com/pysal/spaghetti/pull/348) update README.md 
+* [#343:](https://github.com/pysal/spaghetti/issues/343) tarball jobs failing on Travis 
+* [#344:](https://github.com/pysal/spaghetti/pull/344) updating README.md 
+* [#339:](https://github.com/pysal/spaghetti/pull/339) links in the docs,reviewed  
+* [#336:](https://github.com/pysal/spaghetti/issues/336) automatically generate docstrings for class members 
+* [#337:](https://github.com/pysal/spaghetti/pull/337) Update docs 
+* [#335:](https://github.com/pysal/spaghetti/pull/335) Updating .travis.yml 
+* [#334:](https://github.com/pysal/spaghetti/pull/334) fix indentation in `.travis.yml` 
+* [#331:](https://github.com/pysal/spaghetti/pull/331) update README.md badges 
+* [#327:](https://github.com/pysal/spaghetti/issues/327) Citation stipulation for notebooks 
+* [#329:](https://github.com/pysal/spaghetti/pull/329) Notebooks update part 2 
+* [#328:](https://github.com/pysal/spaghetti/pull/328) Notebooks update 
+* [#324:](https://github.com/pysal/spaghetti/issues/324) update email address in notebooks 
+* [#325:](https://github.com/pysal/spaghetti/issues/325) Plotting error in Facility_Location.ipynb 
+* [#326:](https://github.com/pysal/spaghetti/pull/326) Updating Notebooks 
+* [#323:](https://github.com/pysal/spaghetti/issues/323) module 'pysal.explore.spaghetti' has no attribute 'element_as_gdf' 
+* [#318:](https://github.com/pysal/spaghetti/issues/318) [ENH] util.compute_length() — DRY 
+* [#319:](https://github.com/pysal/spaghetti/pull/319) swapping out distance calculation function 
+* [#317:](https://github.com/pysal/spaghetti/pull/317) adjusting snapping image in README.md 
+* [#315:](https://github.com/pysal/spaghetti/issues/315) inaccurate documentation — Network.split_arcs() 
+* [#316:](https://github.com/pysal/spaghetti/pull/316) Split arcs update 
+* [#313:](https://github.com/pysal/spaghetti/issues/313) streamline badges in README.md 
+* [#314:](https://github.com/pysal/spaghetti/pull/314) streaming badges on README.md 
+* [#312:](https://github.com/pysal/spaghetti/pull/312) adding +travis to notification recipients 
+* [#309:](https://github.com/pysal/spaghetti/issues/309) broken "development guidelines" link 
+* [#311:](https://github.com/pysal/spaghetti/pull/311) updating broken dev link 
+* [#299:](https://github.com/pysal/spaghetti/issues/299) Update Travis CI schema 
+* [#308:](https://github.com/pysal/spaghetti/pull/308) Update travis CI for new testing schema 
+* [#310:](https://github.com/pysal/spaghetti/pull/310) adding static docs badge 
+* [#288:](https://github.com/pysal/spaghetti/issues/288) mock c modules for doc dependencies 
+* [#306:](https://github.com/pysal/spaghetti/issues/306) doi missing from citation 
+* [#307:](https://github.com/pysal/spaghetti/pull/307) adding Zenodo DOI to README.md and website 
+* [#305:](https://github.com/pysal/spaghetti/pull/305) blackify setup.py 
+* [#301:](https://github.com/pysal/spaghetti/issues/301) Change Read the Docs to GitHub? 
+* [#304:](https://github.com/pysal/spaghetti/pull/304) updating README to reflect GitHub docs 
+* [#303:](https://github.com/pysal/spaghetti/pull/303) switching to github docs as per #301 
+* [#302:](https://github.com/pysal/spaghetti/issues/302) get_versions() function 
+* [#293:](https://github.com/pysal/spaghetti/issues/293) code formatting with black 
+* [#300:](https://github.com/pysal/spaghetti/pull/300) blackifying code (#293) 
+
+
+<a name="mgwr"></a>
+### mgwr
+
+
+<a name="spglm"></a>
+### spglm
+
+
+<a name="spint"></a>
+### spint
+
+
+<a name="spreg"></a>
+### spreg
+
+
+<a name="spvcm"></a>
+### spvcm
+
+
+<a name="tobler"></a>
+### tobler
+* [#43:](https://github.com/pysal/tobler/pull/43) update docs 
+* [#40:](https://github.com/pysal/tobler/pull/40) return dfs 
+* [#42:](https://github.com/pysal/tobler/pull/42) Move example data to remotes 
+* [#41:](https://github.com/pysal/tobler/issues/41) revisit regression approach 
+* [#36:](https://github.com/pysal/tobler/issues/36) generalize regression approach 
+* [#38:](https://github.com/pysal/tobler/issues/38) License? 
+* [#34:](https://github.com/pysal/tobler/issues/34) wrapper for regression approach 
+* [#39:](https://github.com/pysal/tobler/pull/39) update docs 
+* [#9:](https://github.com/pysal/tobler/issues/9) sphinx docs 
+* [#37:](https://github.com/pysal/tobler/pull/37) remove shap and xgboost as hard deps 
+* [#35:](https://github.com/pysal/tobler/pull/35) cosmetic upgrades 
+* [#33:](https://github.com/pysal/tobler/pull/33) reorg and add masked_area_interpolate func 
+* [#31:](https://github.com/pysal/tobler/pull/31) Move data into data direcotry for examples 
+* [#32:](https://github.com/pysal/tobler/pull/32) Environment 
+* [#8:](https://github.com/pysal/tobler/issues/8) decide on working notebooks 
+* [#30:](https://github.com/pysal/tobler/pull/30) Reorg 
+* [#29:](https://github.com/pysal/tobler/pull/29) fix for quilt dep clash 
+* [#28:](https://github.com/pysal/tobler/issues/28) quilt3 breakage 
+* [#26:](https://github.com/pysal/tobler/pull/26) raise ioerror 
+* [#24:](https://github.com/pysal/tobler/pull/24) raise IOError if rasters are missing 
+* [#25:](https://github.com/pysal/tobler/pull/25) Rel01 
+* [#23:](https://github.com/pysal/tobler/pull/23) add xgboost approach in tests 
+* [#22:](https://github.com/pysal/tobler/pull/22) update readme image from harmonize notebook 
+* [#21:](https://github.com/pysal/tobler/pull/21) Add raster regression tests (also small tweak in a notebook) 
+* [#20:](https://github.com/pysal/tobler/pull/20) handle "file://" in raster path 
+* [#19:](https://github.com/pysal/tobler/pull/19) add quilt dependency 
+* [#18:](https://github.com/pysal/tobler/pull/18) extra reqs files 
+* [#17:](https://github.com/pysal/tobler/pull/17) update travis 
+* [#16:](https://github.com/pysal/tobler/issues/16) turn on travis 
+* [#15:](https://github.com/pysal/tobler/pull/15) swap to pytest tests 
+* [#14:](https://github.com/pysal/tobler/pull/14) fix url and keywords from setup.py 
+* [#13:](https://github.com/pysal/tobler/pull/13) tweak badge link 
+* [#12:](https://github.com/pysal/tobler/pull/12) add build and coverage badges in readme 
+* [#7:](https://github.com/pysal/tobler/pull/7) remove local paths 
+* [#5:](https://github.com/pysal/tobler/pull/5) Drop scanlines (and harmonize) and improve notebooks and include tobler examples notebook (also adds tests and create travis file) 
+* [#1:](https://github.com/pysal/tobler/issues/1) put NLCD as default for raster data 
+* [#4:](https://github.com/pysal/tobler/pull/4) default to nlcd data from quilt 
+* [#3:](https://github.com/pysal/tobler/pull/3) keep input crs 
+
+
+<a name="mapclassify"></a>
+### mapclassify
+* [#54:](https://github.com/pysal/mapclassify/pull/54) 2.2 
+* [#53:](https://github.com/pysal/mapclassify/pull/53) 2.2 
+* [#52:](https://github.com/pysal/mapclassify/issues/52) conda-forge UnsatisfiableError on windows and python 3.7 
+* [#49:](https://github.com/pysal/mapclassify/pull/49) [MAINT] updating supported Python versions in setup.py 
+* [#46:](https://github.com/pysal/mapclassify/pull/46) BUG: RecursiveError in HeadTailBreaks 
+* [#45:](https://github.com/pysal/mapclassify/issues/45) BUG: HeadTailBreaks raise RecursionError 
+* [#47:](https://github.com/pysal/mapclassify/pull/47) BUG: UserDefined accepts only list if max not in bins 
+* [#44:](https://github.com/pysal/mapclassify/pull/44) BUG: avoid deprecation warning in HeadTailBreaks 
+* [#42:](https://github.com/pysal/mapclassify/issues/42) remove docs badge 
+* [#43:](https://github.com/pysal/mapclassify/pull/43) Remove doc badge 
+* [#41:](https://github.com/pysal/mapclassify/pull/41) Docs: moving to project pages on github and off rtd 
+
+
+<a name="splot"></a>
+### splot
+* [#83:](https://github.com/pysal/splot/issues/83) [BUG] vba_choropleth failure 
+* [#95:](https://github.com/pysal/splot/pull/95) BUG: Fix breakage due to mapclassify deprecation 
+* [#93:](https://github.com/pysal/splot/pull/93) addressing pysal/pysal#1145 & adapting testing examples 
+* [#89:](https://github.com/pysal/splot/pull/89) Fix docstring for plot_spatial_weights 
+* [#59:](https://github.com/pysal/splot/issues/59) JOSS paper submission 
+* [#87:](https://github.com/pysal/splot/pull/87) Fix format for multiple citations in JOSS paper 
+* [#86:](https://github.com/pysal/splot/pull/86) Joss paper, finalise title 
+* [#62:](https://github.com/pysal/splot/pull/62) [JOSS] work on `paper.md` 
+* [#85:](https://github.com/pysal/splot/pull/85) [ENH] change doc badge to latest doc 
+* [#84:](https://github.com/pysal/splot/pull/84) [BUG] require geopandas>=0.4.0,<=0.6.0rc1 for vba_choropleth testing 
+* [#82:](https://github.com/pysal/splot/issues/82) `plot_moran_simulation` weird dimensions 
+
+<a name="summary-statistics"></a>
+## Summary Statistics
+
+<a name="package-activity"></a>
+### Package Activity
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>package</th>
+      <th>commits</th>
+      <th>total issues</th>
+      <th>pulls</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>tobler</td>
+      <td>178</td>
+      <td>38</td>
+      <td>29</td>
+    </tr>
+    <tr>
+      <td>spaghetti</td>
+      <td>172</td>
+      <td>42</td>
+      <td>25</td>
+    </tr>
+    <tr>
+      <td>libpysal</td>
+      <td>170</td>
+      <td>43</td>
+      <td>24</td>
+    </tr>
+    <tr>
+      <td>splot</td>
+      <td>42</td>
+      <td>11</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <td>mapclassify</td>
+      <td>32</td>
+      <td>11</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <td>giddy</td>
+      <td>31</td>
+      <td>10</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <td>esda</td>
+      <td>21</td>
+      <td>8</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>inequality</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>pointpats</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>segregation</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>mgwr</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>spglm</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>spint</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>spreg</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>spvcm</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+
+<a name="contributor-activity"></a>
+### Contributor Activity
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>commits</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Eli Knaap</th>
+      <td>98</td>
+    </tr>
+    <tr>
+      <th>James Gaboardi</th>
+      <td>217</td>
+    </tr>
+    <tr>
+      <th>Leonardo Uieda</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Levi John Wolf</th>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>Martin Fleischmann</th>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>Rahul799</th>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>Renan Xavier Cortes</th>
+      <td>41</td>
+    </tr>
+    <tr>
+      <th>Serge Rey</th>
+      <td>176</td>
+    </tr>
+    <tr>
+      <th>Siddharths8212376</th>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>Stefanie Lumnitz</th>
+      <td>24</td>
+    </tr>
+    <tr>
+      <th>Wei Kang</th>
+      <td>35</td>
+    </tr>
+  </tbody>
+</table>
+
+<a name="contributor-by-package-activity"></a>
+### Contributor by Package Activity
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Serge Rey</th>
+      <th>James Gaboardi</th>
+      <th>Levi John Wolf</th>
+      <th>Wei Kang</th>
+      <th>Siddharths8212376</th>
+      <th>Rahul799</th>
+      <th>Eli Knaap</th>
+      <th>Renan Xavier Cortes</th>
+      <th>Martin Fleischmann</th>
+      <th>Stefanie Lumnitz</th>
+      <th>Leonardo Uieda</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>libpysal.libpysal</th>
+      <td>116</td>
+      <td>43</td>
+      <td>3</td>
+      <td>6</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>libpysal.esda</th>
+      <td>5</td>
+      <td>9</td>
+      <td>3</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>libpysal.giddy</th>
+      <td>2</td>
+      <td>3</td>
+      <td>0</td>
+      <td>23</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>libpysal.inequality</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>libpysal.pointpats</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>libpysal.segregation</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>libpysal.spaghetti</th>
+      <td>0</td>
+      <td>152</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>libpysal.mgwr</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>libpysal.spglm</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>libpysal.spint</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>libpysal.spreg</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>libpysal.spvcm</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>libpysal.tobler</th>
+      <td>31</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>98</td>
+      <td>41</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>libpysal.mapclassify</th>
+      <td>21</td>
+      <td>3</td>
+      <td>0</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>libpysal.splot</th>
+      <td>1</td>
+      <td>7</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>24</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
 v<2.1.0>, 2019-07-29
 
 PySAL 2.1.0 represents 6 months of enhancements, bug-fixes, widening of test coverage, and improved documentation. All users are encouraged to upgrade to this version as there are numerous optimizations as well as new features (see below) that have been implemented.
