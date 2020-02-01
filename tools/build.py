@@ -50,8 +50,8 @@ def _get_pysal_sub_versions():
 
 def get_frozen():
     from os import path
-    if not path.exists(PACKAGE_FILE):
-        _get_pysal_sub_versions()
+
+    _get_pysal_sub_versions()
     with open(PACKAGE_FILE, 'r') as version_file:
         frozen = dict([line.strip().split()
                        for line in version_file.readlines()])
@@ -93,3 +93,10 @@ def build_requirements():
 
     with open('requirements.txt', 'w') as req:
         req.write("\n".join(lines))
+
+def main():
+    build_requirements()
+    build_base()
+
+if __name__ == '__main__':
+    main()
