@@ -98,7 +98,7 @@ conda install pysal==1.14.3
 
 For help on using PySAL, check out the following resources:
 
--   [User Guide](https://pysal.readthedocs.io/en/latest/)
+-   [User Guide](https://pysal.org/pysal)
 -   [Tutorials and Short Courses](https://github.com/pysal/notebooks)
 
 # Development
