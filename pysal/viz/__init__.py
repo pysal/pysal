@@ -1,2 +1,2 @@
-from . import mapclassify
-from . import splot
+import mapclassify
+import splot
