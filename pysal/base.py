@@ -49,10 +49,13 @@ class cached_property(object):
         return value
 
 def _installed_version(package):
-    exec(f'import {package}')
     try:
-        v = eval(f'{package}.__version__')  ## FIX when spvcm is 0.3.0
-    except:
+        exec(f'import {package}')
+    except ModuleNotFoundError:
+        v = 'NA'
+    try:
+        v = eval(f'{package}.__version__')
+    except AttributeError:
         v = 'NA'
     return v
 
