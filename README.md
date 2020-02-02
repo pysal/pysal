@@ -119,7 +119,7 @@ To search for or report bugs, please see PySAL\'s [issues](http://github.com/pys
 
 # Build Instructions
 
-To build the meta-package pysal see [build.md](build.md).
+To build the meta-package pysal see [tools/README.md](tools/README.md).
 
 # License information
 
