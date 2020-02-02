@@ -4,9 +4,29 @@ from . import explore
 from . import viz
 from . import model
 
+from .base import memberships, federation_hierarchy
+
+
+def installed_version(package):
+    exec(f'import {package}')
+    try:
+        v = eval(f'{package}.__version__')  ## FIX when spvcm is 0.3.0
+    except:
+        v = None
+    return v
+
+def installed_versions():
+    ver = {}
+    for package in memberships.keys():
+        ver[package] = installed_version(package)
+    return ver
+
+def released_versions():
+    from .frozen import frozen_packages
+    return frozen_packages
 
 def check_versions():
-    from .base import frozen_packages
+    from .frozen import frozen_packages 
     import warnings
     frozen_packages.pop('spvcm')
     current_packages = {}

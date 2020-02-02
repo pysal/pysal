@@ -58,8 +58,8 @@ def get_frozen():
     return frozen
 
 
-def build_base():
-    base = os.path.join(os.pardir, 'pysal', 'base.py')
+def build_frozen():
+    base = os.path.join(os.pardir, 'pysal', 'frozen.py')
     content = f'"""\nFrozen subpackages for meta release.\n"""\n\n'
 
     with open(base, 'w') as target_file:
@@ -70,8 +70,11 @@ def build_base():
         for package, version in frozen.items():
             lines.append(f'    "{package}": "{version}"')
         lines = ",\n".join(lines)
+
         target_file.write(lines)
         target_file.write("\n}")
+
+
 
 def build_requirements():
     """
@@ -94,9 +97,11 @@ def build_requirements():
     with open('requirements.txt', 'w') as req:
         req.write("\n".join(lines))
 
+
+
 def main():
     build_requirements()
-    build_base()
+    build_frozen()
 
 if __name__ == '__main__':
     main()
