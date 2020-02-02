@@ -50,16 +50,16 @@ def _get_pysal_sub_versions():
 
 def get_frozen():
     from os import path
-    if not path.exists(PACKAGE_FILE):
-        _get_pysal_sub_versions()
+
+    _get_pysal_sub_versions()
     with open(PACKAGE_FILE, 'r') as version_file:
         frozen = dict([line.strip().split()
                        for line in version_file.readlines()])
     return frozen
 
 
-def build_base():
-    base = os.path.join(os.pardir, 'pysal', 'base.py')
+def build_frozen():
+    base = os.path.join(os.pardir, 'pysal', 'frozen.py')
     content = f'"""\nFrozen subpackages for meta release.\n"""\n\n'
 
     with open(base, 'w') as target_file:
@@ -70,8 +70,11 @@ def build_base():
         for package, version in frozen.items():
             lines.append(f'    "{package}": "{version}"')
         lines = ",\n".join(lines)
+
         target_file.write(lines)
         target_file.write("\n}")
+
+
 
 def build_requirements():
     """
@@ -93,3 +96,12 @@ def build_requirements():
 
     with open('requirements.txt', 'w') as req:
         req.write("\n".join(lines))
+
+
+
+def main():
+    build_requirements()
+    build_frozen()
+
+if __name__ == '__main__':
+    main()
