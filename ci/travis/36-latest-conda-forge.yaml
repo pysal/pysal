@@ -51,7 +51,7 @@ dependencies:
   - giddy
   - mapclassify
   - splot
+  - spvcm
+  - inequality
   - pip:
       - doc2dash
-      - spvcm
-      - inequality
