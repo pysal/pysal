@@ -41,7 +41,7 @@ def get_github_info():
 
     for package in release:
         dt = release[package]['release_date']
-        release[package]['release_date'] = datetime.strptime(dt, '%Y-%m-%dT%H:%M:%SZ' )
+        release[package]['release_date'] = datetime.datetime.strptime(dt, '%Y-%m-%dT%H:%M:%SZ' )
 
     return release
 
@@ -75,8 +75,8 @@ def clone_releases():
     with open('tarballs.json', 'r') as file_name:
         packages = json.load(file_name)
         for package in packages:
-            print(package, packages[package][0])
-            tag = packages[package][0]
+            print(package, packages[package]['version'])
+            tag = packages[package]['version']
             pkgstr = (
                 f'git clone --branch {tag}'
                 f' https://github.com/pysal/{package}.git'
