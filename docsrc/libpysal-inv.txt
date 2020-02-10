@@ -1,0 +1,864 @@
+py:attribute
+	libpysal.io.open                         generated/libpysal.io.open.html#libpysal.io.open
+py:class
+	libpysal.cg.Chain                        generated/libpysal.cg.Chain.html#libpysal.cg.Chain
+	libpysal.cg.Grid                         generated/libpysal.cg.Grid.html#libpysal.cg.Grid
+	libpysal.cg.Line                         generated/libpysal.cg.Line.html#libpysal.cg.Line
+	libpysal.cg.LineSegment                  generated/libpysal.cg.LineSegment.html#libpysal.cg.LineSegment
+	libpysal.cg.Point                        generated/libpysal.cg.Point.html#libpysal.cg.Point
+	libpysal.cg.PointLocator                 generated/libpysal.cg.PointLocator.html#libpysal.cg.PointLocator
+	libpysal.cg.Polygon                      generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon
+	libpysal.cg.PolygonLocator               generated/libpysal.cg.PolygonLocator.html#libpysal.cg.PolygonLocator
+	libpysal.cg.Ray                          generated/libpysal.cg.Ray.html#libpysal.cg.Ray
+	libpysal.cg.Rectangle                    generated/libpysal.cg.Rectangle.html#libpysal.cg.Rectangle
+	libpysal.io.fileio.FileIO                generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO
+	libpysal.weights.DistanceBand            generated/libpysal.weights.DistanceBand.html#libpysal.weights.DistanceBand
+	libpysal.weights.KNN                     generated/libpysal.weights.KNN.html#libpysal.weights.KNN
+	libpysal.weights.Kernel                  generated/libpysal.weights.Kernel.html#libpysal.weights.Kernel
+	libpysal.weights.Queen                   generated/libpysal.weights.Queen.html#libpysal.weights.Queen
+	libpysal.weights.Rook                    generated/libpysal.weights.Rook.html#libpysal.weights.Rook
+	libpysal.weights.W                       generated/libpysal.weights.W.html#libpysal.weights.W
+	libpysal.weights.WSP                     generated/libpysal.weights.WSP.html#libpysal.weights.WSP
+py:data
+	libpysal.cg.RADIUS_EARTH_KM              generated/libpysal.cg.RADIUS_EARTH_KM.html#libpysal.cg.RADIUS_EARTH_KM
+	libpysal.cg.RADIUS_EARTH_MILES           generated/libpysal.cg.RADIUS_EARTH_MILES.html#libpysal.cg.RADIUS_EARTH_MILES
+py:function
+	libpysal.cg.KDTree                       generated/libpysal.cg.KDTree.html#libpysal.cg.KDTree
+	libpysal.cg.alpha_shape                  generated/libpysal.cg.alpha_shape.html#libpysal.cg.alpha_shape
+	libpysal.cg.alpha_shape_auto             generated/libpysal.cg.alpha_shape_auto.html#libpysal.cg.alpha_shape_auto
+	libpysal.cg.arcdist                      generated/libpysal.cg.arcdist.html#libpysal.cg.arcdist
+	libpysal.cg.arcdist2linear               generated/libpysal.cg.arcdist2linear.html#libpysal.cg.arcdist2linear
+	libpysal.cg.asShape                      generated/libpysal.cg.asShape.html#libpysal.cg.asShape
+	libpysal.cg.bbcommon                     generated/libpysal.cg.bbcommon.html#libpysal.cg.bbcommon
+	libpysal.cg.brute_knn                    generated/libpysal.cg.brute_knn.html#libpysal.cg.brute_knn
+	libpysal.cg.convex_hull                  generated/libpysal.cg.convex_hull.html#libpysal.cg.convex_hull
+	libpysal.cg.distance_matrix              generated/libpysal.cg.distance_matrix.html#libpysal.cg.distance_matrix
+	libpysal.cg.fast_knn                     generated/libpysal.cg.fast_knn.html#libpysal.cg.fast_knn
+	libpysal.cg.fast_threshold               generated/libpysal.cg.fast_threshold.html#libpysal.cg.fast_threshold
+	libpysal.cg.geogrid                      generated/libpysal.cg.geogrid.html#libpysal.cg.geogrid
+	libpysal.cg.geointerpolate               generated/libpysal.cg.geointerpolate.html#libpysal.cg.geointerpolate
+	libpysal.cg.get_angle_between            generated/libpysal.cg.get_angle_between.html#libpysal.cg.get_angle_between
+	libpysal.cg.get_bounding_box             generated/libpysal.cg.get_bounding_box.html#libpysal.cg.get_bounding_box
+	libpysal.cg.get_point_at_angle_and_dist  generated/libpysal.cg.get_point_at_angle_and_dist.html#libpysal.cg.get_point_at_angle_and_dist
+	libpysal.cg.get_points_dist              generated/libpysal.cg.get_points_dist.html#libpysal.cg.get_points_dist
+	libpysal.cg.get_polygon_point_dist       generated/libpysal.cg.get_polygon_point_dist.html#libpysal.cg.get_polygon_point_dist
+	libpysal.cg.get_polygon_point_intersect  generated/libpysal.cg.get_polygon_point_intersect.html#libpysal.cg.get_polygon_point_intersect
+	libpysal.cg.get_ray_segment_intersect    generated/libpysal.cg.get_ray_segment_intersect.html#libpysal.cg.get_ray_segment_intersect
+	libpysal.cg.get_rectangle_point_intersect generated/libpysal.cg.get_rectangle_point_intersect.html#libpysal.cg.get_rectangle_point_intersect
+	libpysal.cg.get_rectangle_rectangle_intersection generated/libpysal.cg.get_rectangle_rectangle_intersection.html#libpysal.cg.get_rectangle_rectangle_intersection
+	libpysal.cg.get_segment_point_dist       generated/libpysal.cg.get_segment_point_dist.html#libpysal.cg.get_segment_point_dist
+	libpysal.cg.get_segment_point_intersect  generated/libpysal.cg.get_segment_point_intersect.html#libpysal.cg.get_segment_point_intersect
+	libpysal.cg.get_segments_intersect       generated/libpysal.cg.get_segments_intersect.html#libpysal.cg.get_segments_intersect
+	libpysal.cg.get_shared_segments          generated/libpysal.cg.get_shared_segments.html#libpysal.cg.get_shared_segments
+	libpysal.cg.harcdist                     generated/libpysal.cg.harcdist.html#libpysal.cg.harcdist
+	libpysal.cg.is_clockwise                 generated/libpysal.cg.is_clockwise.html#libpysal.cg.is_clockwise
+	libpysal.cg.is_collinear                 generated/libpysal.cg.is_collinear.html#libpysal.cg.is_collinear
+	libpysal.cg.linear2arcdist               generated/libpysal.cg.linear2arcdist.html#libpysal.cg.linear2arcdist
+	libpysal.cg.lonlat                       generated/libpysal.cg.lonlat.html#libpysal.cg.lonlat
+	libpysal.cg.point_touches_rectangle      generated/libpysal.cg.point_touches_rectangle.html#libpysal.cg.point_touches_rectangle
+	libpysal.cg.toLngLat                     generated/libpysal.cg.toLngLat.html#libpysal.cg.toLngLat
+	libpysal.cg.toXYZ                        generated/libpysal.cg.toXYZ.html#libpysal.cg.toXYZ
+	libpysal.cg.voronoi_frames               generated/libpysal.cg.voronoi_frames.html#libpysal.cg.voronoi_frames
+	libpysal.examples.available              generated/libpysal.examples.available.html#libpysal.examples.available
+	libpysal.examples.explain                generated/libpysal.examples.explain.html#libpysal.examples.explain
+	libpysal.examples.get_path               generated/libpysal.examples.get_path.html#libpysal.examples.get_path
+	libpysal.weights.ODW                     generated/libpysal.weights.ODW.html#libpysal.weights.ODW
+	libpysal.weights.Voronoi                 generated/libpysal.weights.Voronoi.html#libpysal.weights.Voronoi
+	libpysal.weights.WSP2W                   generated/libpysal.weights.WSP2W.html#libpysal.weights.WSP2W
+	libpysal.weights.attach_islands          generated/libpysal.weights.attach_islands.html#libpysal.weights.attach_islands
+	libpysal.weights.block_weights           generated/libpysal.weights.block_weights.html#libpysal.weights.block_weights
+	libpysal.weights.build_lattice_shapefile generated/libpysal.weights.build_lattice_shapefile.html#libpysal.weights.build_lattice_shapefile
+	libpysal.weights.comb                    generated/libpysal.weights.comb.html#libpysal.weights.comb
+	libpysal.weights.full                    generated/libpysal.weights.full.html#libpysal.weights.full
+	libpysal.weights.full2W                  generated/libpysal.weights.full2W.html#libpysal.weights.full2W
+	libpysal.weights.fuzzy_contiguity        generated/libpysal.weights.fuzzy_contiguity.html#libpysal.weights.fuzzy_contiguity
+	libpysal.weights.get_ids                 generated/libpysal.weights.get_ids.html#libpysal.weights.get_ids
+	libpysal.weights.get_points_array_from_shapefile generated/libpysal.weights.get_points_array_from_shapefile.html#libpysal.weights.get_points_array_from_shapefile
+	libpysal.weights.hexLat2W                generated/libpysal.weights.hexLat2W.html#libpysal.weights.hexLat2W
+	libpysal.weights.higher_order            generated/libpysal.weights.higher_order.html#libpysal.weights.higher_order
+	libpysal.weights.higher_order_sp         generated/libpysal.weights.higher_order_sp.html#libpysal.weights.higher_order_sp
+	libpysal.weights.lag_categorical         generated/libpysal.weights.lag_categorical.html#libpysal.weights.lag_categorical
+	libpysal.weights.lag_spatial             generated/libpysal.weights.lag_spatial.html#libpysal.weights.lag_spatial
+	libpysal.weights.lat2SW                  generated/libpysal.weights.lat2SW.html#libpysal.weights.lat2SW
+	libpysal.weights.lat2W                   generated/libpysal.weights.lat2W.html#libpysal.weights.lat2W
+	libpysal.weights.mat2L                   generated/libpysal.weights.mat2L.html#libpysal.weights.mat2L
+	libpysal.weights.min_threshold_dist_from_shapefile generated/libpysal.weights.min_threshold_dist_from_shapefile.html#libpysal.weights.min_threshold_dist_from_shapefile
+	libpysal.weights.min_threshold_distance  generated/libpysal.weights.min_threshold_distance.html#libpysal.weights.min_threshold_distance
+	libpysal.weights.netW                    generated/libpysal.weights.netW.html#libpysal.weights.netW
+	libpysal.weights.nonplanar_neighbors     generated/libpysal.weights.nonplanar_neighbors.html#libpysal.weights.nonplanar_neighbors
+	libpysal.weights.order                   generated/libpysal.weights.order.html#libpysal.weights.order
+	libpysal.weights.remap_ids               generated/libpysal.weights.remap_ids.html#libpysal.weights.remap_ids
+	libpysal.weights.shimbel                 generated/libpysal.weights.shimbel.html#libpysal.weights.shimbel
+	libpysal.weights.spw_from_gal            generated/libpysal.weights.spw_from_gal.html#libpysal.weights.spw_from_gal
+	libpysal.weights.vecW                    generated/libpysal.weights.vecW.html#libpysal.weights.vecW
+	libpysal.weights.w_clip                  generated/libpysal.weights.w_clip.html#libpysal.weights.w_clip
+	libpysal.weights.w_difference            generated/libpysal.weights.w_difference.html#libpysal.weights.w_difference
+	libpysal.weights.w_intersection          generated/libpysal.weights.w_intersection.html#libpysal.weights.w_intersection
+	libpysal.weights.w_local_cluster         generated/libpysal.weights.w_local_cluster.html#libpysal.weights.w_local_cluster
+	libpysal.weights.w_subset                generated/libpysal.weights.w_subset.html#libpysal.weights.w_subset
+	libpysal.weights.w_symmetric_difference  generated/libpysal.weights.w_symmetric_difference.html#libpysal.weights.w_symmetric_difference
+	libpysal.weights.w_union                 generated/libpysal.weights.w_union.html#libpysal.weights.w_union
+py:method
+	libpysal.cg.Chain.__init__               generated/libpysal.cg.Chain.html#libpysal.cg.Chain.__init__
+	libpysal.cg.Chain.arclen                 generated/libpysal.cg.Chain.html#libpysal.cg.Chain.arclen
+	libpysal.cg.Chain.bounding_box           generated/libpysal.cg.Chain.html#libpysal.cg.Chain.bounding_box
+	libpysal.cg.Chain.len                    generated/libpysal.cg.Chain.html#libpysal.cg.Chain.len
+	libpysal.cg.Chain.parts                  generated/libpysal.cg.Chain.html#libpysal.cg.Chain.parts
+	libpysal.cg.Chain.segments               generated/libpysal.cg.Chain.html#libpysal.cg.Chain.segments
+	libpysal.cg.Chain.vertices               generated/libpysal.cg.Chain.html#libpysal.cg.Chain.vertices
+	libpysal.cg.Grid.__init__                generated/libpysal.cg.Grid.html#libpysal.cg.Grid.__init__
+	libpysal.cg.Grid.add                     generated/libpysal.cg.Grid.html#libpysal.cg.Grid.add
+	libpysal.cg.Grid.bounds                  generated/libpysal.cg.Grid.html#libpysal.cg.Grid.bounds
+	libpysal.cg.Grid.in_grid                 generated/libpysal.cg.Grid.html#libpysal.cg.Grid.in_grid
+	libpysal.cg.Grid.nearest                 generated/libpysal.cg.Grid.html#libpysal.cg.Grid.nearest
+	libpysal.cg.Grid.proximity               generated/libpysal.cg.Grid.html#libpysal.cg.Grid.proximity
+	libpysal.cg.Grid.remove                  generated/libpysal.cg.Grid.html#libpysal.cg.Grid.remove
+	libpysal.cg.Line.__init__                generated/libpysal.cg.Line.html#libpysal.cg.Line.__init__
+	libpysal.cg.Line.x                       generated/libpysal.cg.Line.html#libpysal.cg.Line.x
+	libpysal.cg.Line.y                       generated/libpysal.cg.Line.html#libpysal.cg.Line.y
+	libpysal.cg.LineSegment.__init__         generated/libpysal.cg.LineSegment.html#libpysal.cg.LineSegment.__init__
+	libpysal.cg.LineSegment.bounding_box     generated/libpysal.cg.LineSegment.html#libpysal.cg.LineSegment.bounding_box
+	libpysal.cg.LineSegment.get_swap         generated/libpysal.cg.LineSegment.html#libpysal.cg.LineSegment.get_swap
+	libpysal.cg.LineSegment.intersect        generated/libpysal.cg.LineSegment.html#libpysal.cg.LineSegment.intersect
+	libpysal.cg.LineSegment.is_ccw           generated/libpysal.cg.LineSegment.html#libpysal.cg.LineSegment.is_ccw
+	libpysal.cg.LineSegment.is_cw            generated/libpysal.cg.LineSegment.html#libpysal.cg.LineSegment.is_cw
+	libpysal.cg.LineSegment.len              generated/libpysal.cg.LineSegment.html#libpysal.cg.LineSegment.len
+	libpysal.cg.LineSegment.line             generated/libpysal.cg.LineSegment.html#libpysal.cg.LineSegment.line
+	libpysal.cg.LineSegment.p1               generated/libpysal.cg.LineSegment.html#libpysal.cg.LineSegment.p1
+	libpysal.cg.LineSegment.p2               generated/libpysal.cg.LineSegment.html#libpysal.cg.LineSegment.p2
+	libpysal.cg.LineSegment.sw_ccw           generated/libpysal.cg.LineSegment.html#libpysal.cg.LineSegment.sw_ccw
+	libpysal.cg.Point.__init__               generated/libpysal.cg.Point.html#libpysal.cg.Point.__init__
+	libpysal.cg.PointLocator.__init__        generated/libpysal.cg.PointLocator.html#libpysal.cg.PointLocator.__init__
+	libpysal.cg.PointLocator.nearest         generated/libpysal.cg.PointLocator.html#libpysal.cg.PointLocator.nearest
+	libpysal.cg.PointLocator.overlapping     generated/libpysal.cg.PointLocator.html#libpysal.cg.PointLocator.overlapping
+	libpysal.cg.PointLocator.polygon         generated/libpysal.cg.PointLocator.html#libpysal.cg.PointLocator.polygon
+	libpysal.cg.PointLocator.proximity       generated/libpysal.cg.PointLocator.html#libpysal.cg.PointLocator.proximity
+	libpysal.cg.PointLocator.region          generated/libpysal.cg.PointLocator.html#libpysal.cg.PointLocator.region
+	libpysal.cg.Polygon.__init__             generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon.__init__
+	libpysal.cg.Polygon.area                 generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon.area
+	libpysal.cg.Polygon.bbox                 generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon.bbox
+	libpysal.cg.Polygon.bounding_box         generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon.bounding_box
+	libpysal.cg.Polygon.build_quad_tree_structure generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon.build_quad_tree_structure
+	libpysal.cg.Polygon.centroid             generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon.centroid
+	libpysal.cg.Polygon.contains_point       generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon.contains_point
+	libpysal.cg.Polygon.holes                generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon.holes
+	libpysal.cg.Polygon.len                  generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon.len
+	libpysal.cg.Polygon.parts                generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon.parts
+	libpysal.cg.Polygon.perimeter            generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon.perimeter
+	libpysal.cg.Polygon.vertices             generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon.vertices
+	libpysal.cg.PolygonLocator.__init__      generated/libpysal.cg.PolygonLocator.html#libpysal.cg.PolygonLocator.__init__
+	libpysal.cg.PolygonLocator.contains_point generated/libpysal.cg.PolygonLocator.html#libpysal.cg.PolygonLocator.contains_point
+	libpysal.cg.PolygonLocator.inside        generated/libpysal.cg.PolygonLocator.html#libpysal.cg.PolygonLocator.inside
+	libpysal.cg.PolygonLocator.nearest       generated/libpysal.cg.PolygonLocator.html#libpysal.cg.PolygonLocator.nearest
+	libpysal.cg.PolygonLocator.overlapping   generated/libpysal.cg.PolygonLocator.html#libpysal.cg.PolygonLocator.overlapping
+	libpysal.cg.PolygonLocator.proximity     generated/libpysal.cg.PolygonLocator.html#libpysal.cg.PolygonLocator.proximity
+	libpysal.cg.PolygonLocator.region        generated/libpysal.cg.PolygonLocator.html#libpysal.cg.PolygonLocator.region
+	libpysal.cg.Ray.__init__                 generated/libpysal.cg.Ray.html#libpysal.cg.Ray.__init__
+	libpysal.cg.Rectangle.__init__           generated/libpysal.cg.Rectangle.html#libpysal.cg.Rectangle.__init__
+	libpysal.cg.Rectangle.area               generated/libpysal.cg.Rectangle.html#libpysal.cg.Rectangle.area
+	libpysal.cg.Rectangle.height             generated/libpysal.cg.Rectangle.html#libpysal.cg.Rectangle.height
+	libpysal.cg.Rectangle.set_centroid       generated/libpysal.cg.Rectangle.html#libpysal.cg.Rectangle.set_centroid
+	libpysal.cg.Rectangle.set_scale          generated/libpysal.cg.Rectangle.html#libpysal.cg.Rectangle.set_scale
+	libpysal.cg.Rectangle.width              generated/libpysal.cg.Rectangle.html#libpysal.cg.Rectangle.width
+	libpysal.io.fileio.FileIO.__init__       generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO.__init__
+	libpysal.io.fileio.FileIO.cast           generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO.cast
+	libpysal.io.fileio.FileIO.check          generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO.check
+	libpysal.io.fileio.FileIO.close          generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO.close
+	libpysal.io.fileio.FileIO.get            generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO.get
+	libpysal.io.fileio.FileIO.getType        generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO.getType
+	libpysal.io.fileio.FileIO.open           generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO.open
+	libpysal.io.fileio.FileIO.read           generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO.read
+	libpysal.io.fileio.FileIO.seek           generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO.seek
+	libpysal.io.fileio.FileIO.tell           generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO.tell
+	libpysal.io.fileio.FileIO.truncate       generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO.truncate
+	libpysal.io.fileio.FileIO.write          generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO.write
+	libpysal.weights.DistanceBand.__init__   generated/libpysal.weights.DistanceBand.html#libpysal.weights.DistanceBand.__init__
+	libpysal.weights.DistanceBand.from_array generated/libpysal.weights.DistanceBand.html#libpysal.weights.DistanceBand.from_array
+	libpysal.weights.DistanceBand.from_dataframe generated/libpysal.weights.DistanceBand.html#libpysal.weights.DistanceBand.from_dataframe
+	libpysal.weights.DistanceBand.from_shapefile generated/libpysal.weights.DistanceBand.html#libpysal.weights.DistanceBand.from_shapefile
+	libpysal.weights.KNN.__init__            generated/libpysal.weights.KNN.html#libpysal.weights.KNN.__init__
+	libpysal.weights.KNN.from_array          generated/libpysal.weights.KNN.html#libpysal.weights.KNN.from_array
+	libpysal.weights.KNN.from_dataframe      generated/libpysal.weights.KNN.html#libpysal.weights.KNN.from_dataframe
+	libpysal.weights.KNN.from_shapefile      generated/libpysal.weights.KNN.html#libpysal.weights.KNN.from_shapefile
+	libpysal.weights.KNN.reweight            generated/libpysal.weights.KNN.html#libpysal.weights.KNN.reweight
+	libpysal.weights.Kernel.__init__         generated/libpysal.weights.Kernel.html#libpysal.weights.Kernel.__init__
+	libpysal.weights.Kernel.from_array       generated/libpysal.weights.Kernel.html#libpysal.weights.Kernel.from_array
+	libpysal.weights.Kernel.from_dataframe   generated/libpysal.weights.Kernel.html#libpysal.weights.Kernel.from_dataframe
+	libpysal.weights.Kernel.from_shapefile   generated/libpysal.weights.Kernel.html#libpysal.weights.Kernel.from_shapefile
+	libpysal.weights.Queen.__init__          generated/libpysal.weights.Queen.html#libpysal.weights.Queen.__init__
+	libpysal.weights.Queen.from_dataframe    generated/libpysal.weights.Queen.html#libpysal.weights.Queen.from_dataframe
+	libpysal.weights.Queen.from_iterable     generated/libpysal.weights.Queen.html#libpysal.weights.Queen.from_iterable
+	libpysal.weights.Queen.from_shapefile    generated/libpysal.weights.Queen.html#libpysal.weights.Queen.from_shapefile
+	libpysal.weights.Rook.__init__           generated/libpysal.weights.Rook.html#libpysal.weights.Rook.__init__
+	libpysal.weights.Rook.from_dataframe     generated/libpysal.weights.Rook.html#libpysal.weights.Rook.from_dataframe
+	libpysal.weights.Rook.from_iterable      generated/libpysal.weights.Rook.html#libpysal.weights.Rook.from_iterable
+	libpysal.weights.Rook.from_shapefile     generated/libpysal.weights.Rook.html#libpysal.weights.Rook.from_shapefile
+	libpysal.weights.W.asymmetries           generated/libpysal.weights.W.html#libpysal.weights.W.asymmetries
+	libpysal.weights.W.asymmetry             generated/libpysal.weights.W.html#libpysal.weights.W.asymmetry
+	libpysal.weights.W.cardinalities         generated/libpysal.weights.W.html#libpysal.weights.W.cardinalities
+	libpysal.weights.W.component_labels      generated/libpysal.weights.W.html#libpysal.weights.W.component_labels
+	libpysal.weights.W.diagW2                generated/libpysal.weights.W.html#libpysal.weights.W.diagW2
+	libpysal.weights.W.diagWtW               generated/libpysal.weights.W.html#libpysal.weights.W.diagWtW
+	libpysal.weights.W.diagWtW_WW            generated/libpysal.weights.W.html#libpysal.weights.W.diagWtW_WW
+	libpysal.weights.W.from_adjlist          generated/libpysal.weights.W.html#libpysal.weights.W.from_adjlist
+	libpysal.weights.W.from_networkx         generated/libpysal.weights.W.html#libpysal.weights.W.from_networkx
+	libpysal.weights.W.full                  generated/libpysal.weights.W.html#libpysal.weights.W.full
+	libpysal.weights.W.get_transform         generated/libpysal.weights.W.html#libpysal.weights.W.get_transform
+	libpysal.weights.W.histogram             generated/libpysal.weights.W.html#libpysal.weights.W.histogram
+	libpysal.weights.W.id2i                  generated/libpysal.weights.W.html#libpysal.weights.W.id2i
+	libpysal.weights.W.id_order              generated/libpysal.weights.W.html#libpysal.weights.W.id_order
+	libpysal.weights.W.id_order_set          generated/libpysal.weights.W.html#libpysal.weights.W.id_order_set
+	libpysal.weights.W.islands               generated/libpysal.weights.W.html#libpysal.weights.W.islands
+	libpysal.weights.W.max_neighbors         generated/libpysal.weights.W.html#libpysal.weights.W.max_neighbors
+	libpysal.weights.W.mean_neighbors        generated/libpysal.weights.W.html#libpysal.weights.W.mean_neighbors
+	libpysal.weights.W.min_neighbors         generated/libpysal.weights.W.html#libpysal.weights.W.min_neighbors
+	libpysal.weights.W.n                     generated/libpysal.weights.W.html#libpysal.weights.W.n
+	libpysal.weights.W.n_components          generated/libpysal.weights.W.html#libpysal.weights.W.n_components
+	libpysal.weights.W.neighbor_offsets      generated/libpysal.weights.W.html#libpysal.weights.W.neighbor_offsets
+	libpysal.weights.W.nonzero               generated/libpysal.weights.W.html#libpysal.weights.W.nonzero
+	libpysal.weights.W.pct_nonzero           generated/libpysal.weights.W.html#libpysal.weights.W.pct_nonzero
+	libpysal.weights.W.plot                  generated/libpysal.weights.W.html#libpysal.weights.W.plot
+	libpysal.weights.W.remap_ids             generated/libpysal.weights.W.html#libpysal.weights.W.remap_ids
+	libpysal.weights.W.s0                    generated/libpysal.weights.W.html#libpysal.weights.W.s0
+	libpysal.weights.W.s1                    generated/libpysal.weights.W.html#libpysal.weights.W.s1
+	libpysal.weights.W.s2                    generated/libpysal.weights.W.html#libpysal.weights.W.s2
+	libpysal.weights.W.s2array               generated/libpysal.weights.W.html#libpysal.weights.W.s2array
+	libpysal.weights.W.sd                    generated/libpysal.weights.W.html#libpysal.weights.W.sd
+	libpysal.weights.W.set_shapefile         generated/libpysal.weights.W.html#libpysal.weights.W.set_shapefile
+	libpysal.weights.W.set_transform         generated/libpysal.weights.W.html#libpysal.weights.W.set_transform
+	libpysal.weights.W.sparse                generated/libpysal.weights.W.html#libpysal.weights.W.sparse
+	libpysal.weights.W.symmetrize            generated/libpysal.weights.W.html#libpysal.weights.W.symmetrize
+	libpysal.weights.W.to_WSP                generated/libpysal.weights.W.html#libpysal.weights.W.to_WSP
+	libpysal.weights.W.to_adjlist            generated/libpysal.weights.W.html#libpysal.weights.W.to_adjlist
+	libpysal.weights.W.to_networkx           generated/libpysal.weights.W.html#libpysal.weights.W.to_networkx
+	libpysal.weights.W.transform             generated/libpysal.weights.W.html#libpysal.weights.W.transform
+	libpysal.weights.W.trcW2                 generated/libpysal.weights.W.html#libpysal.weights.W.trcW2
+	libpysal.weights.W.trcWtW                generated/libpysal.weights.W.html#libpysal.weights.W.trcWtW
+	libpysal.weights.W.trcWtW_WW             generated/libpysal.weights.W.html#libpysal.weights.W.trcWtW_WW
+	libpysal.weights.WSP.__init__            generated/libpysal.weights.WSP.html#libpysal.weights.WSP.__init__
+	libpysal.weights.WSP.diagWtW_WW          generated/libpysal.weights.WSP.html#libpysal.weights.WSP.diagWtW_WW
+	libpysal.weights.WSP.from_W              generated/libpysal.weights.WSP.html#libpysal.weights.WSP.from_W
+	libpysal.weights.WSP.s0                  generated/libpysal.weights.WSP.html#libpysal.weights.WSP.s0
+	libpysal.weights.WSP.to_W                generated/libpysal.weights.WSP.html#libpysal.weights.WSP.to_W
+	libpysal.weights.WSP.trcWtW_WW           generated/libpysal.weights.WSP.html#libpysal.weights.WSP.trcWtW_WW
+std:doc
+	api                                      libpysal API reference                  : api.html
+	generated/libpysal.cg.Chain              libpysal.cg.Chain                       : generated/libpysal.cg.Chain.html
+	generated/libpysal.cg.Grid               libpysal.cg.Grid                        : generated/libpysal.cg.Grid.html
+	generated/libpysal.cg.KDTree             libpysal.cg.KDTree                      : generated/libpysal.cg.KDTree.html
+	generated/libpysal.cg.Line               libpysal.cg.Line                        : generated/libpysal.cg.Line.html
+	generated/libpysal.cg.LineSegment        libpysal.cg.LineSegment                 : generated/libpysal.cg.LineSegment.html
+	generated/libpysal.cg.Point              libpysal.cg.Point                       : generated/libpysal.cg.Point.html
+	generated/libpysal.cg.PointLocator       libpysal.cg.PointLocator                : generated/libpysal.cg.PointLocator.html
+	generated/libpysal.cg.Polygon            libpysal.cg.Polygon                     : generated/libpysal.cg.Polygon.html
+	generated/libpysal.cg.PolygonLocator     libpysal.cg.PolygonLocator              : generated/libpysal.cg.PolygonLocator.html
+	generated/libpysal.cg.RADIUS_EARTH_KM    libpysal.cg.RADIUS_EARTH_KM             : generated/libpysal.cg.RADIUS_EARTH_KM.html
+	generated/libpysal.cg.RADIUS_EARTH_MILES libpysal.cg.RADIUS_EARTH_MILES          : generated/libpysal.cg.RADIUS_EARTH_MILES.html
+	generated/libpysal.cg.Ray                libpysal.cg.Ray                         : generated/libpysal.cg.Ray.html
+	generated/libpysal.cg.Rectangle          libpysal.cg.Rectangle                   : generated/libpysal.cg.Rectangle.html
+	generated/libpysal.cg.alpha_shape        libpysal.cg.alpha_shape                 : generated/libpysal.cg.alpha_shape.html
+	generated/libpysal.cg.alpha_shape_auto   libpysal.cg.alpha_shape_auto            : generated/libpysal.cg.alpha_shape_auto.html
+	generated/libpysal.cg.arcdist            libpysal.cg.arcdist                     : generated/libpysal.cg.arcdist.html
+	generated/libpysal.cg.arcdist2linear     libpysal.cg.arcdist2linear              : generated/libpysal.cg.arcdist2linear.html
+	generated/libpysal.cg.asShape            libpysal.cg.asShape                     : generated/libpysal.cg.asShape.html
+	generated/libpysal.cg.bbcommon           libpysal.cg.bbcommon                    : generated/libpysal.cg.bbcommon.html
+	generated/libpysal.cg.brute_knn          libpysal.cg.brute_knn                   : generated/libpysal.cg.brute_knn.html
+	generated/libpysal.cg.convex_hull        libpysal.cg.convex_hull                 : generated/libpysal.cg.convex_hull.html
+	generated/libpysal.cg.distance_matrix    libpysal.cg.distance_matrix             : generated/libpysal.cg.distance_matrix.html
+	generated/libpysal.cg.fast_knn           libpysal.cg.fast_knn                    : generated/libpysal.cg.fast_knn.html
+	generated/libpysal.cg.fast_threshold     libpysal.cg.fast_threshold              : generated/libpysal.cg.fast_threshold.html
+	generated/libpysal.cg.geogrid            libpysal.cg.geogrid                     : generated/libpysal.cg.geogrid.html
+	generated/libpysal.cg.geointerpolate     libpysal.cg.geointerpolate              : generated/libpysal.cg.geointerpolate.html
+	generated/libpysal.cg.get_angle_between  libpysal.cg.get_angle_between           : generated/libpysal.cg.get_angle_between.html
+	generated/libpysal.cg.get_bounding_box   libpysal.cg.get_bounding_box            : generated/libpysal.cg.get_bounding_box.html
+	generated/libpysal.cg.get_point_at_angle_and_dist libpysal.cg.get_point_at_angle_and_dist : generated/libpysal.cg.get_point_at_angle_and_dist.html
+	generated/libpysal.cg.get_points_dist    libpysal.cg.get_points_dist             : generated/libpysal.cg.get_points_dist.html
+	generated/libpysal.cg.get_polygon_point_dist libpysal.cg.get_polygon_point_dist      : generated/libpysal.cg.get_polygon_point_dist.html
+	generated/libpysal.cg.get_polygon_point_intersect libpysal.cg.get_polygon_point_intersect : generated/libpysal.cg.get_polygon_point_intersect.html
+	generated/libpysal.cg.get_ray_segment_intersect libpysal.cg.get_ray_segment_intersect   : generated/libpysal.cg.get_ray_segment_intersect.html
+	generated/libpysal.cg.get_rectangle_point_intersect libpysal.cg.get_rectangle_point_intersect: generated/libpysal.cg.get_rectangle_point_intersect.html
+	generated/libpysal.cg.get_rectangle_rectangle_intersection libpysal.cg.get_rectangle_rectangle_intersection: generated/libpysal.cg.get_rectangle_rectangle_intersection.html
+	generated/libpysal.cg.get_segment_point_dist libpysal.cg.get_segment_point_dist      : generated/libpysal.cg.get_segment_point_dist.html
+	generated/libpysal.cg.get_segment_point_intersect libpysal.cg.get_segment_point_intersect : generated/libpysal.cg.get_segment_point_intersect.html
+	generated/libpysal.cg.get_segments_intersect libpysal.cg.get_segments_intersect      : generated/libpysal.cg.get_segments_intersect.html
+	generated/libpysal.cg.get_shared_segments libpysal.cg.get_shared_segments         : generated/libpysal.cg.get_shared_segments.html
+	generated/libpysal.cg.harcdist           libpysal.cg.harcdist                    : generated/libpysal.cg.harcdist.html
+	generated/libpysal.cg.is_clockwise       libpysal.cg.is_clockwise                : generated/libpysal.cg.is_clockwise.html
+	generated/libpysal.cg.is_collinear       libpysal.cg.is_collinear                : generated/libpysal.cg.is_collinear.html
+	generated/libpysal.cg.linear2arcdist     libpysal.cg.linear2arcdist              : generated/libpysal.cg.linear2arcdist.html
+	generated/libpysal.cg.lonlat             libpysal.cg.lonlat                      : generated/libpysal.cg.lonlat.html
+	generated/libpysal.cg.point_touches_rectangle libpysal.cg.point_touches_rectangle     : generated/libpysal.cg.point_touches_rectangle.html
+	generated/libpysal.cg.toLngLat           libpysal.cg.toLngLat                    : generated/libpysal.cg.toLngLat.html
+	generated/libpysal.cg.toXYZ              libpysal.cg.toXYZ                       : generated/libpysal.cg.toXYZ.html
+	generated/libpysal.cg.voronoi_frames     libpysal.cg.voronoi_frames              : generated/libpysal.cg.voronoi_frames.html
+	generated/libpysal.examples.available    libpysal.examples.available             : generated/libpysal.examples.available.html
+	generated/libpysal.examples.explain      libpysal.examples.explain               : generated/libpysal.examples.explain.html
+	generated/libpysal.examples.get_path     libpysal.examples.get_path              : generated/libpysal.examples.get_path.html
+	generated/libpysal.io.fileio.FileIO      libpysal.io.fileio.FileIO               : generated/libpysal.io.fileio.FileIO.html
+	generated/libpysal.io.open               libpysal.io.open                        : generated/libpysal.io.open.html
+	generated/libpysal.weights.DistanceBand  libpysal.weights.DistanceBand           : generated/libpysal.weights.DistanceBand.html
+	generated/libpysal.weights.KNN           libpysal.weights.KNN                    : generated/libpysal.weights.KNN.html
+	generated/libpysal.weights.Kernel        libpysal.weights.Kernel                 : generated/libpysal.weights.Kernel.html
+	generated/libpysal.weights.ODW           libpysal.weights.ODW                    : generated/libpysal.weights.ODW.html
+	generated/libpysal.weights.Queen         libpysal.weights.Queen                  : generated/libpysal.weights.Queen.html
+	generated/libpysal.weights.Rook          libpysal.weights.Rook                   : generated/libpysal.weights.Rook.html
+	generated/libpysal.weights.Voronoi       libpysal.weights.Voronoi                : generated/libpysal.weights.Voronoi.html
+	generated/libpysal.weights.W             libpysal.weights.W                      : generated/libpysal.weights.W.html
+	generated/libpysal.weights.WSP           libpysal.weights.WSP                    : generated/libpysal.weights.WSP.html
+	generated/libpysal.weights.WSP2W         libpysal.weights.WSP2W                  : generated/libpysal.weights.WSP2W.html
+	generated/libpysal.weights.attach_islands libpysal.weights.attach_islands         : generated/libpysal.weights.attach_islands.html
+	generated/libpysal.weights.block_weights libpysal.weights.block_weights          : generated/libpysal.weights.block_weights.html
+	generated/libpysal.weights.build_lattice_shapefile libpysal.weights.build_lattice_shapefile: generated/libpysal.weights.build_lattice_shapefile.html
+	generated/libpysal.weights.comb          libpysal.weights.comb                   : generated/libpysal.weights.comb.html
+	generated/libpysal.weights.full          libpysal.weights.full                   : generated/libpysal.weights.full.html
+	generated/libpysal.weights.full2W        libpysal.weights.full2W                 : generated/libpysal.weights.full2W.html
+	generated/libpysal.weights.fuzzy_contiguity libpysal.weights.fuzzy_contiguity       : generated/libpysal.weights.fuzzy_contiguity.html
+	generated/libpysal.weights.get_ids       libpysal.weights.get_ids                : generated/libpysal.weights.get_ids.html
+	generated/libpysal.weights.get_points_array_from_shapefile libpysal.weights.get_points_array_from_shapefile: generated/libpysal.weights.get_points_array_from_shapefile.html
+	generated/libpysal.weights.hexLat2W      libpysal.weights.hexLat2W               : generated/libpysal.weights.hexLat2W.html
+	generated/libpysal.weights.higher_order  libpysal.weights.higher_order           : generated/libpysal.weights.higher_order.html
+	generated/libpysal.weights.higher_order_sp libpysal.weights.higher_order_sp        : generated/libpysal.weights.higher_order_sp.html
+	generated/libpysal.weights.lag_categorical libpysal.weights.lag_categorical        : generated/libpysal.weights.lag_categorical.html
+	generated/libpysal.weights.lag_spatial   libpysal.weights.lag_spatial            : generated/libpysal.weights.lag_spatial.html
+	generated/libpysal.weights.lat2SW        libpysal.weights.lat2SW                 : generated/libpysal.weights.lat2SW.html
+	generated/libpysal.weights.lat2W         libpysal.weights.lat2W                  : generated/libpysal.weights.lat2W.html
+	generated/libpysal.weights.mat2L         libpysal.weights.mat2L                  : generated/libpysal.weights.mat2L.html
+	generated/libpysal.weights.min_threshold_dist_from_shapefile libpysal.weights.min_threshold_dist_from_shapefile: generated/libpysal.weights.min_threshold_dist_from_shapefile.html
+	generated/libpysal.weights.min_threshold_distance libpysal.weights.min_threshold_distance : generated/libpysal.weights.min_threshold_distance.html
+	generated/libpysal.weights.netW          libpysal.weights.netW                   : generated/libpysal.weights.netW.html
+	generated/libpysal.weights.nonplanar_neighbors libpysal.weights.nonplanar_neighbors    : generated/libpysal.weights.nonplanar_neighbors.html
+	generated/libpysal.weights.order         libpysal.weights.order                  : generated/libpysal.weights.order.html
+	generated/libpysal.weights.remap_ids     libpysal.weights.remap_ids              : generated/libpysal.weights.remap_ids.html
+	generated/libpysal.weights.shimbel       libpysal.weights.shimbel                : generated/libpysal.weights.shimbel.html
+	generated/libpysal.weights.spw_from_gal  libpysal.weights.spw_from_gal           : generated/libpysal.weights.spw_from_gal.html
+	generated/libpysal.weights.vecW          libpysal.weights.vecW                   : generated/libpysal.weights.vecW.html
+	generated/libpysal.weights.w_clip        libpysal.weights.w_clip                 : generated/libpysal.weights.w_clip.html
+	generated/libpysal.weights.w_difference  libpysal.weights.w_difference           : generated/libpysal.weights.w_difference.html
+	generated/libpysal.weights.w_intersection libpysal.weights.w_intersection         : generated/libpysal.weights.w_intersection.html
+	generated/libpysal.weights.w_local_cluster libpysal.weights.w_local_cluster        : generated/libpysal.weights.w_local_cluster.html
+	generated/libpysal.weights.w_subset      libpysal.weights.w_subset               : generated/libpysal.weights.w_subset.html
+	generated/libpysal.weights.w_symmetric_difference libpysal.weights.w_symmetric_difference : generated/libpysal.weights.w_symmetric_difference.html
+	generated/libpysal.weights.w_union       libpysal.weights.w_union                : generated/libpysal.weights.w_union.html
+	index                                    libpysal: Python Spatial Analysis Library Core: index.html
+	installation                             Installation                            : installation.html
+	notebooks/.ipynb_checkpoints/examples-checkpoint Datasets for use with libpysal          : notebooks/.ipynb_checkpoints/examples-checkpoint.html
+	notebooks/.ipynb_checkpoints/voronoi-checkpoint Voronoi Polygons for 2-D Point Sets     : notebooks/.ipynb_checkpoints/voronoi-checkpoint.html
+	notebooks/.ipynb_checkpoints/weights-checkpoint Weights from GeoDataFrames              : notebooks/.ipynb_checkpoints/weights-checkpoint.html
+	notebooks/examples                       Datasets for use with libpysal          : notebooks/examples.html
+	notebooks/voronoi                        Voronoi Polygons for 2-D Point Sets     : notebooks/voronoi.html
+	notebooks/weights                        Weights from GeoDataFrames              : notebooks/weights.html
+	references                               References                              : references.html
+	tutorial                                 Tutorial                                : tutorial.html
+std:label
+	/api.rst                                 libpysal API reference                  : api.html
+	/api.rst#alpha-shapes                    alpha_shapes                            : api.html#alpha-shapes
+	/api.rst#cg-computational-geometry       cg: Computational Geometry              : api.html#cg-computational-geometry
+	/api.rst#contiguity-weights              Contiguity Weights                      : api.html#contiguity-weights
+	/api.rst#distance-weights                Distance Weights                        : api.html#distance-weights
+	/api.rst#examples                        examples                                : api.html#examples
+	/api.rst#io                              io                                      : api.html#io
+	/api.rst#kdtree                          kdtree                                  : api.html#kdtree
+	/api.rst#libpysal-api-reference          libpysal API reference                  : api.html#libpysal-api-reference
+	/api.rst#locators                        locators                                : api.html#locators
+	/api.rst#set-theoretic-weights           Set Theoretic Weights                   : api.html#set-theoretic-weights
+	/api.rst#shapes                          shapes                                  : api.html#shapes
+	/api.rst#spatial-lag                     Spatial Lag                             : api.html#spatial-lag
+	/api.rst#spatial-weights                 Spatial Weights                         : api.html#spatial-weights
+	/api.rst#sphere                          sphere                                  : api.html#sphere
+	/api.rst#spint-weights                   spint Weights                           : api.html#spint-weights
+	/api.rst#standalone                      standalone                              : api.html#standalone
+	/api.rst#voronoi                         voronoi                                 : api.html#voronoi
+	/api.rst#weights-user-classes-and-functions Weights user Classes and Functions      : api.html#weights-user-classes-and-functions
+	/api.rst#weights-util-classes-and-functions Weights Util Classes and Functions      : api.html#weights-util-classes-and-functions
+	/generated/libpysal.cg.alpha_shape.rst   libpysal.cg.alpha_shape                 : generated/libpysal.cg.alpha_shape.html
+	/generated/libpysal.cg.alpha_shape.rst#libpysal-cg-alpha-shape libpysal.cg.alpha_shape                 : generated/libpysal.cg.alpha_shape.html#libpysal-cg-alpha-shape
+	/generated/libpysal.cg.alpha_shape.rst#libpysal.cg.alpha_shape libpysal.cg.alpha_shape                 : generated/libpysal.cg.alpha_shape.html#libpysal.cg.alpha_shape
+	/generated/libpysal.cg.alpha_shape_auto.rst libpysal.cg.alpha_shape_auto            : generated/libpysal.cg.alpha_shape_auto.html
+	/generated/libpysal.cg.alpha_shape_auto.rst#libpysal-cg-alpha-shape-auto libpysal.cg.alpha_shape_auto            : generated/libpysal.cg.alpha_shape_auto.html#libpysal-cg-alpha-shape-auto
+	/generated/libpysal.cg.alpha_shape_auto.rst#libpysal.cg.alpha_shape_auto libpysal.cg.alpha_shape_auto            : generated/libpysal.cg.alpha_shape_auto.html#libpysal.cg.alpha_shape_auto
+	/generated/libpysal.cg.arcdist.rst       libpysal.cg.arcdist                     : generated/libpysal.cg.arcdist.html
+	/generated/libpysal.cg.arcdist.rst#libpysal-cg-arcdist libpysal.cg.arcdist                     : generated/libpysal.cg.arcdist.html#libpysal-cg-arcdist
+	/generated/libpysal.cg.arcdist.rst#libpysal.cg.arcdist libpysal.cg.arcdist                     : generated/libpysal.cg.arcdist.html#libpysal.cg.arcdist
+	/generated/libpysal.cg.arcdist2linear.rst libpysal.cg.arcdist2linear              : generated/libpysal.cg.arcdist2linear.html
+	/generated/libpysal.cg.arcdist2linear.rst#libpysal-cg-arcdist2linear libpysal.cg.arcdist2linear              : generated/libpysal.cg.arcdist2linear.html#libpysal-cg-arcdist2linear
+	/generated/libpysal.cg.arcdist2linear.rst#libpysal.cg.arcdist2linear libpysal.cg.arcdist2linear              : generated/libpysal.cg.arcdist2linear.html#libpysal.cg.arcdist2linear
+	/generated/libpysal.cg.asshape.rst       libpysal.cg.asShape                     : generated/libpysal.cg.asShape.html
+	/generated/libpysal.cg.asshape.rst#libpysal-cg-asshape libpysal.cg.asShape                     : generated/libpysal.cg.asShape.html#libpysal-cg-asshape
+	/generated/libpysal.cg.asshape.rst#libpysal.cg.asshape libpysal.cg.asShape                     : generated/libpysal.cg.asShape.html#libpysal.cg.asShape
+	/generated/libpysal.cg.bbcommon.rst      libpysal.cg.bbcommon                    : generated/libpysal.cg.bbcommon.html
+	/generated/libpysal.cg.bbcommon.rst#libpysal-cg-bbcommon libpysal.cg.bbcommon                    : generated/libpysal.cg.bbcommon.html#libpysal-cg-bbcommon
+	/generated/libpysal.cg.bbcommon.rst#libpysal.cg.bbcommon libpysal.cg.bbcommon                    : generated/libpysal.cg.bbcommon.html#libpysal.cg.bbcommon
+	/generated/libpysal.cg.brute_knn.rst     libpysal.cg.brute_knn                   : generated/libpysal.cg.brute_knn.html
+	/generated/libpysal.cg.brute_knn.rst#libpysal-cg-brute-knn libpysal.cg.brute_knn                   : generated/libpysal.cg.brute_knn.html#libpysal-cg-brute-knn
+	/generated/libpysal.cg.brute_knn.rst#libpysal.cg.brute_knn libpysal.cg.brute_knn                   : generated/libpysal.cg.brute_knn.html#libpysal.cg.brute_knn
+	/generated/libpysal.cg.chain.rst         libpysal.cg.Chain                       : generated/libpysal.cg.Chain.html
+	/generated/libpysal.cg.chain.rst#libpysal-cg-chain libpysal.cg.Chain                       : generated/libpysal.cg.Chain.html#libpysal-cg-chain
+	/generated/libpysal.cg.chain.rst#libpysal.cg.chain libpysal.cg.Chain                       : generated/libpysal.cg.Chain.html#libpysal.cg.Chain
+	/generated/libpysal.cg.chain.rst#libpysal.cg.chain.__init__ libpysal.cg.Chain.__init__              : generated/libpysal.cg.Chain.html#libpysal.cg.Chain.__init__
+	/generated/libpysal.cg.chain.rst#libpysal.cg.chain.arclen libpysal.cg.Chain.arclen                : generated/libpysal.cg.Chain.html#libpysal.cg.Chain.arclen
+	/generated/libpysal.cg.chain.rst#libpysal.cg.chain.bounding_box libpysal.cg.Chain.bounding_box          : generated/libpysal.cg.Chain.html#libpysal.cg.Chain.bounding_box
+	/generated/libpysal.cg.chain.rst#libpysal.cg.chain.len libpysal.cg.Chain.len                   : generated/libpysal.cg.Chain.html#libpysal.cg.Chain.len
+	/generated/libpysal.cg.chain.rst#libpysal.cg.chain.parts libpysal.cg.Chain.parts                 : generated/libpysal.cg.Chain.html#libpysal.cg.Chain.parts
+	/generated/libpysal.cg.chain.rst#libpysal.cg.chain.segments libpysal.cg.Chain.segments              : generated/libpysal.cg.Chain.html#libpysal.cg.Chain.segments
+	/generated/libpysal.cg.chain.rst#libpysal.cg.chain.vertices libpysal.cg.Chain.vertices              : generated/libpysal.cg.Chain.html#libpysal.cg.Chain.vertices
+	/generated/libpysal.cg.convex_hull.rst   libpysal.cg.convex_hull                 : generated/libpysal.cg.convex_hull.html
+	/generated/libpysal.cg.convex_hull.rst#libpysal-cg-convex-hull libpysal.cg.convex_hull                 : generated/libpysal.cg.convex_hull.html#libpysal-cg-convex-hull
+	/generated/libpysal.cg.convex_hull.rst#libpysal.cg.convex_hull libpysal.cg.convex_hull                 : generated/libpysal.cg.convex_hull.html#libpysal.cg.convex_hull
+	/generated/libpysal.cg.distance_matrix.rst libpysal.cg.distance_matrix             : generated/libpysal.cg.distance_matrix.html
+	/generated/libpysal.cg.distance_matrix.rst#libpysal-cg-distance-matrix libpysal.cg.distance_matrix             : generated/libpysal.cg.distance_matrix.html#libpysal-cg-distance-matrix
+	/generated/libpysal.cg.distance_matrix.rst#libpysal.cg.distance_matrix libpysal.cg.distance_matrix             : generated/libpysal.cg.distance_matrix.html#libpysal.cg.distance_matrix
+	/generated/libpysal.cg.fast_knn.rst      libpysal.cg.fast_knn                    : generated/libpysal.cg.fast_knn.html
+	/generated/libpysal.cg.fast_knn.rst#libpysal-cg-fast-knn libpysal.cg.fast_knn                    : generated/libpysal.cg.fast_knn.html#libpysal-cg-fast-knn
+	/generated/libpysal.cg.fast_knn.rst#libpysal.cg.fast_knn libpysal.cg.fast_knn                    : generated/libpysal.cg.fast_knn.html#libpysal.cg.fast_knn
+	/generated/libpysal.cg.fast_threshold.rst libpysal.cg.fast_threshold              : generated/libpysal.cg.fast_threshold.html
+	/generated/libpysal.cg.fast_threshold.rst#libpysal-cg-fast-threshold libpysal.cg.fast_threshold              : generated/libpysal.cg.fast_threshold.html#libpysal-cg-fast-threshold
+	/generated/libpysal.cg.fast_threshold.rst#libpysal.cg.fast_threshold libpysal.cg.fast_threshold              : generated/libpysal.cg.fast_threshold.html#libpysal.cg.fast_threshold
+	/generated/libpysal.cg.geogrid.rst       libpysal.cg.geogrid                     : generated/libpysal.cg.geogrid.html
+	/generated/libpysal.cg.geogrid.rst#libpysal-cg-geogrid libpysal.cg.geogrid                     : generated/libpysal.cg.geogrid.html#libpysal-cg-geogrid
+	/generated/libpysal.cg.geogrid.rst#libpysal.cg.geogrid libpysal.cg.geogrid                     : generated/libpysal.cg.geogrid.html#libpysal.cg.geogrid
+	/generated/libpysal.cg.geointerpolate.rst libpysal.cg.geointerpolate              : generated/libpysal.cg.geointerpolate.html
+	/generated/libpysal.cg.geointerpolate.rst#libpysal-cg-geointerpolate libpysal.cg.geointerpolate              : generated/libpysal.cg.geointerpolate.html#libpysal-cg-geointerpolate
+	/generated/libpysal.cg.geointerpolate.rst#libpysal.cg.geointerpolate libpysal.cg.geointerpolate              : generated/libpysal.cg.geointerpolate.html#libpysal.cg.geointerpolate
+	/generated/libpysal.cg.get_angle_between.rst libpysal.cg.get_angle_between           : generated/libpysal.cg.get_angle_between.html
+	/generated/libpysal.cg.get_angle_between.rst#libpysal-cg-get-angle-between libpysal.cg.get_angle_between           : generated/libpysal.cg.get_angle_between.html#libpysal-cg-get-angle-between
+	/generated/libpysal.cg.get_angle_between.rst#libpysal.cg.get_angle_between libpysal.cg.get_angle_between           : generated/libpysal.cg.get_angle_between.html#libpysal.cg.get_angle_between
+	/generated/libpysal.cg.get_bounding_box.rst libpysal.cg.get_bounding_box            : generated/libpysal.cg.get_bounding_box.html
+	/generated/libpysal.cg.get_bounding_box.rst#libpysal-cg-get-bounding-box libpysal.cg.get_bounding_box            : generated/libpysal.cg.get_bounding_box.html#libpysal-cg-get-bounding-box
+	/generated/libpysal.cg.get_bounding_box.rst#libpysal.cg.get_bounding_box libpysal.cg.get_bounding_box            : generated/libpysal.cg.get_bounding_box.html#libpysal.cg.get_bounding_box
+	/generated/libpysal.cg.get_point_at_angle_and_dist.rst libpysal.cg.get_point_at_angle_and_dist : generated/libpysal.cg.get_point_at_angle_and_dist.html
+	/generated/libpysal.cg.get_point_at_angle_and_dist.rst#libpysal-cg-get-point-at-angle-and-dist libpysal.cg.get_point_at_angle_and_dist : generated/libpysal.cg.get_point_at_angle_and_dist.html#libpysal-cg-get-point-at-angle-and-dist
+	/generated/libpysal.cg.get_point_at_angle_and_dist.rst#libpysal.cg.get_point_at_angle_and_dist libpysal.cg.get_point_at_angle_and_dist : generated/libpysal.cg.get_point_at_angle_and_dist.html#libpysal.cg.get_point_at_angle_and_dist
+	/generated/libpysal.cg.get_points_dist.rst libpysal.cg.get_points_dist             : generated/libpysal.cg.get_points_dist.html
+	/generated/libpysal.cg.get_points_dist.rst#libpysal-cg-get-points-dist libpysal.cg.get_points_dist             : generated/libpysal.cg.get_points_dist.html#libpysal-cg-get-points-dist
+	/generated/libpysal.cg.get_points_dist.rst#libpysal.cg.get_points_dist libpysal.cg.get_points_dist             : generated/libpysal.cg.get_points_dist.html#libpysal.cg.get_points_dist
+	/generated/libpysal.cg.get_polygon_point_dist.rst libpysal.cg.get_polygon_point_dist      : generated/libpysal.cg.get_polygon_point_dist.html
+	/generated/libpysal.cg.get_polygon_point_dist.rst#libpysal-cg-get-polygon-point-dist libpysal.cg.get_polygon_point_dist      : generated/libpysal.cg.get_polygon_point_dist.html#libpysal-cg-get-polygon-point-dist
+	/generated/libpysal.cg.get_polygon_point_dist.rst#libpysal.cg.get_polygon_point_dist libpysal.cg.get_polygon_point_dist      : generated/libpysal.cg.get_polygon_point_dist.html#libpysal.cg.get_polygon_point_dist
+	/generated/libpysal.cg.get_polygon_point_intersect.rst libpysal.cg.get_polygon_point_intersect : generated/libpysal.cg.get_polygon_point_intersect.html
+	/generated/libpysal.cg.get_polygon_point_intersect.rst#libpysal-cg-get-polygon-point-intersect libpysal.cg.get_polygon_point_intersect : generated/libpysal.cg.get_polygon_point_intersect.html#libpysal-cg-get-polygon-point-intersect
+	/generated/libpysal.cg.get_polygon_point_intersect.rst#libpysal.cg.get_polygon_point_intersect libpysal.cg.get_polygon_point_intersect : generated/libpysal.cg.get_polygon_point_intersect.html#libpysal.cg.get_polygon_point_intersect
+	/generated/libpysal.cg.get_ray_segment_intersect.rst libpysal.cg.get_ray_segment_intersect   : generated/libpysal.cg.get_ray_segment_intersect.html
+	/generated/libpysal.cg.get_ray_segment_intersect.rst#libpysal-cg-get-ray-segment-intersect libpysal.cg.get_ray_segment_intersect   : generated/libpysal.cg.get_ray_segment_intersect.html#libpysal-cg-get-ray-segment-intersect
+	/generated/libpysal.cg.get_ray_segment_intersect.rst#libpysal.cg.get_ray_segment_intersect libpysal.cg.get_ray_segment_intersect   : generated/libpysal.cg.get_ray_segment_intersect.html#libpysal.cg.get_ray_segment_intersect
+	/generated/libpysal.cg.get_rectangle_point_intersect.rst libpysal.cg.get_rectangle_point_intersect: generated/libpysal.cg.get_rectangle_point_intersect.html
+	/generated/libpysal.cg.get_rectangle_point_intersect.rst#libpysal-cg-get-rectangle-point-intersect libpysal.cg.get_rectangle_point_intersect: generated/libpysal.cg.get_rectangle_point_intersect.html#libpysal-cg-get-rectangle-point-intersect
+	/generated/libpysal.cg.get_rectangle_point_intersect.rst#libpysal.cg.get_rectangle_point_intersect libpysal.cg.get_rectangle_point_intersect: generated/libpysal.cg.get_rectangle_point_intersect.html#libpysal.cg.get_rectangle_point_intersect
+	/generated/libpysal.cg.get_rectangle_rectangle_intersection.rst libpysal.cg.get_rectangle_rectangle_intersection: generated/libpysal.cg.get_rectangle_rectangle_intersection.html
+	/generated/libpysal.cg.get_rectangle_rectangle_intersection.rst#libpysal-cg-get-rectangle-rectangle-intersection libpysal.cg.get_rectangle_rectangle_intersection: generated/libpysal.cg.get_rectangle_rectangle_intersection.html#libpysal-cg-get-rectangle-rectangle-intersection
+	/generated/libpysal.cg.get_rectangle_rectangle_intersection.rst#libpysal.cg.get_rectangle_rectangle_intersection libpysal.cg.get_rectangle_rectangle_intersection: generated/libpysal.cg.get_rectangle_rectangle_intersection.html#libpysal.cg.get_rectangle_rectangle_intersection
+	/generated/libpysal.cg.get_segment_point_dist.rst libpysal.cg.get_segment_point_dist      : generated/libpysal.cg.get_segment_point_dist.html
+	/generated/libpysal.cg.get_segment_point_dist.rst#libpysal-cg-get-segment-point-dist libpysal.cg.get_segment_point_dist      : generated/libpysal.cg.get_segment_point_dist.html#libpysal-cg-get-segment-point-dist
+	/generated/libpysal.cg.get_segment_point_dist.rst#libpysal.cg.get_segment_point_dist libpysal.cg.get_segment_point_dist      : generated/libpysal.cg.get_segment_point_dist.html#libpysal.cg.get_segment_point_dist
+	/generated/libpysal.cg.get_segment_point_intersect.rst libpysal.cg.get_segment_point_intersect : generated/libpysal.cg.get_segment_point_intersect.html
+	/generated/libpysal.cg.get_segment_point_intersect.rst#libpysal-cg-get-segment-point-intersect libpysal.cg.get_segment_point_intersect : generated/libpysal.cg.get_segment_point_intersect.html#libpysal-cg-get-segment-point-intersect
+	/generated/libpysal.cg.get_segment_point_intersect.rst#libpysal.cg.get_segment_point_intersect libpysal.cg.get_segment_point_intersect : generated/libpysal.cg.get_segment_point_intersect.html#libpysal.cg.get_segment_point_intersect
+	/generated/libpysal.cg.get_segments_intersect.rst libpysal.cg.get_segments_intersect      : generated/libpysal.cg.get_segments_intersect.html
+	/generated/libpysal.cg.get_segments_intersect.rst#libpysal-cg-get-segments-intersect libpysal.cg.get_segments_intersect      : generated/libpysal.cg.get_segments_intersect.html#libpysal-cg-get-segments-intersect
+	/generated/libpysal.cg.get_segments_intersect.rst#libpysal.cg.get_segments_intersect libpysal.cg.get_segments_intersect      : generated/libpysal.cg.get_segments_intersect.html#libpysal.cg.get_segments_intersect
+	/generated/libpysal.cg.get_shared_segments.rst libpysal.cg.get_shared_segments         : generated/libpysal.cg.get_shared_segments.html
+	/generated/libpysal.cg.get_shared_segments.rst#libpysal-cg-get-shared-segments libpysal.cg.get_shared_segments         : generated/libpysal.cg.get_shared_segments.html#libpysal-cg-get-shared-segments
+	/generated/libpysal.cg.get_shared_segments.rst#libpysal.cg.get_shared_segments libpysal.cg.get_shared_segments         : generated/libpysal.cg.get_shared_segments.html#libpysal.cg.get_shared_segments
+	/generated/libpysal.cg.grid.rst          libpysal.cg.Grid                        : generated/libpysal.cg.Grid.html
+	/generated/libpysal.cg.grid.rst#libpysal-cg-grid libpysal.cg.Grid                        : generated/libpysal.cg.Grid.html#libpysal-cg-grid
+	/generated/libpysal.cg.grid.rst#libpysal.cg.grid libpysal.cg.Grid                        : generated/libpysal.cg.Grid.html#libpysal.cg.Grid
+	/generated/libpysal.cg.grid.rst#libpysal.cg.grid.__init__ libpysal.cg.Grid.__init__               : generated/libpysal.cg.Grid.html#libpysal.cg.Grid.__init__
+	/generated/libpysal.cg.grid.rst#libpysal.cg.grid.add libpysal.cg.Grid.add                    : generated/libpysal.cg.Grid.html#libpysal.cg.Grid.add
+	/generated/libpysal.cg.grid.rst#libpysal.cg.grid.bounds libpysal.cg.Grid.bounds                 : generated/libpysal.cg.Grid.html#libpysal.cg.Grid.bounds
+	/generated/libpysal.cg.grid.rst#libpysal.cg.grid.in_grid libpysal.cg.Grid.in_grid                : generated/libpysal.cg.Grid.html#libpysal.cg.Grid.in_grid
+	/generated/libpysal.cg.grid.rst#libpysal.cg.grid.nearest libpysal.cg.Grid.nearest                : generated/libpysal.cg.Grid.html#libpysal.cg.Grid.nearest
+	/generated/libpysal.cg.grid.rst#libpysal.cg.grid.proximity libpysal.cg.Grid.proximity              : generated/libpysal.cg.Grid.html#libpysal.cg.Grid.proximity
+	/generated/libpysal.cg.grid.rst#libpysal.cg.grid.remove libpysal.cg.Grid.remove                 : generated/libpysal.cg.Grid.html#libpysal.cg.Grid.remove
+	/generated/libpysal.cg.harcdist.rst      libpysal.cg.harcdist                    : generated/libpysal.cg.harcdist.html
+	/generated/libpysal.cg.harcdist.rst#libpysal-cg-harcdist libpysal.cg.harcdist                    : generated/libpysal.cg.harcdist.html#libpysal-cg-harcdist
+	/generated/libpysal.cg.harcdist.rst#libpysal.cg.harcdist libpysal.cg.harcdist                    : generated/libpysal.cg.harcdist.html#libpysal.cg.harcdist
+	/generated/libpysal.cg.is_clockwise.rst  libpysal.cg.is_clockwise                : generated/libpysal.cg.is_clockwise.html
+	/generated/libpysal.cg.is_clockwise.rst#libpysal-cg-is-clockwise libpysal.cg.is_clockwise                : generated/libpysal.cg.is_clockwise.html#libpysal-cg-is-clockwise
+	/generated/libpysal.cg.is_clockwise.rst#libpysal.cg.is_clockwise libpysal.cg.is_clockwise                : generated/libpysal.cg.is_clockwise.html#libpysal.cg.is_clockwise
+	/generated/libpysal.cg.is_collinear.rst  libpysal.cg.is_collinear                : generated/libpysal.cg.is_collinear.html
+	/generated/libpysal.cg.is_collinear.rst#libpysal-cg-is-collinear libpysal.cg.is_collinear                : generated/libpysal.cg.is_collinear.html#libpysal-cg-is-collinear
+	/generated/libpysal.cg.is_collinear.rst#libpysal.cg.is_collinear libpysal.cg.is_collinear                : generated/libpysal.cg.is_collinear.html#libpysal.cg.is_collinear
+	/generated/libpysal.cg.kdtree.rst        libpysal.cg.KDTree                      : generated/libpysal.cg.KDTree.html
+	/generated/libpysal.cg.kdtree.rst#libpysal-cg-kdtree libpysal.cg.KDTree                      : generated/libpysal.cg.KDTree.html#libpysal-cg-kdtree
+	/generated/libpysal.cg.kdtree.rst#libpysal.cg.kdtree libpysal.cg.KDTree                      : generated/libpysal.cg.KDTree.html#libpysal.cg.KDTree
+	/generated/libpysal.cg.line.rst          libpysal.cg.Line                        : generated/libpysal.cg.Line.html
+	/generated/libpysal.cg.line.rst#libpysal-cg-line libpysal.cg.Line                        : generated/libpysal.cg.Line.html#libpysal-cg-line
+	/generated/libpysal.cg.line.rst#libpysal.cg.line libpysal.cg.Line                        : generated/libpysal.cg.Line.html#libpysal.cg.Line
+	/generated/libpysal.cg.line.rst#libpysal.cg.line.__init__ libpysal.cg.Line.__init__               : generated/libpysal.cg.Line.html#libpysal.cg.Line.__init__
+	/generated/libpysal.cg.line.rst#libpysal.cg.line.x libpysal.cg.Line.x                      : generated/libpysal.cg.Line.html#libpysal.cg.Line.x
+	/generated/libpysal.cg.line.rst#libpysal.cg.line.y libpysal.cg.Line.y                      : generated/libpysal.cg.Line.html#libpysal.cg.Line.y
+	/generated/libpysal.cg.linear2arcdist.rst libpysal.cg.linear2arcdist              : generated/libpysal.cg.linear2arcdist.html
+	/generated/libpysal.cg.linear2arcdist.rst#libpysal-cg-linear2arcdist libpysal.cg.linear2arcdist              : generated/libpysal.cg.linear2arcdist.html#libpysal-cg-linear2arcdist
+	/generated/libpysal.cg.linear2arcdist.rst#libpysal.cg.linear2arcdist libpysal.cg.linear2arcdist              : generated/libpysal.cg.linear2arcdist.html#libpysal.cg.linear2arcdist
+	/generated/libpysal.cg.linesegment.rst   libpysal.cg.LineSegment                 : generated/libpysal.cg.LineSegment.html
+	/generated/libpysal.cg.linesegment.rst#libpysal-cg-linesegment libpysal.cg.LineSegment                 : generated/libpysal.cg.LineSegment.html#libpysal-cg-linesegment
+	/generated/libpysal.cg.linesegment.rst#libpysal.cg.linesegment libpysal.cg.LineSegment                 : generated/libpysal.cg.LineSegment.html#libpysal.cg.LineSegment
+	/generated/libpysal.cg.linesegment.rst#libpysal.cg.linesegment.__init__ libpysal.cg.LineSegment.__init__        : generated/libpysal.cg.LineSegment.html#libpysal.cg.LineSegment.__init__
+	/generated/libpysal.cg.linesegment.rst#libpysal.cg.linesegment.bounding_box libpysal.cg.LineSegment.bounding_box    : generated/libpysal.cg.LineSegment.html#libpysal.cg.LineSegment.bounding_box
+	/generated/libpysal.cg.linesegment.rst#libpysal.cg.linesegment.get_swap libpysal.cg.LineSegment.get_swap        : generated/libpysal.cg.LineSegment.html#libpysal.cg.LineSegment.get_swap
+	/generated/libpysal.cg.linesegment.rst#libpysal.cg.linesegment.intersect libpysal.cg.LineSegment.intersect       : generated/libpysal.cg.LineSegment.html#libpysal.cg.LineSegment.intersect
+	/generated/libpysal.cg.linesegment.rst#libpysal.cg.linesegment.is_ccw libpysal.cg.LineSegment.is_ccw          : generated/libpysal.cg.LineSegment.html#libpysal.cg.LineSegment.is_ccw
+	/generated/libpysal.cg.linesegment.rst#libpysal.cg.linesegment.is_cw libpysal.cg.LineSegment.is_cw           : generated/libpysal.cg.LineSegment.html#libpysal.cg.LineSegment.is_cw
+	/generated/libpysal.cg.linesegment.rst#libpysal.cg.linesegment.len libpysal.cg.LineSegment.len             : generated/libpysal.cg.LineSegment.html#libpysal.cg.LineSegment.len
+	/generated/libpysal.cg.linesegment.rst#libpysal.cg.linesegment.line libpysal.cg.LineSegment.line            : generated/libpysal.cg.LineSegment.html#libpysal.cg.LineSegment.line
+	/generated/libpysal.cg.linesegment.rst#libpysal.cg.linesegment.p1 libpysal.cg.LineSegment.p1              : generated/libpysal.cg.LineSegment.html#libpysal.cg.LineSegment.p1
+	/generated/libpysal.cg.linesegment.rst#libpysal.cg.linesegment.p2 libpysal.cg.LineSegment.p2              : generated/libpysal.cg.LineSegment.html#libpysal.cg.LineSegment.p2
+	/generated/libpysal.cg.linesegment.rst#libpysal.cg.linesegment.sw_ccw libpysal.cg.LineSegment.sw_ccw          : generated/libpysal.cg.LineSegment.html#libpysal.cg.LineSegment.sw_ccw
+	/generated/libpysal.cg.lonlat.rst        libpysal.cg.lonlat                      : generated/libpysal.cg.lonlat.html
+	/generated/libpysal.cg.lonlat.rst#libpysal-cg-lonlat libpysal.cg.lonlat                      : generated/libpysal.cg.lonlat.html#libpysal-cg-lonlat
+	/generated/libpysal.cg.lonlat.rst#libpysal.cg.lonlat libpysal.cg.lonlat                      : generated/libpysal.cg.lonlat.html#libpysal.cg.lonlat
+	/generated/libpysal.cg.point.rst         libpysal.cg.Point                       : generated/libpysal.cg.Point.html
+	/generated/libpysal.cg.point.rst#libpysal-cg-point libpysal.cg.Point                       : generated/libpysal.cg.Point.html#libpysal-cg-point
+	/generated/libpysal.cg.point.rst#libpysal.cg.point libpysal.cg.Point                       : generated/libpysal.cg.Point.html#libpysal.cg.Point
+	/generated/libpysal.cg.point.rst#libpysal.cg.point.__init__ libpysal.cg.Point.__init__              : generated/libpysal.cg.Point.html#libpysal.cg.Point.__init__
+	/generated/libpysal.cg.point_touches_rectangle.rst libpysal.cg.point_touches_rectangle     : generated/libpysal.cg.point_touches_rectangle.html
+	/generated/libpysal.cg.point_touches_rectangle.rst#libpysal-cg-point-touches-rectangle libpysal.cg.point_touches_rectangle     : generated/libpysal.cg.point_touches_rectangle.html#libpysal-cg-point-touches-rectangle
+	/generated/libpysal.cg.point_touches_rectangle.rst#libpysal.cg.point_touches_rectangle libpysal.cg.point_touches_rectangle     : generated/libpysal.cg.point_touches_rectangle.html#libpysal.cg.point_touches_rectangle
+	/generated/libpysal.cg.pointlocator.rst  libpysal.cg.PointLocator                : generated/libpysal.cg.PointLocator.html
+	/generated/libpysal.cg.pointlocator.rst#libpysal-cg-pointlocator libpysal.cg.PointLocator                : generated/libpysal.cg.PointLocator.html#libpysal-cg-pointlocator
+	/generated/libpysal.cg.pointlocator.rst#libpysal.cg.pointlocator libpysal.cg.PointLocator                : generated/libpysal.cg.PointLocator.html#libpysal.cg.PointLocator
+	/generated/libpysal.cg.pointlocator.rst#libpysal.cg.pointlocator.__init__ libpysal.cg.PointLocator.__init__       : generated/libpysal.cg.PointLocator.html#libpysal.cg.PointLocator.__init__
+	/generated/libpysal.cg.pointlocator.rst#libpysal.cg.pointlocator.nearest libpysal.cg.PointLocator.nearest        : generated/libpysal.cg.PointLocator.html#libpysal.cg.PointLocator.nearest
+	/generated/libpysal.cg.pointlocator.rst#libpysal.cg.pointlocator.overlapping libpysal.cg.PointLocator.overlapping    : generated/libpysal.cg.PointLocator.html#libpysal.cg.PointLocator.overlapping
+	/generated/libpysal.cg.pointlocator.rst#libpysal.cg.pointlocator.polygon libpysal.cg.PointLocator.polygon        : generated/libpysal.cg.PointLocator.html#libpysal.cg.PointLocator.polygon
+	/generated/libpysal.cg.pointlocator.rst#libpysal.cg.pointlocator.proximity libpysal.cg.PointLocator.proximity      : generated/libpysal.cg.PointLocator.html#libpysal.cg.PointLocator.proximity
+	/generated/libpysal.cg.pointlocator.rst#libpysal.cg.pointlocator.region libpysal.cg.PointLocator.region         : generated/libpysal.cg.PointLocator.html#libpysal.cg.PointLocator.region
+	/generated/libpysal.cg.polygon.rst       libpysal.cg.Polygon                     : generated/libpysal.cg.Polygon.html
+	/generated/libpysal.cg.polygon.rst#libpysal-cg-polygon libpysal.cg.Polygon                     : generated/libpysal.cg.Polygon.html#libpysal-cg-polygon
+	/generated/libpysal.cg.polygon.rst#libpysal.cg.polygon libpysal.cg.Polygon                     : generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon
+	/generated/libpysal.cg.polygon.rst#libpysal.cg.polygon.__init__ libpysal.cg.Polygon.__init__            : generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon.__init__
+	/generated/libpysal.cg.polygon.rst#libpysal.cg.polygon.area libpysal.cg.Polygon.area                : generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon.area
+	/generated/libpysal.cg.polygon.rst#libpysal.cg.polygon.bbox libpysal.cg.Polygon.bbox                : generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon.bbox
+	/generated/libpysal.cg.polygon.rst#libpysal.cg.polygon.bounding_box libpysal.cg.Polygon.bounding_box        : generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon.bounding_box
+	/generated/libpysal.cg.polygon.rst#libpysal.cg.polygon.build_quad_tree_structure libpysal.cg.Polygon.build_quad_tree_structure: generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon.build_quad_tree_structure
+	/generated/libpysal.cg.polygon.rst#libpysal.cg.polygon.centroid libpysal.cg.Polygon.centroid            : generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon.centroid
+	/generated/libpysal.cg.polygon.rst#libpysal.cg.polygon.contains_point libpysal.cg.Polygon.contains_point      : generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon.contains_point
+	/generated/libpysal.cg.polygon.rst#libpysal.cg.polygon.holes libpysal.cg.Polygon.holes               : generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon.holes
+	/generated/libpysal.cg.polygon.rst#libpysal.cg.polygon.len libpysal.cg.Polygon.len                 : generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon.len
+	/generated/libpysal.cg.polygon.rst#libpysal.cg.polygon.parts libpysal.cg.Polygon.parts               : generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon.parts
+	/generated/libpysal.cg.polygon.rst#libpysal.cg.polygon.perimeter libpysal.cg.Polygon.perimeter           : generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon.perimeter
+	/generated/libpysal.cg.polygon.rst#libpysal.cg.polygon.vertices libpysal.cg.Polygon.vertices            : generated/libpysal.cg.Polygon.html#libpysal.cg.Polygon.vertices
+	/generated/libpysal.cg.polygonlocator.rst libpysal.cg.PolygonLocator              : generated/libpysal.cg.PolygonLocator.html
+	/generated/libpysal.cg.polygonlocator.rst#libpysal-cg-polygonlocator libpysal.cg.PolygonLocator              : generated/libpysal.cg.PolygonLocator.html#libpysal-cg-polygonlocator
+	/generated/libpysal.cg.polygonlocator.rst#libpysal.cg.polygonlocator libpysal.cg.PolygonLocator              : generated/libpysal.cg.PolygonLocator.html#libpysal.cg.PolygonLocator
+	/generated/libpysal.cg.polygonlocator.rst#libpysal.cg.polygonlocator.__init__ libpysal.cg.PolygonLocator.__init__     : generated/libpysal.cg.PolygonLocator.html#libpysal.cg.PolygonLocator.__init__
+	/generated/libpysal.cg.polygonlocator.rst#libpysal.cg.polygonlocator.contains_point libpysal.cg.PolygonLocator.contains_point: generated/libpysal.cg.PolygonLocator.html#libpysal.cg.PolygonLocator.contains_point
+	/generated/libpysal.cg.polygonlocator.rst#libpysal.cg.polygonlocator.inside libpysal.cg.PolygonLocator.inside       : generated/libpysal.cg.PolygonLocator.html#libpysal.cg.PolygonLocator.inside
+	/generated/libpysal.cg.polygonlocator.rst#libpysal.cg.polygonlocator.nearest libpysal.cg.PolygonLocator.nearest      : generated/libpysal.cg.PolygonLocator.html#libpysal.cg.PolygonLocator.nearest
+	/generated/libpysal.cg.polygonlocator.rst#libpysal.cg.polygonlocator.overlapping libpysal.cg.PolygonLocator.overlapping  : generated/libpysal.cg.PolygonLocator.html#libpysal.cg.PolygonLocator.overlapping
+	/generated/libpysal.cg.polygonlocator.rst#libpysal.cg.polygonlocator.proximity libpysal.cg.PolygonLocator.proximity    : generated/libpysal.cg.PolygonLocator.html#libpysal.cg.PolygonLocator.proximity
+	/generated/libpysal.cg.polygonlocator.rst#libpysal.cg.polygonlocator.region libpysal.cg.PolygonLocator.region       : generated/libpysal.cg.PolygonLocator.html#libpysal.cg.PolygonLocator.region
+	/generated/libpysal.cg.radius_earth_km.rst libpysal.cg.RADIUS_EARTH_KM             : generated/libpysal.cg.RADIUS_EARTH_KM.html
+	/generated/libpysal.cg.radius_earth_km.rst#libpysal-cg-radius-earth-km libpysal.cg.RADIUS_EARTH_KM             : generated/libpysal.cg.RADIUS_EARTH_KM.html#libpysal-cg-radius-earth-km
+	/generated/libpysal.cg.radius_earth_km.rst#libpysal.cg.radius_earth_km libpysal.cg.RADIUS_EARTH_KM             : generated/libpysal.cg.RADIUS_EARTH_KM.html#libpysal.cg.RADIUS_EARTH_KM
+	/generated/libpysal.cg.radius_earth_miles.rst libpysal.cg.RADIUS_EARTH_MILES          : generated/libpysal.cg.RADIUS_EARTH_MILES.html
+	/generated/libpysal.cg.radius_earth_miles.rst#libpysal-cg-radius-earth-miles libpysal.cg.RADIUS_EARTH_MILES          : generated/libpysal.cg.RADIUS_EARTH_MILES.html#libpysal-cg-radius-earth-miles
+	/generated/libpysal.cg.radius_earth_miles.rst#libpysal.cg.radius_earth_miles libpysal.cg.RADIUS_EARTH_MILES          : generated/libpysal.cg.RADIUS_EARTH_MILES.html#libpysal.cg.RADIUS_EARTH_MILES
+	/generated/libpysal.cg.ray.rst           libpysal.cg.Ray                         : generated/libpysal.cg.Ray.html
+	/generated/libpysal.cg.ray.rst#libpysal-cg-ray libpysal.cg.Ray                         : generated/libpysal.cg.Ray.html#libpysal-cg-ray
+	/generated/libpysal.cg.ray.rst#libpysal.cg.ray libpysal.cg.Ray                         : generated/libpysal.cg.Ray.html#libpysal.cg.Ray
+	/generated/libpysal.cg.ray.rst#libpysal.cg.ray.__init__ libpysal.cg.Ray.__init__                : generated/libpysal.cg.Ray.html#libpysal.cg.Ray.__init__
+	/generated/libpysal.cg.rectangle.rst     libpysal.cg.Rectangle                   : generated/libpysal.cg.Rectangle.html
+	/generated/libpysal.cg.rectangle.rst#libpysal-cg-rectangle libpysal.cg.Rectangle                   : generated/libpysal.cg.Rectangle.html#libpysal-cg-rectangle
+	/generated/libpysal.cg.rectangle.rst#libpysal.cg.rectangle libpysal.cg.Rectangle                   : generated/libpysal.cg.Rectangle.html#libpysal.cg.Rectangle
+	/generated/libpysal.cg.rectangle.rst#libpysal.cg.rectangle.__init__ libpysal.cg.Rectangle.__init__          : generated/libpysal.cg.Rectangle.html#libpysal.cg.Rectangle.__init__
+	/generated/libpysal.cg.rectangle.rst#libpysal.cg.rectangle.area libpysal.cg.Rectangle.area              : generated/libpysal.cg.Rectangle.html#libpysal.cg.Rectangle.area
+	/generated/libpysal.cg.rectangle.rst#libpysal.cg.rectangle.height libpysal.cg.Rectangle.height            : generated/libpysal.cg.Rectangle.html#libpysal.cg.Rectangle.height
+	/generated/libpysal.cg.rectangle.rst#libpysal.cg.rectangle.set_centroid libpysal.cg.Rectangle.set_centroid      : generated/libpysal.cg.Rectangle.html#libpysal.cg.Rectangle.set_centroid
+	/generated/libpysal.cg.rectangle.rst#libpysal.cg.rectangle.set_scale libpysal.cg.Rectangle.set_scale         : generated/libpysal.cg.Rectangle.html#libpysal.cg.Rectangle.set_scale
+	/generated/libpysal.cg.rectangle.rst#libpysal.cg.rectangle.width libpysal.cg.Rectangle.width             : generated/libpysal.cg.Rectangle.html#libpysal.cg.Rectangle.width
+	/generated/libpysal.cg.tolnglat.rst      libpysal.cg.toLngLat                    : generated/libpysal.cg.toLngLat.html
+	/generated/libpysal.cg.tolnglat.rst#libpysal-cg-tolnglat libpysal.cg.toLngLat                    : generated/libpysal.cg.toLngLat.html#libpysal-cg-tolnglat
+	/generated/libpysal.cg.tolnglat.rst#libpysal.cg.tolnglat libpysal.cg.toLngLat                    : generated/libpysal.cg.toLngLat.html#libpysal.cg.toLngLat
+	/generated/libpysal.cg.toxyz.rst         libpysal.cg.toXYZ                       : generated/libpysal.cg.toXYZ.html
+	/generated/libpysal.cg.toxyz.rst#libpysal-cg-toxyz libpysal.cg.toXYZ                       : generated/libpysal.cg.toXYZ.html#libpysal-cg-toxyz
+	/generated/libpysal.cg.toxyz.rst#libpysal.cg.toxyz libpysal.cg.toXYZ                       : generated/libpysal.cg.toXYZ.html#libpysal.cg.toXYZ
+	/generated/libpysal.cg.voronoi_frames.rst libpysal.cg.voronoi_frames              : generated/libpysal.cg.voronoi_frames.html
+	/generated/libpysal.cg.voronoi_frames.rst#libpysal-cg-voronoi-frames libpysal.cg.voronoi_frames              : generated/libpysal.cg.voronoi_frames.html#libpysal-cg-voronoi-frames
+	/generated/libpysal.cg.voronoi_frames.rst#libpysal.cg.voronoi_frames libpysal.cg.voronoi_frames              : generated/libpysal.cg.voronoi_frames.html#libpysal.cg.voronoi_frames
+	/generated/libpysal.examples.available.rst libpysal.examples.available             : generated/libpysal.examples.available.html
+	/generated/libpysal.examples.available.rst#libpysal-examples-available libpysal.examples.available             : generated/libpysal.examples.available.html#libpysal-examples-available
+	/generated/libpysal.examples.available.rst#libpysal.examples.available libpysal.examples.available             : generated/libpysal.examples.available.html#libpysal.examples.available
+	/generated/libpysal.examples.explain.rst libpysal.examples.explain               : generated/libpysal.examples.explain.html
+	/generated/libpysal.examples.explain.rst#libpysal-examples-explain libpysal.examples.explain               : generated/libpysal.examples.explain.html#libpysal-examples-explain
+	/generated/libpysal.examples.explain.rst#libpysal.examples.explain libpysal.examples.explain               : generated/libpysal.examples.explain.html#libpysal.examples.explain
+	/generated/libpysal.examples.get_path.rst libpysal.examples.get_path              : generated/libpysal.examples.get_path.html
+	/generated/libpysal.examples.get_path.rst#libpysal-examples-get-path libpysal.examples.get_path              : generated/libpysal.examples.get_path.html#libpysal-examples-get-path
+	/generated/libpysal.examples.get_path.rst#libpysal.examples.get_path libpysal.examples.get_path              : generated/libpysal.examples.get_path.html#libpysal.examples.get_path
+	/generated/libpysal.io.fileio.fileio.rst libpysal.io.fileio.FileIO               : generated/libpysal.io.fileio.FileIO.html
+	/generated/libpysal.io.fileio.fileio.rst#libpysal-io-fileio-fileio libpysal.io.fileio.FileIO               : generated/libpysal.io.fileio.FileIO.html#libpysal-io-fileio-fileio
+	/generated/libpysal.io.fileio.fileio.rst#libpysal.io.fileio.fileio libpysal.io.fileio.FileIO               : generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO
+	/generated/libpysal.io.fileio.fileio.rst#libpysal.io.fileio.fileio.__init__ libpysal.io.fileio.FileIO.__init__      : generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO.__init__
+	/generated/libpysal.io.fileio.fileio.rst#libpysal.io.fileio.fileio.cast libpysal.io.fileio.FileIO.cast          : generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO.cast
+	/generated/libpysal.io.fileio.fileio.rst#libpysal.io.fileio.fileio.check libpysal.io.fileio.FileIO.check         : generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO.check
+	/generated/libpysal.io.fileio.fileio.rst#libpysal.io.fileio.fileio.close libpysal.io.fileio.FileIO.close         : generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO.close
+	/generated/libpysal.io.fileio.fileio.rst#libpysal.io.fileio.fileio.get libpysal.io.fileio.FileIO.get           : generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO.get
+	/generated/libpysal.io.fileio.fileio.rst#libpysal.io.fileio.fileio.gettype libpysal.io.fileio.FileIO.getType       : generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO.getType
+	/generated/libpysal.io.fileio.fileio.rst#libpysal.io.fileio.fileio.open libpysal.io.fileio.FileIO.open          : generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO.open
+	/generated/libpysal.io.fileio.fileio.rst#libpysal.io.fileio.fileio.read libpysal.io.fileio.FileIO.read          : generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO.read
+	/generated/libpysal.io.fileio.fileio.rst#libpysal.io.fileio.fileio.seek libpysal.io.fileio.FileIO.seek          : generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO.seek
+	/generated/libpysal.io.fileio.fileio.rst#libpysal.io.fileio.fileio.tell libpysal.io.fileio.FileIO.tell          : generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO.tell
+	/generated/libpysal.io.fileio.fileio.rst#libpysal.io.fileio.fileio.truncate libpysal.io.fileio.FileIO.truncate      : generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO.truncate
+	/generated/libpysal.io.fileio.fileio.rst#libpysal.io.fileio.fileio.write libpysal.io.fileio.FileIO.write         : generated/libpysal.io.fileio.FileIO.html#libpysal.io.fileio.FileIO.write
+	/generated/libpysal.io.open.rst          libpysal.io.open                        : generated/libpysal.io.open.html
+	/generated/libpysal.io.open.rst#libpysal-io-open libpysal.io.open                        : generated/libpysal.io.open.html#libpysal-io-open
+	/generated/libpysal.io.open.rst#libpysal.io.open libpysal.io.open                        : generated/libpysal.io.open.html#libpysal.io.open
+	/generated/libpysal.weights.attach_islands.rst libpysal.weights.attach_islands         : generated/libpysal.weights.attach_islands.html
+	/generated/libpysal.weights.attach_islands.rst#libpysal-weights-attach-islands libpysal.weights.attach_islands         : generated/libpysal.weights.attach_islands.html#libpysal-weights-attach-islands
+	/generated/libpysal.weights.attach_islands.rst#libpysal.weights.attach_islands libpysal.weights.attach_islands         : generated/libpysal.weights.attach_islands.html#libpysal.weights.attach_islands
+	/generated/libpysal.weights.block_weights.rst libpysal.weights.block_weights          : generated/libpysal.weights.block_weights.html
+	/generated/libpysal.weights.block_weights.rst#libpysal-weights-block-weights libpysal.weights.block_weights          : generated/libpysal.weights.block_weights.html#libpysal-weights-block-weights
+	/generated/libpysal.weights.block_weights.rst#libpysal.weights.block_weights libpysal.weights.block_weights          : generated/libpysal.weights.block_weights.html#libpysal.weights.block_weights
+	/generated/libpysal.weights.build_lattice_shapefile.rst libpysal.weights.build_lattice_shapefile: generated/libpysal.weights.build_lattice_shapefile.html
+	/generated/libpysal.weights.build_lattice_shapefile.rst#libpysal-weights-build-lattice-shapefile libpysal.weights.build_lattice_shapefile: generated/libpysal.weights.build_lattice_shapefile.html#libpysal-weights-build-lattice-shapefile
+	/generated/libpysal.weights.build_lattice_shapefile.rst#libpysal.weights.build_lattice_shapefile libpysal.weights.build_lattice_shapefile: generated/libpysal.weights.build_lattice_shapefile.html#libpysal.weights.build_lattice_shapefile
+	/generated/libpysal.weights.comb.rst     libpysal.weights.comb                   : generated/libpysal.weights.comb.html
+	/generated/libpysal.weights.comb.rst#libpysal-weights-comb libpysal.weights.comb                   : generated/libpysal.weights.comb.html#libpysal-weights-comb
+	/generated/libpysal.weights.comb.rst#libpysal.weights.comb libpysal.weights.comb                   : generated/libpysal.weights.comb.html#libpysal.weights.comb
+	/generated/libpysal.weights.distanceband.rst libpysal.weights.DistanceBand           : generated/libpysal.weights.DistanceBand.html
+	/generated/libpysal.weights.distanceband.rst#libpysal-weights-distanceband libpysal.weights.DistanceBand           : generated/libpysal.weights.DistanceBand.html#libpysal-weights-distanceband
+	/generated/libpysal.weights.distanceband.rst#libpysal.weights.distanceband libpysal.weights.DistanceBand           : generated/libpysal.weights.DistanceBand.html#libpysal.weights.DistanceBand
+	/generated/libpysal.weights.distanceband.rst#libpysal.weights.distanceband.__init__ libpysal.weights.DistanceBand.__init__  : generated/libpysal.weights.DistanceBand.html#libpysal.weights.DistanceBand.__init__
+	/generated/libpysal.weights.distanceband.rst#libpysal.weights.distanceband.from_array libpysal.weights.DistanceBand.from_array: generated/libpysal.weights.DistanceBand.html#libpysal.weights.DistanceBand.from_array
+	/generated/libpysal.weights.distanceband.rst#libpysal.weights.distanceband.from_dataframe libpysal.weights.DistanceBand.from_dataframe: generated/libpysal.weights.DistanceBand.html#libpysal.weights.DistanceBand.from_dataframe
+	/generated/libpysal.weights.distanceband.rst#libpysal.weights.distanceband.from_shapefile libpysal.weights.DistanceBand.from_shapefile: generated/libpysal.weights.DistanceBand.html#libpysal.weights.DistanceBand.from_shapefile
+	/generated/libpysal.weights.full.rst     libpysal.weights.full                   : generated/libpysal.weights.full.html
+	/generated/libpysal.weights.full.rst#libpysal-weights-full libpysal.weights.full                   : generated/libpysal.weights.full.html#libpysal-weights-full
+	/generated/libpysal.weights.full.rst#libpysal.weights.full libpysal.weights.full                   : generated/libpysal.weights.full.html#libpysal.weights.full
+	/generated/libpysal.weights.full2w.rst   libpysal.weights.full2W                 : generated/libpysal.weights.full2W.html
+	/generated/libpysal.weights.full2w.rst#libpysal-weights-full2w libpysal.weights.full2W                 : generated/libpysal.weights.full2W.html#libpysal-weights-full2w
+	/generated/libpysal.weights.full2w.rst#libpysal.weights.full2w libpysal.weights.full2W                 : generated/libpysal.weights.full2W.html#libpysal.weights.full2W
+	/generated/libpysal.weights.fuzzy_contiguity.rst libpysal.weights.fuzzy_contiguity       : generated/libpysal.weights.fuzzy_contiguity.html
+	/generated/libpysal.weights.fuzzy_contiguity.rst#libpysal-weights-fuzzy-contiguity libpysal.weights.fuzzy_contiguity       : generated/libpysal.weights.fuzzy_contiguity.html#libpysal-weights-fuzzy-contiguity
+	/generated/libpysal.weights.fuzzy_contiguity.rst#libpysal.weights.fuzzy_contiguity libpysal.weights.fuzzy_contiguity       : generated/libpysal.weights.fuzzy_contiguity.html#libpysal.weights.fuzzy_contiguity
+	/generated/libpysal.weights.get_ids.rst  libpysal.weights.get_ids                : generated/libpysal.weights.get_ids.html
+	/generated/libpysal.weights.get_ids.rst#libpysal-weights-get-ids libpysal.weights.get_ids                : generated/libpysal.weights.get_ids.html#libpysal-weights-get-ids
+	/generated/libpysal.weights.get_ids.rst#libpysal.weights.get_ids libpysal.weights.get_ids                : generated/libpysal.weights.get_ids.html#libpysal.weights.get_ids
+	/generated/libpysal.weights.get_points_array_from_shapefile.rst libpysal.weights.get_points_array_from_shapefile: generated/libpysal.weights.get_points_array_from_shapefile.html
+	/generated/libpysal.weights.get_points_array_from_shapefile.rst#libpysal-weights-get-points-array-from-shapefile libpysal.weights.get_points_array_from_shapefile: generated/libpysal.weights.get_points_array_from_shapefile.html#libpysal-weights-get-points-array-from-shapefile
+	/generated/libpysal.weights.get_points_array_from_shapefile.rst#libpysal.weights.get_points_array_from_shapefile libpysal.weights.get_points_array_from_shapefile: generated/libpysal.weights.get_points_array_from_shapefile.html#libpysal.weights.get_points_array_from_shapefile
+	/generated/libpysal.weights.hexlat2w.rst libpysal.weights.hexLat2W               : generated/libpysal.weights.hexLat2W.html
+	/generated/libpysal.weights.hexlat2w.rst#libpysal-weights-hexlat2w libpysal.weights.hexLat2W               : generated/libpysal.weights.hexLat2W.html#libpysal-weights-hexlat2w
+	/generated/libpysal.weights.hexlat2w.rst#libpysal.weights.hexlat2w libpysal.weights.hexLat2W               : generated/libpysal.weights.hexLat2W.html#libpysal.weights.hexLat2W
+	/generated/libpysal.weights.higher_order.rst libpysal.weights.higher_order           : generated/libpysal.weights.higher_order.html
+	/generated/libpysal.weights.higher_order.rst#libpysal-weights-higher-order libpysal.weights.higher_order           : generated/libpysal.weights.higher_order.html#libpysal-weights-higher-order
+	/generated/libpysal.weights.higher_order.rst#libpysal.weights.higher_order libpysal.weights.higher_order           : generated/libpysal.weights.higher_order.html#libpysal.weights.higher_order
+	/generated/libpysal.weights.higher_order_sp.rst libpysal.weights.higher_order_sp        : generated/libpysal.weights.higher_order_sp.html
+	/generated/libpysal.weights.higher_order_sp.rst#libpysal-weights-higher-order-sp libpysal.weights.higher_order_sp        : generated/libpysal.weights.higher_order_sp.html#libpysal-weights-higher-order-sp
+	/generated/libpysal.weights.higher_order_sp.rst#libpysal.weights.higher_order_sp libpysal.weights.higher_order_sp        : generated/libpysal.weights.higher_order_sp.html#libpysal.weights.higher_order_sp
+	/generated/libpysal.weights.kernel.rst   libpysal.weights.Kernel                 : generated/libpysal.weights.Kernel.html
+	/generated/libpysal.weights.kernel.rst#libpysal-weights-kernel libpysal.weights.Kernel                 : generated/libpysal.weights.Kernel.html#libpysal-weights-kernel
+	/generated/libpysal.weights.kernel.rst#libpysal.weights.kernel libpysal.weights.Kernel                 : generated/libpysal.weights.Kernel.html#libpysal.weights.Kernel
+	/generated/libpysal.weights.kernel.rst#libpysal.weights.kernel.__init__ libpysal.weights.Kernel.__init__        : generated/libpysal.weights.Kernel.html#libpysal.weights.Kernel.__init__
+	/generated/libpysal.weights.kernel.rst#libpysal.weights.kernel.from_array libpysal.weights.Kernel.from_array      : generated/libpysal.weights.Kernel.html#libpysal.weights.Kernel.from_array
+	/generated/libpysal.weights.kernel.rst#libpysal.weights.kernel.from_dataframe libpysal.weights.Kernel.from_dataframe  : generated/libpysal.weights.Kernel.html#libpysal.weights.Kernel.from_dataframe
+	/generated/libpysal.weights.kernel.rst#libpysal.weights.kernel.from_shapefile libpysal.weights.Kernel.from_shapefile  : generated/libpysal.weights.Kernel.html#libpysal.weights.Kernel.from_shapefile
+	/generated/libpysal.weights.knn.rst      libpysal.weights.KNN                    : generated/libpysal.weights.KNN.html
+	/generated/libpysal.weights.knn.rst#libpysal-weights-knn libpysal.weights.KNN                    : generated/libpysal.weights.KNN.html#libpysal-weights-knn
+	/generated/libpysal.weights.knn.rst#libpysal.weights.knn libpysal.weights.KNN                    : generated/libpysal.weights.KNN.html#libpysal.weights.KNN
+	/generated/libpysal.weights.knn.rst#libpysal.weights.knn.__init__ libpysal.weights.KNN.__init__           : generated/libpysal.weights.KNN.html#libpysal.weights.KNN.__init__
+	/generated/libpysal.weights.knn.rst#libpysal.weights.knn.from_array libpysal.weights.KNN.from_array         : generated/libpysal.weights.KNN.html#libpysal.weights.KNN.from_array
+	/generated/libpysal.weights.knn.rst#libpysal.weights.knn.from_dataframe libpysal.weights.KNN.from_dataframe     : generated/libpysal.weights.KNN.html#libpysal.weights.KNN.from_dataframe
+	/generated/libpysal.weights.knn.rst#libpysal.weights.knn.from_shapefile libpysal.weights.KNN.from_shapefile     : generated/libpysal.weights.KNN.html#libpysal.weights.KNN.from_shapefile
+	/generated/libpysal.weights.knn.rst#libpysal.weights.knn.reweight libpysal.weights.KNN.reweight           : generated/libpysal.weights.KNN.html#libpysal.weights.KNN.reweight
+	/generated/libpysal.weights.lag_categorical.rst libpysal.weights.lag_categorical        : generated/libpysal.weights.lag_categorical.html
+	/generated/libpysal.weights.lag_categorical.rst#libpysal-weights-lag-categorical libpysal.weights.lag_categorical        : generated/libpysal.weights.lag_categorical.html#libpysal-weights-lag-categorical
+	/generated/libpysal.weights.lag_categorical.rst#libpysal.weights.lag_categorical libpysal.weights.lag_categorical        : generated/libpysal.weights.lag_categorical.html#libpysal.weights.lag_categorical
+	/generated/libpysal.weights.lag_spatial.rst libpysal.weights.lag_spatial            : generated/libpysal.weights.lag_spatial.html
+	/generated/libpysal.weights.lag_spatial.rst#libpysal-weights-lag-spatial libpysal.weights.lag_spatial            : generated/libpysal.weights.lag_spatial.html#libpysal-weights-lag-spatial
+	/generated/libpysal.weights.lag_spatial.rst#libpysal.weights.lag_spatial libpysal.weights.lag_spatial            : generated/libpysal.weights.lag_spatial.html#libpysal.weights.lag_spatial
+	/generated/libpysal.weights.lat2sw.rst   libpysal.weights.lat2SW                 : generated/libpysal.weights.lat2SW.html
+	/generated/libpysal.weights.lat2sw.rst#libpysal-weights-lat2sw libpysal.weights.lat2SW                 : generated/libpysal.weights.lat2SW.html#libpysal-weights-lat2sw
+	/generated/libpysal.weights.lat2sw.rst#libpysal.weights.lat2sw libpysal.weights.lat2SW                 : generated/libpysal.weights.lat2SW.html#libpysal.weights.lat2SW
+	/generated/libpysal.weights.lat2w.rst    libpysal.weights.lat2W                  : generated/libpysal.weights.lat2W.html
+	/generated/libpysal.weights.lat2w.rst#libpysal-weights-lat2w libpysal.weights.lat2W                  : generated/libpysal.weights.lat2W.html#libpysal-weights-lat2w
+	/generated/libpysal.weights.lat2w.rst#libpysal.weights.lat2w libpysal.weights.lat2W                  : generated/libpysal.weights.lat2W.html#libpysal.weights.lat2W
+	/generated/libpysal.weights.mat2l.rst    libpysal.weights.mat2L                  : generated/libpysal.weights.mat2L.html
+	/generated/libpysal.weights.mat2l.rst#libpysal-weights-mat2l libpysal.weights.mat2L                  : generated/libpysal.weights.mat2L.html#libpysal-weights-mat2l
+	/generated/libpysal.weights.mat2l.rst#libpysal.weights.mat2l libpysal.weights.mat2L                  : generated/libpysal.weights.mat2L.html#libpysal.weights.mat2L
+	/generated/libpysal.weights.min_threshold_dist_from_shapefile.rst libpysal.weights.min_threshold_dist_from_shapefile: generated/libpysal.weights.min_threshold_dist_from_shapefile.html
+	/generated/libpysal.weights.min_threshold_dist_from_shapefile.rst#libpysal-weights-min-threshold-dist-from-shapefile libpysal.weights.min_threshold_dist_from_shapefile: generated/libpysal.weights.min_threshold_dist_from_shapefile.html#libpysal-weights-min-threshold-dist-from-shapefile
+	/generated/libpysal.weights.min_threshold_dist_from_shapefile.rst#libpysal.weights.min_threshold_dist_from_shapefile libpysal.weights.min_threshold_dist_from_shapefile: generated/libpysal.weights.min_threshold_dist_from_shapefile.html#libpysal.weights.min_threshold_dist_from_shapefile
+	/generated/libpysal.weights.min_threshold_distance.rst libpysal.weights.min_threshold_distance : generated/libpysal.weights.min_threshold_distance.html
+	/generated/libpysal.weights.min_threshold_distance.rst#libpysal-weights-min-threshold-distance libpysal.weights.min_threshold_distance : generated/libpysal.weights.min_threshold_distance.html#libpysal-weights-min-threshold-distance
+	/generated/libpysal.weights.min_threshold_distance.rst#libpysal.weights.min_threshold_distance libpysal.weights.min_threshold_distance : generated/libpysal.weights.min_threshold_distance.html#libpysal.weights.min_threshold_distance
+	/generated/libpysal.weights.netw.rst     libpysal.weights.netW                   : generated/libpysal.weights.netW.html
+	/generated/libpysal.weights.netw.rst#libpysal-weights-netw libpysal.weights.netW                   : generated/libpysal.weights.netW.html#libpysal-weights-netw
+	/generated/libpysal.weights.netw.rst#libpysal.weights.netw libpysal.weights.netW                   : generated/libpysal.weights.netW.html#libpysal.weights.netW
+	/generated/libpysal.weights.nonplanar_neighbors.rst libpysal.weights.nonplanar_neighbors    : generated/libpysal.weights.nonplanar_neighbors.html
+	/generated/libpysal.weights.nonplanar_neighbors.rst#libpysal-weights-nonplanar-neighbors libpysal.weights.nonplanar_neighbors    : generated/libpysal.weights.nonplanar_neighbors.html#libpysal-weights-nonplanar-neighbors
+	/generated/libpysal.weights.nonplanar_neighbors.rst#libpysal.weights.nonplanar_neighbors libpysal.weights.nonplanar_neighbors    : generated/libpysal.weights.nonplanar_neighbors.html#libpysal.weights.nonplanar_neighbors
+	/generated/libpysal.weights.odw.rst      libpysal.weights.ODW                    : generated/libpysal.weights.ODW.html
+	/generated/libpysal.weights.odw.rst#libpysal-weights-odw libpysal.weights.ODW                    : generated/libpysal.weights.ODW.html#libpysal-weights-odw
+	/generated/libpysal.weights.odw.rst#libpysal.weights.odw libpysal.weights.ODW                    : generated/libpysal.weights.ODW.html#libpysal.weights.ODW
+	/generated/libpysal.weights.order.rst    libpysal.weights.order                  : generated/libpysal.weights.order.html
+	/generated/libpysal.weights.order.rst#libpysal-weights-order libpysal.weights.order                  : generated/libpysal.weights.order.html#libpysal-weights-order
+	/generated/libpysal.weights.order.rst#libpysal.weights.order libpysal.weights.order                  : generated/libpysal.weights.order.html#libpysal.weights.order
+	/generated/libpysal.weights.queen.rst    libpysal.weights.Queen                  : generated/libpysal.weights.Queen.html
+	/generated/libpysal.weights.queen.rst#libpysal-weights-queen libpysal.weights.Queen                  : generated/libpysal.weights.Queen.html#libpysal-weights-queen
+	/generated/libpysal.weights.queen.rst#libpysal.weights.queen libpysal.weights.Queen                  : generated/libpysal.weights.Queen.html#libpysal.weights.Queen
+	/generated/libpysal.weights.queen.rst#libpysal.weights.queen.__init__ libpysal.weights.Queen.__init__         : generated/libpysal.weights.Queen.html#libpysal.weights.Queen.__init__
+	/generated/libpysal.weights.queen.rst#libpysal.weights.queen.from_dataframe libpysal.weights.Queen.from_dataframe   : generated/libpysal.weights.Queen.html#libpysal.weights.Queen.from_dataframe
+	/generated/libpysal.weights.queen.rst#libpysal.weights.queen.from_iterable libpysal.weights.Queen.from_iterable    : generated/libpysal.weights.Queen.html#libpysal.weights.Queen.from_iterable
+	/generated/libpysal.weights.queen.rst#libpysal.weights.queen.from_shapefile libpysal.weights.Queen.from_shapefile   : generated/libpysal.weights.Queen.html#libpysal.weights.Queen.from_shapefile
+	/generated/libpysal.weights.remap_ids.rst libpysal.weights.remap_ids              : generated/libpysal.weights.remap_ids.html
+	/generated/libpysal.weights.remap_ids.rst#libpysal-weights-remap-ids libpysal.weights.remap_ids              : generated/libpysal.weights.remap_ids.html#libpysal-weights-remap-ids
+	/generated/libpysal.weights.remap_ids.rst#libpysal.weights.remap_ids libpysal.weights.remap_ids              : generated/libpysal.weights.remap_ids.html#libpysal.weights.remap_ids
+	/generated/libpysal.weights.rook.rst     libpysal.weights.Rook                   : generated/libpysal.weights.Rook.html
+	/generated/libpysal.weights.rook.rst#libpysal-weights-rook libpysal.weights.Rook                   : generated/libpysal.weights.Rook.html#libpysal-weights-rook
+	/generated/libpysal.weights.rook.rst#libpysal.weights.rook libpysal.weights.Rook                   : generated/libpysal.weights.Rook.html#libpysal.weights.Rook
+	/generated/libpysal.weights.rook.rst#libpysal.weights.rook.__init__ libpysal.weights.Rook.__init__          : generated/libpysal.weights.Rook.html#libpysal.weights.Rook.__init__
+	/generated/libpysal.weights.rook.rst#libpysal.weights.rook.from_dataframe libpysal.weights.Rook.from_dataframe    : generated/libpysal.weights.Rook.html#libpysal.weights.Rook.from_dataframe
+	/generated/libpysal.weights.rook.rst#libpysal.weights.rook.from_iterable libpysal.weights.Rook.from_iterable     : generated/libpysal.weights.Rook.html#libpysal.weights.Rook.from_iterable
+	/generated/libpysal.weights.rook.rst#libpysal.weights.rook.from_shapefile libpysal.weights.Rook.from_shapefile    : generated/libpysal.weights.Rook.html#libpysal.weights.Rook.from_shapefile
+	/generated/libpysal.weights.shimbel.rst  libpysal.weights.shimbel                : generated/libpysal.weights.shimbel.html
+	/generated/libpysal.weights.shimbel.rst#libpysal-weights-shimbel libpysal.weights.shimbel                : generated/libpysal.weights.shimbel.html#libpysal-weights-shimbel
+	/generated/libpysal.weights.shimbel.rst#libpysal.weights.shimbel libpysal.weights.shimbel                : generated/libpysal.weights.shimbel.html#libpysal.weights.shimbel
+	/generated/libpysal.weights.spw_from_gal.rst libpysal.weights.spw_from_gal           : generated/libpysal.weights.spw_from_gal.html
+	/generated/libpysal.weights.spw_from_gal.rst#libpysal-weights-spw-from-gal libpysal.weights.spw_from_gal           : generated/libpysal.weights.spw_from_gal.html#libpysal-weights-spw-from-gal
+	/generated/libpysal.weights.spw_from_gal.rst#libpysal.weights.spw_from_gal libpysal.weights.spw_from_gal           : generated/libpysal.weights.spw_from_gal.html#libpysal.weights.spw_from_gal
+	/generated/libpysal.weights.vecw.rst     libpysal.weights.vecW                   : generated/libpysal.weights.vecW.html
+	/generated/libpysal.weights.vecw.rst#libpysal-weights-vecw libpysal.weights.vecW                   : generated/libpysal.weights.vecW.html#libpysal-weights-vecw
+	/generated/libpysal.weights.vecw.rst#libpysal.weights.vecw libpysal.weights.vecW                   : generated/libpysal.weights.vecW.html#libpysal.weights.vecW
+	/generated/libpysal.weights.voronoi.rst  libpysal.weights.Voronoi                : generated/libpysal.weights.Voronoi.html
+	/generated/libpysal.weights.voronoi.rst#libpysal-weights-voronoi libpysal.weights.Voronoi                : generated/libpysal.weights.Voronoi.html#libpysal-weights-voronoi
+	/generated/libpysal.weights.voronoi.rst#libpysal.weights.voronoi libpysal.weights.Voronoi                : generated/libpysal.weights.Voronoi.html#libpysal.weights.Voronoi
+	/generated/libpysal.weights.w.rst        libpysal.weights.W                      : generated/libpysal.weights.W.html
+	/generated/libpysal.weights.w.rst#libpysal-weights-w libpysal.weights.W                      : generated/libpysal.weights.W.html#libpysal-weights-w
+	/generated/libpysal.weights.w.rst#libpysal.weights.w libpysal.weights.W                      : generated/libpysal.weights.W.html#libpysal.weights.W
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.asymmetries libpysal.weights.W.asymmetries          : generated/libpysal.weights.W.html#libpysal.weights.W.asymmetries
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.asymmetry libpysal.weights.W.asymmetry            : generated/libpysal.weights.W.html#libpysal.weights.W.asymmetry
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.cardinalities libpysal.weights.W.cardinalities        : generated/libpysal.weights.W.html#libpysal.weights.W.cardinalities
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.component_labels libpysal.weights.W.component_labels     : generated/libpysal.weights.W.html#libpysal.weights.W.component_labels
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.diagw2 libpysal.weights.W.diagW2               : generated/libpysal.weights.W.html#libpysal.weights.W.diagW2
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.diagwtw libpysal.weights.W.diagWtW              : generated/libpysal.weights.W.html#libpysal.weights.W.diagWtW
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.diagwtw_ww libpysal.weights.W.diagWtW_WW           : generated/libpysal.weights.W.html#libpysal.weights.W.diagWtW_WW
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.from_adjlist libpysal.weights.W.from_adjlist         : generated/libpysal.weights.W.html#libpysal.weights.W.from_adjlist
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.from_networkx libpysal.weights.W.from_networkx        : generated/libpysal.weights.W.html#libpysal.weights.W.from_networkx
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.full libpysal.weights.W.full                 : generated/libpysal.weights.W.html#libpysal.weights.W.full
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.get_transform libpysal.weights.W.get_transform        : generated/libpysal.weights.W.html#libpysal.weights.W.get_transform
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.histogram libpysal.weights.W.histogram            : generated/libpysal.weights.W.html#libpysal.weights.W.histogram
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.id2i libpysal.weights.W.id2i                 : generated/libpysal.weights.W.html#libpysal.weights.W.id2i
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.id_order libpysal.weights.W.id_order             : generated/libpysal.weights.W.html#libpysal.weights.W.id_order
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.id_order_set libpysal.weights.W.id_order_set         : generated/libpysal.weights.W.html#libpysal.weights.W.id_order_set
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.islands libpysal.weights.W.islands              : generated/libpysal.weights.W.html#libpysal.weights.W.islands
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.max_neighbors libpysal.weights.W.max_neighbors        : generated/libpysal.weights.W.html#libpysal.weights.W.max_neighbors
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.mean_neighbors libpysal.weights.W.mean_neighbors       : generated/libpysal.weights.W.html#libpysal.weights.W.mean_neighbors
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.min_neighbors libpysal.weights.W.min_neighbors        : generated/libpysal.weights.W.html#libpysal.weights.W.min_neighbors
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.n libpysal.weights.W.n                    : generated/libpysal.weights.W.html#libpysal.weights.W.n
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.n_components libpysal.weights.W.n_components         : generated/libpysal.weights.W.html#libpysal.weights.W.n_components
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.neighbor_offsets libpysal.weights.W.neighbor_offsets     : generated/libpysal.weights.W.html#libpysal.weights.W.neighbor_offsets
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.nonzero libpysal.weights.W.nonzero              : generated/libpysal.weights.W.html#libpysal.weights.W.nonzero
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.pct_nonzero libpysal.weights.W.pct_nonzero          : generated/libpysal.weights.W.html#libpysal.weights.W.pct_nonzero
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.plot libpysal.weights.W.plot                 : generated/libpysal.weights.W.html#libpysal.weights.W.plot
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.remap_ids libpysal.weights.W.remap_ids            : generated/libpysal.weights.W.html#libpysal.weights.W.remap_ids
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.s0 libpysal.weights.W.s0                   : generated/libpysal.weights.W.html#libpysal.weights.W.s0
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.s1 libpysal.weights.W.s1                   : generated/libpysal.weights.W.html#libpysal.weights.W.s1
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.s2 libpysal.weights.W.s2                   : generated/libpysal.weights.W.html#libpysal.weights.W.s2
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.s2array libpysal.weights.W.s2array              : generated/libpysal.weights.W.html#libpysal.weights.W.s2array
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.sd libpysal.weights.W.sd                   : generated/libpysal.weights.W.html#libpysal.weights.W.sd
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.set_shapefile libpysal.weights.W.set_shapefile        : generated/libpysal.weights.W.html#libpysal.weights.W.set_shapefile
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.set_transform libpysal.weights.W.set_transform        : generated/libpysal.weights.W.html#libpysal.weights.W.set_transform
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.sparse libpysal.weights.W.sparse               : generated/libpysal.weights.W.html#libpysal.weights.W.sparse
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.symmetrize libpysal.weights.W.symmetrize           : generated/libpysal.weights.W.html#libpysal.weights.W.symmetrize
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.to_adjlist libpysal.weights.W.to_adjlist           : generated/libpysal.weights.W.html#libpysal.weights.W.to_adjlist
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.to_networkx libpysal.weights.W.to_networkx          : generated/libpysal.weights.W.html#libpysal.weights.W.to_networkx
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.to_wsp libpysal.weights.W.to_WSP               : generated/libpysal.weights.W.html#libpysal.weights.W.to_WSP
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.transform libpysal.weights.W.transform            : generated/libpysal.weights.W.html#libpysal.weights.W.transform
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.trcw2 libpysal.weights.W.trcW2                : generated/libpysal.weights.W.html#libpysal.weights.W.trcW2
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.trcwtw libpysal.weights.W.trcWtW               : generated/libpysal.weights.W.html#libpysal.weights.W.trcWtW
+	/generated/libpysal.weights.w.rst#libpysal.weights.w.trcwtw_ww libpysal.weights.W.trcWtW_WW            : generated/libpysal.weights.W.html#libpysal.weights.W.trcWtW_WW
+	/generated/libpysal.weights.w_clip.rst   libpysal.weights.w_clip                 : generated/libpysal.weights.w_clip.html
+	/generated/libpysal.weights.w_clip.rst#libpysal-weights-w-clip libpysal.weights.w_clip                 : generated/libpysal.weights.w_clip.html#libpysal-weights-w-clip
+	/generated/libpysal.weights.w_clip.rst#libpysal.weights.w_clip libpysal.weights.w_clip                 : generated/libpysal.weights.w_clip.html#libpysal.weights.w_clip
+	/generated/libpysal.weights.w_difference.rst libpysal.weights.w_difference           : generated/libpysal.weights.w_difference.html
+	/generated/libpysal.weights.w_difference.rst#libpysal-weights-w-difference libpysal.weights.w_difference           : generated/libpysal.weights.w_difference.html#libpysal-weights-w-difference
+	/generated/libpysal.weights.w_difference.rst#libpysal.weights.w_difference libpysal.weights.w_difference           : generated/libpysal.weights.w_difference.html#libpysal.weights.w_difference
+	/generated/libpysal.weights.w_intersection.rst libpysal.weights.w_intersection         : generated/libpysal.weights.w_intersection.html
+	/generated/libpysal.weights.w_intersection.rst#libpysal-weights-w-intersection libpysal.weights.w_intersection         : generated/libpysal.weights.w_intersection.html#libpysal-weights-w-intersection
+	/generated/libpysal.weights.w_intersection.rst#libpysal.weights.w_intersection libpysal.weights.w_intersection         : generated/libpysal.weights.w_intersection.html#libpysal.weights.w_intersection
+	/generated/libpysal.weights.w_local_cluster.rst libpysal.weights.w_local_cluster        : generated/libpysal.weights.w_local_cluster.html
+	/generated/libpysal.weights.w_local_cluster.rst#libpysal-weights-w-local-cluster libpysal.weights.w_local_cluster        : generated/libpysal.weights.w_local_cluster.html#libpysal-weights-w-local-cluster
+	/generated/libpysal.weights.w_local_cluster.rst#libpysal.weights.w_local_cluster libpysal.weights.w_local_cluster        : generated/libpysal.weights.w_local_cluster.html#libpysal.weights.w_local_cluster
+	/generated/libpysal.weights.w_subset.rst libpysal.weights.w_subset               : generated/libpysal.weights.w_subset.html
+	/generated/libpysal.weights.w_subset.rst#libpysal-weights-w-subset libpysal.weights.w_subset               : generated/libpysal.weights.w_subset.html#libpysal-weights-w-subset
+	/generated/libpysal.weights.w_subset.rst#libpysal.weights.w_subset libpysal.weights.w_subset               : generated/libpysal.weights.w_subset.html#libpysal.weights.w_subset
+	/generated/libpysal.weights.w_symmetric_difference.rst libpysal.weights.w_symmetric_difference : generated/libpysal.weights.w_symmetric_difference.html
+	/generated/libpysal.weights.w_symmetric_difference.rst#libpysal-weights-w-symmetric-difference libpysal.weights.w_symmetric_difference : generated/libpysal.weights.w_symmetric_difference.html#libpysal-weights-w-symmetric-difference
+	/generated/libpysal.weights.w_symmetric_difference.rst#libpysal.weights.w_symmetric_difference libpysal.weights.w_symmetric_difference : generated/libpysal.weights.w_symmetric_difference.html#libpysal.weights.w_symmetric_difference
+	/generated/libpysal.weights.w_union.rst  libpysal.weights.w_union                : generated/libpysal.weights.w_union.html
+	/generated/libpysal.weights.w_union.rst#libpysal-weights-w-union libpysal.weights.w_union                : generated/libpysal.weights.w_union.html#libpysal-weights-w-union
+	/generated/libpysal.weights.w_union.rst#libpysal.weights.w_union libpysal.weights.w_union                : generated/libpysal.weights.w_union.html#libpysal.weights.w_union
+	/generated/libpysal.weights.wsp.rst      libpysal.weights.WSP                    : generated/libpysal.weights.WSP.html
+	/generated/libpysal.weights.wsp.rst#libpysal-weights-wsp libpysal.weights.WSP                    : generated/libpysal.weights.WSP.html#libpysal-weights-wsp
+	/generated/libpysal.weights.wsp.rst#libpysal.weights.wsp libpysal.weights.WSP                    : generated/libpysal.weights.WSP.html#libpysal.weights.WSP
+	/generated/libpysal.weights.wsp.rst#libpysal.weights.wsp.__init__ libpysal.weights.WSP.__init__           : generated/libpysal.weights.WSP.html#libpysal.weights.WSP.__init__
+	/generated/libpysal.weights.wsp.rst#libpysal.weights.wsp.diagwtw_ww libpysal.weights.WSP.diagWtW_WW         : generated/libpysal.weights.WSP.html#libpysal.weights.WSP.diagWtW_WW
+	/generated/libpysal.weights.wsp.rst#libpysal.weights.wsp.from_w libpysal.weights.WSP.from_W             : generated/libpysal.weights.WSP.html#libpysal.weights.WSP.from_W
+	/generated/libpysal.weights.wsp.rst#libpysal.weights.wsp.s0 libpysal.weights.WSP.s0                 : generated/libpysal.weights.WSP.html#libpysal.weights.WSP.s0
+	/generated/libpysal.weights.wsp.rst#libpysal.weights.wsp.to_w libpysal.weights.WSP.to_W               : generated/libpysal.weights.WSP.html#libpysal.weights.WSP.to_W
+	/generated/libpysal.weights.wsp.rst#libpysal.weights.wsp.trcwtw_ww libpysal.weights.WSP.trcWtW_WW          : generated/libpysal.weights.WSP.html#libpysal.weights.WSP.trcWtW_WW
+	/generated/libpysal.weights.wsp2w.rst    libpysal.weights.WSP2W                  : generated/libpysal.weights.WSP2W.html
+	/generated/libpysal.weights.wsp2w.rst#libpysal-weights-wsp2w libpysal.weights.WSP2W                  : generated/libpysal.weights.WSP2W.html#libpysal-weights-wsp2w
+	/generated/libpysal.weights.wsp2w.rst#libpysal.weights.wsp2w libpysal.weights.WSP2W                  : generated/libpysal.weights.WSP2W.html#libpysal.weights.WSP2W
+	/index.rst                               libpysal: Python Spatial Analysis Library Core: index.html
+	/index.rst#bug-reports                   Bug reports                             : index.html#bug-reports
+	/index.rst#citing-libpysal               Citing libpysal                         : index.html#citing-libpysal
+	/index.rst#development                   Development                             : index.html#development
+	/index.rst#getting-involved              Getting Involved                        : index.html#getting-involved
+	/index.rst#introduction                  Introduction                            : index.html#introduction
+	/index.rst#libpysal                      libpysal                                : index.html#libpysal
+	/index.rst#libpysal-python-spatial-analysis-library-core libpysal: Python Spatial Analysis Library Core: index.html#libpysal-python-spatial-analysis-library-core
+	/index.rst#license-information           License information                     : index.html#license-information
+	/installation.rst                        Installation                            : installation.html
+	/installation.rst#installation           Installation                            : installation.html#installation
+	/installation.rst#installing-development-version Installing development version          : installation.html#installing-development-version
+	/installation.rst#installing-released-version Installing released version             : installation.html#installing-released-version
+	/notebooks/.ipynb_checkpoints/examples-checkpoint.ipynb Datasets for use with libpysal          : notebooks/.ipynb_checkpoints/examples-checkpoint.html
+	/notebooks/.ipynb_checkpoints/examples-checkpoint.ipynb#available-is-updated available is updated                    : notebooks/.ipynb_checkpoints/examples-checkpoint.html#available-is-updated
+	/notebooks/.ipynb_checkpoints/examples-checkpoint.ipynb#backwards-compatibility-is-maintained Backwards compatibility is maintained   : notebooks/.ipynb_checkpoints/examples-checkpoint.html#Backwards-compatibility-is-maintained
+	/notebooks/.ipynb_checkpoints/examples-checkpoint.ipynb#datasets-for-use-with-libpysal Datasets for use with libpysal          : notebooks/.ipynb_checkpoints/examples-checkpoint.html#Datasets-for-use-with-libpysal
+	/notebooks/.ipynb_checkpoints/examples-checkpoint.ipynb#grabbing-all-the-remotes Grabbing all the remotes                : notebooks/.ipynb_checkpoints/examples-checkpoint.html#Grabbing-all-the-remotes
+	/notebooks/.ipynb_checkpoints/examples-checkpoint.ipynb#other-remotes Other Remotes                           : notebooks/.ipynb_checkpoints/examples-checkpoint.html#Other-Remotes
+	/notebooks/.ipynb_checkpoints/examples-checkpoint.ipynb#remote-datasets Remote datasets                         : notebooks/.ipynb_checkpoints/examples-checkpoint.html#Remote-datasets
+	/notebooks/.ipynb_checkpoints/voronoi-checkpoint.ipynb Voronoi Polygons for 2-D Point Sets     : notebooks/.ipynb_checkpoints/voronoi-checkpoint.html
+	/notebooks/.ipynb_checkpoints/voronoi-checkpoint.ipynb#basic-usage Basic Usage                             : notebooks/.ipynb_checkpoints/voronoi-checkpoint.html#Basic-Usage
+	/notebooks/.ipynb_checkpoints/voronoi-checkpoint.ipynb#larger-problem Larger Problem                          : notebooks/.ipynb_checkpoints/voronoi-checkpoint.html#Larger-Problem
+	/notebooks/.ipynb_checkpoints/voronoi-checkpoint.ipynb#trimming Trimming                                : notebooks/.ipynb_checkpoints/voronoi-checkpoint.html#Trimming
+	/notebooks/.ipynb_checkpoints/voronoi-checkpoint.ipynb#voronoi-polygons-for-2-d-point-sets Voronoi Polygons for 2-D Point Sets     : notebooks/.ipynb_checkpoints/voronoi-checkpoint.html#Voronoi-Polygons-for-2-D-Point-Sets
+	/notebooks/.ipynb_checkpoints/voronoi-checkpoint.ipynb#voronoi-weights Voronoi Weights                         : notebooks/.ipynb_checkpoints/voronoi-checkpoint.html#Voronoi-Weights
+	/notebooks/.ipynb_checkpoints/weights-checkpoint.ipynb Weights from GeoDataFrames              : notebooks/.ipynb_checkpoints/weights-checkpoint.html
+	/notebooks/.ipynb_checkpoints/weights-checkpoint.ipynb#contiguity-weights Contiguity Weights                      : notebooks/.ipynb_checkpoints/weights-checkpoint.html#Contiguity-Weights
+	/notebooks/.ipynb_checkpoints/weights-checkpoint.ipynb#handling-nonplanar-geometries Handling nonplanar geometries           : notebooks/.ipynb_checkpoints/weights-checkpoint.html#Handling-nonplanar-geometries
+	/notebooks/.ipynb_checkpoints/weights-checkpoint.ipynb#lattice-weights Lattice Weights                         : notebooks/.ipynb_checkpoints/weights-checkpoint.html#Lattice-Weights
+	/notebooks/.ipynb_checkpoints/weights-checkpoint.ipynb#weights-from-geodataframes Weights from GeoDataFrames              : notebooks/.ipynb_checkpoints/weights-checkpoint.html#Weights-from-GeoDataFrames
+	/notebooks/.ipynb_checkpoints/weights-checkpoint.ipynb#weights-from-shapefiles-(without-geopandas) Weights from shapefiles (without geopandas): notebooks/.ipynb_checkpoints/weights-checkpoint.html#Weights-from-shapefiles-(without-geopandas)
+	/notebooks/examples.ipynb                Datasets for use with libpysal          : notebooks/examples.html
+	/notebooks/examples.ipynb#available-is-updated available is updated                    : notebooks/examples.html#available-is-updated
+	/notebooks/examples.ipynb#backwards-compatibility-is-maintained Backwards compatibility is maintained   : notebooks/examples.html#Backwards-compatibility-is-maintained
+	/notebooks/examples.ipynb#datasets-for-use-with-libpysal Datasets for use with libpysal          : notebooks/examples.html#Datasets-for-use-with-libpysal
+	/notebooks/examples.ipynb#grabbing-all-the-remotes Grabbing all the remotes                : notebooks/examples.html#Grabbing-all-the-remotes
+	/notebooks/examples.ipynb#other-remotes  Other Remotes                           : notebooks/examples.html#Other-Remotes
+	/notebooks/examples.ipynb#remote-datasets Remote datasets                         : notebooks/examples.html#Remote-datasets
+	/notebooks/voronoi.ipynb                 Voronoi Polygons for 2-D Point Sets     : notebooks/voronoi.html
+	/notebooks/voronoi.ipynb#basic-usage     Basic Usage                             : notebooks/voronoi.html#Basic-Usage
+	/notebooks/voronoi.ipynb#larger-problem  Larger Problem                          : notebooks/voronoi.html#Larger-Problem
+	/notebooks/voronoi.ipynb#trimming        Trimming                                : notebooks/voronoi.html#Trimming
+	/notebooks/voronoi.ipynb#voronoi-polygons-for-2-d-point-sets Voronoi Polygons for 2-D Point Sets     : notebooks/voronoi.html#Voronoi-Polygons-for-2-D-Point-Sets
+	/notebooks/voronoi.ipynb#voronoi-weights Voronoi Weights                         : notebooks/voronoi.html#Voronoi-Weights
+	/notebooks/weights.ipynb                 Weights from GeoDataFrames              : notebooks/weights.html
+	/notebooks/weights.ipynb#contiguity-weights Contiguity Weights                      : notebooks/weights.html#Contiguity-Weights
+	/notebooks/weights.ipynb#handling-nonplanar-geometries Handling nonplanar geometries           : notebooks/weights.html#Handling-nonplanar-geometries
+	/notebooks/weights.ipynb#lattice-weights Lattice Weights                         : notebooks/weights.html#Lattice-Weights
+	/notebooks/weights.ipynb#weights-from-geodataframes Weights from GeoDataFrames              : notebooks/weights.html#Weights-from-GeoDataFrames
+	/notebooks/weights.ipynb#weights-from-shapefiles-(without-geopandas) Weights from shapefiles (without geopandas): notebooks/weights.html#Weights-from-shapefiles-(without-geopandas)
+	/references.rst                          References                              : references.html
+	/references.rst#references               References                              : references.html#references
+	/tutorial.rst                            Tutorial                                : tutorial.html
+	/tutorial.rst#tutorial                   Tutorial                                : tutorial.html#tutorial
+	anselin1996b                             references.html#anselin1996b
+	api_ref                                  libpysal API reference                  : api.html#api-ref
+	genindex                                 Index                                   : genindex.html
+	modindex                                 Module Index                            : py-modindex.html
+	pysal2007                                references.html#pysal2007
+	search                                   Search Page                             : search.html
+	watts1998                                references.html#watts1998

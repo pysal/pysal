@@ -1,4 +1,4 @@
-__version__ = "4.1.0"
+__version__ = "4.2.1"
 
 # __version__ has to be define in the first line
 
@@ -24,7 +24,9 @@ io
 weights
     Tools for creating and manipulating weights
 """
-from . import cg
-from . import io
-from . import weights
-from . import examples
+
+from libpysal import cg
+from libpysal import io
+from libpysal import weights
+from libpysal import examples
+

@@ -1,3 +1,16 @@
+.cache/
+.#failures
+.python_history
+develop.sh
+docscrc/giddy.inv
+.conda*
+.local*
+.bash_history
+docsrc/_bui*
+failures
+newtags.json
+notebooks/lib/io.ipynb
+package_info.py
 *.py[cod]
 *.bak
 .ipynb_checkpoints/
