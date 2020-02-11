@@ -13,7 +13,7 @@ frozen_packages = {    "libpysal": "4.2.2",
     "spglm": "1.0.7",
     "spint": "1.0.6",
     "spreg": "1.0.4",
-    "spvcm": "0.2.1.post1",
+    "spvcm": "0.3.0",
     "tobler": "0.2.0",
     "mapclassify": "2.2.0",
     "splot": "1.1.2"
