@@ -1,4 +1,4 @@
-__version__='v2.2.0'
+__version__='2.2.0'
 from . import lib
 from . import explore
 from . import viz
