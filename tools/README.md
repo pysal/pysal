@@ -8,6 +8,7 @@
 
 ## Instructions
 
+- Change `USER` in `release_info.py`
 - build.py
   - creates a requirements.txt file in this dir that can be hand edited if needed before moving up to `pysal/requirements.txt`
   - creates `pysal/pysal/frozen.py` with information for pinning to subpackage versions
