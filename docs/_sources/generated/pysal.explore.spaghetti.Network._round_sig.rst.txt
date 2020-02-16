@@ -1,6 +1,0 @@
-pysal.explore.spaghetti.Network.\_round\_sig
-============================================
-
-.. currentmodule:: pysal.explore.spaghetti
-
-.. automethod:: Network._round_sig

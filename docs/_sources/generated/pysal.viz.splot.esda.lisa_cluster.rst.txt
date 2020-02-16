@@ -1,6 +1,0 @@
-pysal.viz.splot.esda.lisa\_cluster
-==================================
-
-.. currentmodule:: pysal.viz.splot.esda
-
-.. autofunction:: lisa_cluster

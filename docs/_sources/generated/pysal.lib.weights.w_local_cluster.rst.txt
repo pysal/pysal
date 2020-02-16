@@ -1,6 +1,0 @@
-pysal.lib.weights.w\_local\_cluster
-===================================
-
-.. currentmodule:: pysal.lib.weights
-
-.. autofunction:: w_local_cluster

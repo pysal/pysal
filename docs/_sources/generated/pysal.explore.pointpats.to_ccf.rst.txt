@@ -1,6 +1,0 @@
-pysal.explore.pointpats.to\_ccf
-===============================
-
-.. currentmodule:: pysal.explore.pointpats
-
-.. autofunction:: to_ccf

@@ -1,6 +1,0 @@
-pysal.explore.pointpats.skyum
-=============================
-
-.. currentmodule:: pysal.explore.pointpats
-
-.. autofunction:: skyum

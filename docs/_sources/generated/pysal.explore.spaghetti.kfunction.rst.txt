@@ -1,6 +1,0 @@
-pysal.explore.spaghetti.kfunction
-=================================
-
-.. currentmodule:: pysal.explore.spaghetti
-
-.. autofunction:: kfunction

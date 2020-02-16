@@ -1,6 +1,0 @@
-pysal.explore.spaghetti.Network.\_evaluate\_napts
-=================================================
-
-.. currentmodule:: pysal.explore.spaghetti
-
-.. automethod:: Network._evaluate_napts

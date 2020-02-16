@@ -1,6 +1,0 @@
-pysal.viz.splot.esda.plot\_moran
-================================
-
-.. currentmodule:: pysal.viz.splot.esda
-
-.. autofunction:: plot_moran

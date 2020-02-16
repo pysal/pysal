@@ -1,6 +1,0 @@
-pysal.explore.segregation.network.calc\_access
-==============================================
-
-.. currentmodule:: pysal.explore.segregation.network
-
-.. autofunction:: calc_access

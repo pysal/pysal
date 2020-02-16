@@ -1,6 +1,0 @@
-pysal.viz.splot.giddy.dynamic\_lisa\_rose
-=========================================
-
-.. currentmodule:: pysal.viz.splot.giddy
-
-.. autofunction:: dynamic_lisa_rose

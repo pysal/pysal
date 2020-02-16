@@ -1,6 +1,0 @@
-pysal.explore.pointpats.dtot
-============================
-
-.. currentmodule:: pysal.explore.pointpats
-
-.. autofunction:: dtot

@@ -1,6 +1,0 @@
-pysal.lib.cg.is\_collinear
-==========================
-
-.. currentmodule:: pysal.lib.cg
-
-.. autofunction:: is_collinear
