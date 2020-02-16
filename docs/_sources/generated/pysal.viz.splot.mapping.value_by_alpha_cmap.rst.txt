@@ -1,6 +1,0 @@
-pysal.viz.splot.mapping.value\_by\_alpha\_cmap
-==============================================
-
-.. currentmodule:: pysal.viz.splot.mapping
-
-.. autofunction:: value_by_alpha_cmap

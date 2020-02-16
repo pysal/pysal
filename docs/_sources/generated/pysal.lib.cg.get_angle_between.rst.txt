@@ -1,6 +1,0 @@
-pysal.lib.cg.get\_angle\_between
-================================
-
-.. currentmodule:: pysal.lib.cg
-
-.. autofunction:: get_angle_between

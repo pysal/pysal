@@ -1,6 +1,0 @@
-pysal.explore.spaghetti.element\_as\_gdf
-========================================
-
-.. currentmodule:: pysal.explore.spaghetti
-
-.. autofunction:: element_as_gdf

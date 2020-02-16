@@ -1,6 +1,0 @@
-pysal.model.mgwr.kernels.fix\_bisquare
-======================================
-
-.. currentmodule:: pysal.model.mgwr.kernels
-
-.. autofunction:: fix_bisquare

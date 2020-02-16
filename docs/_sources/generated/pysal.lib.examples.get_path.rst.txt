@@ -1,6 +1,0 @@
-pysal.lib.examples.get\_path
-============================
-
-.. currentmodule:: pysal.lib.examples
-
-.. autofunction:: get_path

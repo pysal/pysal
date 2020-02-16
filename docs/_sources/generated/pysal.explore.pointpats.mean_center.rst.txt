@@ -1,6 +1,0 @@
-pysal.explore.pointpats.mean\_center
-====================================
-
-.. currentmodule:: pysal.explore.pointpats
-
-.. autofunction:: mean_center

@@ -1,6 +1,0 @@
-pysal.viz.splot.esda.plot\_local\_autocorrelation
-=================================================
-
-.. currentmodule:: pysal.viz.splot.esda
-
-.. autofunction:: plot_local_autocorrelation

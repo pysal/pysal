@@ -1,6 +1,0 @@
-pysal.lib.cg.fast\_threshold
-============================
-
-.. currentmodule:: pysal.lib.cg
-
-.. autofunction:: fast_threshold

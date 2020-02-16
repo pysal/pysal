@@ -1,6 +1,0 @@
-pysal.explore.pointpats.manhattan\_median
-=========================================
-
-.. currentmodule:: pysal.explore.pointpats
-
-.. autofunction:: manhattan_median

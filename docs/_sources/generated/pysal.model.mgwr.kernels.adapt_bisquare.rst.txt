@@ -1,6 +1,0 @@
-pysal.model.mgwr.kernels.adapt\_bisquare
-========================================
-
-.. currentmodule:: pysal.model.mgwr.kernels
-
-.. autofunction:: adapt_bisquare

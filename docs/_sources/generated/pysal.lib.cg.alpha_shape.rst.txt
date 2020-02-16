@@ -1,6 +1,0 @@
-pysal.lib.cg.alpha\_shape
-=========================
-
-.. currentmodule:: pysal.lib.cg
-
-.. autofunction:: alpha_shape

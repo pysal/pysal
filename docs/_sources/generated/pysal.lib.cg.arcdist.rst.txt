@@ -1,6 +1,0 @@
-pysal.lib.cg.arcdist
-====================
-
-.. currentmodule:: pysal.lib.cg
-
-.. autofunction:: arcdist

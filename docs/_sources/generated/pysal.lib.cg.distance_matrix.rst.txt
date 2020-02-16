@@ -1,6 +1,0 @@
-pysal.lib.cg.distance\_matrix
-=============================
-
-.. currentmodule:: pysal.lib.cg
-
-.. autofunction:: distance_matrix

@@ -1,6 +1,0 @@
-pysal.lib.cg.is\_clockwise
-==========================
-
-.. currentmodule:: pysal.lib.cg
-
-.. autofunction:: is_clockwise
