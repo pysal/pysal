@@ -1,6 +1,0 @@
-pysal.lib.weights.lag\_categorical
-==================================
-
-.. currentmodule:: pysal.lib.weights
-
-.. autofunction:: lag_categorical

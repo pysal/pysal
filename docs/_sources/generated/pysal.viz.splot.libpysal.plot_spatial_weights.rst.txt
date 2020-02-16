@@ -1,6 +1,0 @@
-pysal.viz.splot.libpysal.plot\_spatial\_weights
-===============================================
-
-.. currentmodule:: pysal.viz.splot.libpysal
-
-.. autofunction:: plot_spatial_weights

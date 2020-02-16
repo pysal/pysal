@@ -1,6 +1,0 @@
-pysal.lib.cg.toLngLat
-=====================
-
-.. currentmodule:: pysal.lib.cg
-
-.. autofunction:: toLngLat

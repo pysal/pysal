@@ -1,6 +1,0 @@
-pysal.explore.spaghetti.Network.\_yield\_napts
-==============================================
-
-.. currentmodule:: pysal.explore.spaghetti
-
-.. automethod:: Network._yield_napts

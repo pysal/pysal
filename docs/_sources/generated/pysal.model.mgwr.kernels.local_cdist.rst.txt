@@ -1,6 +1,0 @@
-pysal.model.mgwr.kernels.local\_cdist
-=====================================
-
-.. currentmodule:: pysal.model.mgwr.kernels
-
-.. autofunction:: local_cdist

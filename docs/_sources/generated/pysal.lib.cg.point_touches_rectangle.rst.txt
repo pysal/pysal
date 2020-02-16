@@ -1,6 +1,0 @@
-pysal.lib.cg.point\_touches\_rectangle
-======================================
-
-.. currentmodule:: pysal.lib.cg
-
-.. autofunction:: point_touches_rectangle

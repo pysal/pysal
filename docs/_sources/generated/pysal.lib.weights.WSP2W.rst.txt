@@ -1,6 +1,0 @@
-pysal.lib.weights.WSP2W
-=======================
-
-.. currentmodule:: pysal.lib.weights
-
-.. autofunction:: WSP2W

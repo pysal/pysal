@@ -1,6 +1,0 @@
-pysal.explore.spaghetti.compute\_length
-=======================================
-
-.. currentmodule:: pysal.explore.spaghetti
-
-.. autofunction:: compute_length

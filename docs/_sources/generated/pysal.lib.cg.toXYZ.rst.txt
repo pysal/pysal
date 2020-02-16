@@ -1,6 +1,0 @@
-pysal.lib.cg.toXYZ
-==================
-
-.. currentmodule:: pysal.lib.cg
-
-.. autofunction:: toXYZ

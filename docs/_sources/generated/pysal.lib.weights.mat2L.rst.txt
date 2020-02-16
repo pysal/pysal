@@ -1,6 +1,0 @@
-pysal.lib.weights.mat2L
-=======================
-
-.. currentmodule:: pysal.lib.weights
-
-.. autofunction:: mat2L

@@ -1,6 +1,0 @@
-pysal.viz.splot.mapping.mapclassify\_bin
-========================================
-
-.. currentmodule:: pysal.viz.splot.mapping
-
-.. autofunction:: mapclassify_bin

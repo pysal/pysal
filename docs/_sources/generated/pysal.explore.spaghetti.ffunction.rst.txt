@@ -1,6 +1,0 @@
-pysal.explore.spaghetti.ffunction
-=================================
-
-.. currentmodule:: pysal.explore.spaghetti
-
-.. autofunction:: ffunction

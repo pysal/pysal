@@ -1,6 +1,0 @@
-pysal.explore.spaghetti.Network.enum\_links\_vertex
-===================================================
-
-.. currentmodule:: pysal.explore.spaghetti
-
-.. automethod:: Network.enum_links_vertex

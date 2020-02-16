@@ -1,6 +1,0 @@
-pysal.lib.weights.order
-=======================
-
-.. currentmodule:: pysal.lib.weights
-
-.. autofunction:: order

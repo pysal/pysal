@@ -1,6 +1,0 @@
-pysal.lib.weights.remap\_ids
-============================
-
-.. currentmodule:: pysal.lib.weights
-
-.. autofunction:: remap_ids

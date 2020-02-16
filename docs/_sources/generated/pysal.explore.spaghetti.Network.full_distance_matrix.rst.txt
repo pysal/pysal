@@ -1,6 +1,0 @@
-pysal.explore.spaghetti.Network.full\_distance\_matrix
-======================================================
-
-.. currentmodule:: pysal.explore.spaghetti
-
-.. automethod:: Network.full_distance_matrix

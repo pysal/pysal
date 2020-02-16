@@ -1,6 +1,0 @@
-pysal.explore.pointpats.weighted\_mean\_center
-==============================================
-
-.. currentmodule:: pysal.explore.pointpats
-
-.. autofunction:: weighted_mean_center

@@ -1,6 +1,0 @@
-pysal.lib.weights.get\_ids
-==========================
-
-.. currentmodule:: pysal.lib.weights
-
-.. autofunction:: get_ids

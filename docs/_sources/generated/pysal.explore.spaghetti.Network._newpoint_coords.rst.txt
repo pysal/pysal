@@ -1,6 +1,0 @@
-pysal.explore.spaghetti.Network.\_newpoint\_coords
-==================================================
-
-.. currentmodule:: pysal.explore.spaghetti
-
-.. automethod:: Network._newpoint_coords
