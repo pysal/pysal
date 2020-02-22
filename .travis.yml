@@ -4,15 +4,11 @@ sudo: true
 
 sudo: false
 
-jobs:
+matrix:
   fast_finish: true
   include:
     - env: ENV_FILE="ci/travis/36-latest-conda-forge.yaml"
     - env: ENV_FILE="ci/travis/37-latest-conda-forge.yaml"
-  allow_failures:
-    - python: 3.8
-    - env: ENV_FILE="ci/travis/38-latest-conda-forge.yaml"
-
 
 install:
   # Install conda
@@ -36,7 +32,7 @@ script:
   - python setup.py sdist >/dev/null
   - echo "check_stable=False" >pysal/config.py
   - python setup.py install
-  - py.test pysal --cov pysal -v --cov-report term-missing
+  - nosetests --with-doctest --verbose --with-coverage --cover-package=pysal 
   #- cd doc; make pickle; make doctest
 
 notifications:
