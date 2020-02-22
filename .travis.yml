@@ -3,9 +3,9 @@ dist: xenial
 sudo: true
 
 env:
-  - env: ENV_FILE="ci/travis/36-latest-conda-forge.yaml"
-  - env: ENV_FILE="ci/travis/37-latest-conda-forge.yaml"
-  - env: ENV_FILE="ci/travis/38-latest-conda-forge.yaml"
+  - ENV_FILE="ci/travis/36-latest-conda-forge.yaml"
+  - ENV_FILE="ci/travis/37-latest-conda-forge.yaml"
+  - ENV_FILE="ci/travis/38-latest-conda-forge.yaml"
 
 
 matrix:
