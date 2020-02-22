@@ -4,7 +4,12 @@ sudo: true
 
 sudo: false
 
-matrix:
+python:
+  - 3.6
+  - 3.7
+  - 3.8
+
+jobs:
   fast_finish: true
   include:
     - env: ENV_FILE="ci/travis/36-latest-conda-forge.yaml"
