@@ -15,6 +15,7 @@ jobs:
     - env: ENV_FILE="ci/travis/36-latest-conda-forge.yaml"
     - env: ENV_FILE="ci/travis/37-latest-conda-forge.yaml"
   allow_failures:
+    - python: 3.8
     - env: ENV_FILE="ci/travis/38-latest-conda-forge.yaml"
 
 
