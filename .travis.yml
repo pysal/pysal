@@ -4,11 +4,6 @@ sudo: true
 
 sudo: false
 
-python:
-  - 3.6
-  - 3.7
-  - 3.8
-
 jobs:
   fast_finish: true
   include:
