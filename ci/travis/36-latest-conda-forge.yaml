@@ -42,7 +42,7 @@ dependencies:
   - libpysal
   - esda
   - spaghetti
-  - tobler
+  - tobler>=0.2.1
   - spint
   - spreg
   - mgwr
