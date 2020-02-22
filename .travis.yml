@@ -32,7 +32,7 @@ script:
   - python setup.py sdist >/dev/null
   - echo "check_stable=False" >pysal/config.py
   - python setup.py install
-  - nosetests --with-doctest --verbose --with-coverage --cover-package=pysal 
+  - py.test pysal --cov pysal -v --cov-report term-missing
   #- cd doc; make pickle; make doctest
 
 notifications:
