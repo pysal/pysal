@@ -3,7 +3,7 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python =3.7
+  - python >=3.6
   - libpysal> =4.2.2
   - esda >=2.2.1
   - giddy >=2.3.0
