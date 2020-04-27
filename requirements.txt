@@ -14,4 +14,3 @@ tobler>=0.2.1
 mapclassify>=2.2.0
 splot>=1.1.2
 urllib3<1.25
-python-dateutil<=2.8.0
