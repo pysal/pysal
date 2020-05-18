@@ -3,7 +3,7 @@
 Installation
 ============
 
-As of version 2.0.0, PySAL supports python `3.5`_ and `3.6`_ only. Please make sure that you are
+As of version 2.0.0, PySAL supports python `3.6`_ and `3.7`_. Please make sure that you are
 operating in a python 3 environment.
 
 Installing with conda
@@ -16,7 +16,7 @@ distribution only containing Python and the conda package manager).
 
 Using conda, PySAL can be installed as follows::
 
-  conda install pysal
+  conda install --channel conda-forge pysal
 
 
 Installing with pip
@@ -94,7 +94,7 @@ Users requiring Python 2 support can install the legacy version of PySAL: 1.1.14
 
 Note that this version is only receiving bug fixes. All new enhancements (post 2019-01) to PySAL are Python 3+ only, and are not available in 1.14.4.
 
-.. _3.5: https://docs.python.org/3.5/
+.. _3.7: https://docs.python.org/3.7/
 .. _3.6: https://docs.python.org/3.6/
 .. _Python Package Index: https://pypi.org/project/PySAL/
 .. _pysal/PySAL: https://github.com/pysal/PySAL
