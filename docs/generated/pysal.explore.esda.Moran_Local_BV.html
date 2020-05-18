@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pysal.explore.esda.Moran_Local_BV &#8212; pysal v2.1.0 Manual</title>
+    <title>pysal.explore.esda.Moran_Local_BV &#8212; pysal vv2.2.0rc Manual</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
@@ -13,10 +13,6 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -24,6 +20,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           pysal</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>v2.2.0rc</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -58,7 +58,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
@@ -67,9 +67,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
 </ul>
@@ -116,156 +116,10 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="pysal-explore-esda-moran-local-bv">
 <h1>pysal.explore.esda.Moran_Local_BV<a class="headerlink" href="#pysal-explore-esda-moran-local-bv" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="pysal.explore.esda.Moran_Local_BV">
-<em class="property">class </em><code class="sig-prename descclassname">pysal.explore.esda.</code><code class="sig-name descname">Moran_Local_BV</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">w</em>, <em class="sig-param">transformation='r'</em>, <em class="sig-param">permutations=999</em>, <em class="sig-param">geoda_quads=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/esda/moran.html#Moran_Local_BV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.esda.Moran_Local_BV" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bivariate Local Moran Statistics</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>x</strong><span class="classifier">array</span></dt><dd><p>x-axis variable</p>
-</dd>
-<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>(n,1), wy will be on y axis</p>
-</dd>
-<dt><strong>w</strong><span class="classifier">W</span></dt><dd><p>weight instance assumed to be aligned with y</p>
-</dd>
-<dt><strong>transformation</strong><span class="classifier">{‘R’, ‘B’, ‘D’, ‘U’, ‘V’}</span></dt><dd><p>weights transformation,  default is row-standardized “r”.
-Other options include
-“B”: binary,
-“D”: doubly-standardized,
-“U”: untransformed (general weights),
-“V”: variance-stabilizing.</p>
-</dd>
-<dt><strong>permutations</strong><span class="classifier">int</span></dt><dd><p>number of random permutations for calculation of pseudo
-p_values</p>
-</dd>
-<dt><strong>geoda_quads</strong><span class="classifier">boolean</span></dt><dd><p>(default=False)
-If True use GeoDa scheme: HH=1, LL=2, LH=3, HL=4
-If False use PySAL Scheme: HH=1, LH=2, LL=3, HL=4</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pysal.lib</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;sids2.gal&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;sids2.dbf&quot;</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">by_col</span><span class="p">[</span><span class="s1">&#39;SIDR79&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">by_col</span><span class="p">[</span><span class="s1">&#39;SIDR74&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pysal.explore.esda.moran</span> <span class="k">import</span> <span class="n">Moran_Local_BV</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lm</span> <span class="o">=</span><span class="n">Moran_Local_BV</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">transformation</span> <span class="o">=</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span>                                <span class="n">permutations</span> <span class="o">=</span> <span class="mi">99</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lm</span><span class="o">.</span><span class="n">q</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
-<span class="go">array([3, 4, 3, 4, 2, 1, 4, 4, 2, 4])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lm</span> <span class="o">=</span> <span class="n">Moran_Local_BV</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">transformation</span> <span class="o">=</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span>                                <span class="n">permutations</span> <span class="o">=</span> <span class="mi">99</span><span class="p">,</span> <span class="n">geoda_quads</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lm</span><span class="o">.</span><span class="n">q</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
-<span class="go">array([2, 4, 2, 4, 3, 1, 4, 4, 3, 4])</span>
-</pre></div>
-</div>
-<p>Note random components result is slightly different values across
-architectures so the results have been removed from doctests and will be
-moved into unittests that are conditional on architectures</p>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>zx</strong><span class="classifier">array</span></dt><dd><p>original x variable standardized by mean and std</p>
-</dd>
-<dt><strong>zy</strong><span class="classifier">array</span></dt><dd><p>original y variable standardized by mean and std</p>
-</dd>
-<dt><strong>w</strong><span class="classifier">W</span></dt><dd><p>original w object</p>
-</dd>
-<dt><strong>permutations</strong><span class="classifier">int</span></dt><dd><p>number of random permutations for calculation of pseudo
-p_values</p>
-</dd>
-<dt><strong>Is</strong><span class="classifier">float</span></dt><dd><p>value of Moran’s I</p>
-</dd>
-<dt><strong>q</strong><span class="classifier">array</span></dt><dd><p>(if permutations&gt;0)
-values indicate quandrant location 1 HH,  2 LH,  3 LL,  4 HL</p>
-</dd>
-<dt><strong>sim</strong><span class="classifier">array</span></dt><dd><p>(if permutations&gt;0)
-vector of I values for permuted samples</p>
-</dd>
-<dt><strong>p_sim</strong><span class="classifier">array</span></dt><dd><p>(if permutations&gt;0)
-p-value based on permutations (one-sided)
-null: spatial randomness
-alternative: the observed Ii is further away or extreme
-from the median of simulated values. It is either extremelyi
-high or extremely low in the distribution of simulated Is.</p>
-</dd>
-<dt><strong>EI_sim</strong><span class="classifier">array</span></dt><dd><p>(if permutations&gt;0)
-average values of local Is from permutations</p>
-</dd>
-<dt><strong>VI_sim</strong><span class="classifier">array</span></dt><dd><p>(if permutations&gt;0)
-variance of Is from permutations</p>
-</dd>
-<dt><strong>seI_sim</strong><span class="classifier">array</span></dt><dd><p>(if permutations&gt;0)
-standard deviations of Is under permutations.</p>
-</dd>
-<dt><strong>z_sim</strong><span class="classifier">arrray</span></dt><dd><p>(if permutations&gt;0)
-standardized Is based on permutations</p>
-</dd>
-<dt><strong>p_z_sim</strong><span class="classifier">array</span></dt><dd><p>(if permutations&gt;0)
-p-values based on standard normal approximation from
-permutations (one-sided)
-for two-sided tests, these values should be multiplied by 2</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">by_col</span></code>(df, x[, y, w, inplace, pvalue, outvals])</p></td>
-<td><p>Function to compute a Moran_Local_BV statistic on a dataframe</p></td>
-</tr>
-</tbody>
-</table>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 44%" />
-<col style="width: 56%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>calc</strong></p></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="pysal.explore.esda.Moran_Local_BV.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">w</em>, <em class="sig-param">transformation='r'</em>, <em class="sig-param">permutations=999</em>, <em class="sig-param">geoda_quads=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/esda/moran.html#Moran_Local_BV.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.esda.Moran_Local_BV.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pysal.explore.esda.Moran_Local_BV.__init__" title="pysal.explore.esda.Moran_Local_BV.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self, x, y, w[, transformation, …])</p></td>
-<td><p>Initialize self.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">by_col</span></code>(df, x[, y, w, inplace, pvalue, outvals])</p></td>
-<td><p>Function to compute a Moran_Local_BV statistic on a dataframe</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc</span></code>(self, w, zx, zy)</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 
 
@@ -288,7 +142,7 @@ for two-sided tests, these values should be multiplied by 2</p>
     </p>
     <p>
         &copy; Copyright 2018-, pysal developers.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.<br/>
     </p>
   </div>
 </footer>

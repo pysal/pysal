@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pysal.explore.segregation.aspatial.MultiDiversity &#8212; pysal v2.1.0 Manual</title>
+    <title>pysal.explore.segregation.aspatial.MultiDiversity &#8212; pysal vv2.2.0rc Manual</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
@@ -13,19 +13,17 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pysal.explore.segregation.aspatial.SimpsonsConcentration" href="pysal.explore.segregation.aspatial.SimpsonsConcentration.html" />
-    <link rel="prev" title="pysal.explore.segregation.aspatial.MultiSquaredCoefficientVariation" href="pysal.explore.segregation.aspatial.MultiSquaredCoefficientVariation.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -40,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           pysal</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>v2.2.0rc</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -60,7 +58,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
@@ -69,9 +67,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
 </ul>
@@ -118,83 +116,10 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="pysal-explore-segregation-aspatial-multidiversity">
 <h1>pysal.explore.segregation.aspatial.MultiDiversity<a class="headerlink" href="#pysal-explore-segregation-aspatial-multidiversity" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="pysal.explore.segregation.aspatial.MultiDiversity">
-<em class="property">class </em><code class="sig-prename descclassname">pysal.explore.segregation.aspatial.</code><code class="sig-name descname">MultiDiversity</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">groups</em>, <em class="sig-param">normalized=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/segregation/aspatial/multigroup_aspatial_indexes.html#MultiDiversity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.segregation.aspatial.MultiDiversity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculation of Multigroup Diversity index</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>data</strong><span class="classifier">a pandas DataFrame</span></dt><dd></dd>
-<dt><strong>groups</strong><span class="classifier">list of strings.</span></dt><dd><p>The variables names in data of the groups of interest of the analysis.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>Based on Reardon, Sean F., and Glenn Firebaugh. “Measures of multigroup segregation.” Sociological methodology 32.1 (2002): 33-67 and Theil, Henry. “Statistical decomposition analysis; with applications in the social and administrative sciences”. No. 04; HA33, T4.. 1972.</p>
-<p>This is also know as Theil’s Entropy Index (Equation 2 of page 37 of Reardon, Sean F., and Glenn Firebaugh. “Measures of multigroup segregation.” Sociological methodology 32.1 (2002): 33-67)</p>
-<p>High diversity means less segregation.</p>
-<p>Reference: <a class="reference internal" href="../references.html#reardon2002measures" id="id1">[RF02]</a>.</p>
-<p class="rubric">Examples</p>
-<p>In this example, we are going to use 2000 Census Tract Data for Sacramento MSA, CA. The groups of interest are White, Black, Asian and Hispanic population.</p>
-<p>Firstly, we need to perform some import the modules and the respective function.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pysal.lib</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pysal.explore.segregation.multigroup_aspatial</span> <span class="k">import</span> <span class="n">MultiDiversity</span>
-</pre></div>
-</div>
-<p>Then, we read the data and create an auxiliary list with only the necessary columns for fitting the index.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">input_df</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;sacramentot2.shp&quot;</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">groups_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;WHITE_&#39;</span><span class="p">,</span> <span class="s1">&#39;BLACK_&#39;</span><span class="p">,</span> <span class="s1">&#39;ASIAN_&#39;</span><span class="p">,</span><span class="s1">&#39;HISP_&#39;</span><span class="p">]</span>
-</pre></div>
-</div>
-<p>The value is estimated below.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">index</span> <span class="o">=</span> <span class="n">MultiDiversity</span><span class="p">(</span><span class="n">input_df</span><span class="p">,</span> <span class="n">groups_list</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">index</span><span class="o">.</span><span class="n">statistic</span>
-<span class="go">0.9733112243997906</span>
-</pre></div>
-</div>
-<p>You can also fit the normalized version of the multigroup diversity index.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">normalized_index</span> <span class="o">=</span> <span class="n">Multi_Diversity</span><span class="p">(</span><span class="n">input_df</span><span class="p">,</span> <span class="n">groups_list</span><span class="p">,</span> <span class="n">normalized</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">normalized_index</span><span class="o">.</span><span class="n">statistic</span>
-<span class="go">0.7020956383415715</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>statistic</strong><span class="classifier">float</span></dt><dd><p>Multigroup Diversity Index</p>
-</dd>
-<dt><strong>core_data</strong><span class="classifier">a pandas DataFrame</span></dt><dd><p>A pandas DataFrame that contains the columns used to perform the estimate.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<dl class="method">
-<dt id="pysal.explore.segregation.aspatial.MultiDiversity.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">data</em>, <em class="sig-param">groups</em>, <em class="sig-param">normalized=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/segregation/aspatial/multigroup_aspatial_indexes.html#MultiDiversity.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.segregation.aspatial.MultiDiversity.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pysal.explore.segregation.aspatial.MultiDiversity.__init__" title="pysal.explore.segregation.aspatial.MultiDiversity.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self, data, groups[, normalized])</p></td>
-<td><p>Initialize self.</p></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 
 
@@ -217,7 +142,7 @@
     </p>
     <p>
         &copy; Copyright 2018-, pysal developers.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.<br/>
     </p>
   </div>
 </footer>

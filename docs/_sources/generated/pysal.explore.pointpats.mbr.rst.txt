@@ -1,0 +1,6 @@
+pysal.explore.pointpats.mbr
+===========================
+
+.. currentmodule:: pysal.explore.pointpats
+
+.. autofunction:: mbr

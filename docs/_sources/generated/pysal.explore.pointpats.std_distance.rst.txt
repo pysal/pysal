@@ -1,0 +1,6 @@
+pysal.explore.pointpats.std\_distance
+=====================================
+
+.. currentmodule:: pysal.explore.pointpats
+
+.. autofunction:: std_distance

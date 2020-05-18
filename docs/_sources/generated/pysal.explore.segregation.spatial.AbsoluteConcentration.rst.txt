@@ -1,0 +1,22 @@
+pysal.explore.segregation.spatial.AbsoluteConcentration
+=======================================================
+
+.. currentmodule:: pysal.explore.segregation.spatial
+
+.. autoclass:: AbsoluteConcentration
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AbsoluteConcentration.__init__
+   
+   
+
+   
+   
+   

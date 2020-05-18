@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pysal.model.spreg.SURlagIV &#8212; pysal v2.1.0 Manual</title>
+    <title>pysal.model.spreg.SURlagIV &#8212; pysal vv2.2.0rc Manual</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
@@ -13,19 +13,17 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pysal.model.mgwr.gwr.GWR" href="pysal.model.mgwr.gwr.GWR.html" />
-    <link rel="prev" title="pysal.model.spreg.SURerrorML" href="pysal.model.spreg.SURerrorML.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -40,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           pysal</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>v2.2.0rc</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -60,7 +58,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
@@ -69,11 +67,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
@@ -118,188 +116,10 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="pysal-model-spreg-surlagiv">
 <h1>pysal.model.spreg.SURlagIV<a class="headerlink" href="#pysal-model-spreg-surlagiv" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="pysal.model.spreg.SURlagIV">
-<em class="property">class </em><code class="sig-prename descclassname">pysal.model.spreg.</code><code class="sig-name descname">SURlagIV</code><span class="sig-paren">(</span><em class="sig-param">bigy</em>, <em class="sig-param">bigX</em>, <em class="sig-param">bigyend=None</em>, <em class="sig-param">bigq=None</em>, <em class="sig-param">w=None</em>, <em class="sig-param">regimes=None</em>, <em class="sig-param">vm=False</em>, <em class="sig-param">regime_lag_sep=False</em>, <em class="sig-param">w_lags=1</em>, <em class="sig-param">lag_q=True</em>, <em class="sig-param">nonspat_diag=True</em>, <em class="sig-param">spat_diag=False</em>, <em class="sig-param">name_bigy=None</em>, <em class="sig-param">name_bigX=None</em>, <em class="sig-param">name_bigyend=None</em>, <em class="sig-param">name_bigq=None</em>, <em class="sig-param">name_ds=None</em>, <em class="sig-param">name_w=None</em>, <em class="sig-param">name_regimes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/model/spreg/sur_lag.html#SURlagIV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.model.spreg.SURlagIV" title="Permalink to this definition">¶</a></dt>
-<dd><p>User class for spatial lag estimation using IV</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>bigy</strong><span class="classifier">dictionary with vector for dependent variable by equation</span></dt><dd></dd>
-<dt><strong>bigX</strong><span class="classifier">dictionary with matrix of explanatory variables by equation</span></dt><dd><p>(note, already includes constant term)</p>
-</dd>
-<dt><strong>bigyend</strong><span class="classifier">dictionary with matrix of endogenous variables by equation</span></dt><dd><p>(optional)</p>
-</dd>
-<dt><strong>bigq</strong><span class="classifier">dictionary with matrix of instruments by equation</span></dt><dd><p>(optional)</p>
-</dd>
-<dt><strong>w</strong><span class="classifier">spatial weights object, required</span></dt><dd></dd>
-<dt><strong>vm</strong><span class="classifier">boolean</span></dt><dd><p>listing of full variance-covariance matrix, default = False</p>
-</dd>
-<dt><strong>w_lags</strong><span class="classifier">integer</span></dt><dd><p>order of spatial lags for WX instruments, default = 1</p>
-</dd>
-<dt><strong>lag_q</strong><span class="classifier">boolean</span></dt><dd><p>flag to apply spatial lag to other instruments,
-default = True</p>
-</dd>
-<dt><strong>nonspat_diag</strong><span class="classifier">boolean; flag for non-spatial diagnostics, default = True</span></dt><dd></dd>
-<dt><strong>spat_diag</strong><span class="classifier">boolean; flag for spatial diagnostics, default = False</span></dt><dd></dd>
-<dt><strong>name_bigy</strong><span class="classifier">dictionary with name of dependent variable for each equation</span></dt><dd><p>default = None, but should be specified
-is done when sur_stackxy is used</p>
-</dd>
-<dt><strong>name_bigX</strong><span class="classifier">dictionary with names of explanatory variables for each</span></dt><dd><p>equation
-default = None, but should be specified
-is done when sur_stackxy is used</p>
-</dd>
-<dt><strong>name_bigyend</strong><span class="classifier">dictionary with names of endogenous variables for each</span></dt><dd><p>equation
-default = None, but should be spedified
-is done when sur_stackZ is used</p>
-</dd>
-<dt><strong>name_bigq</strong><span class="classifier">dictionary with names of instrumental variables for each</span></dt><dd><p>equations
-default = None, but should be specified
-is done when sur_stackZ is used</p>
-</dd>
-<dt><strong>name_ds</strong><span class="classifier">string; name for the data set</span></dt><dd></dd>
-<dt><strong>name_w</strong><span class="classifier">string; name for the spatial weights</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<p>First import pysal.lib to load the spatial analysis tools.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pysal.lib</span>
-</pre></div>
-</div>
-<p>Open data on NCOVR US County Homicides (3085 areas) using pysal.lib.io.open(). 
-This is the DBF associated with the NAT shapefile. Note that pysal.lib.io.open() 
-also reads data in CSV format.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">db</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;NAT.dbf&quot;</span><span class="p">),</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>The specification of the model to be estimated can be provided as lists.
-Each equation should be listed separately. Although not required,
-in this example we will specify additional endogenous regressors.
-Equation 1 has HR80 as dependent variable, PS80 and UE80 as exogenous regressors,
-RD80 as endogenous regressor and FP79 as additional instrument.
-For equation 2, HR90 is the dependent variable, PS90 and UE90 the
-exogenous regressors, RD90 as endogenous regressor and FP99 as 
-additional instrument</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">y_var</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;HR80&#39;</span><span class="p">,</span><span class="s1">&#39;HR90&#39;</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x_var</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;PS80&#39;</span><span class="p">,</span><span class="s1">&#39;UE80&#39;</span><span class="p">],[</span><span class="s1">&#39;PS90&#39;</span><span class="p">,</span><span class="s1">&#39;UE90&#39;</span><span class="p">]]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">yend_var</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;RD80&#39;</span><span class="p">],[</span><span class="s1">&#39;RD90&#39;</span><span class="p">]]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">q_var</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;FP79&#39;</span><span class="p">],[</span><span class="s1">&#39;FP89&#39;</span><span class="p">]]</span>
-</pre></div>
-</div>
-<p>The SUR method requires data to be provided as dictionaries. PySAL
-provides two tools to create these dictionaries from the list of variables: 
-sur_dictxy and sur_dictZ. The tool sur_dictxy can be used to create the
-dictionaries for Y and X, and sur_dictZ for endogenous variables (yend) and
-additional instruments (q).</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bigy</span><span class="p">,</span><span class="n">bigX</span><span class="p">,</span><span class="n">bigyvars</span><span class="p">,</span><span class="n">bigXvars</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">spreg</span><span class="o">.</span><span class="n">sur_utils</span><span class="o">.</span><span class="n">sur_dictxy</span><span class="p">(</span><span class="n">db</span><span class="p">,</span><span class="n">y_var</span><span class="p">,</span><span class="n">x_var</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">bigyend</span><span class="p">,</span><span class="n">bigyendvars</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">spreg</span><span class="o">.</span><span class="n">sur_utils</span><span class="o">.</span><span class="n">sur_dictZ</span><span class="p">(</span><span class="n">db</span><span class="p">,</span><span class="n">yend_var</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">bigq</span><span class="p">,</span><span class="n">bigqvars</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">spreg</span><span class="o">.</span><span class="n">sur_utils</span><span class="o">.</span><span class="n">sur_dictZ</span><span class="p">(</span><span class="n">db</span><span class="p">,</span><span class="n">q_var</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>To run a spatial lag model, we need to specify the spatial weights matrix. 
-To do that, we can open an already existing gal file or create a new one.
-In this example, we will create a new one from NAT.shp and transform it to
-row-standardized.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">Queen</span><span class="o">.</span><span class="n">from_shapefile</span><span class="p">(</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;NAT.shp&quot;</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span><span class="o">.</span><span class="n">transform</span><span class="o">=</span><span class="s1">&#39;r&#39;</span>
-</pre></div>
-</div>
-<p>We can now run the regression and then have a summary of the output by typing:
-print(reg.summary)</p>
-<p>Alternatively, we can just check the betas and standard errors, asymptotic t 
-and p-value of the parameters:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">reg</span> <span class="o">=</span> <span class="n">SURlagIV</span><span class="p">(</span><span class="n">bigy</span><span class="p">,</span><span class="n">bigX</span><span class="p">,</span><span class="n">bigyend</span><span class="p">,</span><span class="n">bigq</span><span class="p">,</span><span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span><span class="n">name_bigy</span><span class="o">=</span><span class="n">bigyvars</span><span class="p">,</span><span class="n">name_bigX</span><span class="o">=</span><span class="n">bigXvars</span><span class="p">,</span><span class="n">name_bigyend</span><span class="o">=</span><span class="n">bigyendvars</span><span class="p">,</span><span class="n">name_bigq</span><span class="o">=</span><span class="n">bigqvars</span><span class="p">,</span><span class="n">name_ds</span><span class="o">=</span><span class="s2">&quot;NAT&quot;</span><span class="p">,</span><span class="n">name_w</span><span class="o">=</span><span class="s2">&quot;nat_queen&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">reg</span><span class="o">.</span><span class="n">b3SLS</span>
-<span class="go">{0: array([[ 6.95472387],</span>
-<span class="go">       [ 1.44044301],</span>
-<span class="go">       [-0.00771893],</span>
-<span class="go">       [ 3.65051153],</span>
-<span class="go">       [ 0.00362663]]), 1: array([[ 5.61101925],</span>
-<span class="go">       [ 1.38716801],</span>
-<span class="go">       [-0.15512029],</span>
-<span class="go">       [ 3.1884457 ],</span>
-<span class="go">       [ 0.25832185]])}</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">reg</span><span class="o">.</span><span class="n">tsls_inf</span>
-<span class="go">{0: array([[  0.49128435,  14.15620899,   0.        ],</span>
-<span class="go">       [  0.11516292,  12.50787151,   0.        ],</span>
-<span class="go">       [  0.03204088,  -0.2409087 ,   0.80962588],</span>
-<span class="go">       [  0.1876025 ,  19.45875745,   0.        ],</span>
-<span class="go">       [  0.05450628,   0.06653605,   0.94695106]]), 1: array([[  0.44969956,  12.47726211,   0.        ],</span>
-<span class="go">       [  0.10440241,  13.28674277,   0.        ],</span>
-<span class="go">       [  0.04150243,  -3.73761961,   0.00018577],</span>
-<span class="go">       [  0.19133145,  16.66451427,   0.        ],</span>
-<span class="go">       [  0.04394024,   5.87893596,   0.        ]])}</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>w</strong><span class="classifier">spatial weights object</span></dt><dd></dd>
-<dt><strong>bigy</strong><span class="classifier">dictionary with y values</span></dt><dd></dd>
-<dt><strong>bigZ</strong><span class="classifier">dictionary with matrix of exogenous and endogenous variables</span></dt><dd><p>for each equation</p>
-</dd>
-<dt><strong>bigyend</strong><span class="classifier">dictionary with matrix of endogenous variables for each</span></dt><dd><p>equation; contains Wy only if no other endogenous specified</p>
-</dd>
-<dt><strong>bigq</strong><span class="classifier">dictionary with matrix of instrumental variables for each</span></dt><dd><p>equation; contains WX only if no other endogenous specified</p>
-</dd>
-<dt><strong>bigZHZH</strong><span class="classifier">dictionary with matrix of cross products Zhat_r’Zhat_s</span></dt><dd></dd>
-<dt><strong>bigZHy</strong><span class="classifier">dictionary with matrix of cross products Zhat_r’y_end_s</span></dt><dd></dd>
-<dt><strong>n_eq</strong><span class="classifier">number of equations</span></dt><dd></dd>
-<dt><strong>n</strong><span class="classifier">number of observations in each cross-section</span></dt><dd></dd>
-<dt><strong>bigK</strong><span class="classifier">vector with number of explanatory variables (including constant,</span></dt><dd><p>exogenous and endogenous) for each equation</p>
-</dd>
-<dt><strong>b2SLS</strong><span class="classifier">dictionary with 2SLS regression coefficients for each equation</span></dt><dd></dd>
-<dt><strong>tslsE</strong><span class="classifier">N x n_eq array with OLS residuals for each equation</span></dt><dd></dd>
-<dt><strong>b3SLS</strong><span class="classifier">dictionary with 3SLS regression coefficients for each equation</span></dt><dd></dd>
-<dt><strong>varb</strong><span class="classifier">variance-covariance matrix</span></dt><dd></dd>
-<dt><strong>sig</strong><span class="classifier">Sigma matrix of inter-equation error covariances</span></dt><dd></dd>
-<dt><strong>resids</strong><span class="classifier">n by n_eq array of residuals</span></dt><dd></dd>
-<dt><strong>corr</strong><span class="classifier">inter-equation 3SLS error correlation matrix</span></dt><dd></dd>
-<dt><strong>tsls_inf</strong><span class="classifier">dictionary with standard error, asymptotic t and p-value,</span></dt><dd><p>one for each equation</p>
-</dd>
-<dt><strong>joinrho</strong><span class="classifier">test on joint significance of spatial autoregressive coefficient</span></dt><dd><p>tuple with test statistic, degrees of freedom, p-value</p>
-</dd>
-<dt><strong>surchow</strong><span class="classifier">list with tuples for Chow test on regression coefficients</span></dt><dd><p>each tuple contains test value, degrees of freedom, p-value</p>
-</dd>
-<dt><strong>name_w</strong><span class="classifier">string; name for the spatial weights</span></dt><dd></dd>
-<dt><strong>name_ds</strong><span class="classifier">string; name for the data set</span></dt><dd></dd>
-<dt><strong>name_bigy</strong><span class="classifier">dictionary with name of dependent variable for each equation</span></dt><dd></dd>
-<dt><strong>name_bigX</strong><span class="classifier">dictionary with names of explanatory variables for each</span></dt><dd><p>equation</p>
-</dd>
-<dt><strong>name_bigyend</strong><span class="classifier">dictionary with names of endogenous variables for each</span></dt><dd><p>equation</p>
-</dd>
-<dt><strong>name_bigq</strong><span class="classifier">dictionary with names of instrumental variables for each</span></dt><dd><p>equations</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<dl class="method">
-<dt id="pysal.model.spreg.SURlagIV.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">bigy</em>, <em class="sig-param">bigX</em>, <em class="sig-param">bigyend=None</em>, <em class="sig-param">bigq=None</em>, <em class="sig-param">w=None</em>, <em class="sig-param">regimes=None</em>, <em class="sig-param">vm=False</em>, <em class="sig-param">regime_lag_sep=False</em>, <em class="sig-param">w_lags=1</em>, <em class="sig-param">lag_q=True</em>, <em class="sig-param">nonspat_diag=True</em>, <em class="sig-param">spat_diag=False</em>, <em class="sig-param">name_bigy=None</em>, <em class="sig-param">name_bigX=None</em>, <em class="sig-param">name_bigyend=None</em>, <em class="sig-param">name_bigq=None</em>, <em class="sig-param">name_ds=None</em>, <em class="sig-param">name_w=None</em>, <em class="sig-param">name_regimes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/model/spreg/sur_lag.html#SURlagIV.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.model.spreg.SURlagIV.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pysal.model.spreg.SURlagIV.__init__" title="pysal.model.spreg.SURlagIV.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self, bigy, bigX[, bigyend, bigq, …])</p></td>
-<td><p>Initialize self.</p></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 
 
@@ -322,7 +142,7 @@ and p-value of the parameters:</p>
     </p>
     <p>
         &copy; Copyright 2018-, pysal developers.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.<br/>
     </p>
   </div>
 </footer>

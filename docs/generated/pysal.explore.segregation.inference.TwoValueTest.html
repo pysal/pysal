@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pysal.explore.segregation.inference.TwoValueTest &#8212; pysal v2.1.0 Manual</title>
+    <title>pysal.explore.segregation.inference.TwoValueTest &#8212; pysal vv2.2.0rc Manual</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
@@ -13,10 +13,6 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -24,6 +20,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           pysal</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>v2.2.0rc</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -58,7 +58,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
@@ -67,9 +67,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
 </ul>
@@ -116,82 +116,10 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="pysal-explore-segregation-inference-twovaluetest">
 <h1>pysal.explore.segregation.inference.TwoValueTest<a class="headerlink" href="#pysal-explore-segregation-inference-twovaluetest" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="pysal.explore.segregation.inference.TwoValueTest">
-<em class="property">class </em><code class="sig-prename descclassname">pysal.explore.segregation.inference.</code><code class="sig-name descname">TwoValueTest</code><span class="sig-paren">(</span><em class="sig-param">seg_class_1</em>, <em class="sig-param">seg_class_2</em>, <em class="sig-param">iterations_under_null=500</em>, <em class="sig-param">null_approach='random_label'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/segregation/inference/inference_wrappers.html#TwoValueTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.segregation.inference.TwoValueTest" title="Permalink to this definition">¶</a></dt>
-<dd><p>Perform inference comparison for a two segregation measures</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>seg_class_1</strong><span class="classifier">a PySAL segregation object to be compared to seg_class_2</span></dt><dd></dd>
-<dt><strong>seg_class_2</strong><span class="classifier">a PySAL segregation object to be compared to seg_class_1</span></dt><dd></dd>
-<dt><strong>iterations_under_null</strong><span class="classifier">number of iterations under null hyphothesis</span></dt><dd></dd>
-<dt><strong>null_approach</strong><span class="classifier">argument that specifies which type of null hypothesis the inference will iterate.</span></dt><dd><p>“random_label”      : random label the data in each iteration</p>
-<p>“counterfactual_composition” : randomizes the number of minority population according to both cumulative distribution function of a variable that represents the composition of the minority group. The composition is the division of the minority population of unit i divided by total population of tract i.</p>
-<p>“counterfactual_share” : randomizes the number of minority population and total population according to both cumulative distribution function of a variable that represents the share of the minority group. The share is the division of the minority population of unit i divided by total population of minority population.</p>
-<p>“counterfactual_dual_composition” : applies the “counterfactual_composition” for both minority and complementary groups.</p>
-</dd>
-<dt><strong>**kwargs</strong><span class="classifier">customizable parameters to pass to the segregation measures. Usually they need to be the same as both seg_class_1 and seg_class_2  was built.</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>This function performs inference to compare two segregation measures. This can be either two measures of the same locations in two different points in time or it can be two different locations at the same point in time.</p>
-<p>The null hypothesis is H0: Segregation_1 is not different than Segregation_2.</p>
-<p>Based on Rey, Sergio J., and Myrna L. Sastré-Gutiérrez. “Interregional inequality dynamics in Mexico.” Spatial Economic Analysis 5.3 (2010): 277-298.</p>
-<p class="rubric">Examples</p>
-<p>Several examples can be found here <a class="reference external" href="https://github.com/pysal/segregation/blob/master/notebooks/inference_wrappers_example.ipynb">https://github.com/pysal/segregation/blob/master/notebooks/inference_wrappers_example.ipynb</a>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>p_value</strong><span class="classifier">float</span></dt><dd><p>Two-Tailed p-value</p>
-</dd>
-<dt><strong>est_sim</strong><span class="classifier">numpy array</span></dt><dd><p>Estimates of the segregation measure differences under the null hypothesis</p>
-</dd>
-<dt><strong>est_point_diff</strong><span class="classifier">float</span></dt><dd><p>Point estimation of the difference between the segregation measures</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code>(self[, ax])</p></td>
-<td><p>Plot the Compare_Segregation class</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="pysal.explore.segregation.inference.TwoValueTest.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">seg_class_1</em>, <em class="sig-param">seg_class_2</em>, <em class="sig-param">iterations_under_null=500</em>, <em class="sig-param">null_approach='random_label'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/segregation/inference/inference_wrappers.html#TwoValueTest.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.segregation.inference.TwoValueTest.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pysal.explore.segregation.inference.TwoValueTest.__init__" title="pysal.explore.segregation.inference.TwoValueTest.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self, seg_class_1, seg_class_2[, …])</p></td>
-<td><p>Initialize self.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code>(self[, ax])</p></td>
-<td><p>Plot the Compare_Segregation class</p></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 
 
@@ -214,7 +142,7 @@
     </p>
     <p>
         &copy; Copyright 2018-, pysal developers.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.<br/>
     </p>
   </div>
 </footer>

@@ -1,0 +1,22 @@
+pysal.explore.segregation.aspatial.MultiSquaredCoefficientVariation
+===================================================================
+
+.. currentmodule:: pysal.explore.segregation.aspatial
+
+.. autoclass:: MultiSquaredCoefficientVariation
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MultiSquaredCoefficientVariation.__init__
+   
+   
+
+   
+   
+   

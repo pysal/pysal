@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pysal.explore.giddy.rank.Tau &#8212; pysal v2.1.0 Manual</title>
+    <title>pysal.explore.giddy.rank.Tau &#8212; pysal vv2.2.0rc Manual</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
@@ -13,19 +13,17 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pysal.explore.giddy.rank.SpatialTau" href="pysal.explore.giddy.rank.SpatialTau.html" />
-    <link rel="prev" title="pysal.explore.giddy.rank.Theta" href="pysal.explore.giddy.rank.Theta.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -40,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           pysal</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>v2.2.0rc</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -60,7 +58,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
@@ -69,9 +67,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
 </ul>
@@ -118,78 +116,10 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="pysal-explore-giddy-rank-tau">
 <h1>pysal.explore.giddy.rank.Tau<a class="headerlink" href="#pysal-explore-giddy-rank-tau" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="pysal.explore.giddy.rank.Tau">
-<em class="property">class </em><code class="sig-prename descclassname">pysal.explore.giddy.rank.</code><code class="sig-name descname">Tau</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/giddy/rank.html#Tau"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.giddy.rank.Tau" title="Permalink to this definition">¶</a></dt>
-<dd><p>Kendall’s Tau is based on a comparison of the number of pairs of n
-observations that have concordant ranks between two variables.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>x</strong><span class="classifier">array</span></dt><dd><p>(n, ), first variable.</p>
-</dd>
-<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>(n, ), second variable.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>Modification of algorithm suggested by <a class="reference internal" href="../references.html#christensen2005" id="id1">[Chr05]</a>.PySAL/giddy
-implementation uses a list based representation of a binary tree for
-the accumulation of the concordance measures. Ties are handled by this
-implementation (in other words, if there are ties in either x, or y, or
-both, the calculation returns Tau_b, if no ties classic Tau is returned.)</p>
-<p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">kendalltau</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pysal.explore.giddy.rank</span> <span class="k">import</span> <span class="n">Tau</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">kt</span> <span class="o">=</span> <span class="n">Tau</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">kt</span><span class="o">.</span><span class="n">tau</span>
-<span class="go">-0.47140452079103173</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">kt</span><span class="o">.</span><span class="n">tau_p</span>
-<span class="go">0.24821309157521476</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tau</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">kendalltau</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tau</span>
-<span class="go">-0.4714045207910316</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
-<span class="go">0.2827454599327748</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>tau</strong><span class="classifier">float</span></dt><dd><p>The classic Tau statistic.</p>
-</dd>
-<dt><strong>tau_p</strong><span class="classifier">float</span></dt><dd><p>asymptotic p-value.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<dl class="method">
-<dt id="pysal.explore.giddy.rank.Tau.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/giddy/rank.html#Tau.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.giddy.rank.Tau.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pysal.explore.giddy.rank.Tau.__init__" title="pysal.explore.giddy.rank.Tau.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self, x, y)</p></td>
-<td><p>Initialize self.</p></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 
 
@@ -212,7 +142,7 @@ both, the calculation returns Tau_b, if no ties classic Tau is returned.)</p>
     </p>
     <p>
         &copy; Copyright 2018-, pysal developers.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.<br/>
     </p>
   </div>
 </footer>

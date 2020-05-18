@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pysal.explore.segregation.decomposition.DecomposeSegregation &#8212; pysal v2.1.0 Manual</title>
+    <title>pysal.explore.segregation.decomposition.DecomposeSegregation &#8212; pysal vv2.2.0rc Manual</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
@@ -13,10 +13,6 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -24,6 +20,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           pysal</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>v2.2.0rc</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -58,7 +58,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
@@ -67,9 +67,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
 </ul>
@@ -116,80 +116,10 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="pysal-explore-segregation-decomposition-decomposesegregation">
 <h1>pysal.explore.segregation.decomposition.DecomposeSegregation<a class="headerlink" href="#pysal-explore-segregation-decomposition-decomposesegregation" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="pysal.explore.segregation.decomposition.DecomposeSegregation">
-<em class="property">class </em><code class="sig-prename descclassname">pysal.explore.segregation.decomposition.</code><code class="sig-name descname">DecomposeSegregation</code><span class="sig-paren">(</span><em class="sig-param">index1</em>, <em class="sig-param">index2</em>, <em class="sig-param">counterfactual_approach='composition'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/segregation/decomposition/decompose_segregation.html#DecomposeSegregation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.segregation.decomposition.DecomposeSegregation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decompose segregation differences into spatial and attribute components.</p>
-<p>Given two segregation indices of the same type, use Shapley decomposition
-to measure whether the differences between index measures arise from
-differences in spatial structure or population structure</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>index1</strong><span class="classifier">segregation.SegIndex class</span></dt><dd><p>First SegIndex class to compare.</p>
-</dd>
-<dt><strong>index2</strong><span class="classifier">segregation.SegIndex class</span></dt><dd><p>Second SegIndex class to compare.</p>
-</dd>
-<dt><strong>counterfactual_approach</strong><span class="classifier">str, one of</span></dt><dd><blockquote>
-<div><p>[“composition”, “share”, “dual_composition”]</p>
-</div></blockquote>
-<p>The technique used to generate the counterfactual population
-distributions.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<p>Several examples can be found at <a class="reference external" href="https://github.com/pysal/segregation/blob/master/notebooks/decomposition_wrapper_example.ipynb">https://github.com/pysal/segregation/blob/master/notebooks/decomposition_wrapper_example.ipynb</a>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>c_s</strong><span class="classifier">float</span></dt><dd><p>Shapley’s Spatial Component of the decomposition</p>
-</dd>
-<dt><strong>c_a</strong><span class="classifier">float</span></dt><dd><p>Shapley’s Attribute Component of the decomposition</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code>(self[, plot_type])</p></td>
-<td><p>Plot the Segregation Decomposition Profile</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="pysal.explore.segregation.decomposition.DecomposeSegregation.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">index1</em>, <em class="sig-param">index2</em>, <em class="sig-param">counterfactual_approach='composition'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/segregation/decomposition/decompose_segregation.html#DecomposeSegregation.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.segregation.decomposition.DecomposeSegregation.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pysal.explore.segregation.decomposition.DecomposeSegregation.__init__" title="pysal.explore.segregation.decomposition.DecomposeSegregation.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self, index1, index2[, …])</p></td>
-<td><p>Initialize self.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code>(self[, plot_type])</p></td>
-<td><p>Plot the Segregation Decomposition Profile</p></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 
 
@@ -212,7 +142,7 @@ distributions.</p>
     </p>
     <p>
         &copy; Copyright 2018-, pysal developers.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.<br/>
     </p>
   </div>
 </footer>

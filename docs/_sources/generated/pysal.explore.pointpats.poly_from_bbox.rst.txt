@@ -1,0 +1,6 @@
+pysal.explore.pointpats.poly\_from\_bbox
+========================================
+
+.. currentmodule:: pysal.explore.pointpats
+
+.. autofunction:: poly_from_bbox

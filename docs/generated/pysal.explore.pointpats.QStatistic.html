@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pysal.explore.pointpats.QStatistic &#8212; pysal v2.1.0 Manual</title>
+    <title>pysal.explore.pointpats.QStatistic &#8212; pysal vv2.2.0rc Manual</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
@@ -13,10 +13,6 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -24,6 +20,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           pysal</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>v2.2.0rc</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -58,7 +58,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
@@ -67,9 +67,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
 </ul>
@@ -116,101 +116,10 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="pysal-explore-pointpats-qstatistic">
 <h1>pysal.explore.pointpats.QStatistic<a class="headerlink" href="#pysal-explore-pointpats-qstatistic" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="pysal.explore.pointpats.QStatistic">
-<em class="property">class </em><code class="sig-prename descclassname">pysal.explore.pointpats.</code><code class="sig-name descname">QStatistic</code><span class="sig-paren">(</span><em class="sig-param">pp</em>, <em class="sig-param">shape='rectangle'</em>, <em class="sig-param">nx=3</em>, <em class="sig-param">ny=3</em>, <em class="sig-param">lh=10</em>, <em class="sig-param">realizations=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/pointpats/quadrat_statistics.html#QStatistic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.pointpats.QStatistic" title="Permalink to this definition">¶</a></dt>
-<dd><p>Quadrat analysis of point pattern.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>pp</strong><span class="classifier"><a class="reference internal" href="pysal.explore.pointpats.PointPattern.html#pysal.explore.pointpats.PointPattern" title="pysal.explore.pointpats.PointPattern"><code class="xref py py-class docutils literal notranslate"><span class="pre">PointPattern</span></code></a></span></dt><dd><p>Point Pattern instance.</p>
-</dd>
-<dt><strong>shape</strong><span class="classifier">string</span></dt><dd><p>Grid structure. Either “rectangle” or “hexagon”.
-Default is “rectangle”.</p>
-</dd>
-<dt><strong>nx</strong><span class="classifier">integer</span></dt><dd><p>Number of rectangles in the horizontal
-direction. Only when shape is specified as
-“rectangle” will nx be considered.</p>
-</dd>
-<dt><strong>ny</strong><span class="classifier">integer</span></dt><dd><p>Number of rectangles in the vertical direction.
-Only when shape is specified as “rectangle”
-will ny be considered.</p>
-</dd>
-<dt><strong>lh</strong><span class="classifier">float</span></dt><dd><p>Hexagon length (hexagon). Only when shape is
-specified as “hexagon” will lh be considered.
-Incompatible with nx &amp; ny.</p>
-</dd>
-<dt><strong>realizations</strong><span class="classifier"><a class="reference internal" href="pysal.explore.pointpats.PointProcess.html#pysal.explore.pointpats.PointProcess" title="pysal.explore.pointpats.PointProcess"><code class="xref py py-class docutils literal notranslate"><span class="pre">PointProcess</span></code></a></span></dt><dd><p>Point process instance with more than 1 point
-pattern realizations which would be used for
-simulation based inference. Default is 0
-where no simulation based inference is
-performed.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Attributes</dt>
-<dd class="field-even"><dl>
-<dt><strong>pp</strong><span class="classifier"><a class="reference internal" href="pysal.explore.pointpats.PointPattern.html#pysal.explore.pointpats.PointPattern" title="pysal.explore.pointpats.PointPattern"><code class="xref py py-class docutils literal notranslate"><span class="pre">PointPattern</span></code></a></span></dt><dd><p>Point Pattern instance.</p>
-</dd>
-<dt><strong>mr</strong><span class="classifier"><a class="reference internal" href="pysal.explore.pointpats.RectangleM.html#pysal.explore.pointpats.RectangleM" title="pysal.explore.pointpats.RectangleM"><code class="xref py py-class docutils literal notranslate"><span class="pre">RectangleM</span></code></a> or <a class="reference internal" href="pysal.explore.pointpats.HexagonM.html#pysal.explore.pointpats.HexagonM" title="pysal.explore.pointpats.HexagonM"><code class="xref py py-class docutils literal notranslate"><span class="pre">HexagonM</span></code></a></span></dt><dd><p>RectangleM or HexagonM instance.</p>
-</dd>
-<dt><strong>chi2</strong><span class="classifier">float</span></dt><dd><p>Chi-squared test statistic for the observed
-point pattern pp.</p>
-</dd>
-<dt><strong>df</strong><span class="classifier">integer</span></dt><dd><p>Degree of freedom.</p>
-</dd>
-<dt><strong>chi2_pvalue</strong><span class="classifier">float</span></dt><dd><p>p-value based on analytical chi-squared
-distribution.</p>
-</dd>
-<dt><strong>chi2_r_pvalue</strong><span class="classifier">float</span></dt><dd><p>p-value based on simulated sampling
-distribution. Only available when
-realizations is correctly specified.</p>
-</dd>
-<dt><strong>chi2_realizations</strong><span class="classifier">array</span></dt><dd><p>Chi-squared test statistics calculated for
-all of the simulated csr point patterns.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code>(self[, title])</p></td>
-<td><p>Plot quadrats as well as the number of points falling in each quadrat.</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="pysal.explore.pointpats.QStatistic.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">pp</em>, <em class="sig-param">shape='rectangle'</em>, <em class="sig-param">nx=3</em>, <em class="sig-param">ny=3</em>, <em class="sig-param">lh=10</em>, <em class="sig-param">realizations=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/pointpats/quadrat_statistics.html#QStatistic.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.pointpats.QStatistic.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pysal.explore.pointpats.QStatistic.__init__" title="pysal.explore.pointpats.QStatistic.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self, pp[, shape, nx, ny, lh, …])</p></td>
-<td><p>Initialize self.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code>(self[, title])</p></td>
-<td><p>Plot quadrats as well as the number of points falling in each quadrat.</p></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 
 
@@ -233,7 +142,7 @@ all of the simulated csr point patterns.</p>
     </p>
     <p>
         &copy; Copyright 2018-, pysal developers.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.<br/>
     </p>
   </div>
 </footer>

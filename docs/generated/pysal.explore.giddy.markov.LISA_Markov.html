@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pysal.explore.giddy.markov.LISA_Markov &#8212; pysal v2.1.0 Manual</title>
+    <title>pysal.explore.giddy.markov.LISA_Markov &#8212; pysal vv2.2.0rc Manual</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
@@ -13,10 +13,6 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -24,6 +20,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           pysal</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>v2.2.0rc</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -58,7 +58,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
@@ -67,9 +67,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
 </ul>
@@ -116,523 +116,10 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="pysal-explore-giddy-markov-lisa-markov">
 <h1>pysal.explore.giddy.markov.LISA_Markov<a class="headerlink" href="#pysal-explore-giddy-markov-lisa-markov" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="pysal.explore.giddy.markov.LISA_Markov">
-<em class="property">class </em><code class="sig-prename descclassname">pysal.explore.giddy.markov.</code><code class="sig-name descname">LISA_Markov</code><span class="sig-paren">(</span><em class="sig-param">y</em>, <em class="sig-param">w</em>, <em class="sig-param">permutations=0</em>, <em class="sig-param">significance_level=0.05</em>, <em class="sig-param">geoda_quads=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/giddy/markov.html#LISA_Markov"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.giddy.markov.LISA_Markov" title="Permalink to this definition">¶</a></dt>
-<dd><p>Markov for Local Indicators of Spatial Association</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>(n, t), n cross-sectional units observed over t time
-periods.</p>
-</dd>
-<dt><strong>w</strong><span class="classifier">W</span></dt><dd><p>spatial weights object.</p>
-</dd>
-<dt><strong>permutations</strong><span class="classifier">int, optional</span></dt><dd><p>number of permutations used to determine LISA
-significance (the default is 0).</p>
-</dd>
-<dt><strong>significance_level</strong><span class="classifier">float, optional</span></dt><dd><p>significance level (two-sided) for filtering
-significant LISA endpoints in a transition (the
-default is 0.05).</p>
-</dd>
-<dt><strong>geoda_quads</strong><span class="classifier">bool</span></dt><dd><p>If True use GeoDa scheme: HH=1, LL=2, LH=3, HL=4.
-If False use PySAL Scheme: HH=1, LH=2, LL=3, HL=4.
-(the default is False).</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pysal.lib</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pysal.explore.giddy.markov</span> <span class="k">import</span> <span class="n">LISA_Markov</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;usjoin.csv&quot;</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">years</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1929</span><span class="p">,</span> <span class="mi">2010</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">pci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">by_col</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">y</span><span class="p">)]</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">years</span><span class="p">])</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;states48.gal&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lm</span> <span class="o">=</span> <span class="n">LISA_Markov</span><span class="p">(</span><span class="n">pci</span><span class="p">,</span><span class="n">w</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lm</span><span class="o">.</span><span class="n">classes</span>
-<span class="go">array([1, 2, 3, 4])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lm</span><span class="o">.</span><span class="n">steady_state</span>
-<span class="go">array([0.28561505, 0.14190226, 0.40493672, 0.16754598])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lm</span><span class="o">.</span><span class="n">transitions</span>
-<span class="go">array([[1.087e+03, 4.400e+01, 4.000e+00, 3.400e+01],</span>
-<span class="go">       [4.100e+01, 4.700e+02, 3.600e+01, 1.000e+00],</span>
-<span class="go">       [5.000e+00, 3.400e+01, 1.422e+03, 3.900e+01],</span>
-<span class="go">       [3.000e+01, 1.000e+00, 4.000e+01, 5.520e+02]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lm</span><span class="o">.</span><span class="n">p</span>
-<span class="go">array([[0.92985458, 0.03763901, 0.00342173, 0.02908469],</span>
-<span class="go">       [0.07481752, 0.85766423, 0.06569343, 0.00182482],</span>
-<span class="go">       [0.00333333, 0.02266667, 0.948     , 0.026     ],</span>
-<span class="go">       [0.04815409, 0.00160514, 0.06420546, 0.88603531]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lm</span><span class="o">.</span><span class="n">move_types</span><span class="p">[</span><span class="mi">0</span><span class="p">,:</span><span class="mi">3</span><span class="p">]</span>
-<span class="go">array([11, 11, 11])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lm</span><span class="o">.</span><span class="n">move_types</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span>
-<span class="go">array([11, 11, 11])</span>
-</pre></div>
-</div>
-<p>Now consider only moves with one, or both, of the LISA end points being
-significant</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lm_random</span> <span class="o">=</span> <span class="n">LISA_Markov</span><span class="p">(</span><span class="n">pci</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">permutations</span><span class="o">=</span><span class="mi">99</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lm_random</span><span class="o">.</span><span class="n">significant_moves</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
-<span class="go">array([11, 11, 11])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lm_random</span><span class="o">.</span><span class="n">significant_moves</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span>
-<span class="go">array([59, 43, 27])</span>
-</pre></div>
-</div>
-<p>Any value less than 49 indicates at least one of the LISA end points was
-significant. So for example, the first spatial unit experienced a
-transition of type 11 (LL, LL)  during the first three and last tree
-intervals (according to lm.move_types), however, the last three of these
-transitions involved insignificant LISAS in both the start and ending year
-of each transition.</p>
-<p>Test whether the moves of y are independent of the moves of wy</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;Chi2: </span><span class="si">%8.3f</span><span class="s2">, p: </span><span class="si">%5.2f</span><span class="s2">, dof: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">lm</span><span class="o">.</span><span class="n">chi_2</span>
-<span class="go">&#39;Chi2: 1058.208, p:  0.00, dof: 9&#39;</span>
-</pre></div>
-</div>
-<p>Actual transitions of LISAs</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lm</span><span class="o">.</span><span class="n">transitions</span>
-<span class="go">array([[1.087e+03, 4.400e+01, 4.000e+00, 3.400e+01],</span>
-<span class="go">       [4.100e+01, 4.700e+02, 3.600e+01, 1.000e+00],</span>
-<span class="go">       [5.000e+00, 3.400e+01, 1.422e+03, 3.900e+01],</span>
-<span class="go">       [3.000e+01, 1.000e+00, 4.000e+01, 5.520e+02]])</span>
-</pre></div>
-</div>
-<p>Expected transitions of LISAs under the null y and wy are moving
-independently of one another</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lm</span><span class="o">.</span><span class="n">expected_t</span>
-<span class="go">array([[1.12328098e+03, 1.15377356e+01, 3.47522158e-01, 3.38337644e+01],</span>
-<span class="go">       [3.50272664e+00, 5.28473882e+02, 1.59178880e+01, 1.05503814e-01],</span>
-<span class="go">       [1.53878082e-01, 2.32163556e+01, 1.46690710e+03, 9.72266513e+00],</span>
-<span class="go">       [9.60775143e+00, 9.86856346e-02, 6.23537392e+00, 6.07058189e+02]])</span>
-</pre></div>
-</div>
-<p>If the LISA classes are to be defined according to GeoDa, the <cite>geoda_quad</cite>
-option has to be set to true</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lm</span><span class="o">.</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
-<span class="go">array([3, 2, 3, 1, 4])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lm</span> <span class="o">=</span> <span class="n">LISA_Markov</span><span class="p">(</span><span class="n">pci</span><span class="p">,</span><span class="n">w</span><span class="p">,</span> <span class="n">geoda_quads</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lm</span><span class="o">.</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
-<span class="go">array([2, 3, 2, 1, 4])</span>
-</pre></div>
-</div>
-<dl class="field-list">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl>
-<dt><strong>chi_2</strong><span class="classifier">tuple</span></dt><dd><p>(3 elements)
-(chi square test statistic, p-value, degrees of freedom) for
-test that dynamics of y are independent of dynamics of wy.</p>
-</dd>
-<dt><strong>classes</strong><span class="classifier">array</span></dt><dd><p>(4, 1)
-1=HH, 2=LH, 3=LL, 4=HL (own, lag)
-1=HH, 2=LL, 3=LH, 4=HL (own, lag) (if geoda_quads=True)</p>
-</dd>
-<dt><strong>expected_t</strong><span class="classifier">array</span></dt><dd><p>(4, 4), expected number of transitions under the null that
-dynamics of y are independent of dynamics of wy.</p>
-</dd>
-<dt><strong>move_types</strong><span class="classifier">matrix</span></dt><dd><p>(n, t-1), integer values indicating which type of LISA
-transition occurred (q1 is quadrant in period 1, q2 is
-quadrant in period 2).</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 15%" />
-<col style="width: 15%" />
-<col style="width: 69%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>q1</p></th>
-<th class="head"><p>q2</p></th>
-<th class="head"><p>move_type</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-</tr>
-<tr class="row-odd"><td><p>1</p></td>
-<td><p>2</p></td>
-<td><p>2</p></td>
-</tr>
-<tr class="row-even"><td><p>1</p></td>
-<td><p>3</p></td>
-<td><p>3</p></td>
-</tr>
-<tr class="row-odd"><td><p>1</p></td>
-<td><p>4</p></td>
-<td><p>4</p></td>
-</tr>
-<tr class="row-even"><td><p>2</p></td>
-<td><p>1</p></td>
-<td><p>5</p></td>
-</tr>
-<tr class="row-odd"><td><p>2</p></td>
-<td><p>2</p></td>
-<td><p>6</p></td>
-</tr>
-<tr class="row-even"><td><p>2</p></td>
-<td><p>3</p></td>
-<td><p>7</p></td>
-</tr>
-<tr class="row-odd"><td><p>2</p></td>
-<td><p>4</p></td>
-<td><p>8</p></td>
-</tr>
-<tr class="row-even"><td><p>3</p></td>
-<td><p>1</p></td>
-<td><p>9</p></td>
-</tr>
-<tr class="row-odd"><td><p>3</p></td>
-<td><p>2</p></td>
-<td><p>10</p></td>
-</tr>
-<tr class="row-even"><td><p>3</p></td>
-<td><p>3</p></td>
-<td><p>11</p></td>
-</tr>
-<tr class="row-odd"><td><p>3</p></td>
-<td><p>4</p></td>
-<td><p>12</p></td>
-</tr>
-<tr class="row-even"><td><p>4</p></td>
-<td><p>1</p></td>
-<td><p>13</p></td>
-</tr>
-<tr class="row-odd"><td><p>4</p></td>
-<td><p>2</p></td>
-<td><p>14</p></td>
-</tr>
-<tr class="row-even"><td><p>4</p></td>
-<td><p>3</p></td>
-<td><p>15</p></td>
-</tr>
-<tr class="row-odd"><td><p>4</p></td>
-<td><p>4</p></td>
-<td><p>16</p></td>
-</tr>
-</tbody>
-</table>
-</dd>
-<dt><strong>p</strong><span class="classifier">array</span></dt><dd><p>(k, k), transition probability matrix.</p>
-</dd>
-<dt><strong>p_values</strong><span class="classifier">matrix</span></dt><dd><p>(n, t), LISA p-values for each end point (if permutations &gt;
-0).</p>
-</dd>
-<dt><strong>significant_moves</strong><span class="classifier">matrix</span></dt><dd><p>(n, t-1), integer values indicating the type and
-significance of a LISA transition. st = 1 if
-significant in period t, else st=0 (if permutations &gt;
-0).</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 44%" />
-<col style="width: 56%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>(s1,s2)</p></th>
-<th class="head"><p>move_type</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>(1,1)</p></td>
-<td><p>[1, 16]</p></td>
-</tr>
-<tr class="row-odd"><td><p>(1,0)</p></td>
-<td><p>[17, 32]</p></td>
-</tr>
-<tr class="row-even"><td><p>(0,1)</p></td>
-<td><p>[33, 48]</p></td>
-</tr>
-<tr class="row-odd"><td><p>(0,0)</p></td>
-<td><p>[49, 64]</p></td>
-</tr>
-</tbody>
-</table>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 53%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>q1</p></th>
-<th class="head"><p>q2</p></th>
-<th class="head"><p>s1</p></th>
-<th class="head"><p>s2</p></th>
-<th class="head"><p>move_type</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-</tr>
-<tr class="row-odd"><td><p>1</p></td>
-<td><p>2</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>2</p></td>
-</tr>
-<tr class="row-even"><td><p>1</p></td>
-<td><p>3</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>3</p></td>
-</tr>
-<tr class="row-odd"><td><p>1</p></td>
-<td><p>4</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>4</p></td>
-</tr>
-<tr class="row-even"><td><p>2</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>5</p></td>
-</tr>
-<tr class="row-odd"><td><p>2</p></td>
-<td><p>2</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>6</p></td>
-</tr>
-<tr class="row-even"><td><p>2</p></td>
-<td><p>3</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>7</p></td>
-</tr>
-<tr class="row-odd"><td><p>2</p></td>
-<td><p>4</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>8</p></td>
-</tr>
-<tr class="row-even"><td><p>3</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>9</p></td>
-</tr>
-<tr class="row-odd"><td><p>3</p></td>
-<td><p>2</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>10</p></td>
-</tr>
-<tr class="row-even"><td><p>3</p></td>
-<td><p>3</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>11</p></td>
-</tr>
-<tr class="row-odd"><td><p>3</p></td>
-<td><p>4</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>12</p></td>
-</tr>
-<tr class="row-even"><td><p>4</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>13</p></td>
-</tr>
-<tr class="row-odd"><td><p>4</p></td>
-<td><p>2</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>14</p></td>
-</tr>
-<tr class="row-even"><td><p>4</p></td>
-<td><p>3</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>15</p></td>
-</tr>
-<tr class="row-odd"><td><p>4</p></td>
-<td><p>4</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>16</p></td>
-</tr>
-<tr class="row-even"><td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>17</p></td>
-</tr>
-<tr class="row-odd"><td><p>1</p></td>
-<td><p>2</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>18</p></td>
-</tr>
-<tr class="row-even"><td><p>.</p></td>
-<td><p>.</p></td>
-<td><p>.</p></td>
-<td><p>.</p></td>
-<td><p>.</p></td>
-</tr>
-<tr class="row-odd"><td><p>.</p></td>
-<td><p>.</p></td>
-<td><p>.</p></td>
-<td><p>.</p></td>
-<td><p>.</p></td>
-</tr>
-<tr class="row-even"><td><p>4</p></td>
-<td><p>3</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>31</p></td>
-</tr>
-<tr class="row-odd"><td><p>4</p></td>
-<td><p>4</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>32</p></td>
-</tr>
-<tr class="row-even"><td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>33</p></td>
-</tr>
-<tr class="row-odd"><td><p>1</p></td>
-<td><p>2</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>34</p></td>
-</tr>
-<tr class="row-even"><td><p>.</p></td>
-<td><p>.</p></td>
-<td><p>.</p></td>
-<td><p>.</p></td>
-<td><p>.</p></td>
-</tr>
-<tr class="row-odd"><td><p>.</p></td>
-<td><p>.</p></td>
-<td><p>.</p></td>
-<td><p>.</p></td>
-<td><p>.</p></td>
-</tr>
-<tr class="row-even"><td><p>4</p></td>
-<td><p>3</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>47</p></td>
-</tr>
-<tr class="row-odd"><td><p>4</p></td>
-<td><p>4</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>48</p></td>
-</tr>
-<tr class="row-even"><td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>49</p></td>
-</tr>
-<tr class="row-odd"><td><p>1</p></td>
-<td><p>2</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>50</p></td>
-</tr>
-<tr class="row-even"><td><p>.</p></td>
-<td><p>.</p></td>
-<td><p>.</p></td>
-<td><p>.</p></td>
-<td><p>.</p></td>
-</tr>
-<tr class="row-odd"><td><p>.</p></td>
-<td><p>.</p></td>
-<td><p>.</p></td>
-<td><p>.</p></td>
-<td><p>.</p></td>
-</tr>
-<tr class="row-even"><td><p>4</p></td>
-<td><p>3</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>63</p></td>
-</tr>
-<tr class="row-odd"><td><p>4</p></td>
-<td><p>4</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>64</p></td>
-</tr>
-</tbody>
-</table>
-</dd>
-<dt><strong>steady_state</strong><span class="classifier">array</span></dt><dd><p>(k, ), ergodic distribution.</p>
-</dd>
-<dt><strong>transitions</strong><span class="classifier">array</span></dt><dd><p>(4, 4), count of transitions between each state i and j.</p>
-</dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">spillover</span></code><span class="classifier">array</span></dt><dd><p>Detect spillover locations for diffusion in LISA Markov.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spillover</span></code>(self[, quadrant, neighbors_on])</p></td>
-<td><p>Detect spillover locations for diffusion in LISA Markov.</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="pysal.explore.giddy.markov.LISA_Markov.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">y</em>, <em class="sig-param">w</em>, <em class="sig-param">permutations=0</em>, <em class="sig-param">significance_level=0.05</em>, <em class="sig-param">geoda_quads=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/giddy/markov.html#LISA_Markov.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.giddy.markov.LISA_Markov.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pysal.explore.giddy.markov.LISA_Markov.__init__" title="pysal.explore.giddy.markov.LISA_Markov.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self, y, w[, permutations, …])</p></td>
-<td><p>Initialize self.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spillover</span></code>(self[, quadrant, neighbors_on])</p></td>
-<td><p>Detect spillover locations for diffusion in LISA Markov.</p></td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Attributes</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">steady_state</span></code></p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 
 
@@ -655,7 +142,7 @@ significant in period t, else st=0 (if permutations &gt;
     </p>
     <p>
         &copy; Copyright 2018-, pysal developers.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.<br/>
     </p>
   </div>
 </footer>

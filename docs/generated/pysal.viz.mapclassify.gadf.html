@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pysal.viz.mapclassify.gadf &#8212; pysal v2.1.0 Manual</title>
+    <title>pysal.viz.mapclassify.gadf &#8212; pysal vv2.2.0rc Manual</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
@@ -13,18 +13,17 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="pysal.viz.mapclassify.K_classifiers" href="pysal.viz.mapclassify.K_classifiers.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -39,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           pysal</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>v2.2.0rc</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -59,7 +58,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
@@ -68,10 +67,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
 </ul>
 </li>
@@ -117,75 +116,10 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="pysal-viz-mapclassify-gadf">
 <h1>pysal.viz.mapclassify.gadf<a class="headerlink" href="#pysal-viz-mapclassify-gadf" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="pysal.viz.mapclassify.gadf">
-<code class="sig-prename descclassname">pysal.viz.mapclassify.</code><code class="sig-name descname">gadf</code><span class="sig-paren">(</span><em class="sig-param">y</em>, <em class="sig-param">method='Quantiles'</em>, <em class="sig-param">maxk=15</em>, <em class="sig-param">pct=0.8</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/viz/mapclassify/classifiers.html#gadf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.viz.mapclassify.gadf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Evaluate the Goodness of Absolute Deviation Fit of a Classifier
-Finds the minimum value of k for which gadf&gt;pct</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>(n, 1) values to be classified</p>
-</dd>
-<dt><strong>method</strong><span class="classifier">{‘Quantiles, ‘Fisher_Jenks’, ‘Maximum_Breaks’, ‘Natrual_Breaks’}</span></dt><dd></dd>
-<dt><strong>maxk</strong><span class="classifier">int</span></dt><dd><p>maximum value of k to evaluate</p>
-</dd>
-<dt><strong>pct</strong><span class="classifier">float</span></dt><dd><p>The percentage of GADF to exceed</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>k</strong><span class="classifier">int</span></dt><dd><p>number of classes</p>
-</dd>
-<dt><strong>cl</strong><span class="classifier">object</span></dt><dd><p>instance of the classifier at k</p>
-</dd>
-<dt><strong>gadf</strong><span class="classifier">float</span></dt><dd><p>goodness of absolute deviation fit</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<dl class="simple">
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">KClassifiers</span></code></dt><dd></dd>
-</dl>
-</div>
-<p class="rubric">Notes</p>
-<p>The GADF is defined as:</p>
-<blockquote>
-<div><div class="math notranslate nohighlight">
-\[GADF = 1 - \sum_c \sum_{i \in c}
-       |y_i - y_{c,med}|  / \sum_i |y_i - y_{med}|\]</div>
-<p>where <span class="math notranslate nohighlight">\(y_{med}\)</span> is the global median and <span class="math notranslate nohighlight">\(y_{c,med}\)</span> is
-the median for class <span class="math notranslate nohighlight">\(c\)</span>.</p>
-</div></blockquote>
-<p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pysal.viz.mapclassify</span> <span class="k">as</span> <span class="nn">mc</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cal</span> <span class="o">=</span> <span class="n">mc</span><span class="o">.</span><span class="n">load_example</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">qgadf</span> <span class="o">=</span> <span class="n">mc</span><span class="o">.</span><span class="n">classifiers</span><span class="o">.</span><span class="n">gadf</span><span class="p">(</span><span class="n">cal</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">qgadf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="go">15</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">qgadf</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="go">0.3740257590909283</span>
-</pre></div>
-</div>
-<p>Quantiles fail to exceed 0.80 before 15 classes. If we lower the bar to
-0.2 we see quintiles as a result</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">qgadf2</span> <span class="o">=</span> <span class="n">mc</span><span class="o">.</span><span class="n">classifiers</span><span class="o">.</span><span class="n">gadf</span><span class="p">(</span><span class="n">cal</span><span class="p">,</span> <span class="n">pct</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">qgadf2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="go">5</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">qgadf2</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="go">0.21710231966462412</span>
-<span class="go">&gt;&gt;&gt;</span>
-</pre></div>
-</div>
-</dd></dl>
-
 </div>
 
 
@@ -208,7 +142,7 @@ the median for class <span class="math notranslate nohighlight">\(c\)</span>.</p
     </p>
     <p>
         &copy; Copyright 2018-, pysal developers.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.<br/>
     </p>
   </div>
 </footer>

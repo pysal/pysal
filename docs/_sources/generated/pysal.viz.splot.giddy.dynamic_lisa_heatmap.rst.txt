@@ -1,0 +1,6 @@
+pysal.viz.splot.giddy.dynamic\_lisa\_heatmap
+============================================
+
+.. currentmodule:: pysal.viz.splot.giddy
+
+.. autofunction:: dynamic_lisa_heatmap

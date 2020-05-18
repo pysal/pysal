@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pysal.explore.esda.G_Local &#8212; pysal v2.1.0 Manual</title>
+    <title>pysal.explore.esda.G_Local &#8212; pysal vv2.2.0rc Manual</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
@@ -13,10 +13,6 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -24,6 +20,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           pysal</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>v2.2.0rc</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -58,7 +58,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
@@ -67,9 +67,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
 </ul>
@@ -116,210 +116,10 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="pysal-explore-esda-g-local">
 <h1>pysal.explore.esda.G_Local<a class="headerlink" href="#pysal-explore-esda-g-local" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="pysal.explore.esda.G_Local">
-<em class="property">class </em><code class="sig-prename descclassname">pysal.explore.esda.</code><code class="sig-name descname">G_Local</code><span class="sig-paren">(</span><em class="sig-param">y</em>, <em class="sig-param">w</em>, <em class="sig-param">transform='R'</em>, <em class="sig-param">permutations=999</em>, <em class="sig-param">star=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/esda/getisord.html#G_Local"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.esda.G_Local" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generalized Local G Autocorrelation</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>variable</p>
-</dd>
-<dt><strong>w</strong><span class="classifier">W</span></dt><dd><p>DistanceBand, weights instance that is based on threshold distance
-and is assumed to be aligned with y</p>
-</dd>
-<dt><strong>transform</strong><span class="classifier">{‘R’, ‘B’}</span></dt><dd><p>the type of w, either ‘B’ (binary) or ‘R’ (row-standardized)</p>
-</dd>
-<dt><strong>permutations</strong><span class="classifier">int</span></dt><dd><p>the number of random permutations for calculating
-pseudo p values</p>
-</dd>
-<dt><strong>star</strong><span class="classifier">boolean</span></dt><dd><p>whether or not to include focal observation in sums (default: False)</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>To compute moments of Gs under normality assumption,
-PySAL considers w is either binary or row-standardized.
-For binary weights object, the weight value for self is 1
-For row-standardized weights object, the weight value for self is
-1/(the number of its neighbors + 1).</p>
-<p>For technical details see <a class="reference internal" href="../references.html#getis-2010" id="id1">[GO10]</a> and <a class="reference internal" href="../references.html#ord-2010" id="id2">[OG10]</a>.</p>
-<p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pysal.lib</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Preparing a point data set</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">points</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]</span>
-</pre></div>
-</div>
-<p>Creating a weights object from points</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">DistanceBand</span><span class="p">(</span><span class="n">points</span><span class="p">,</span><span class="n">threshold</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Preparing a variable</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">7</span><span class="p">])</span>
-</pre></div>
-</div>
-<p>Applying Getis and Ord local G test using a binary weights object</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pysal.explore.esda.getisord</span> <span class="k">import</span> <span class="n">G_Local</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lg</span> <span class="o">=</span> <span class="n">G_Local</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">transform</span><span class="o">=</span><span class="s1">&#39;B&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Examining the results</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lg</span><span class="o">.</span><span class="n">Zs</span>
-<span class="go">array([-1.0136729 , -0.04361589,  1.31558703, -0.31412676,  1.15373986,</span>
-<span class="go">        1.77833941])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">round</span><span class="p">(</span><span class="n">lg</span><span class="o">.</span><span class="n">p_sim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>
-<span class="go">0.101</span>
-</pre></div>
-</div>
-<p>p-value based on standard normal approximation from permutations
-&gt;&gt;&gt; round(lg.p_z_sim[0], 3)
-0.154</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Applying Getis and Ord local G* test using a binary weights object</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lg_star</span> <span class="o">=</span> <span class="n">G_Local</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">transform</span><span class="o">=</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="n">star</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Examining the results</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lg_star</span><span class="o">.</span><span class="n">Zs</span>
-<span class="go">array([-1.39727626, -0.28917762,  0.65064964, -0.28917762,  1.23452088,</span>
-<span class="go">        2.02424331])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">round</span><span class="p">(</span><span class="n">lg_star</span><span class="o">.</span><span class="n">p_sim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>
-<span class="go">0.101</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">12345</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Applying Getis and Ord local G test using a row-standardized weights object</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lg</span> <span class="o">=</span> <span class="n">G_Local</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">transform</span><span class="o">=</span><span class="s1">&#39;R&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Examining the results</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lg</span><span class="o">.</span><span class="n">Zs</span>
-<span class="go">array([-0.62074534, -0.01780611,  1.31558703, -0.12824171,  0.28843496,</span>
-<span class="go">        1.77833941])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">round</span><span class="p">(</span><span class="n">lg</span><span class="o">.</span><span class="n">p_sim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>
-<span class="go">0.103</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Applying Getis and Ord local G* test using a row-standardized weights object</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lg_star</span> <span class="o">=</span> <span class="n">G_Local</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">transform</span><span class="o">=</span><span class="s1">&#39;R&#39;</span><span class="p">,</span><span class="n">star</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Examining the results</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lg_star</span><span class="o">.</span><span class="n">Zs</span>
-<span class="go">array([-0.62488094, -0.09144599,  0.41150696, -0.09144599,  0.24690418,</span>
-<span class="go">        1.28024388])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">round</span><span class="p">(</span><span class="n">lg_star</span><span class="o">.</span><span class="n">p_sim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>
-<span class="go">0.101</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>original variable</p>
-</dd>
-<dt><strong>w</strong><span class="classifier">DistanceBand W</span></dt><dd><p>original weights object</p>
-</dd>
-<dt><strong>permutations</strong><span class="classifier">int</span></dt><dd><p>the number of permutations</p>
-</dd>
-<dt><strong>Gs</strong><span class="classifier">array</span></dt><dd><p>of floats, the value of the orginal G statistic in Getis &amp; Ord (1992)</p>
-</dd>
-<dt><strong>EGs</strong><span class="classifier">float</span></dt><dd><p>expected value of Gs under normality assumption
-the values is scalar, since the expectation is identical
-across all observations</p>
-</dd>
-<dt><strong>VGs</strong><span class="classifier">array</span></dt><dd><p>of floats, variance values of Gs under normality assumption</p>
-</dd>
-<dt><strong>Zs</strong><span class="classifier">array</span></dt><dd><p>of floats, standardized Gs</p>
-</dd>
-<dt><strong>p_norm</strong><span class="classifier">array</span></dt><dd><p>of floats, p-value under normality assumption (one-sided)
-for two-sided tests, this value should be multiplied by 2</p>
-</dd>
-<dt><strong>sim</strong><span class="classifier">array</span></dt><dd><p>of arrays of floats (if permutations&gt;0), vector of I values
-for permutated samples</p>
-</dd>
-<dt><strong>p_sim</strong><span class="classifier">array</span></dt><dd><p>of floats, p-value based on permutations (one-sided)
-null - spatial randomness
-alternative - the observed G is extreme it is either extremely high or extremely low</p>
-</dd>
-<dt><strong>EG_sim</strong><span class="classifier">array</span></dt><dd><p>of floats, average value of G from permutations</p>
-</dd>
-<dt><strong>VG_sim</strong><span class="classifier">array</span></dt><dd><p>of floats, variance of G from permutations</p>
-</dd>
-<dt><strong>seG_sim</strong><span class="classifier">array</span></dt><dd><p>of floats, standard deviation of G under permutations.</p>
-</dd>
-<dt><strong>z_sim</strong><span class="classifier">array</span></dt><dd><p>of floats, standardized G based on permutations</p>
-</dd>
-<dt><strong>p_z_sim</strong><span class="classifier">array</span></dt><dd><p>of floats, p-value based on standard normal approximation from
-permutations (one-sided)</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">by_col</span></code>(df, cols[, w, inplace, pvalue, outvals])</p></td>
-<td><p>Function to compute a G_Local statistic on a dataframe</p></td>
-</tr>
-</tbody>
-</table>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 44%" />
-<col style="width: 56%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>calc</strong></p></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="pysal.explore.esda.G_Local.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">y</em>, <em class="sig-param">w</em>, <em class="sig-param">transform='R'</em>, <em class="sig-param">permutations=999</em>, <em class="sig-param">star=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/esda/getisord.html#G_Local.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.esda.G_Local.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pysal.explore.esda.G_Local.__init__" title="pysal.explore.esda.G_Local.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self, y, w[, transform, …])</p></td>
-<td><p>Initialize self.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">by_col</span></code>(df, cols[, w, inplace, pvalue, outvals])</p></td>
-<td><p>Function to compute a G_Local statistic on a dataframe</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 
 
@@ -342,7 +142,7 @@ permutations (one-sided)</p>
     </p>
     <p>
         &copy; Copyright 2018-, pysal developers.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.<br/>
     </p>
   </div>
 </footer>

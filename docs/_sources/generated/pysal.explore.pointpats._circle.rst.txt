@@ -1,0 +1,6 @@
+pysal.explore.pointpats.\_circle
+================================
+
+.. currentmodule:: pysal.explore.pointpats
+
+.. autofunction:: _circle

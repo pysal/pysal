@@ -1,0 +1,22 @@
+pysal.explore.segregation.aspatial.MultiInformationTheory
+=========================================================
+
+.. currentmodule:: pysal.explore.segregation.aspatial
+
+.. autoclass:: MultiInformationTheory
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MultiInformationTheory.__init__
+   
+   
+
+   
+   
+   

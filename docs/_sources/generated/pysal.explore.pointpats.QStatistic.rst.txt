@@ -1,0 +1,23 @@
+pysal.explore.pointpats.QStatistic
+==================================
+
+.. currentmodule:: pysal.explore.pointpats
+
+.. autoclass:: QStatistic
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~QStatistic.__init__
+      ~QStatistic.plot
+   
+   
+
+   
+   
+   

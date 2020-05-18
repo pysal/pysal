@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pysal.explore.esda.Moran_Rate &#8212; pysal v2.1.0 Manual</title>
+    <title>pysal.explore.esda.Moran_Rate &#8212; pysal vv2.2.0rc Manual</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
@@ -13,10 +13,6 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -24,6 +20,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           pysal</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>v2.2.0rc</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -58,7 +58,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
@@ -67,9 +67,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
 </ul>
@@ -116,155 +116,10 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="pysal-explore-esda-moran-rate">
 <h1>pysal.explore.esda.Moran_Rate<a class="headerlink" href="#pysal-explore-esda-moran-rate" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="pysal.explore.esda.Moran_Rate">
-<em class="property">class </em><code class="sig-prename descclassname">pysal.explore.esda.</code><code class="sig-name descname">Moran_Rate</code><span class="sig-paren">(</span><em class="sig-param">e</em>, <em class="sig-param">b</em>, <em class="sig-param">w</em>, <em class="sig-param">adjusted=True</em>, <em class="sig-param">transformation='r'</em>, <em class="sig-param">permutations=999</em>, <em class="sig-param">two_tailed=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/esda/moran.html#Moran_Rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.esda.Moran_Rate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adjusted Moran’s I Global Autocorrelation Statistic for Rate
-Variables <a class="reference internal" href="../references.html#assun-o-1999" id="id1">[AR99]</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>e</strong><span class="classifier">array</span></dt><dd><p>an event variable measured across n spatial units</p>
-</dd>
-<dt><strong>b</strong><span class="classifier">array</span></dt><dd><p>a population-at-risk variable measured across n spatial
-units</p>
-</dd>
-<dt><strong>w</strong><span class="classifier">W</span></dt><dd><p>spatial weights instance</p>
-</dd>
-<dt><strong>adjusted</strong><span class="classifier">boolean</span></dt><dd><p>whether or not Moran’s I needs to be adjusted for rate
-variable</p>
-</dd>
-<dt><strong>transformation</strong><span class="classifier">{‘R’, ‘B’, ‘D’, ‘U’, ‘V’}</span></dt><dd><p>weights transformation, default is row-standardized “r”.
-Other options include
-“B”: binary,
-“D”: doubly-standardized,
-“U”: untransformed (general weights),
-“V”: variance-stabilizing.</p>
-</dd>
-<dt><strong>two_tailed</strong><span class="classifier">boolean</span></dt><dd><p>If True (default), analytical p-values for Moran’s I are
-two-tailed, otherwise they are one tailed.</p>
-</dd>
-<dt><strong>permutations</strong><span class="classifier">int</span></dt><dd><p>number of random permutations for calculation of pseudo
-p_values</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pysal.lib</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;sids2.gal&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;sids2.dbf&quot;</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="s1">&#39;SID79&#39;</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="s1">&#39;BIR79&#39;</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pysal.explore.esda.moran</span> <span class="k">import</span> <span class="n">Moran_Rate</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mi</span> <span class="o">=</span> <span class="n">Moran_Rate</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span>  <span class="n">w</span><span class="p">,</span> <span class="n">two_tailed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;</span><span class="si">%6.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">mi</span><span class="o">.</span><span class="n">I</span>
-<span class="go">&#39;0.1662&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;</span><span class="si">%6.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">mi</span><span class="o">.</span><span class="n">p_norm</span>
-<span class="go">&#39;0.0042&#39;</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>rate variable computed from parameters e and b
-if adjusted is True, y is standardized rates
-otherwise, y is raw rates</p>
-</dd>
-<dt><strong>w</strong><span class="classifier">W</span></dt><dd><p>original w object</p>
-</dd>
-<dt><strong>permutations</strong><span class="classifier">int</span></dt><dd><p>number of permutations</p>
-</dd>
-<dt><strong>I</strong><span class="classifier">float</span></dt><dd><p>value of Moran’s I</p>
-</dd>
-<dt><strong>EI</strong><span class="classifier">float</span></dt><dd><p>expected value under normality assumption</p>
-</dd>
-<dt><strong>VI_norm</strong><span class="classifier">float</span></dt><dd><p>variance of I under normality assumption</p>
-</dd>
-<dt><strong>seI_norm</strong><span class="classifier">float</span></dt><dd><p>standard deviation of I under normality assumption</p>
-</dd>
-<dt><strong>z_norm</strong><span class="classifier">float</span></dt><dd><p>z-value of I under normality assumption</p>
-</dd>
-<dt><strong>p_norm</strong><span class="classifier">float</span></dt><dd><p>p-value of I under normality assumption</p>
-</dd>
-<dt><strong>VI_rand</strong><span class="classifier">float</span></dt><dd><p>variance of I under randomization assumption</p>
-</dd>
-<dt><strong>seI_rand</strong><span class="classifier">float</span></dt><dd><p>standard deviation of I under randomization assumption</p>
-</dd>
-<dt><strong>z_rand</strong><span class="classifier">float</span></dt><dd><p>z-value of I under randomization assumption</p>
-</dd>
-<dt><strong>p_rand</strong><span class="classifier">float</span></dt><dd><p>p-value of I under randomization assumption</p>
-</dd>
-<dt><strong>two_tailed</strong><span class="classifier">boolean</span></dt><dd><p>If True, p_norm and p_rand are two-tailed p-values,
-otherwise they are one-tailed.</p>
-</dd>
-<dt><strong>sim</strong><span class="classifier">array</span></dt><dd><p>(if permutations&gt;0)
-vector of I values for permuted samples</p>
-</dd>
-<dt><strong>p_sim</strong><span class="classifier">array</span></dt><dd><p>(if permutations&gt;0)
-p-value based on permutations (one-sided)
-null: spatial randomness
-alternative: the observed I is extreme if it is
-either extremely greater or extremely lower than the values
-obtained from permutaitons</p>
-</dd>
-<dt><strong>EI_sim</strong><span class="classifier">float</span></dt><dd><p>(if permutations&gt;0)
-average value of I from permutations</p>
-</dd>
-<dt><strong>VI_sim</strong><span class="classifier">float</span></dt><dd><p>(if permutations&gt;0)
-variance of I from permutations</p>
-</dd>
-<dt><strong>seI_sim</strong><span class="classifier">float</span></dt><dd><p>(if permutations&gt;0)
-standard deviation of I under permutations.</p>
-</dd>
-<dt><strong>z_sim</strong><span class="classifier">float</span></dt><dd><p>(if permutations&gt;0)
-standardized I based on permutations</p>
-</dd>
-<dt><strong>p_z_sim</strong><span class="classifier">float</span></dt><dd><p>(if permutations&gt;0)
-p-value based on standard normal approximation from</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">by_col</span></code>(df, events, populations[, w, …])</p></td>
-<td><p>Function to compute a Moran_Rate statistic on a dataframe</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="pysal.explore.esda.Moran_Rate.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">e</em>, <em class="sig-param">b</em>, <em class="sig-param">w</em>, <em class="sig-param">adjusted=True</em>, <em class="sig-param">transformation='r'</em>, <em class="sig-param">permutations=999</em>, <em class="sig-param">two_tailed=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/esda/moran.html#Moran_Rate.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.esda.Moran_Rate.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pysal.explore.esda.Moran_Rate.__init__" title="pysal.explore.esda.Moran_Rate.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self, e, b, w[, adjusted, …])</p></td>
-<td><p>Initialize self.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">by_col</span></code>(df, events, populations[, w, …])</p></td>
-<td><p>Function to compute a Moran_Rate statistic on a dataframe</p></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 
 
@@ -287,7 +142,7 @@ p-value based on standard normal approximation from</p>
     </p>
     <p>
         &copy; Copyright 2018-, pysal developers.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.<br/>
     </p>
   </div>
 </footer>

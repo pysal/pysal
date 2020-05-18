@@ -1,0 +1,74 @@
+pysal.lib.weights.DistanceBand
+==============================
+
+.. currentmodule:: pysal.lib.weights
+
+.. autoclass:: DistanceBand
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DistanceBand.__init__
+      ~DistanceBand.asymmetry
+      ~DistanceBand.from_WSP
+      ~DistanceBand.from_adjlist
+      ~DistanceBand.from_array
+      ~DistanceBand.from_dataframe
+      ~DistanceBand.from_file
+      ~DistanceBand.from_networkx
+      ~DistanceBand.from_shapefile
+      ~DistanceBand.full
+      ~DistanceBand.get_transform
+      ~DistanceBand.plot
+      ~DistanceBand.remap_ids
+      ~DistanceBand.set_shapefile
+      ~DistanceBand.set_transform
+      ~DistanceBand.symmetrize
+      ~DistanceBand.to_WSP
+      ~DistanceBand.to_adjlist
+      ~DistanceBand.to_networkx
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~DistanceBand.asymmetries
+      ~DistanceBand.cardinalities
+      ~DistanceBand.component_labels
+      ~DistanceBand.diagW2
+      ~DistanceBand.diagWtW
+      ~DistanceBand.diagWtW_WW
+      ~DistanceBand.histogram
+      ~DistanceBand.id2i
+      ~DistanceBand.id_order
+      ~DistanceBand.id_order_set
+      ~DistanceBand.islands
+      ~DistanceBand.max_neighbors
+      ~DistanceBand.mean_neighbors
+      ~DistanceBand.min_neighbors
+      ~DistanceBand.n
+      ~DistanceBand.n_components
+      ~DistanceBand.neighbor_offsets
+      ~DistanceBand.nonzero
+      ~DistanceBand.pct_nonzero
+      ~DistanceBand.s0
+      ~DistanceBand.s1
+      ~DistanceBand.s2
+      ~DistanceBand.s2array
+      ~DistanceBand.sd
+      ~DistanceBand.sparse
+      ~DistanceBand.transform
+      ~DistanceBand.trcW2
+      ~DistanceBand.trcWtW
+      ~DistanceBand.trcWtW_WW
+   
+   

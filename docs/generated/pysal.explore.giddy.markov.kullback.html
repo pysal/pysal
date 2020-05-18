@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pysal.explore.giddy.markov.kullback &#8212; pysal v2.1.0 Manual</title>
+    <title>pysal.explore.giddy.markov.kullback &#8212; pysal vv2.2.0rc Manual</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
@@ -13,19 +13,17 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pysal.explore.giddy.markov.prais" href="pysal.explore.giddy.markov.prais.html" />
-    <link rel="prev" title="pysal.explore.giddy.markov.GeoRank_Markov" href="pysal.explore.giddy.markov.GeoRank_Markov.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -40,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           pysal</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>v2.2.0rc</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -60,7 +58,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
@@ -69,9 +67,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
 </ul>
@@ -118,70 +116,10 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="pysal-explore-giddy-markov-kullback">
 <h1>pysal.explore.giddy.markov.kullback<a class="headerlink" href="#pysal-explore-giddy-markov-kullback" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="pysal.explore.giddy.markov.kullback">
-<code class="sig-prename descclassname">pysal.explore.giddy.markov.</code><code class="sig-name descname">kullback</code><span class="sig-paren">(</span><em class="sig-param">F</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/giddy/markov.html#kullback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.giddy.markov.kullback" title="Permalink to this definition">¶</a></dt>
-<dd><p>Kullback information based test of Markov Homogeneity.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>F</strong><span class="classifier">array</span></dt><dd><p>(s, r, r), values are transitions (not probabilities) for
-s strata, r initial states, r terminal states.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl>
-<dt><strong>Results</strong><span class="classifier">dictionary</span></dt><dd><p>(key - value)</p>
-<p>Conditional homogeneity - (float) test statistic for homogeneity
-of transition probabilities across strata.</p>
-<p>Conditional homogeneity pvalue - (float) p-value for test
-statistic.</p>
-<p>Conditional homogeneity dof - (int) degrees of freedom =
-r(s-1)(r-1).</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>Based on <a class="reference internal" href="../references.html#kullback1962" id="id1">[KKK62]</a>.
-Example below is taken from Table 9.2 .</p>
-<p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pysal.explore.giddy.markov</span> <span class="k">import</span> <span class="n">kullback</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
-<span class="gp">... </span>        <span class="p">[</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span>  <span class="mi">7</span><span class="p">],</span>
-<span class="gp">... </span>        <span class="p">[</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span>  <span class="mi">3</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span>  <span class="mi">6</span><span class="p">],</span>
-<span class="gp">... </span>        <span class="p">[</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">190</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">34</span><span class="p">],</span>
-<span class="gp">... </span>        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">56</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">28</span><span class="p">],</span>
-<span class="gp">... </span>        <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">56</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span>
-<span class="gp">... </span>        <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">134</span><span class="p">]</span>
-<span class="gp">... </span>    <span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
-<span class="gp">... </span>    <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">208</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">18</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="p">[</span><span class="mi">22</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">53</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">116</span><span class="p">]</span>
-<span class="gp">... </span>    <span class="p">])</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">F</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">kullback</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;</span><span class="si">%8.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">res</span><span class="p">[</span><span class="s1">&#39;Conditional homogeneity&#39;</span><span class="p">]</span>
-<span class="go">&#39; 160.961&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">res</span><span class="p">[</span><span class="s1">&#39;Conditional homogeneity dof&#39;</span><span class="p">]</span>
-<span class="go">&#39;30&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;</span><span class="si">%3.1f</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">res</span><span class="p">[</span><span class="s1">&#39;Conditional homogeneity pvalue&#39;</span><span class="p">]</span>
-<span class="go">&#39;0.0&#39;</span>
-</pre></div>
-</div>
-</dd></dl>
-
 </div>
 
 
@@ -204,7 +142,7 @@ Example below is taken from Table 9.2 .</p>
     </p>
     <p>
         &copy; Copyright 2018-, pysal developers.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.<br/>
     </p>
   </div>
 </footer>

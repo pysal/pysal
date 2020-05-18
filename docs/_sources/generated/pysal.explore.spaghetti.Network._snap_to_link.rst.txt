@@ -1,0 +1,6 @@
+pysal.explore.spaghetti.Network.\_snap\_to\_link
+================================================
+
+.. currentmodule:: pysal.explore.spaghetti
+
+.. automethod:: Network._snap_to_link

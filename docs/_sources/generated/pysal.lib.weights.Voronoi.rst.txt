@@ -1,0 +1,6 @@
+pysal.lib.weights.Voronoi
+=========================
+
+.. currentmodule:: pysal.lib.weights
+
+.. autofunction:: Voronoi

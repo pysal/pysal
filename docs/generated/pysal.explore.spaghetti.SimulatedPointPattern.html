@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pysal.explore.spaghetti.SimulatedPointPattern &#8212; pysal v2.1.0 Manual</title>
+    <title>pysal.explore.spaghetti.SimulatedPointPattern &#8212; pysal vv2.2.0rc Manual</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
@@ -13,19 +13,17 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pysal.explore.spaghetti.element_as_gdf" href="pysal.explore.spaghetti.element_as_gdf.html" />
-    <link rel="prev" title="pysal.explore.spaghetti.PointPattern" href="pysal.explore.spaghetti.PointPattern.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -40,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           pysal</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>v2.2.0rc</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -60,7 +58,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
@@ -69,9 +67,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
 </ul>
@@ -118,69 +116,10 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="pysal-explore-spaghetti-simulatedpointpattern">
 <h1>pysal.explore.spaghetti.SimulatedPointPattern<a class="headerlink" href="#pysal-explore-spaghetti-simulatedpointpattern" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="pysal.explore.spaghetti.SimulatedPointPattern">
-<em class="property">class </em><code class="sig-prename descclassname">pysal.explore.spaghetti.</code><code class="sig-name descname">SimulatedPointPattern</code><a class="reference internal" href="../_modules/pysal/explore/spaghetti/network.html#SimulatedPointPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.spaghetti.SimulatedPointPattern" title="Permalink to this definition">¶</a></dt>
-<dd><p>Struct style class to mirror the <code class="docutils literal notranslate"><span class="pre">PointPattern</span></code> class. If the
-<code class="docutils literal notranslate"><span class="pre">PointPattern</span></code> class has methods, it might make sense to make this
-a child of that class. This class is not intended to be used by the
-external user.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>npoints</strong><span class="classifier">int</span></dt><dd><p>The number of points.</p>
-</dd>
-<dt><strong>obs_to_arc</strong><span class="classifier">dict</span></dt><dd><p>Keys are arc ids (tuple). Values are snapped point information
-(<code class="docutils literal notranslate"><span class="pre">dict</span></code>).  Within the snapped point information (<code class="docutils literal notranslate"><span class="pre">dict</span></code>)
-keys are observation ids (<code class="docutils literal notranslate"><span class="pre">int</span></code>), and values are snapped
-coordinates.</p>
-</dd>
-<dt><strong>obs_to_vertex</strong><span class="classifier">list</span></dt><dd><p>List of incident network vertices to snapped observation points
-converted from a <code class="docutils literal notranslate"><span class="pre">default_dict</span></code>. Originally in the form of
-paired left/right nearest network vertices {netvtx1: obs_id1,
-netvtx2: obs_id1, netvtx1: obs_id2… netvtx1: obs_idn}, then
-simplified to a list in the form
-[netvtx1, netvtx2, netvtx1, netvtx2, …].</p>
-</dd>
-<dt><strong>dist_to_vertex</strong><span class="classifier">dict</span></dt><dd><p>Keys are observations ids (<code class="docutils literal notranslate"><span class="pre">int</span></code>). Values are distance lookup
-(<code class="docutils literal notranslate"><span class="pre">dict</span></code>). Within distance lookup (<code class="docutils literal notranslate"><span class="pre">dict</span></code>) keys are the two
-incident vertices of the arc and values are distance to each of
-those arcs.</p>
-</dd>
-<dt><strong>snapped_coordinates</strong><span class="classifier">dict</span></dt><dd><p>Keys are the point ids (<code class="docutils literal notranslate"><span class="pre">int</span></code>). Values are the snapped x,y
-coordinates (tuple).</p>
-</dd>
-<dt><strong>snap_dist</strong><span class="classifier">bool</span></dt><dd><p>Flag as <code class="docutils literal notranslate"><span class="pre">True</span></code> to include the distance from the original
-location to the snapped location along the network. Default
-is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<dl class="method">
-<dt id="pysal.explore.spaghetti.SimulatedPointPattern.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/spaghetti/network.html#SimulatedPointPattern.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.spaghetti.SimulatedPointPattern.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pysal.explore.spaghetti.SimulatedPointPattern.__init__" title="pysal.explore.spaghetti.SimulatedPointPattern.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self)</p></td>
-<td><p>Initialize self.</p></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 
 
@@ -203,7 +142,7 @@ is <code class="docutils literal notranslate"><span class="pre">False</span></co
     </p>
     <p>
         &copy; Copyright 2018-, pysal developers.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.<br/>
     </p>
   </div>
 </footer>

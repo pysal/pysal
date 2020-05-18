@@ -1,0 +1,22 @@
+pysal.explore.segregation.aspatial.MultiRelativeDiversity
+=========================================================
+
+.. currentmodule:: pysal.explore.segregation.aspatial
+
+.. autoclass:: MultiRelativeDiversity
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MultiRelativeDiversity.__init__
+   
+   
+
+   
+   
+   

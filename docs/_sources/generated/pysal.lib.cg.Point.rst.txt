@@ -1,0 +1,22 @@
+pysal.lib.cg.Point
+==================
+
+.. currentmodule:: pysal.lib.cg
+
+.. autoclass:: Point
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Point.__init__
+   
+   
+
+   
+   
+   

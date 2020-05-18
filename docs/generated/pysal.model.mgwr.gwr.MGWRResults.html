@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pysal.model.mgwr.gwr.MGWRResults &#8212; pysal v2.1.0 Manual</title>
+    <title>pysal.model.mgwr.gwr.MGWRResults &#8212; pysal vv2.2.0rc Manual</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
@@ -13,10 +13,6 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -24,6 +20,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           pysal</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>v2.2.0rc</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -58,7 +58,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
@@ -67,11 +67,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
@@ -116,473 +116,10 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="pysal-model-mgwr-gwr-mgwrresults">
 <h1>pysal.model.mgwr.gwr.MGWRResults<a class="headerlink" href="#pysal-model-mgwr-gwr-mgwrresults" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="pysal.model.mgwr.gwr.MGWRResults">
-<em class="property">class </em><code class="sig-prename descclassname">pysal.model.mgwr.gwr.</code><code class="sig-name descname">MGWRResults</code><span class="sig-paren">(</span><em class="sig-param">model</em>, <em class="sig-param">params</em>, <em class="sig-param">predy</em>, <em class="sig-param">CCT</em>, <em class="sig-param">ENP_j</em>, <em class="sig-param">w</em>, <em class="sig-param">R</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/model/mgwr/gwr.html#MGWRResults"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.model.mgwr.gwr.MGWRResults" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class including common properties for a MGWR model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>model</strong><span class="classifier">MGWR object</span></dt><dd><p>pointer to MGWR object with estimation parameters</p>
-</dd>
-<dt><strong>params</strong><span class="classifier">array</span></dt><dd><p>n*k, estimated coefficients</p>
-</dd>
-<dt><strong>predy</strong><span class="classifier">array</span></dt><dd><p>n*1, predicted y values</p>
-</dd>
-<dt><strong>S</strong><span class="classifier">array</span></dt><dd><p>n*n, model hat matrix (if MGWR(hat_matrix=True))</p>
-</dd>
-<dt><strong>R</strong><span class="classifier">array</span></dt><dd><p>n*n*k, covariate-specific hat matrices (if MGWR(hat_matrix=True))</p>
-</dd>
-<dt><strong>CCT</strong><span class="classifier">array</span></dt><dd><p>n*k, scaled variance-covariance matrix</p>
-</dd>
-<dt><strong>w</strong><span class="classifier">array</span></dt><dd><p>n*1, final weight used for iteratively re-weighted least
-sqaures; default is None</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Attributes</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>model</strong><span class="classifier">GWR Object</span></dt><dd><p>points to GWR object for which parameters have been
-estimated</p>
-</dd>
-<dt><strong>params</strong><span class="classifier">array</span></dt><dd><p>n*k, parameter estimates</p>
-</dd>
-<dt><strong>predy</strong><span class="classifier">array</span></dt><dd><p>n*1, predicted value of y</p>
-</dd>
-<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>n*1, dependent variable</p>
-</dd>
-<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>n*k, independent variable, including constant</p>
-</dd>
-<dt><strong>family</strong><span class="classifier">family object</span></dt><dd><p>underlying probability model; provides
-distribution-specific calculations</p>
-</dd>
-<dt><strong>n</strong><span class="classifier">integer</span></dt><dd><p>number of observations</p>
-</dd>
-<dt><strong>k</strong><span class="classifier">integer</span></dt><dd><p>number of independent variables</p>
-</dd>
-<dt><strong>df_model</strong><span class="classifier">integer</span></dt><dd><p>model degrees of freedom</p>
-</dd>
-<dt><strong>df_resid</strong><span class="classifier">integer</span></dt><dd><p>residual degrees of freedom</p>
-</dd>
-<dt><strong>scale</strong><span class="classifier">float</span></dt><dd><p>sigma squared used for subsequent computations</p>
-</dd>
-<dt><strong>w</strong><span class="classifier">array</span></dt><dd><p>n*1, final weights from iteratively re-weighted least
-sqaures routine</p>
-</dd>
-<dt><strong>resid_response</strong><span class="classifier">array</span></dt><dd><p>n*1, residuals of the repsonse</p>
-</dd>
-<dt><strong>resid_ss</strong><span class="classifier">scalar</span></dt><dd><p>residual sum of sqaures</p>
-</dd>
-<dt><strong>W</strong><span class="classifier">array-like</span></dt><dd><p>list of n*n arrays, spatial weights matrices for weighting all
-observations from each calibration point: one for each
-covariate (k)</p>
-</dd>
-<dt><strong>S</strong><span class="classifier">array</span></dt><dd><p>n*n, model hat matrix (if MGWR(hat_matrix=True))</p>
-</dd>
-<dt><strong>R</strong><span class="classifier">array</span></dt><dd><p>n*n*k, covariate-specific hat matrices (if MGWR(hat_matrix=True))</p>
-</dd>
-<dt><strong>CCT</strong><span class="classifier">array</span></dt><dd><p>n*k, scaled variance-covariance matrix</p>
-</dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENP</span></code><span class="classifier">scalar</span></dt><dd><p>effective number of parameters</p>
-</dd>
-<dt><strong>ENP_j</strong><span class="classifier">array-like</span></dt><dd><p>effective number of paramters, which depends on
-sigma2, for each covariate in the model</p>
-</dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">adj_alpha</span></code><span class="classifier">array</span></dt><dd><p>Corrected alpha (critical) values to account for multiple testing during hypothesis testing.</p>
-</dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">adj_alpha_j</span></code><span class="classifier">array</span></dt><dd><p>Corrected alpha (critical) values to account for multiple testing during hypothesis testing.</p>
-</dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">tr_S</span></code><span class="classifier">float</span></dt><dd><p>trace of S (hat) matrix</p>
-</dd>
-<dt><strong>tr_STS</strong><span class="classifier">float</span></dt><dd><p>trace of STS matrix</p>
-</dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">R2</span></code><span class="classifier">float</span></dt><dd><p>Global r-squared value for a Gaussian model.</p>
-</dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">adj_R2</span></code><span class="classifier">float</span></dt><dd><p>Adjusted global r-squared for a Gaussian model.</p>
-</dd>
-<dt><strong>aic</strong><span class="classifier">float</span></dt><dd><p>Akaike information criterion</p>
-</dd>
-<dt><strong>aicc</strong><span class="classifier">float</span></dt><dd><p>corrected Akaike information criterion to account
-to account for model complexity (smaller
-bandwidths)</p>
-</dd>
-<dt><strong>bic</strong><span class="classifier">float</span></dt><dd><p>Bayesian information criterio</p>
-</dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">sigma2</span></code><span class="classifier">float</span></dt><dd><p>residual variance</p>
-</dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">std_res</span></code><span class="classifier">array</span></dt><dd><p>standardized residuals</p>
-</dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">bse</span></code><span class="classifier">array</span></dt><dd><p>standard errors of Betas</p>
-</dd>
-<dt><strong>influ</strong><span class="classifier">array</span></dt><dd><p>n*1, leading diagonal of S matrix</p>
-</dd>
-<dt><strong>CooksD</strong><span class="classifier">array</span></dt><dd><p>n*1, Cook’s D</p>
-</dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">tvalues</span></code><span class="classifier">array</span></dt><dd><p>Return the t-statistic for a given parameter estimate.</p>
-</dd>
-<dt><strong>llf</strong><span class="classifier">scalar</span></dt><dd><p>log-likelihood of the full model; see
-pysal.contrib.glm.family for damily-sepcific
-log-likelihoods</p>
-</dd>
-<dt><strong>mu</strong><span class="classifier">array</span></dt><dd><p>n*, flat one dimensional array of predicted mean
-response value from estimator</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">D2</span></code>(self)</p></td>
-<td><p>Percentage of deviance explanied.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENP</span></code>(self)</p></td>
-<td><p>effective number of parameters</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">R2</span></code>(self)</p></td>
-<td><p>Global r-squared value for a Gaussian model.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">RSS</span></code>(self)</p></td>
-<td><p>geographically weighted residual sum of squares</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">TSS</span></code>(self)</p></td>
-<td><p>geographically weighted total sum of squares</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">adj_D2</span></code>(self)</p></td>
-<td><p>Adjusted percentage of deviance explanied.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">adj_R2</span></code>(self)</p></td>
-<td><p>Adjusted global r-squared for a Gaussian model.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">adj_alpha</span></code>(self)</p></td>
-<td><p>Corrected alpha (critical) values to account for multiple testing during hypothesis testing.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">adj_alpha_j</span></code>(self)</p></td>
-<td><p>Corrected alpha (critical) values to account for multiple testing during hypothesis testing.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">bse</span></code>(self)</p></td>
-<td><p>standard errors of Betas</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">conf_int</span></code>(self)</p></td>
-<td><p>Returns the confidence interval of the fitted parameters.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cooksD</span></code>(self)</p></td>
-<td><p>Influence: leading diagonal of S Matrix</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cov_params</span></code>(self, cov[, exog_scale])</p></td>
-<td><p>Returns scaled covariance parameters</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">critical_tval</span></code>(self[, alpha])</p></td>
-<td><p>Utility function to derive the critial t-value based on given alpha that are needed for hypothesis testing</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_tvals</span></code>(self[, critical_t, alpha])</p></td>
-<td><p>Utility function to set tvalues with an absolute value smaller than the absolute value of the alpha (critical) value to 0.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">localR2</span></code>(self)</p></td>
-<td><p>local R square</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">local_collinearity</span></code>(self)</p></td>
-<td><p>Computes several indicators of multicollinearity within a geographically weighted design matrix, including:</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pDev</span></code>(self)</p></td>
-<td><p>Local percentage of deviance accounted for.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sigma2</span></code>(self)</p></td>
-<td><p>residual variance</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spatial_variability</span></code>(self, selector[, …])</p></td>
-<td><p>Method to compute a Monte Carlo test of spatial variability for each estimated coefficient surface.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">std_res</span></code>(self)</p></td>
-<td><p>standardized residuals</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code>(self)</p></td>
-<td><p>Print out MGWR summary</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">tr_S</span></code>(self)</p></td>
-<td><p>trace of S (hat) matrix</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">tvalues</span></code>(self)</p></td>
-<td><p>Return the t-statistic for a given parameter estimate.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">use_t</span></code>(self)</p></td>
-<td><p>bool(x) -&gt; bool</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">y_bar</span></code>(self)</p></td>
-<td><p>weighted mean of y</p></td>
-</tr>
-</tbody>
-</table>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 71%" />
-<col style="width: 29%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>W</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>adj_pseudoR2</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>aic</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>aicc</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>bic</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>deviance</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>df_model</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>df_resid</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>global_deviance</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>initialize</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>llf</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>llnull</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>normalized_cov_params</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>null</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>null_deviance</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>pearson_chi2</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>predictions</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>pseudoR2</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>pvalues</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>resid_anscombe</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>resid_deviance</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>resid_pearson</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>resid_response</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>resid_ss</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>resid_working</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>scale</strong></p></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="pysal.model.mgwr.gwr.MGWRResults.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">model</em>, <em class="sig-param">params</em>, <em class="sig-param">predy</em>, <em class="sig-param">CCT</em>, <em class="sig-param">ENP_j</em>, <em class="sig-param">w</em>, <em class="sig-param">R</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/model/mgwr/gwr.html#MGWRResults.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.model.mgwr.gwr.MGWRResults.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize class</p>
-</dd></dl>
-
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">D2</span></code>(self)</p></td>
-<td><p>Percentage of deviance explanied.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENP</span></code>(self)</p></td>
-<td><p>effective number of parameters</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MGWRResults.ENP_j</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">R2</span></code>(self)</p></td>
-<td><p>Global r-squared value for a Gaussian model.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">RSS</span></code>(self)</p></td>
-<td><p>geographically weighted residual sum of squares</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">TSS</span></code>(self)</p></td>
-<td><p>geographically weighted total sum of squares</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pysal.model.mgwr.gwr.MGWRResults.__init__" title="pysal.model.mgwr.gwr.MGWRResults.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self, model, params, predy, CCT, …)</p></td>
-<td><p>Initialize class</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">adj_D2</span></code>(self)</p></td>
-<td><p>Adjusted percentage of deviance explanied.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">adj_alpha</span></code>(self)</p></td>
-<td><p>Corrected alpha (critical) values to account for multiple testing during hypothesis testing.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">adj_alpha_j</span></code>(self)</p></td>
-<td><p>Corrected alpha (critical) values to account for multiple testing during hypothesis testing.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">adj_pseudoR2</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">aic</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">aicc</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">bic</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">bse</span></code>(self)</p></td>
-<td><p>standard errors of Betas</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">conf_int</span></code>(self)</p></td>
-<td><p>Returns the confidence interval of the fitted parameters.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cooksD</span></code>(self)</p></td>
-<td><p>Influence: leading diagonal of S Matrix</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cov_params</span></code>(self, cov[, exog_scale])</p></td>
-<td><p>Returns scaled covariance parameters</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">critical_tval</span></code>(self[, alpha])</p></td>
-<td><p>Utility function to derive the critial t-value based on given alpha that are needed for hypothesis testing</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">deviance</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_model</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_resid</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_tvals</span></code>(self[, critical_t, alpha])</p></td>
-<td><p>Utility function to set tvalues with an absolute value smaller than the absolute value of the alpha (critical) value to 0.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MGWRResults.influ</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">initialize</span></code>(self, model, params, \*\*kwd)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">llf</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">llnull</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">localR2</span></code>(self)</p></td>
-<td><p>local R square</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">local_collinearity</span></code>(self)</p></td>
-<td><p>Computes several indicators of multicollinearity within a geographically weighted design matrix, including:</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">normalized_cov_params</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">null</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">null_deviance</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pDev</span></code>(self)</p></td>
-<td><p>Local percentage of deviance accounted for.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pearson_chi2</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predictions</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pseudoR2</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pvalues</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resid_anscombe</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resid_deviance</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resid_pearson</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resid_response</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resid_ss</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resid_working</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scale</span></code>(self[, scale])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sigma2</span></code>(self)</p></td>
-<td><p>residual variance</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spatial_variability</span></code>(self, selector[, …])</p></td>
-<td><p>Method to compute a Monte Carlo test of spatial variability for each estimated coefficient surface.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">std_res</span></code>(self)</p></td>
-<td><p>standardized residuals</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code>(self)</p></td>
-<td><p>Print out MGWR summary</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">tr_S</span></code>(self)</p></td>
-<td><p>trace of S (hat) matrix</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MGWRResults.tr_STS</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">tvalues</span></code>(self)</p></td>
-<td><p>Return the t-statistic for a given parameter estimate.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">use_t</span></code>(self)</p></td>
-<td><p>bool(x) -&gt; bool</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">y_bar</span></code>(self)</p></td>
-<td><p>weighted mean of y</p></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 
 
@@ -605,7 +142,7 @@ response value from estimator</p>
     </p>
     <p>
         &copy; Copyright 2018-, pysal developers.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.<br/>
     </p>
   </div>
 </footer>

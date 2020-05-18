@@ -1,0 +1,74 @@
+pysal.lib.weights.Rook
+======================
+
+.. currentmodule:: pysal.lib.weights
+
+.. autoclass:: Rook
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Rook.__init__
+      ~Rook.asymmetry
+      ~Rook.from_WSP
+      ~Rook.from_adjlist
+      ~Rook.from_dataframe
+      ~Rook.from_file
+      ~Rook.from_iterable
+      ~Rook.from_networkx
+      ~Rook.from_shapefile
+      ~Rook.full
+      ~Rook.get_transform
+      ~Rook.plot
+      ~Rook.remap_ids
+      ~Rook.set_shapefile
+      ~Rook.set_transform
+      ~Rook.symmetrize
+      ~Rook.to_WSP
+      ~Rook.to_adjlist
+      ~Rook.to_networkx
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Rook.asymmetries
+      ~Rook.cardinalities
+      ~Rook.component_labels
+      ~Rook.diagW2
+      ~Rook.diagWtW
+      ~Rook.diagWtW_WW
+      ~Rook.histogram
+      ~Rook.id2i
+      ~Rook.id_order
+      ~Rook.id_order_set
+      ~Rook.islands
+      ~Rook.max_neighbors
+      ~Rook.mean_neighbors
+      ~Rook.min_neighbors
+      ~Rook.n
+      ~Rook.n_components
+      ~Rook.neighbor_offsets
+      ~Rook.nonzero
+      ~Rook.pct_nonzero
+      ~Rook.s0
+      ~Rook.s1
+      ~Rook.s2
+      ~Rook.s2array
+      ~Rook.sd
+      ~Rook.sparse
+      ~Rook.transform
+      ~Rook.trcW2
+      ~Rook.trcWtW
+      ~Rook.trcWtW_WW
+   
+   

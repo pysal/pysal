@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pysal.explore.spaghetti.Network.nearestneighbordistances &#8212; pysal v2.1.0 Manual</title>
+    <title>pysal.explore.spaghetti.Network.nearestneighbordistances &#8212; pysal vv2.2.0rc Manual</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
@@ -13,19 +13,17 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pysal.explore.spaghetti.Network.split_arcs" href="pysal.explore.spaghetti.Network.split_arcs.html" />
-    <link rel="prev" title="pysal.explore.spaghetti.Network.allneighbordistances" href="pysal.explore.spaghetti.Network.allneighbordistances.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -40,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           pysal</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>v2.2.0rc</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -60,7 +58,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
@@ -69,9 +67,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
 </ul>
@@ -118,71 +116,10 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="pysal-explore-spaghetti-network-nearestneighbordistances">
 <h1>pysal.explore.spaghetti.Network.nearestneighbordistances<a class="headerlink" href="#pysal-explore-spaghetti-network-nearestneighbordistances" title="Permalink to this headline">¶</a></h1>
-<dl class="method">
-<dt id="pysal.explore.spaghetti.Network.nearestneighbordistances">
-<code class="sig-prename descclassname">Network.</code><code class="sig-name descname">nearestneighbordistances</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">sourcepattern</em>, <em class="sig-param">destpattern=None</em>, <em class="sig-param">n_processes=None</em>, <em class="sig-param">gen_tree=False</em>, <em class="sig-param">all_dists=None</em>, <em class="sig-param">snap_dist=False</em>, <em class="sig-param">keep_zero_dist=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/spaghetti/network.html#Network.nearestneighbordistances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.spaghetti.Network.nearestneighbordistances" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the interpattern nearest neighbor distances or the
-intrapattern nearest neighbor distances between a source
-pattern and a destination pattern.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>sourcepattern</strong><span class="classifier">str</span></dt><dd><p>The key of a point pattern snapped to the network.</p>
-</dd>
-<dt><strong>destpattern</strong><span class="classifier">str</span></dt><dd><p>(Optional) The key of a point pattern snapped to the
-network.</p>
-</dd>
-<dt><strong>n_processes</strong><span class="classifier">{int, str}</span></dt><dd><p>(Optional) Specify the number of cores to utilize. Default
-is 1 core. Use <code class="docutils literal notranslate"><span class="pre">int</span></code> to specify an exact number or cores.
-Use <code class="docutils literal notranslate"><span class="pre">&quot;all&quot;</span></code> to request all available cores.</p>
-</dd>
-<dt><strong>gen_tree</strong><span class="classifier">bool</span></dt><dd><p>Rebuild shortest path <code class="docutils literal notranslate"><span class="pre">True</span></code>, or skip <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
-</dd>
-<dt><strong>all_dists</strong><span class="classifier"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html">numpy.ndarray</a></span></dt><dd><p>An array of shape (n,n) storing distances between all
-points.</p>
-</dd>
-<dt><strong>snap_dist</strong><span class="classifier">bool</span></dt><dd><p>Flag as <code class="docutils literal notranslate"><span class="pre">True</span></code> to include the distance from the original
-location to the snapped location along the network. Default
-is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
-</dd>
-<dt><strong>keep_zero_dist</strong><span class="classifier">bool</span></dt><dd><p>Include zero values in minimum distance <code class="docutils literal notranslate"><span class="pre">True</span></code> or exclude
-<code class="docutils literal notranslate"><span class="pre">False</span></code>. Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>. If the source pattern is the
-same as the destination pattern the diagonal is filled with
-<code class="docutils literal notranslate"><span class="pre">numpy.nan</span></code>.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>nearest</strong><span class="classifier">dict</span></dt><dd><p>key is source point id, value is tuple of list containing
-nearest destination point ids and distance.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pysal.explore.spaghetti</span> <span class="k">as</span> <span class="nn">spgh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ntw</span> <span class="o">=</span> <span class="n">spgh</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;streets.shp&#39;</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ntw</span><span class="o">.</span><span class="n">snapobservations</span><span class="p">(</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;crimes.shp&#39;</span><span class="p">),</span>
-<span class="gp">... </span>                     <span class="s1">&#39;crimes&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">nn</span> <span class="o">=</span> <span class="n">ntw</span><span class="o">.</span><span class="n">nearestneighbordistances</span><span class="p">(</span><span class="s1">&#39;crimes&#39;</span><span class="p">,</span>
-<span class="gp">... </span>                                  <span class="n">keep_zero_dist</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">nn</span><span class="p">[</span><span class="mi">11</span><span class="p">],</span> <span class="n">nn</span><span class="p">[</span><span class="mi">18</span><span class="p">]</span>
-<span class="go">(([18, 19], 165.33982412719126), ([19], 0.0))</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nn</span> <span class="o">=</span> <span class="n">ntw</span><span class="o">.</span><span class="n">nearestneighbordistances</span><span class="p">(</span><span class="s1">&#39;crimes&#39;</span><span class="p">,</span>
-<span class="gp">... </span>                                  <span class="n">keep_zero_dist</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">nn</span><span class="p">[</span><span class="mi">11</span><span class="p">],</span> <span class="n">nn</span><span class="p">[</span><span class="mi">18</span><span class="p">]</span>
-<span class="go">(([18, 19], 165.33982412719126), ([11], 165.33982412719126))</span>
-</pre></div>
-</div>
-</dd></dl>
-
 </div>
 
 
@@ -205,7 +142,7 @@ nearest destination point ids and distance.</p>
     </p>
     <p>
         &copy; Copyright 2018-, pysal developers.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.<br/>
     </p>
   </div>
 </footer>

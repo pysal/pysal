@@ -1,0 +1,22 @@
+pysal.explore.segregation.spatial.AbsoluteCentralization
+========================================================
+
+.. currentmodule:: pysal.explore.segregation.spatial
+
+.. autoclass:: AbsoluteCentralization
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AbsoluteCentralization.__init__
+   
+   
+
+   
+   
+   

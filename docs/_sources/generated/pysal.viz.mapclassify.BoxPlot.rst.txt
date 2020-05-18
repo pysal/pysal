@@ -1,0 +1,29 @@
+pysal.viz.mapclassify.BoxPlot
+=============================
+
+.. currentmodule:: pysal.viz.mapclassify
+
+.. autoclass:: BoxPlot
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BoxPlot.__init__
+      ~BoxPlot.find_bin
+      ~BoxPlot.get_adcm
+      ~BoxPlot.get_gadf
+      ~BoxPlot.get_tss
+      ~BoxPlot.make
+      ~BoxPlot.plot
+      ~BoxPlot.update
+   
+   
+
+   
+   
+   

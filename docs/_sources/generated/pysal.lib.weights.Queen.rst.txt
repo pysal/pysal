@@ -1,0 +1,74 @@
+pysal.lib.weights.Queen
+=======================
+
+.. currentmodule:: pysal.lib.weights
+
+.. autoclass:: Queen
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Queen.__init__
+      ~Queen.asymmetry
+      ~Queen.from_WSP
+      ~Queen.from_adjlist
+      ~Queen.from_dataframe
+      ~Queen.from_file
+      ~Queen.from_iterable
+      ~Queen.from_networkx
+      ~Queen.from_shapefile
+      ~Queen.full
+      ~Queen.get_transform
+      ~Queen.plot
+      ~Queen.remap_ids
+      ~Queen.set_shapefile
+      ~Queen.set_transform
+      ~Queen.symmetrize
+      ~Queen.to_WSP
+      ~Queen.to_adjlist
+      ~Queen.to_networkx
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Queen.asymmetries
+      ~Queen.cardinalities
+      ~Queen.component_labels
+      ~Queen.diagW2
+      ~Queen.diagWtW
+      ~Queen.diagWtW_WW
+      ~Queen.histogram
+      ~Queen.id2i
+      ~Queen.id_order
+      ~Queen.id_order_set
+      ~Queen.islands
+      ~Queen.max_neighbors
+      ~Queen.mean_neighbors
+      ~Queen.min_neighbors
+      ~Queen.n
+      ~Queen.n_components
+      ~Queen.neighbor_offsets
+      ~Queen.nonzero
+      ~Queen.pct_nonzero
+      ~Queen.s0
+      ~Queen.s1
+      ~Queen.s2
+      ~Queen.s2array
+      ~Queen.sd
+      ~Queen.sparse
+      ~Queen.transform
+      ~Queen.trcW2
+      ~Queen.trcWtW
+      ~Queen.trcWtW_WW
+   
+   

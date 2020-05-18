@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pysal.viz.splot.esda.plot_moran_simulation &#8212; pysal v2.1.0 Manual</title>
+    <title>pysal.viz.splot.esda.plot_moran_simulation &#8212; pysal vv2.2.0rc Manual</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
@@ -13,19 +13,17 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pysal.viz.splot.esda.plot_moran_bv" href="pysal.viz.splot.esda.plot_moran_bv.html" />
-    <link rel="prev" title="pysal.viz.splot.esda.plot_moran" href="pysal.viz.splot.esda.plot_moran.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -40,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           pysal</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>v2.2.0rc</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -60,7 +58,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
@@ -69,10 +67,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
 </ul>
 </li>
@@ -118,84 +116,10 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="pysal-viz-splot-esda-plot-moran-simulation">
 <h1>pysal.viz.splot.esda.plot_moran_simulation<a class="headerlink" href="#pysal-viz-splot-esda-plot-moran-simulation" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="pysal.viz.splot.esda.plot_moran_simulation">
-<code class="sig-prename descclassname">pysal.viz.splot.esda.</code><code class="sig-name descname">plot_moran_simulation</code><span class="sig-paren">(</span><em class="sig-param">moran</em>, <em class="sig-param">aspect_equal=True</em>, <em class="sig-param">ax=None</em>, <em class="sig-param">fitline_kwds=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/viz/splot/_viz_esda_mpl.html#plot_moran_simulation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.viz.splot.esda.plot_moran_simulation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Global Moran’s I simulated reference distribution.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>moran</strong><span class="classifier">esda.moran.Moran instance</span></dt><dd><p>Values of Moran’s I Global Autocorrelation Statistics</p>
-</dd>
-<dt><strong>aspect_equal</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, Axes of Moran Scatterplot will show the same
-aspect or visual proportions.</p>
-</dd>
-<dt><strong>ax</strong><span class="classifier">Matplotlib Axes instance, optional</span></dt><dd><p>If given, the Moran plot will be created inside this axis.
-Default =None.</p>
-</dd>
-<dt><strong>fitline_kwds</strong><span class="classifier">keyword arguments, optional</span></dt><dd><p>Keywords used for creating and designing the
-vertical moran fitline. Default =None.</p>
-</dd>
-<dt><strong>**kwargs</strong><span class="classifier">keyword arguments, optional</span></dt><dd><p>Keywords used for creating and designing the figure,
-passed to seaborn.kdeplot.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>fig</strong><span class="classifier">Matplotlib Figure instance</span></dt><dd><p>Simulated reference distribution figure</p>
-</dd>
-<dt><strong>ax</strong><span class="classifier">matplotlib Axes instance</span></dt><dd><p>Axes in which the figure is plotted</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<p>Imports</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pysal.lib.weights.contiguity</span> <span class="k">import</span> <span class="n">Queen</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pysal.lib</span> <span class="k">import</span> <span class="n">examples</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pysal.explore.esda.moran</span> <span class="k">import</span> <span class="n">Moran</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pysal.viz.splot.esda</span> <span class="k">import</span> <span class="n">plot_moran_simulation</span>
-</pre></div>
-</div>
-<p>Load data and calculate weights</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">link_to_data</span> <span class="o">=</span> <span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;Guerry.shp&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">link_to_data</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;Donatns&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">Queen</span><span class="o">.</span><span class="n">from_dataframe</span><span class="p">(</span><span class="n">gdf</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="s1">&#39;r&#39;</span>
-</pre></div>
-</div>
-<p>Calculate Global Moran</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">moran</span> <span class="o">=</span> <span class="n">Moran</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>plot</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plot_moran_simulation</span><span class="p">(</span><span class="n">moran</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>(<a class="reference external" href="../generated/pysal-viz-splot-esda-plot_moran_simulation-1.py">Source code</a>, <a class="reference external" href="../generated/pysal-viz-splot-esda-plot_moran_simulation-1_00_00.png">png</a>, <a class="reference external" href="../generated/pysal-viz-splot-esda-plot_moran_simulation-1_00_00.hires.png">hires.png</a>, <a class="reference external" href="../generated/pysal-viz-splot-esda-plot_moran_simulation-1_00_00.pdf">pdf</a>)</p>
-<div class="figure align-default">
-<img alt="../_images/pysal-viz-splot-esda-plot_moran_simulation-1_00_00.png" src="../_images/pysal-viz-splot-esda-plot_moran_simulation-1_00_00.png" />
-</div>
-<p>customize plot</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plot_moran_simulation</span><span class="p">(</span><span class="n">moran</span><span class="p">,</span> <span class="n">fitline_kwds</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;#4393c3&#39;</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>(<a class="reference external" href="../generated/pysal-viz-splot-esda-plot_moran_simulation-1_01_00.png">png</a>, <a class="reference external" href="../generated/pysal-viz-splot-esda-plot_moran_simulation-1_01_00.hires.png">hires.png</a>, <a class="reference external" href="../generated/pysal-viz-splot-esda-plot_moran_simulation-1_01_00.pdf">pdf</a>)</p>
-<div class="figure align-default">
-<img alt="../_images/pysal-viz-splot-esda-plot_moran_simulation-1_01_00.png" src="../_images/pysal-viz-splot-esda-plot_moran_simulation-1_01_00.png" />
-</div>
-</dd></dl>
-
 </div>
 
 
@@ -218,7 +142,7 @@ passed to seaborn.kdeplot.</p>
     </p>
     <p>
         &copy; Copyright 2018-, pysal developers.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.<br/>
     </p>
   </div>
 </footer>

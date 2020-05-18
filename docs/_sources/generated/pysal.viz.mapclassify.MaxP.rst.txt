@@ -1,0 +1,29 @@
+pysal.viz.mapclassify.MaxP
+==========================
+
+.. currentmodule:: pysal.viz.mapclassify
+
+.. autoclass:: MaxP
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MaxP.__init__
+      ~MaxP.find_bin
+      ~MaxP.get_adcm
+      ~MaxP.get_gadf
+      ~MaxP.get_tss
+      ~MaxP.make
+      ~MaxP.plot
+      ~MaxP.update
+   
+   
+
+   
+   
+   

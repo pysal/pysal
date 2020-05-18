@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pysal.model.mgwr.gwr.MGWR &#8212; pysal v2.1.0 Manual</title>
+    <title>pysal.model.mgwr.gwr.MGWR &#8212; pysal vv2.2.0rc Manual</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
@@ -13,18 +13,17 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="pysal.model.mgwr.gwr.GWRResultsLite" href="pysal.model.mgwr.gwr.GWRResultsLite.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -39,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           pysal</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>v2.2.0rc</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -59,7 +58,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-conda">Installing with conda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
@@ -68,11 +67,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pysal-model-linear-models-for-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Linear models for spatial data analysis</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
@@ -117,222 +116,10 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="pysal-model-mgwr-gwr-mgwr">
 <h1>pysal.model.mgwr.gwr.MGWR<a class="headerlink" href="#pysal-model-mgwr-gwr-mgwr" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="pysal.model.mgwr.gwr.MGWR">
-<em class="property">class </em><code class="sig-prename descclassname">pysal.model.mgwr.gwr.</code><code class="sig-name descname">MGWR</code><span class="sig-paren">(</span><em class="sig-param">coords</em>, <em class="sig-param">y</em>, <em class="sig-param">X</em>, <em class="sig-param">selector</em>, <em class="sig-param">sigma2_v1=True</em>, <em class="sig-param">kernel='bisquare'</em>, <em class="sig-param">fixed=False</em>, <em class="sig-param">constant=True</em>, <em class="sig-param">spherical=False</em>, <em class="sig-param">hat_matrix=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/model/mgwr/gwr.html#MGWR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.model.mgwr.gwr.MGWR" title="Permalink to this definition">¶</a></dt>
-<dd><p>Multiscale GWR estimation and inference.
-See <a class="reference internal" href="../references.html#fotheringham-2017" id="id1">[FYK17]</a> <a class="reference internal" href="../references.html#yu-2019" id="id2">[YFL+19]</a>.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>coords</strong><span class="classifier">array-like</span></dt><dd><p>n*2, collection of n sets of (x,y) coordinates of
-observatons; also used as calibration locations is
-‘points’ is set to None</p>
-</dd>
-<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>n*1, dependent variable</p>
-</dd>
-<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>n*k, independent variable, exlcuding the constant</p>
-</dd>
-<dt><strong>selector</strong><span class="classifier">sel_bw object</span></dt><dd><p>valid sel_bw object that has successfully called
-the “search” method. This parameter passes on
-information from GAM model estimation including optimal
-bandwidths.</p>
-</dd>
-<dt><strong>family</strong><span class="classifier">family object</span></dt><dd><p>underlying probability model; provides
-distribution-specific calculations</p>
-</dd>
-<dt><strong>sigma2_v1</strong><span class="classifier">boolean</span></dt><dd><p>specify form of corrected denominator of sigma squared to use for
-model diagnostics; Acceptable options are:</p>
-<p>‘True’:       n-tr(S) (defualt)
-‘False’:     n-2(tr(S)+tr(S’S))</p>
-</dd>
-<dt><strong>kernel</strong><span class="classifier">string</span></dt><dd><p>type of kernel function used to weight observations;
-available options:
-‘gaussian’
-‘bisquare’
-‘exponential’</p>
-</dd>
-<dt><strong>fixed</strong><span class="classifier">boolean</span></dt><dd><p>True for distance based kernel function and  False for
-adaptive (nearest neighbor) kernel function (default)</p>
-</dd>
-<dt><strong>constant</strong><span class="classifier">boolean</span></dt><dd><p>True to include intercept (default) in model and False to exclude
-intercept.</p>
-</dd>
-<dt><strong>spherical</strong><span class="classifier">boolean</span></dt><dd><p>True for spherical coordinates (long-lat),
-False for projected coordinates (defalut).</p>
-</dd>
-<dt><strong>hat_matrix</strong><span class="classifier">boolean</span></dt><dd><p>True for computing and storing covariate-specific
-hat matrices R (n,n,k) and model hat matrix S (n,n).
-False (default) for computing MGWR inference on the fly.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<p>#basic model calibration</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pysal.lib</span> <span class="k">as</span> <span class="nn">ps</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">mgwr.gwr</span> <span class="k">import</span> <span class="n">MGWR</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">mgwr.sel_bw</span> <span class="k">import</span> <span class="n">Sel_BW</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;GData_utm.csv&#39;</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">coords</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">),</span> <span class="n">data</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="s1">&#39;Y&#39;</span><span class="p">)))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="s1">&#39;PctBach&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rural</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="s1">&#39;PctRural&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">fb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="s1">&#39;PctFB&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">african_amer</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="s1">&#39;PctBlack&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">fb</span><span class="p">,</span> <span class="n">african_amer</span><span class="p">,</span> <span class="n">rural</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span> <span class="o">-</span> <span class="n">X</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span> <span class="o">/</span> <span class="n">X</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">y</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span> <span class="o">/</span> <span class="n">y</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">selector</span> <span class="o">=</span> <span class="n">Sel_BW</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">multi</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">selector</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">multi_bw_min</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-<span class="go">[92.0, 101.0, 136.0, 158.0]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">MGWR</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">selector</span><span class="p">,</span> <span class="n">fixed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;bisquare&#39;</span><span class="p">,</span> <span class="n">sigma2_v1</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="go">(159, 4)</span>
-</pre></div>
-</div>
-<dl class="field-list">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl>
-<dt><strong>coords</strong><span class="classifier">array-like</span></dt><dd><p>n*2, collection of n sets of (x,y) coordinates of
-observatons; also used as calibration locations is
-‘points’ is set to None</p>
-</dd>
-<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>n*1, dependent variable</p>
-</dd>
-<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>n*k, independent variable, exlcuding the constant</p>
-</dd>
-<dt><strong>selector</strong><span class="classifier">sel_bw object</span></dt><dd><p>valid sel_bw object that has successfully called
-the “search” method. This parameter passes on
-information from GAM model estimation including optimal
-bandwidths.</p>
-</dd>
-<dt><strong>bw</strong><span class="classifier">array-like</span></dt><dd><p>collection of bandwidth values consisting of either a distance or N
-nearest neighbors; user specified or obtained using
-Sel_BW with fb=True. Order of values should the same as
-the order of columns associated with X</p>
-</dd>
-<dt><strong>family</strong><span class="classifier">family object</span></dt><dd><p>underlying probability model; provides
-distribution-specific calculations</p>
-</dd>
-<dt><strong>sigma2_v1</strong><span class="classifier">boolean</span></dt><dd><p>specify form of corrected denominator of sigma squared to use for
-model diagnostics; Acceptable options are:</p>
-<p>‘True’:       n-tr(S) (defualt)
-‘False’:     n-2(tr(S)+tr(S’S))</p>
-</dd>
-<dt><strong>kernel</strong><span class="classifier">string</span></dt><dd><p>type of kernel function used to weight observations;
-available options:
-‘gaussian’
-‘bisquare’
-‘exponential’</p>
-</dd>
-<dt><strong>fixed</strong><span class="classifier">boolean</span></dt><dd><p>True for distance based kernel function and  False for
-adaptive (nearest neighbor) kernel function (default)</p>
-</dd>
-<dt><strong>constant</strong><span class="classifier">boolean</span></dt><dd><p>True to include intercept (default) in model and False to exclude
-intercept.</p>
-</dd>
-<dt><strong>spherical</strong><span class="classifier">boolean</span></dt><dd><p>True for shperical coordinates (long-lat),
-False for projected coordinates (defalut).</p>
-</dd>
-<dt><strong>n</strong><span class="classifier">integer</span></dt><dd><p>number of observations</p>
-</dd>
-<dt><strong>k</strong><span class="classifier">integer</span></dt><dd><p>number of independent variables</p>
-</dd>
-<dt><strong>mean_y</strong><span class="classifier">float</span></dt><dd><p>mean of y</p>
-</dd>
-<dt><strong>std_y</strong><span class="classifier">float</span></dt><dd><p>standard deviation of y</p>
-</dd>
-<dt><strong>fit_params</strong><span class="classifier">dict</span></dt><dd><p>parameters passed into fit method to define estimation
-routine</p>
-</dd>
-<dt><strong>W</strong><span class="classifier">array-like</span></dt><dd><p>list of n*n arrays, spatial weights matrices for weighting all
-observations from each calibration point: one for each
-covariate (k)</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code>(self[, n_chunks, pool])</p></td>
-<td><p>Compute MGWR inference by chunk to reduce memory footprint.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code>(self)</p></td>
-<td><p>Not implemented.</p></td>
-</tr>
-</tbody>
-</table>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 55%" />
-<col style="width: 45%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>df_model</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>df_resid</strong></p></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="pysal.model.mgwr.gwr.MGWR.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">coords</em>, <em class="sig-param">y</em>, <em class="sig-param">X</em>, <em class="sig-param">selector</em>, <em class="sig-param">sigma2_v1=True</em>, <em class="sig-param">kernel='bisquare'</em>, <em class="sig-param">fixed=False</em>, <em class="sig-param">constant=True</em>, <em class="sig-param">spherical=False</em>, <em class="sig-param">hat_matrix=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/model/mgwr/gwr.html#MGWR.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.model.mgwr.gwr.MGWR.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize class</p>
-</dd></dl>
-
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pysal.model.mgwr.gwr.MGWR.__init__" title="pysal.model.mgwr.gwr.MGWR.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self, coords, y, X, selector[, …])</p></td>
-<td><p>Initialize class</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_model</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_resid</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code>(self[, n_chunks, pool])</p></td>
-<td><p>Compute MGWR inference by chunk to reduce memory footprint.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code>(self)</p></td>
-<td><p>Not implemented.</p></td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Attributes</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean_y</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">std_y</span></code></p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 
 
@@ -355,7 +142,7 @@ covariate (k)</p>
     </p>
     <p>
         &copy; Copyright 2018-, pysal developers.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.<br/>
     </p>
   </div>
 </footer>

@@ -1,0 +1,6 @@
+pysal.lib.cg.get\_rectangle\_point\_intersect
+=============================================
+
+.. currentmodule:: pysal.lib.cg
+
+.. autofunction:: get_rectangle_point_intersect

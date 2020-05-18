@@ -1,0 +1,32 @@
+pysal.lib.weights.WSP
+=====================
+
+.. currentmodule:: pysal.lib.weights
+
+.. autoclass:: WSP
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~WSP.__init__
+      ~WSP.from_W
+      ~WSP.to_W
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~WSP.diagWtW_WW
+      ~WSP.s0
+      ~WSP.trcWtW_WW
+   
+   

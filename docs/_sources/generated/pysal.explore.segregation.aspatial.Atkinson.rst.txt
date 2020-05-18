@@ -1,0 +1,22 @@
+pysal.explore.segregation.aspatial.Atkinson
+===========================================
+
+.. currentmodule:: pysal.explore.segregation.aspatial
+
+.. autoclass:: Atkinson
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Atkinson.__init__
+   
+   
+
+   
+   
+   

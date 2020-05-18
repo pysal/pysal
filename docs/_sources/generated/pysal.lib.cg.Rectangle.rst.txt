@@ -1,0 +1,32 @@
+pysal.lib.cg.Rectangle
+======================
+
+.. currentmodule:: pysal.lib.cg
+
+.. autoclass:: Rectangle
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Rectangle.__init__
+      ~Rectangle.set_centroid
+      ~Rectangle.set_scale
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Rectangle.area
+      ~Rectangle.height
+      ~Rectangle.width
+   
+   

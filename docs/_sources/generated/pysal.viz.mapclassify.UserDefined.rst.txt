@@ -1,0 +1,29 @@
+pysal.viz.mapclassify.UserDefined
+=================================
+
+.. currentmodule:: pysal.viz.mapclassify
+
+.. autoclass:: UserDefined
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~UserDefined.__init__
+      ~UserDefined.find_bin
+      ~UserDefined.get_adcm
+      ~UserDefined.get_gadf
+      ~UserDefined.get_tss
+      ~UserDefined.make
+      ~UserDefined.plot
+      ~UserDefined.update
+   
+   
+
+   
+   
+   
