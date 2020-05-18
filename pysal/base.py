@@ -107,14 +107,14 @@ class Versions:
         installed = "Installed"
         released = "Released"
         match = "Match"
-        s = f'{package:>12} | {installed:>10} | {released:>13} | {match:>5}'
+        s = f'{package:>12} | {installed:>15} | {released:>15} | {match:>5}'
         table.append(s)
         table.append("-"*len(s))
         for package in self.installed:
             installed = self.installed[package]
             released = self.released[package]
             match = installed == released
-            s = f'{package:>12} | {installed:>10} | {released:>13} | {match:>5}'
+            s = f'{package:>12} | {installed:>15} | {released:>15} | {match:>5}'
             table.append(s)
         print("\n".join(table))
 

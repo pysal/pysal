@@ -2,13 +2,15 @@ language: python
 dist: xenial
 sudo: true
 
-sudo: false
+env:
+  - ENV_FILE="ci/travis/36-latest-conda-forge.yaml"
+  - ENV_FILE="ci/travis/37-latest-conda-forge.yaml"
+  - ENV_FILE="ci/travis/38-latest-conda-forge.yaml"
+
 
 matrix:
-  fast_finish: true
-  include:
-    - env: ENV_FILE="ci/travis/36-latest-conda-forge.yaml"
-    - env: ENV_FILE="ci/travis/37-latest-conda-forge.yaml"
+  allow_failures:
+    - env: ENV_FILE="ci/travis/38-latest-conda-forge.yaml"
 
 install:
   # Install conda
