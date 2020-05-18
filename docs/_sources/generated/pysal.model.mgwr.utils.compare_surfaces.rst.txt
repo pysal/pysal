@@ -1,6 +1,0 @@
-pysal.model.mgwr.utils.compare\_surfaces
-========================================
-
-.. currentmodule:: pysal.model.mgwr.utils
-
-.. autofunction:: compare_surfaces

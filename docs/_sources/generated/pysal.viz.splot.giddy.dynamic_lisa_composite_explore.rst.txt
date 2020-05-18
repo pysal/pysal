@@ -1,6 +1,0 @@
-pysal.viz.splot.giddy.dynamic\_lisa\_composite\_explore
-=======================================================
-
-.. currentmodule:: pysal.viz.splot.giddy
-
-.. autofunction:: dynamic_lisa_composite_explore

@@ -1,6 +1,0 @@
-pysal.lib.cg.KDTree
-===================
-
-.. currentmodule:: pysal.lib.cg
-
-.. autofunction:: KDTree

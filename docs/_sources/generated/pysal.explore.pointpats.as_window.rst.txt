@@ -1,6 +1,0 @@
-pysal.explore.pointpats.as\_window
-==================================
-
-.. currentmodule:: pysal.explore.pointpats
-
-.. autofunction:: as_window

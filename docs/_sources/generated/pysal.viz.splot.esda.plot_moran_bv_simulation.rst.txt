@@ -1,6 +1,0 @@
-pysal.viz.splot.esda.plot\_moran\_bv\_simulation
-================================================
-
-.. currentmodule:: pysal.viz.splot.esda
-
-.. autofunction:: plot_moran_bv_simulation

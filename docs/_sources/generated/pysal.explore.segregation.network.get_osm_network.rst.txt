@@ -1,6 +1,0 @@
-pysal.explore.segregation.network.get\_osm\_network
-===================================================
-
-.. currentmodule:: pysal.explore.segregation.network
-
-.. autofunction:: get_osm_network

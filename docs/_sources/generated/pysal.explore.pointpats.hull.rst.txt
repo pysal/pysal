@@ -1,6 +1,0 @@
-pysal.explore.pointpats.hull
-============================
-
-.. currentmodule:: pysal.explore.pointpats
-
-.. autofunction:: hull

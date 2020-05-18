@@ -1,6 +1,0 @@
-pysal.lib.cg.brute\_knn
-=======================
-
-.. currentmodule:: pysal.lib.cg
-
-.. autofunction:: brute_knn

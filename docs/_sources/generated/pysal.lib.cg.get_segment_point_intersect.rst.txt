@@ -1,6 +1,0 @@
-pysal.lib.cg.get\_segment\_point\_intersect
-===========================================
-
-.. currentmodule:: pysal.lib.cg
-
-.. autofunction:: get_segment_point_intersect

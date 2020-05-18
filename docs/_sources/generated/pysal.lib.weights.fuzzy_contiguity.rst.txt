@@ -1,6 +1,0 @@
-pysal.lib.weights.fuzzy\_contiguity
-===================================
-
-.. currentmodule:: pysal.lib.weights
-
-.. autofunction:: fuzzy_contiguity

@@ -1,6 +1,0 @@
-pysal.lib.cg.lonlat
-===================
-
-.. currentmodule:: pysal.lib.cg
-
-.. autofunction:: lonlat

@@ -1,6 +1,0 @@
-pysal.explore.giddy.markov.sojourn\_time
-========================================
-
-.. currentmodule:: pysal.explore.giddy.markov
-
-.. autofunction:: sojourn_time

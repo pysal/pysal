@@ -1,6 +1,0 @@
-pysal.viz.mapclassify.K\_classifiers
-====================================
-
-.. currentmodule:: pysal.viz.mapclassify
-
-.. autodata:: K_classifiers

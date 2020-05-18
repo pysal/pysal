@@ -1,6 +1,0 @@
-pysal.explore.pointpats.ellipse
-===============================
-
-.. currentmodule:: pysal.explore.pointpats
-
-.. autofunction:: ellipse

@@ -1,6 +1,0 @@
-pysal.lib.weights.shimbel
-=========================
-
-.. currentmodule:: pysal.lib.weights
-
-.. autofunction:: shimbel
