@@ -1,7 +1,6 @@
 __version__ = '2.3.0'
 
 from .base import memberships, federation_hierarchy, versions
-import importlib
 import sys
 import importlib
 from types import ModuleType
