@@ -19,4 +19,5 @@ dependencies:
   - tobler >=0.2.1
   - mapclassify >=2.2.0
   - splot >=1.1.2
+  - access >=1.0.1
   - urllib3 <1.25
