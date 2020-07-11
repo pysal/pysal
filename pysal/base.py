@@ -8,7 +8,7 @@ federation_hierarchy = {
                 'pointpats', 'inequality',
                 'segregation', 'spaghetti'],
     'model': ['spreg', 'spglm', 'tobler', 'spint',
-              'mgwr', 'spvcm'],
+              'mgwr', 'spvcm', 'access'],
     'viz': ['splot', 'mapclassify'],
     'lib': ['libpysal']
 }
@@ -20,6 +20,7 @@ memberships = {'libpysal': 'lib',
                'pointpats': 'explore',
                'inequality': 'explore',
                'spaghetti': 'explore',
+               'access': 'access',
                'spreg': 'model',
                'spglm': 'model',
                'spint': 'model',
