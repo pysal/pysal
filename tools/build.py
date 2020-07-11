@@ -7,6 +7,7 @@ from yolk.pypi import CheeseShop
 
 packages = """
 libpysal
+access
 esda
 giddy
 inequality
