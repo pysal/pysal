@@ -4,7 +4,7 @@ Frozen subpackages for meta release.
 
 frozen_packages = {    "libpysal": "4.3.0",
     "access": "1.1.1",
-    "esda": "2.3.0",
+    "esda": "2.3.1",
     "giddy": "2.3.3",
     "inequality": "1.0.0",
     "pointpats": "2.1.0",
