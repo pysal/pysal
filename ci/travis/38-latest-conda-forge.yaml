@@ -24,6 +24,8 @@ dependencies:
   - ipywidgets
   - twine
   - urllib3<1.25
+  - wheel
+  - dill
   - pytest
   - pytest-cov
   - codecov
