@@ -9,6 +9,7 @@ dependencies:
   # testing
   - matplotlib
   - pytest
+  - pytest-cov
   - coverage
   - codecov
   - coveralls

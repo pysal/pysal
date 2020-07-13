@@ -10,6 +10,7 @@ dependencies:
   - codecov
   - matplotlib
   - pytest
+  - pytest-cov
   - coverage
   - coveralls
   # optional
