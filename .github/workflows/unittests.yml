@@ -40,7 +40,6 @@
        - name: Pytest
          shell: bash -l {0}
          run: |
-           python -c "import libpysal; libpysal.examples.fetch_all()"
            pytest -v pysal --cov=pysal --cov-report=xml
        - name: codecov (${{ matrix.os }}, ${{ matrix.environment-file }})
          uses: codecov/codecov-action@v1
