@@ -54,3 +54,4 @@ dependencies:
   - numba
   - inequality
   - access
+  - splot
