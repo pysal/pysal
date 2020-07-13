@@ -1,0 +1,49 @@
+ name: Unit Tests 
+ on:
+   push:
+     branches:
+     - '*'
+   pull_request:
+     branches:
+     - '*'
+
+ jobs:
+   unittests:
+     name: CI (${{ matrix.os }}-${{ matrix.environment-file }})
+     runs-on: ${{ matrix.os }}
+     continue-on-error: ${{ matrix.experimental }}
+     timeout-minutes: 90 
+     strategy:
+       matrix:
+         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
+         environment-file: [ci/36.yaml, ci/37.yaml, ci/38.yml]
+         experimental: [false]
+     steps:
+       - uses: actions/checkout@v2
+       - uses: goanpeca/setup-miniconda@v1
+         with:
+            miniconda-version: 'latest'
+            auto-update-conda: true
+            auto-activate-base: false
+            environment-file: ${{ matrix.environment-file }}
+            activate-environment: test
+       - shell: bash -l {0}
+         run: conda info --all
+       - shell: bash -l {0}
+         run: conda list
+       - shell: bash -l {0}
+         run: conda config --show-sources
+       - shell: bash -l {0}
+         run: conda config --show
+       - shell: bash -l {0}
+         run: pip install -e . --no-deps --force-reinstall
+       - name: Pytest
+         shell: bash -l {0}
+         run: |
+           pytest -v pysal --cov=pysal --cov-report=xml
+       - name: codecov (${{ matrix.os }}, ${{ matrix.environment-file }})
+         uses: codecov/codecov-action@v1
+         with:
+           token: ${{ secrets.CODECOV_TOKEN }}
+           file: ./coverage.xml
+           name: pysal-codecov
