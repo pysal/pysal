@@ -13,6 +13,7 @@ dependencies:
   - coverage
   - codecov
   - coveralls
+  - nose
   # optional
   - geopandas
   - bokeh
