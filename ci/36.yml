@@ -52,3 +52,5 @@ dependencies:
   - seaborn
   - descartes
   - numba
+  - inequality
+  - access
