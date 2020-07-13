@@ -25,3 +25,21 @@ dependencies:
   - seaborn
   - descartes
   - numba
+  - libpysal
+  - esda
+  - spaghetti
+  - tobler>=0.2.1
+  - spint
+  - spreg
+  - spvcm
+  - mgwr
+  - segregation
+  - pointpats
+  - giddy
+  - mapclassify
+  - seaborn
+  - descartes
+  - numba
+  - inequality
+  - access
+  - splot
