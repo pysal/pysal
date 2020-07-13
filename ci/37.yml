@@ -47,6 +47,7 @@ dependencies:
   - tobler>=0.2.1
   - spint
   - spreg
+  - spvcm
   - mgwr
   - segregation
   - pointpats
@@ -55,3 +56,6 @@ dependencies:
   - seaborn
   - descartes
   - numba
+  - inequality
+  - access
+  - splot
