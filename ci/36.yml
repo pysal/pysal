@@ -3,21 +3,20 @@ channels:
   - conda-forge
 dependencies:
   - python=3.6
-  - pip
-  - numpy>=1.17.0
-  - rtree
-  - sphinxcontrib-bibtex
-  - sphinx_bootstrap_theme
-  - numpydoc
+  - six
+  - pyyaml
+  - deprecated
+  # required
+  # testing
   - matplotlib
-  - python-dateutil<=2.8.0
-  - scipy
-  - pandas
-  - seaborn
-  - matplotlib
-  - descartes
-  - palettable
-  - statsmodels
+  - pytest
+  - pytest-cov
+  - coverage
+  - codecov
+  - coveralls
+  - nose
+  # optional
+  - bokeh
   - scikit-learn
   - geopandas
   - quantecon
@@ -50,9 +49,6 @@ dependencies:
   - pointpats
   - giddy
   - mapclassify
-  - splot
-  - spvcm
-  - inequality
-  - access
-  - pip:
-      - doc2dash
+  - seaborn
+  - descartes
+  - numba
