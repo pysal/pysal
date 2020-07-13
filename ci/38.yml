@@ -21,3 +21,4 @@ dependencies:
   - statsmodels
   - ipywidgets
   - mapclassify
+  - seaborn
