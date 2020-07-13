@@ -1,6 +1,6 @@
 sphinx>=1.4.3
 sphinxcontrib-napoleon
-sphinx_gallery
+sphinx-gallery
 sphinxcontrib-bibtex
 sphinx_bootstrap_theme
 numpydoc

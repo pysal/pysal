@@ -1,6 +1,4 @@
-__version__ = '1.0.6'
-
-from . import glm
-from . import family
-from . import utils
-from . import iwls
+from spglm import glm
+from spglm import family
+from spglm import utils
+from spglm import iwls

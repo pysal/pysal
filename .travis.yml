@@ -1,0 +1,49 @@
+language: python
+dist: xenial
+sudo: true
+
+env:
+  - ENV_FILE="ci/travis/36-latest-conda-forge.yaml"
+  - ENV_FILE="ci/travis/37-latest-conda-forge.yaml"
+  - ENV_FILE="ci/travis/38-latest-conda-forge.yaml"
+
+
+matrix:
+  allow_failures:
+    - env: ENV_FILE="ci/travis/38-latest-conda-forge.yaml"
+
+install:
+  # Install conda
+  - |
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+    bash miniconda.sh -b -p $HOME/miniconda
+    export PATH="$HOME/miniconda/bin:$PATH"
+    conda config --set always_yes yes --set changeps1 no --set show_channel_urls true
+    conda update --quiet conda
+    conda config --add channels conda-forge --force
+    conda config --set channel_priority strict
+    conda config --set safety_checks disabled
+
+  # Install dependencies
+  - conda env create --file="${ENV_FILE}"
+  - source activate test
+  - conda list
+  - conda info --all
+
+script:
+  - python setup.py sdist >/dev/null
+  - echo "check_stable=False" >pysal/config.py
+  - python setup.py install
+  - nosetests --with-doctest --verbose --with-coverage --cover-package=pysal 
+  #- cd doc; make pickle; make doctest
+
+notifications:
+    email:
+        recipients:
+            - sjsrey@gmail.com
+            - levi.john.wolf@gmail.com
+        on_success: change 
+        on_failure: always
+
+after_success:
+  - coveralls

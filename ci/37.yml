@@ -20,7 +20,37 @@ dependencies:
   - scikit-learn
   - numba
   - statsmodels
+  - scikit-learn
+  - geopandas
+  - quantecon
+  - rtree
+  - tqdm
+  - quilt3
+  - rasterio
+  - rasterstats
+  - pytest
+  - coverage
+  - coveralls
   - ipywidgets
+  - twine
+  - urbanaccess
+  - urllib3<1.25
+  - wheel
+  - dill
+  - pytest
+  - pytest-cov
+  - codecov
+  - bokeh
+  - libpysal
+  - esda
+  - spaghetti
+  - tobler>=0.2.1
+  - spint
+  - spreg
+  - mgwr
+  - segregation
+  - pointpats
+  - giddy
   - mapclassify
   - seaborn
   - descartes

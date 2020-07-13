@@ -1,15 +1,7 @@
-__version__ = "2.2.0"
-# __version__ has to be defined in the first line
-
-"""
-:mod:`giddy` --- Spatial Dynamics and Mobility
-==============================================
-
-"""
-
-from . import directional
-from . import ergodic
-from . import markov
-from . import mobility
-from . import rank
-from . import util
+from giddy import directional
+from giddy import ergodic
+from giddy import markov
+from giddy import mobility
+from giddy import rank
+from giddy import util
+from giddy import sequence

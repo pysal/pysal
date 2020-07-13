@@ -1,6 +1,4 @@
-__version__ = "2.0.1"
-
-from . import gwr
-from . import sel_bw
-from . import diagnostics
-from . import kernels
+from mgwr import gwr
+from mgwr import sel_bw
+from mgwr import diagnostics
+from mgwr import kernels

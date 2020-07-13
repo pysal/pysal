@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>PySAL: Python Spatial Analysis Library &#8212; pysal v2.2.1 Manual</title>
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pysal-styles.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="shortcut icon" href="_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="installation.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="api.html">API</a></li>
+                <li><a href="references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installing-with-conda">Installing with conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installing-versions-supporting-python-2">Installing versions supporting Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#pysal-lib-pysal-core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.lib</span></code>: PySAL Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#pysal-explore-exploratory-spatial-data-analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory Spatial Data Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#pysal-model-spatial-statistical-models"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.model</span></code>: Spatial Statistical Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#pysal-viz-geovisualization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">PySAL: Python Spatial Analysis Library</a></li>
+<li><a class="reference internal" href="#pysal-components">PySAL Components</a><ul>
+<li><a class="reference internal" href="#development">Development</a></li>
+<li><a class="reference internal" href="#getting-involved">Getting Involved</a></li>
+<li><a class="reference internal" href="#bug-reports">Bug reports</a></li>
+<li><a class="reference internal" href="#citing-pysal">Citing PySAL</a></li>
+<li><a class="reference internal" href="#license-information">License information</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="pysal-python-spatial-analysis-library">
+<h1>PySAL: Python Spatial Analysis Library<a class="headerlink" href="#pysal-python-spatial-analysis-library" title="Permalink to this headline">¶</a></h1>
+   <div class="container-fluid">
+     <div class="row equal-height">
+       <div class="col-sm-1 col-xs-hidden">
+       </div>
+       <div class="col-md-3 col-xs-12">
+           <a href="http://nbviewer.jupyter.org/github/pysal/esda/blob/master/notebooks/Spatial%20Autocorrelation%20for%20Areal%20Unit%20Data.ipynb" class="thumbnail">
+               <img src="_static/images/prices.png" class="img-responsive center-block">
+               <div class="caption text-center">
+               <h6>Housing Prices Berlin</h6>
+               </div>
+           </a>
+       </div>
+       <div class="col-sm-3 col-xs-12">
+        <a href="http://nbviewer.jupyter.org/github/pysal/giddy/blob/master/notebooks/directional.ipynb" class="thumbnail">
+       <img src="_static/images/rose_conditional.png" class="img-responsive center-block">
+               <div class="caption text-center">
+               <h6>Rose diagram (directional LISAs)</h6>
+               </div>
+           </a>
+       </div>
+       <div class="col-sm-3 col-xs-12">
+<a href="http://nbviewer.jupyter.org/github/pysal/splot/blob/master/notebooks/libpysal_non_planar_joins_viz.ipynb" class="thumbnail">
+               <img src="_static/images/nonplanar.png"
+               class="img-responsive center-block">
+               <div class="caption text-center">
+               <h6>Visualizing Non Planar Neighbours
+               </h6>
+               </div>
+     </a>
+       </div>
+       <div class="col-sm-2 col-xs-hidden">
+       </div>
+     </div>
+   </div><p>PySAL is an open source
+cross-platform library for geospatial data science with an emphasis on
+geospatial vector data written in Python. It supports the development of
+high level applications for spatial analysis, such as</p>
+<ul class="simple">
+<li><p>detection of spatial clusters, hot-spots, and outliers</p></li>
+<li><p>construction of graphs from spatial data</p></li>
+<li><p>spatial regression and statistical modeling on geographically
+embedded networks</p></li>
+<li><p>spatial econometrics</p></li>
+<li><p>exploratory spatio-temporal data analysis</p></li>
+</ul>
+</div>
+<div class="section" id="pysal-components">
+<h1>PySAL Components<a class="headerlink" href="#pysal-components" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><strong>explore</strong> - modules to conduct exploratory analysis of spatial and spatio-temporal data, including statistical testing on points, networks, and
+polygonal lattices.  Also includes methods for spatial inequality,  distributional dynamics, and segregation.</p></li>
+<li><p><strong>viz</strong> - visualize patterns in spatial data to detect clusters,
+outliers, and hot-spots.</p></li>
+<li><p><strong>model</strong> - model spatial relationships in data with a variety of
+linear, generalized-linear, generalized-additive, and nonlinear
+models.</p></li>
+<li><p><strong>lib</strong> - solve a wide variety of computational geometry problems:</p>
+<ul>
+<li><p>graph construction from polygonal lattices, lines, and points.</p></li>
+<li><p>construction and interactive editing of spatial weights matrices
+&amp; graphs</p></li>
+<li><p>computation of alpha shapes, spatial indices, and
+spatial-topological relationships</p></li>
+<li><p>reading and writing of sparse graph data, as well as pure python
+readers of spatial vector data.</p></li>
+</ul>
+</li>
+</ul>
+<div class="toctree-wrapper compound">
+</div>
+<p>Details are available in the <a class="reference external" href="api.html">PySAL api</a>.</p>
+<p>For background information see <a class="bibtex reference internal" href="references.html#pysal2007" id="id1">[RA07]</a>.</p>
+<div class="section" id="development">
+<h2>Development<a class="headerlink" href="#development" title="Permalink to this headline">¶</a></h2>
+<p>As of version 2.0.0, PySAL is now a collection of affiliated geographic
+data science packages. Changes to the code for any of the subpackages
+should be directed at the respective <a class="reference external" href="https://github.com/pysal/help">upstream repositories</a> and not made
+here. Infrastructural changes for the meta-package, like those for
+tooling, building the package, and code standards, will be considered.</p>
+<p>PySAL development is hosted on <a class="reference external" href="https://github.com/pysal/PySAL">github</a>.</p>
+<p>Discussions of development occurs on the
+<a class="reference external" href="http://groups.google.com/group/pysal-dev">developer list</a>
+as well as <a class="reference external" href="https://gitter.im/pysal/pysal?">gitter</a>.</p>
+</div>
+<div class="section" id="getting-involved">
+<h2>Getting Involved<a class="headerlink" href="#getting-involved" title="Permalink to this headline">¶</a></h2>
+<p>If you are interested in contributing to PySAL please see our
+<a class="reference external" href="https://github.com/pysal/pysal/wiki">development guidelines</a>.</p>
+</div>
+<div class="section" id="bug-reports">
+<h2>Bug reports<a class="headerlink" href="#bug-reports" title="Permalink to this headline">¶</a></h2>
+<p>To search for or report bugs, please see PySAL’s <a class="reference external" href="http://github.com/pysal/pysal/issues">issues</a>.</p>
+</div>
+<div class="section" id="citing-pysal">
+<h2>Citing PySAL<a class="headerlink" href="#citing-pysal" title="Permalink to this headline">¶</a></h2>
+<p>If you use PySAL in a scientific publication, we would appreciate citations to the following paper:</p>
+<blockquote>
+<div><p><a class="reference external" href="http://journal.srsa.org/ojs/index.php/RRS/article/view/134/85">PySAL: A Python Library of Spatial Analytical Methods</a>, <em>Rey, S.J. and L. Anselin</em>, Review of Regional Studies 37, 5-27 2007.</p>
+<p>Bibtex entry:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Article</span><span class="p">{</span><span class="n">pysal2007</span><span class="p">,</span>
+  <span class="n">author</span><span class="o">=</span><span class="p">{</span><span class="n">Rey</span><span class="p">,</span> <span class="n">Sergio</span> <span class="n">J</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Anselin</span><span class="p">,</span> <span class="n">Luc</span><span class="p">},</span>
+  <span class="n">title</span><span class="o">=</span><span class="p">{{</span><span class="n">PySAL</span><span class="p">:</span> <span class="n">A</span> <span class="n">Python</span> <span class="n">Library</span> <span class="n">of</span> <span class="n">Spatial</span> <span class="n">Analytical</span> <span class="n">Methods</span><span class="p">}},</span>
+  <span class="n">journal</span><span class="o">=</span><span class="p">{</span><span class="n">The</span> <span class="n">Review</span> <span class="n">of</span> <span class="n">Regional</span> <span class="n">Studies</span><span class="p">},</span>
+  <span class="n">year</span><span class="o">=</span><span class="mi">2007</span><span class="p">,</span>
+  <span class="n">volume</span><span class="o">=</span><span class="p">{</span><span class="mi">37</span><span class="p">},</span>
+  <span class="n">number</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">},</span>
+  <span class="n">pages</span><span class="o">=</span><span class="p">{</span><span class="mi">5</span><span class="o">-</span><span class="mi">27</span><span class="p">},</span>
+  <span class="n">keywords</span><span class="o">=</span><span class="p">{</span><span class="n">Open</span> <span class="n">Source</span><span class="p">;</span> <span class="n">Software</span><span class="p">;</span> <span class="n">Spatial</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="license-information">
+<h2>License information<a class="headerlink" href="#license-information" title="Permalink to this headline">¶</a></h2>
+<p>See the file “LICENSE.txt” for information on the history of this
+software, terms &amp; conditions for usage, and a DISCLAIMER OF ALL
+WARRANTIES.</p>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="_sources/index.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

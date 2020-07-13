@@ -6,7 +6,7 @@ from distutils.command.build_py import build_py
 
 import os
 
-with open('README.rst') as file:
+with open('README.md') as file:
     long_description = file.read()
 
 with open('pysal/__init__.py', 'r') as f:
@@ -32,19 +32,6 @@ def _get_requirements_from_files(groups_files):
 def setup_package():
     # get all file endings and copy whole file names without a file suffix
     # assumes nested directories are only down one level
-    example_data_files = set()
-    for i in os.listdir("pysal/lib/examples"):
-        if i.endswith(('py', 'pyc')):
-            continue
-        if not os.path.isdir("pysal/lib/examples/" + i):
-            if "." in i:
-                glob_name = "lib/examples/*." + i.split(".")[-1]
-            else:
-                glob_name = "lib/examples/" + i
-        else:
-            glob_name = "lib/examples/" + i + "/*"
-
-        example_data_files.add(glob_name)
     _groups_files = {
         'base': 'requirements.txt',
         'plus': 'requirements_plus.txt',
@@ -60,13 +47,14 @@ def setup_package():
         version=__version__,
         description="A library of spatial analysis functions.",
         long_description=long_description,
+        long_description_content_type="text/markdown",
         maintainer="PySAL Developers",
         maintainer_email='pysal-dev@googlegroups.com',
         url='http://pysal.org',
         download_url='https://pypi.python.org/pypi/pysal',
         license='BSD',
         packages=find_packages(),
-        python_requires='>3.5',
+        python_requires='>3.6',
         test_suite='nose.collector',
         tests_require=['nose'],
         keywords='spatial statistics',
@@ -82,7 +70,6 @@ def setup_package():
             'Programming Language :: Python :: 3.6',
             'Programming Language :: Python :: 3.7'
         ],
-        package_data={'pysal': list(example_data_files)},
         install_requires=install_reqs,
         extras_require=extras_reqs,
         cmdclass={'build_py': build_py}

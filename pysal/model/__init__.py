@@ -1,5 +1,7 @@
-from . import spreg
-from . import spglm
-from . import spint
-from . import mgwr
-from . import spvcm
+import access
+import mgwr
+import spglm
+import spint
+import spreg
+import spvcm
+import tobler
