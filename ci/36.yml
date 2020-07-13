@@ -8,9 +8,11 @@ dependencies:
   - deprecated
   # required
   # testing
-  - nose
-  - codecov
   - matplotlib
+  - pytest
+  - coverage
+  - codecov
+  - coveralls
   # optional
   - bokeh
   - scikit-learn

@@ -7,9 +7,11 @@ dependencies:
   - pyyaml
   - deprecated
   # testing
-  - nose
   - codecov
   - matplotlib
+  - pytest
+  - coverage
+  - coveralls
   # optional
   - geopandas
   - bokeh
