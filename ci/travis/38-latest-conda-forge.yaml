@@ -13,22 +13,31 @@ dependencies:
   - python-dateutil<=2.8.0
   - scipy
   - pandas
+  - seaborn
   - matplotlib
   - descartes
   - palettable
   - statsmodels
+  - scikit-learn
   - geopandas
+  - quantecon
+  - rtree
+  - tqdm
+  - rasterio
+  - rasterstats
   - pytest
   - coverage
   - coveralls
   - ipywidgets
   - twine
+  - urbanaccess
   - urllib3<1.25
   - wheel
   - dill
   - pytest
   - pytest-cov
   - codecov
+  - bokeh
   - libpysal
   - esda
   - spaghetti
