@@ -13,8 +13,6 @@ dependencies:
   - pytest-cov
   - coverage
   - codecov
-  - coveralls
-  - nose
   # optional
   - bokeh
   - scikit-learn

@@ -12,8 +12,6 @@ dependencies:
   - pytest-cov
   - coverage
   - codecov
-  - coveralls
-  - nose
   # optional
   - geopandas
   - bokeh
