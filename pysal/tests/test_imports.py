@@ -1,8 +1,11 @@
-import pkgutil
-import pysal
+from pkgutil import iter_modules
+from pysal import federation_hierarchy
 
-__all__ = []
-for loader, module_name, is_pkg in  pkgutil.walk_packages(pysal.__path__):
-    __all__.append(module_name)
-    _module = loader.find_module(module_name).load_module(module_name)
-    globals()[module_name] = _module
+def module_exists(module_name):
+    return module_name in (name for loader, name, ispkg in iter_modules())
+
+def test_imports():
+    for layer in federation_hierarchy:
+        packages = federation_hierarchy[layer]
+        for package in packages:
+            assert module_exists(package), f"{package} not installed." 
