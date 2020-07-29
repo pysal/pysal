@@ -1,5 +1,3 @@
-__version__ = '2.3.0'
-
 """
 PySAL: Python Spatial Analysis Library
 ======================================
@@ -57,3 +55,4 @@ viz
 
 """
 from .base import memberships, federation_hierarchy, versions
+__version__ = '2.3.0'
