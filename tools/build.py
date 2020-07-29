@@ -1,5 +1,7 @@
 """
 Build requirements file for meta package from latest stable subpackages on pypi
+
+The meta package will pin each subpackage to its most recent release on pypi at the time this script is run.
 """
 
 import os
@@ -34,6 +36,7 @@ coverage
 
 PACKAGE_FILE = 'package_versions.txt'
 
+# get most recent releases of subpackages on pypi
 def _get_latest_version_number(package_name):
     pkg, all_versions = CheeseShop().query_versions_pypi(package_name)
     if len(all_versions):
@@ -42,10 +45,12 @@ def _get_latest_version_number(package_name):
 
 def _get_pysal_sub_versions():
     lines = []
+    print('Getting latest pypi versions of subpackages\n\n')
     for package in packages.split():
         version = _get_latest_version_number(package)
-        print(package, version)
-        lines.append(f'{package} {version}')
+        fstring = f'{package} {version}'
+        lines.append(fstring)
+        print(fstring)
     with open(PACKAGE_FILE, 'w') as req:
         req.write("\n".join(lines))
 
@@ -63,6 +68,7 @@ def build_frozen():
     base = os.path.join(os.pardir, 'pysal', 'frozen.py')
     content = f'"""\nFrozen subpackages for meta release.\n"""\n\n'
 
+    print('Creating ../frozen.py')
     with open(base, 'w') as target_file:
         target_file.write(content)
         frozen = get_frozen()
@@ -84,6 +90,7 @@ def build_requirements():
     """
     lines = []
     frozen = get_frozen()
+    print('\n\n Writing requirements.txt:\n')
     for package in frozen.keys():
         version = frozen[package]
         print(package, version)
