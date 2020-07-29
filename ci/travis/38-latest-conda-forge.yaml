@@ -23,7 +23,6 @@ dependencies:
   - quantecon
   - rtree
   - tqdm
-  - quilt3
   - rasterio
   - rasterstats
   - pytest
@@ -53,5 +52,6 @@ dependencies:
   - splot
   - spvcm
   - inequality
+  - access
   - pip:
       - doc2dash

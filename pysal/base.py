@@ -6,9 +6,9 @@ Base information for pysal meta package
 federation_hierarchy = {
     'explore': ['esda', 'giddy', 'segregation',
                 'pointpats', 'inequality',
-                'segregation', 'spaghetti'],
+                 'spaghetti'],
     'model': ['spreg', 'spglm', 'tobler', 'spint',
-              'mgwr', 'spvcm'],
+              'mgwr', 'spvcm', 'access'],
     'viz': ['splot', 'mapclassify'],
     'lib': ['libpysal']
 }
@@ -20,6 +20,7 @@ memberships = {'libpysal': 'lib',
                'pointpats': 'explore',
                'inequality': 'explore',
                'spaghetti': 'explore',
+               'access': 'model',
                'spreg': 'model',
                'spglm': 'model',
                'spint': 'model',

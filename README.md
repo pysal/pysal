@@ -1,6 +1,5 @@
 # Python Spatial Analysis Library
-
-![Travis (.org)](https://img.shields.io/travis/pysal/pysal)
+![.github/workflows/unittests.yml](https://github.com/pysal/pysal/workflows/.github/workflows/unittests.yml/badge.svg)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pysal)
 ![PyPI](https://img.shields.io/pypi/v/pysal)
 ![Conda (channel only)](https://img.shields.io/conda/vn/conda-forge/pysal) 
@@ -60,6 +59,10 @@ In contrast to `explore`, the `model` layer focuses on confirmatory analysis. In
 -   [spvcm](https://github.com/pysal/spvcm) : `spvcm` provides a general framework for estimating spatially-correlated variance components models. This class of models allows for spatial dependence in the variance components, so that nearby groups may affect one another. It also also provides a general-purpose framework for estimating models using Gibbs sampling in Python, accelerated by the `numba` package.
 
 -   [tobler](http://pysal.org/tobler/) : `tobler` provides functionality for for areal interpolation and dasymetric mapping. Its name is an homage to the legendary geographer Waldo Tobler a pioneer of dozens of spatial analytical methods. `tobler` includes functionality for interpolating data using area-weighted approaches, regression model-based approaches that leverage remotely-sensed raster data as auxiliary information, and hybrid approaches.
+
+-   [access](http://github.com/pysal/access) : `access` aims to make it easy for analysis to calculate measures of spatial accessibility. This work has traditionally had two challenges: [1] to calculate accurate travel time matrices at scale and [2] to derive measures of access using the travel times and supply and demand locations. `access` implements classic spatial access models, allowing easy comparison of methodologies and assumptions.
+
+
 
 ### Viz
 
