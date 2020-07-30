@@ -16,7 +16,7 @@ API Reference
 :mod:`pysal.explore`: Exploratory Spatial Data Analysis
 =======================================================
 * `esda: Spatial Autocorrelation Analysis <https://pysal.org/esda/api.html>`_
-* `giddy: Geospatial Distribution Dynamics <https://giddy.readthedocs.io/en/latest/api.html>`_
+* `giddy: Geospatial Distribution Dynamics <https://pysal.org/giddy/api.html>`_
 * `inequality: Spatial Inequality Analysis <https://inequality.readthedocs.io/en/latest/api.html>`_
 * `pointpats: Planar Point Pattern Analysis <https://pointpats.readthedocs.io/en/latest/api.html>`_
 * `segregation: Segregation Analysis <https://segregation.readthedocs.io/en/latest/api.html>`_
