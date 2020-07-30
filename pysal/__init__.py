@@ -2,9 +2,7 @@
 PySAL: Python Spatial Analysis Library
 ======================================
 
-Contents
---------
-pysal imports federation information
+A federation of packages for spatial data science.
 
 
 Layers and Subpackages

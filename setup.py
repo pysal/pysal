@@ -55,7 +55,7 @@ def setup_package():
     extras_reqs = reqs
     setup(
         name='pysal',
-        version=__version__,
+        version=get_version('pysal/__init__.py'),
         description="A library of spatial analysis functions.",
         long_description=long_description,
         long_description_content_type="text/markdown",
