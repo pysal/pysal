@@ -1,5 +1,5 @@
 # Python Spatial Analysis Library
-![.github/workflows/unittests.yml](https://github.com/pysal/pysal/workflows/.github/workflows/unittests.yml/badge.svg)
+![Unit Tests](https://github.com/pysal/pysal/workflows/Unit%20Tests/badge.svg)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pysal)
 ![PyPI](https://img.shields.io/pypi/v/pysal)
 ![Conda (channel only)](https://img.shields.io/conda/vn/conda-forge/pysal) 
