@@ -25,7 +25,7 @@ API Reference
 
 :mod:`pysal.model`: Spatial Statistical Models
 ==============================================
-* `access: Spatial Accessibility  <https://access.readthedocs.io/en/latest/>`_
+* `access: Spatial Accessibility  <https://access.readthedocs.io/en/latest/api.html>`_
 * `mgwr: Multiscale Geographically Weighted Regression <https://mgwr.readthedocs.io/en/latest/api.html>`_ 
 * `spglm: Sparse Generalized Linear Models <https://spglm.readthedocs.io/en/latest/api.html>`_
 * `spint: Spatial Interaction Modeling <https://spint.readthedocs.io/en/latest/api.html>`_
