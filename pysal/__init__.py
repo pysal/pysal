@@ -1,12 +1,8 @@
-__version__ = '2.3.0'
-
 """
 PySAL: Python Spatial Analysis Library
 ======================================
 
-Contents
---------
-pysal imports federation information
+A federation of packages for spatial data science.
 
 
 Layers and Subpackages
@@ -57,3 +53,4 @@ viz
 
 """
 from .base import memberships, federation_hierarchy, versions
+__version__ = '2.3.0'
