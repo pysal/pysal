@@ -10,7 +10,7 @@ Tests](https://github.com/pysal/pysal/workflows/Unit%20Tests/badge.svg?branch=ma
 
 
 <p align="center">
-<img src="figs/pysal_logo.png" width="300" height="300" />
+<img src="https://user-images.githubusercontent.com/8590583/89052459-bad41a00-d323-11ea-9be2-beb7d0d1b7ea.png" width="300" height="300" />
 </p>
 
 PySAL, the Python spatial analysis library, is an open source cross-platform library for geospatial data science with an emphasis on geospatial vector data written in Python. It supports the development of high level applications for spatial analysis, such as
