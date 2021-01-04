@@ -109,7 +109,6 @@ def build_requirements():
 
 def main():
     build_requirements()
-    build_frozen()
 
 if __name__ == '__main__':
     main()
