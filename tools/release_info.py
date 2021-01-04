@@ -85,11 +85,30 @@ def get_pypi_info():
         releases[package] = {'version': last,
                              'released': release_date}
 
+
     return releases
+
 
 
 def clone_masters():
     clone_releases(tag='master')
+
+def clone_mains():
+    clone_releases(tag='main')
+
+def clone_defaults():
+    for package in packages:
+        url = f"https://api.github.com/repos/pysal/{package}"
+        data = json.load(urllib.request.urlopen(url))
+        branch = data['default_branch']
+        pkgstr = (
+            f'git clone --branch {branch}'
+            f' https://github.com/pysal/{package}.git'
+            f' tmp/{package}'
+            )
+        print(pkgstr)
+        os.system(pkgstr)
+
 
 def clone_releases(tag=None):
     """
@@ -99,7 +118,7 @@ def clone_releases(tag=None):
     os.system('mkdir tmp')
     for package in packages:
         print(package, packages[package])
-        if tag:
+        if  tag:
             branch = tag
         else:
             branch = packages[package]
