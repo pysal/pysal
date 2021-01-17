@@ -57,4 +57,5 @@ dependencies:
   - inequality
   - access
   - splot
-  - spopt
+  - pip:
+    - spopt
