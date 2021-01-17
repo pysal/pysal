@@ -40,6 +40,7 @@ model: spatial statistical models
   mgwr                -- Multi-scale geographically weighted regression
   spint               -- Spatial interaction modeling
   spglm               -- Spatial general linear modeling
+  spopt               -- Spatial optimization
   spvcm               -- Spatial variance component models
   spreg               -- Spatial econometrics
   tobler              -- Spatial areal interpolation models
@@ -53,4 +54,4 @@ viz: geovisualization
 
 """
 from .base import memberships, federation_hierarchy, versions
-__version__ = '2.4.0'
+__version__ = '2.4.0rc1'
