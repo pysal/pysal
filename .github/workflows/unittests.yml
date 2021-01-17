@@ -6,6 +6,8 @@
    pull_request:
      branches:
      - '*'
+   schedule:
+     - cron: '59 23 * * *'
 
  jobs:
    unittests:
@@ -20,7 +22,7 @@
          experimental: [false]
      steps:
        - uses: actions/checkout@v2
-       - uses: goanpeca/setup-miniconda@v1
+       - uses: goanpeca/setup-miniconda@v2
          with:
             miniconda-version: 'latest'
             auto-update-conda: true
