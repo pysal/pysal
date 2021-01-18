@@ -65,8 +65,8 @@ In contrast to `explore`, the `model` layer focuses on confirmatory analysis. In
 
 -   [access](http://github.com/pysal/access) : `access` aims to make it easy for analysis to calculate measures of spatial accessibility. This work has traditionally had two challenges: [1] to calculate accurate travel time matrices at scale and [2] to derive measures of access using the travel times and supply and demand locations. `access` implements classic spatial access models, allowing easy comparison of methodologies and assumptions.
 
--   [spopt](http://github.com/pysal/spopt)  : `spopt`  is an open-source Python library for solving optimization problems with spatial data. Originating
-    from the original `region`` module in PySAL (Python Spatial Analysis Library), it is under active development for the inclusion of newly proposed models and methods for regionalization, facility location, and transportation-oriented solutions.
+-   [spopt](http://github.com/pysal/spopt): `spopt`  is an open-source Python library for solving optimization problems with spatial data. Originating
+    from the original `region` module in PySAL, it is under active development for the inclusion of newly proposed models and methods for regionalization, facility location, and transportation-oriented solutions.
 
 ### Viz
 
