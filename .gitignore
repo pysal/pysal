@@ -144,7 +144,6 @@ tools/packages.ipynb
 tools/pull_details.p
 tools/pulls_closed.p
 tools/pypireleases.py
-tools/release_info.py
 tools/requirements.txt
 tools/tarballs.json
 tools/test.md
