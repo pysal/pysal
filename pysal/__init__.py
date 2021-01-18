@@ -22,8 +22,8 @@ lib: core algorithms, weights, and spatial data structures
   weights             -- Spatial Weights
 
 
-explore
-+++++++
+explore: exploratory spatial data analysis
+++++++++++++++++++++++++++++++++++++++++++
 
   esda                -- Global and local spatial autocorrelation
   giddy               -- Spatial distribution dynamics
@@ -33,24 +33,25 @@ explore
   spaghetti           -- Spatial analysis on networks
 
 
-model
-+++++
+model: spatial statistical models
++++++++++++++++++++++++++++++++++
 
   access              -- Measures of spatial accessibility
   mgwr                -- Multi-scale geographically weighted regression
   spint               -- Spatial interaction modeling
   spglm               -- Spatial general linear modeling
+  spopt               -- Spatial optimization
   spvcm               -- Spatial variance component models
   spreg               -- Spatial econometrics
   tobler              -- Spatial areal interpolation models
 
 
-viz
-++++
+viz: geovisualization
++++++++++++++++++++++
 
   mapclassify         -- Classification schemes for choropleth maps
   splot               -- Geovisualization for pysal
 
 """
 from .base import memberships, federation_hierarchy, versions
-__version__ = '2.3.0'
+__version__ = '2.4.0rc1'
