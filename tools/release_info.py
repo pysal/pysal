@@ -96,7 +96,7 @@ def clone_masters():
 def clone_mains():
     clone_releases(tag='main')
 
-def clone_defaults():
+def clone_defaults(packages=packages):
     for package in packages:
         url = f"https://api.github.com/repos/pysal/{package}"
         data = json.load(urllib.request.urlopen(url))
