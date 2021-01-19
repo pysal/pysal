@@ -27,7 +27,7 @@ splot
 """
 
 other_reqs = """
-urllib3<1.25
+urllib3>=1.26
 python-dateutil<=2.8.0
 pytest
 pytest-cov

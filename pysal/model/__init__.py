@@ -5,3 +5,4 @@ import spint
 import spreg
 import spvcm
 import tobler
+import spopt

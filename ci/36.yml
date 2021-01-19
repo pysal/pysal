@@ -29,7 +29,7 @@ dependencies:
   - ipywidgets
   - twine
   - urbanaccess
-  - urllib3<1.25
+  - urllib3>=1.26
   - wheel
   - dill
   - pytest
@@ -54,3 +54,5 @@ dependencies:
   - inequality
   - access
   - splot
+  - pip:
+    - spopt

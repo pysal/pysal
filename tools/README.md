@@ -8,12 +8,23 @@
 
 ## Instructions
 
+### Updating package information
+- If any new packages have been added to the ecosystem update the `packages` list
+in `release_info.py`
 - Change `USER` in `release_info.py`
-- build.py
-  - creates a requirements.txt file in this dir that can be hand edited if needed before moving up to `pysal/requirements.txt`
-  - creates `pysal/pysal/frozen.py` with information for pinning to subpackage versions
+- Change `PYSALVER` in `release_info.py`
+
+### Notebooks to run in sequence
+- frozen.ipynb creates a requirements.txt file in this dir that can be hand edited if needed before moving up to `pysal/requirements.txt`
 - 100-gitcount.ipynb
   - gets git release information
   - clones releases
 - 110-gitcount-tables.ipynb
   - builds change log for meta package
+  
+  
+### Updating meta packages
+- using the `tools/requirements.txt` file, update `./requirements.txt`
+- tag the release
+- push the tag
+

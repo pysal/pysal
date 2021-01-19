@@ -10,7 +10,7 @@ from urllib.request import urlopen
 from datetime import datetime, timedelta
 import requests
 
-PYSALVER = '2.3.0'
+PYSALVER = '2.4.0rc1'
 
 USER = "sjsrey"
 
@@ -28,13 +28,15 @@ with open('token', 'r') as token_file:
 gh_session = requests.Session()
 gh_session.auth = (USER, token)
 
-with open('package_versions.txt', 'r') as package_list:
-    packages = dict([line.strip().split()
-                     for line in package_list.readlines()])
 
-packages['pysal'] = PYSALVER
 
-def get_github_info():
+packages = ["libpysal", "access", "esda", "giddy", "inequality", "pointpats",
+            "segregation", "spaghetti", "mgwr", "spglm", "spint", "spreg", "spvcm",
+            "tobler", "mapclassify", "splot", "spopt"]
+
+
+
+def get_github_info(packages=packages):
     """
     Get information about subpackage releases that have been tagged on github
     """
@@ -68,7 +70,6 @@ def get_github_info():
 
     return release
 
-
 def get_pypi_info():
     """
     Get information about subpackage releases that have been tagged on pypi
@@ -85,18 +86,17 @@ def get_pypi_info():
         releases[package] = {'version': last,
                              'released': release_date}
 
-
     return releases
 
 
 
 def clone_masters():
-    clone_releases(tag='master')
-
+     clone_releases(tag='master')
+ 
 def clone_mains():
     clone_releases(tag='main')
 
-def clone_defaults():
+def clone_defaults(packages=packages):
     for package in packages:
         url = f"https://api.github.com/repos/pysal/{package}"
         data = json.load(urllib.request.urlopen(url))
@@ -129,8 +129,6 @@ def clone_releases(tag=None):
             )
         print(pkgstr)
         os.system(pkgstr)
-
-
 
 def parse_link_header(headers):
     link_s = headers.get('link', '')
@@ -174,6 +172,16 @@ def issues2dict(issues):
         idict[i['number']] = i
     return idict
 
+def get_url(url):
+    d = json.loads(gh_session.get(url).text)
+    return d
+
+def get_issues(project="pysal/pysal", state="closed", pulls=False):
+    """Get a list of the issues from Github api"""
+    which = 'pulls' if pulls else 'issues'
+    url = f'https://api.github.com/repos/{project}/{which}?state={state}'
+    return get_url(url)
+    
 
 def is_pull_request(issue):
     """Return True if the given issue is a pull request."""
@@ -190,7 +198,7 @@ latter case, it is used as a time before the present."""
     if isinstance(period, timedelta):
         period = datetime.now() - period
     url = "https://api.github.com/repos/%s/%s?state=closed&sort=updated&since=%s&per_page=%i" % (project, which, period.strftime(ISO8601), PER_PAGE)
-    allclosed = get_paged_request(url)
+    allclosed = get_url(url)
     # allclosed = get_issues(project=project, state='closed', pulls=pulls, since=period)
     filtered = [i for i in allclosed if _parse_datetime(i['closed_at']) > period]
 
