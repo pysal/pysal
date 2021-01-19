@@ -20,9 +20,9 @@ in `release_info.py`
   - gets git release information
   - clones releases
 - 110-gitcount-tables.ipynb
+  - update the the release dates for this (cell 2) and the last (cell 6) meta release
   - builds change log for meta package
-  
-  
+
 ### Updating meta packages
 - using the `tools/frozen.txt` file, update `./requirements.txt`
 - tag the release
