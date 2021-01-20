@@ -25,6 +25,8 @@ in `release_info.py`
 
 ### Updating meta packages
 - using the `tools/frozen.txt` file, update `./requirements.txt`
+- edit the file `changes.md` and incorporate into the release notes on github
+- solicit input from devs on highlights for the release notes (on github)
 - tag the release
 - push the tag
-
+- release on github
