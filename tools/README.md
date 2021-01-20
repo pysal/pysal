@@ -3,8 +3,8 @@
 ## Dependencies
 
 - [yolk3k](https://pypi.org/project/yolk3k/)
-- personal token for github api: store it in the file `token`
-  https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line
+- [personal github token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line
+): store it in the file `token`
 
 ## Instructions
 
@@ -15,16 +15,16 @@ in `release_info.py`
 - Change `PYSALVER` in `release_info.py`
 
 ### Notebooks to run in sequence
-- frozen.ipynb creates a requirements.txt file in this dir that can be hand edited if needed before moving up to `pysal/requirements.txt`
+- frozen.ipynb creates `frozen.txt` in this dir that can be hand edited if needed before integrating those versions into to `pysal/requirements.txt`
 - 100-gitcount.ipynb
   - gets git release information
   - clones releases
 - 110-gitcount-tables.ipynb
+  - update the the release dates for this (cell 2) and the last (cell 6) meta release
   - builds change log for meta package
-  
-  
+
 ### Updating meta packages
-- using the `tools/requirements.txt` file, update `./requirements.txt`
+- using the `tools/frozen.txt` file, update `./requirements.txt`
 - tag the release
 - push the tag
 
