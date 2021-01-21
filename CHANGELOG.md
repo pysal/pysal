@@ -113,6 +113,7 @@ Overall, there were 1065 commits that closed 309 issues, together with 117 pull 
 
 <a name="spaghetti"></a>
 ### spaghetti
+The highlights of this release include a [bug fix](https://github.com/pysal/spaghetti/pull/535) for how network segments were being split (raised in [#526](https://github.com/pysal/spaghetti/issues/526)) and additions to several notebooks ([spatial network segmentation](https://pysal.org/spaghetti/notebooks/network-segmentation.html#Large-synthetic-clusters), [caveats](https://pysal.org/spaghetti/tutorials.html), and [network-constrained spatial autocorrelation](https://pysal.org/spaghetti/notebooks/network-spatial-autocorrelation.html#A-highly-clustered-synthetic-example)). Also, `spaghetti` is now tested against Python 3.9.
 * [#572:](https://github.com/pysal/spaghetti/pull/572) bump 1.5.5 --> v1.5.6 after syntax error 
 * [#571:](https://github.com/pysal/spaghetti/pull/571) Prep 1.5.4 rel 
 * [#569:](https://github.com/pysal/spaghetti/pull/569) new documentation build GHA schema 
