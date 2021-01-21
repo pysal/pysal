@@ -1,4 +1,4 @@
-v<2.4.0rc2, 2021-01-20
+<v2.4.0rc2>, 2021-01-20
 
 Overall, there were 1065 commits that closed 309 issues, together with 117 pull requests since our last release on 2020-07-29.
 
