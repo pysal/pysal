@@ -1,3 +1,419 @@
+v<2.4.0rc2, 2021-01-20
+
+Overall, there were 1065 commits that closed 309 issues, together with 117 pull requests since our last release on 2020-07-29.
+
+
+<a name="changes-by-package"></a>
+## Changes by Package
+
+
+<a name="libpysal"></a>
+### libpysal
+* [#381:](https://github.com/pysal/libpysal/pull/381) adjust duplicated rst link in README 
+* [#380:](https://github.com/pysal/libpysal/issues/380) rst link & syntax issue in README 
+* [#379:](https://github.com/pysal/libpysal/pull/379) Correct readme.rst 
+* [#378:](https://github.com/pysal/libpysal/pull/378) Troubleshoot release GHA 
+* [#377:](https://github.com/pysal/libpysal/pull/377) bump to v4.3.2 for release action 
+* [#374:](https://github.com/pysal/libpysal/pull/374) Adding deps for examples. 
+* [#373:](https://github.com/pysal/libpysal/pull/373) update unittests.yml 
+* [#372:](https://github.com/pysal/libpysal/issues/372) release action is broken due to gh deprecation of env var 
+* [#371:](https://github.com/pysal/libpysal/pull/371) Fix release action 
+* [#370:](https://github.com/pysal/libpysal/pull/370) Bump actions/setup-python from v2.1.4 to v2.2.0 
+* [#364:](https://github.com/pysal/libpysal/issues/364) `examples.explain` returning 404 
+* [#368:](https://github.com/pysal/libpysal/pull/368) This address a move in remote datasets  
+* [#335:](https://github.com/pysal/libpysal/pull/335) ENH: use query_bulk in fuzzy_contiguity 
+* [#334:](https://github.com/pysal/libpysal/issues/334) BUG: fuzzy_contiguity picks more neighbours than it should 
+* [#367:](https://github.com/pysal/libpysal/pull/367) ENH: use active geometry in from_dataframe 
+* [#342:](https://github.com/pysal/libpysal/pull/342) standardizing libpysal/io docs & ibpysal/cg docs 
+* [#363:](https://github.com/pysal/libpysal/pull/363) Testing matrix 
+* [#359:](https://github.com/pysal/libpysal/pull/359) Bump codecov/codecov-action from v1.0.14 to v1.0.15 
+* [#358:](https://github.com/pysal/libpysal/pull/358) Bump actions/checkout from v2.3.3 to v2.3.4 
+* [#355:](https://github.com/pysal/libpysal/issues/355) Add codecov.yml for customized reports/testing 
+* [#357:](https://github.com/pysal/libpysal/pull/357) Add codecov.yml 
+* [#286:](https://github.com/pysal/libpysal/issues/286) Blacken codebase 
+* [#291:](https://github.com/pysal/libpysal/pull/291) [WIP] DEV: blacken codebase 
+* [#354:](https://github.com/pysal/libpysal/pull/354) Bump codecov/codecov-action from v1.0.13 to v1.0.14 
+* [#257:](https://github.com/pysal/libpysal/issues/257) street network-based weights 
+* [#351:](https://github.com/pysal/libpysal/pull/351) Bump actions/setup-python from v2.1.3 to v2.1.4 
+* [#279:](https://github.com/pysal/libpysal/issues/279) GHA for PyPI release 
+* [#324:](https://github.com/pysal/libpysal/issues/324) Update PR template  
+* [#347:](https://github.com/pysal/libpysal/pull/347) ENH: include lower order contiguities in higher_order_sp 
+* [#313:](https://github.com/pysal/libpysal/issues/313) higher_order weights of <= k 
+* [#348:](https://github.com/pysal/libpysal/pull/348) Bump actions/setup-python from v2.1.2 to v2.1.3 
+* [#345:](https://github.com/pysal/libpysal/pull/345) Add xarray to requirements_plus_conda.txt 
+* [#346:](https://github.com/pysal/libpysal/pull/346) Bump actions/checkout from v2.3.2 to v2.3.3 
+* [#344:](https://github.com/pysal/libpysal/pull/344) Bump actions/create-release from v1.1.3 to v1.1.4 
+* [#318:](https://github.com/pysal/libpysal/pull/318) [WIP] : Base Raster Interface 
+* [#339:](https://github.com/pysal/libpysal/pull/339) Bump codecov/codecov-action from v1.0.12 to v1.0.13 
+* [#338:](https://github.com/pysal/libpysal/pull/338) Update actions/checkout requirement to v2.3.2 
+* [#336:](https://github.com/pysal/libpysal/pull/336) Bump actions/create-release from v1.1.2 to v1.1.3 
+* [#337:](https://github.com/pysal/libpysal/pull/337) Bump actions/setup-python from v2.0.1 to v2.1.2 
+* [#326:](https://github.com/pysal/libpysal/pull/326) Updating PULL_REQUEST_TEMPLATE.md 
+* [#298:](https://github.com/pysal/libpysal/issues/298) Add github action for releasing 
+* [#316:](https://github.com/pysal/libpysal/pull/316) adding release_and_publish.yml 
+* [#333:](https://github.com/pysal/libpysal/issues/333) Rook contiguity weights fails when polygons border at two points 
+
+
+<a name="access"></a>
+### access
+
+
+<a name="esda"></a>
+### esda
+* [#160:](https://github.com/pysal/esda/pull/160) bump version for release 
+* [#157:](https://github.com/pysal/esda/pull/157) Use tags now in gitcount 
+* [#139:](https://github.com/pysal/esda/pull/139) [ENH][DOC] local join count and LOSH statistics 
+* [#143:](https://github.com/pysal/esda/pull/143) document minimum numba version 
+* [#159:](https://github.com/pysal/esda/pull/159) Moments for Moran's I_i following Sokal 1998 
+* [#145:](https://github.com/pysal/esda/pull/145) [ENH][DOC] local Geary statistics 
+* [#158:](https://github.com/pysal/esda/pull/158) Bump actions/setup-python from v1 to v2.2.1 
+* [#156:](https://github.com/pysal/esda/pull/156) Bump to 2.3.5 
+* [#155:](https://github.com/pysal/esda/pull/155) Bump version 
+* [#154:](https://github.com/pysal/esda/pull/154) Prepping for 2.3.2 release. 
+* [#142:](https://github.com/pysal/esda/issues/142) Issue with Numba < 0.47 
+* [#146:](https://github.com/pysal/esda/issues/146) parallel_crand_ ValueError 
+* [#147:](https://github.com/pysal/esda/pull/147) fix concatenation for random statistics 
+* [#153:](https://github.com/pysal/esda/issues/153) Unexpected LISA results for polygons contained by another polygon 
+* [#152:](https://github.com/pysal/esda/pull/152) Dropping 3.6 from testing. 
+* [#151:](https://github.com/pysal/esda/pull/151) CI: update conda setup 
+* [#150:](https://github.com/pysal/esda/pull/150) Bump codecov/codecov-action from v1.0.14 to v1.0.15 
+* [#149:](https://github.com/pysal/esda/pull/149) Bump codecov/codecov-action from v1.0.13 to v1.0.14 
+* [#144:](https://github.com/pysal/esda/pull/144) Bump codecov/codecov-action from v1.0.12 to v1.0.13 
+* [#141:](https://github.com/pysal/esda/issues/141) Spatial cross-correlations? 
+
+
+<a name="giddy"></a>
+### giddy
+
+
+<a name="inequality"></a>
+### inequality
+
+
+<a name="pointpats"></a>
+### pointpats
+
+
+<a name="segregation"></a>
+### segregation
+* [#159:](https://github.com/pysal/segregation/pull/159) bump ver 
+* [#79:](https://github.com/pysal/segregation/issues/79) add network, util, and profile functions to readthedocs 
+* [#158:](https://github.com/pysal/segregation/pull/158) update docs 
+* [#153:](https://github.com/pysal/segregation/issues/153) update docstring for decomposition plotting 
+* [#157:](https://github.com/pysal/segregation/pull/157) Update release action for deprecation of set env 
+* [#156:](https://github.com/pysal/segregation/pull/156) update github actions 
+* [#155:](https://github.com/pysal/segregation/pull/155) bump to Version 1.4 
+* [#154:](https://github.com/pysal/segregation/pull/154) add docstring to decomp plotting 
+* [#152:](https://github.com/pysal/segregation/pull/152) more flexible decomp plotting 
+* [#151:](https://github.com/pysal/segregation/issues/151) move testing to gha 
+* [#148:](https://github.com/pysal/segregation/issues/148) col names hardcoded in _generate_counterfactual 
+* [#150:](https://github.com/pysal/segregation/pull/150) updates docs link 
+* [#149:](https://github.com/pysal/segregation/issues/149) Website is not rendering correctly 
+
+
+<a name="spaghetti"></a>
+### spaghetti
+* [#572:](https://github.com/pysal/spaghetti/pull/572) bump 1.5.5 --> v1.5.6 after syntax error 
+* [#571:](https://github.com/pysal/spaghetti/pull/571) Prep 1.5.4 rel 
+* [#569:](https://github.com/pysal/spaghetti/pull/569) new documentation build GHA schema 
+* [#568:](https://github.com/pysal/spaghetti/pull/568) keep docs/notebooks directory 
+* [#556:](https://github.com/pysal/spaghetti/pull/556) Revert "Python 3.9 testing for CI" 
+* [#567:](https://github.com/pysal/spaghetti/pull/567) documentation maintenance and notebook generation 
+* [#566:](https://github.com/pysal/spaghetti/pull/566) update docs build process 
+* [#558:](https://github.com/pysal/spaghetti/issues/558) Is sphinx_gallery needed for docs? 
+* [#565:](https://github.com/pysal/spaghetti/pull/565) remove sphinx_gallery from reqs 
+* [#564:](https://github.com/pysal/spaghetti/pull/564) Update unittests.yml (GitHub Action) 
+* [#557:](https://github.com/pysal/spaghetti/pull/557) revisit #555 (adding Python 3.9 testing) 
+* [#555:](https://github.com/pysal/spaghetti/pull/555) Python 3.9 testing for CI 
+* [#552:](https://github.com/pysal/spaghetti/pull/552) update GHA workflows and drop Py3.6 Windows testing 
+* [#551:](https://github.com/pysal/spaghetti/pull/551) Bump codecov/codecov-action from v1.0.14 to v1.0.15 
+* [#548:](https://github.com/pysal/spaghetti/issues/548) Request inclusion for GitHub Discussions. 
+* [#546:](https://github.com/pysal/spaghetti/pull/546) Bump actions/checkout from v2.3.3 to v2.3.4 
+* [#101:](https://github.com/pysal/spaghetti/issues/101) Network K Functionality 
+* [#543:](https://github.com/pysal/spaghetti/pull/543) changed binder's link to reflect the new name of master branches from… 
+* [#544:](https://github.com/pysal/spaghetti/pull/544) Update environment.yml 
+* [#437:](https://github.com/pysal/spaghetti/issues/437) [JOSS] time to start thinking about a JOSS paper 
+* [#542:](https://github.com/pysal/spaghetti/pull/542) minor edits and updated figure references 
+* [#541:](https://github.com/pysal/spaghetti/pull/541) preparing JOSS paper for submission 
+* [#540:](https://github.com/pysal/spaghetti/pull/540) Libpysal req 
+* [#539:](https://github.com/pysal/spaghetti/pull/539) forgot to sync docs for v1.5.1 release 
+* [#538:](https://github.com/pysal/spaghetti/pull/538) Version bump for bug fix (#535) 
+* [#535:](https://github.com/pysal/spaghetti/pull/535) Vertex/Arc ID sorting bug in Network.split_arcs() 
+* [#537:](https://github.com/pysal/spaghetti/pull/537) Bump codecov/codecov-action from v1.0.13 to v1.0.14 
+* [#526:](https://github.com/pysal/spaghetti/issues/526) Strange count_per_link() results for networks generated using ntw.split_arcs()  
+* [#536:](https://github.com/pysal/spaghetti/pull/536) Bump actions/setup-python from v2.1.3 to v2.1.4 
+* [#533:](https://github.com/pysal/spaghetti/issues/533) Clarify the Network._extractnetwork() creation procedure 
+* [#534:](https://github.com/pysal/spaghetti/pull/534) Add more documentation for  Network._extractnetwork() 
+* [#532:](https://github.com/pysal/spaghetti/issues/532) Network creation splits arcs at each node 
+* [#531:](https://github.com/pysal/spaghetti/issues/531) Network parameter extractgraph has no effect 
+* [#528:](https://github.com/pysal/spaghetti/pull/528) Correcting unit typos and errors in notebooks 
+* [#529:](https://github.com/pysal/spaghetti/pull/529) updating landing page images 
+* [#525:](https://github.com/pysal/spaghetti/issues/525) Wrong distance units in split_arcs description 
+* [#524:](https://github.com/pysal/spaghetti/pull/524) Bump actions/setup-python from v2.1.2 to v2.1.3 
+* [#523:](https://github.com/pysal/spaghetti/pull/523) update docstrings and rebuild docs 
+* [#521:](https://github.com/pysal/spaghetti/pull/521) bump Python version for notebooks 
+* [#520:](https://github.com/pysal/spaghetti/pull/520) Bump actions/checkout from v2.3.2 to v2.3.3 
+* [#519:](https://github.com/pysal/spaghetti/pull/519) Bump actions/create-release from v1.1.3 to v1.1.4 
+* [#518:](https://github.com/pysal/spaghetti/pull/518) updating test_nearest_neighbor_distances() 
+* [#517:](https://github.com/pysal/spaghetti/pull/517) remove black check in unittest 
+* [#516:](https://github.com/pysal/spaghetti/pull/516) updating Python version in pre-commit-config.yaml 
+* [#515:](https://github.com/pysal/spaghetti/pull/515) Bump codecov/codecov-action from v1.0.12 to v1.0.13 
+* [#514:](https://github.com/pysal/spaghetti/pull/514) Bump actions/create-release from v1.1.2 to v1.1.3 
+* [#513:](https://github.com/pysal/spaghetti/pull/513) Bump actions/setup-python from v2.1.1 to v2.1.2 
+* [#512:](https://github.com/pysal/spaghetti/pull/512) Bump actions/checkout from v2.3.1 to v2.3.2 
+
+
+<a name="mgwr"></a>
+### mgwr
+* [#86:](https://github.com/pysal/mgwr/pull/86) version bump 
+* [#83:](https://github.com/pysal/mgwr/pull/83) check_constant change 
+* [#85:](https://github.com/pysal/mgwr/issues/85) model.predict  =>  AttributeError: 'list' object has no attribute 'shape' 
+
+
+<a name="spglm"></a>
+### spglm
+* [#30:](https://github.com/pysal/spglm/pull/30) update log 
+* [#29:](https://github.com/pysal/spglm/pull/29) version bump 
+* [#28:](https://github.com/pysal/spglm/pull/28) fix check_constant returns 
+
+
+<a name="spint"></a>
+### spint
+* [#26:](https://github.com/pysal/spint/pull/26) version/log bump 
+* [#25:](https://github.com/pysal/spint/pull/25) update travis 
+
+
+<a name="spreg"></a>
+### spreg
+* [#54:](https://github.com/pysal/spreg/issues/54) Docs To Do 
+* [#63:](https://github.com/pysal/spreg/issues/63) Missing classes in API docs 
+* [#64:](https://github.com/pysal/spreg/pull/64) notebook and API docs cleanup 
+* [#60:](https://github.com/pysal/spreg/pull/60) Add tutorials to docs 
+* [#56:](https://github.com/pysal/spreg/issues/56) Travis --> GHA 
+* [#55:](https://github.com/pysal/spreg/pull/55) CI with GitHub Actions 
+* [#53:](https://github.com/pysal/spreg/pull/53) Migrate from RTD to GH-pages for automated doc builds and hosting 
+* [#52:](https://github.com/pysal/spreg/pull/52) update env variable syntax 
+* [#47:](https://github.com/pysal/spreg/issues/47) Spatial dependence diagnostics returns nan 
+* [#46:](https://github.com/pysal/spreg/issues/46) Random Effects for Spatial Panels 
+* [#50:](https://github.com/pysal/spreg/pull/50) Random Effects Panel 
+* [#38:](https://github.com/pysal/spreg/pull/38) Add GM_Lag_example notebook 
+* [#44:](https://github.com/pysal/spreg/issues/44) Fixed Effects Panel - Spatial Error model 
+* [#45:](https://github.com/pysal/spreg/pull/45) Fixed Effects Panel - Spatial Error 
+* [#49:](https://github.com/pysal/spreg/issues/49) Not being able to release to PyPI using release_and_publish.yml 
+* [#48:](https://github.com/pysal/spreg/pull/48) fix doctest of check_constant 
+
+
+<a name="spvcm"></a>
+### spvcm
+
+
+<a name="tobler"></a>
+### tobler
+* [#129:](https://github.com/pysal/tobler/pull/129) bump version 
+* [#128:](https://github.com/pysal/tobler/issues/128) badges out of date 
+* [#127:](https://github.com/pysal/tobler/pull/127) update docs 
+* [#94:](https://github.com/pysal/tobler/issues/94) remove accidental notebook commit 
+* [#121:](https://github.com/pysal/tobler/issues/121) h3fy example/dep 
+* [#126:](https://github.com/pysal/tobler/pull/126) more efficient unary_union in h3fy 
+* [#124:](https://github.com/pysal/tobler/pull/124) hexify multipolygons 
+* [#125:](https://github.com/pysal/tobler/issues/125) h3fy function fails if input contains multipolygons 
+* [#123:](https://github.com/pysal/tobler/pull/123) BUG: fix parallel binning 
+* [#122:](https://github.com/pysal/tobler/issues/122) Untitled notebook 
+* [#104:](https://github.com/pysal/tobler/issues/104) `numba`/parallel implementation of `_area_tables_binning` 
+* [#112:](https://github.com/pysal/tobler/pull/112) [WIP] `STRTree` parallel implementation 
+* [#119:](https://github.com/pysal/tobler/pull/119) ENH: add area_join for join based on the largest intersection 
+* [#101:](https://github.com/pysal/tobler/issues/101) Pick attribute based on largest intersection 
+* [#120:](https://github.com/pysal/tobler/pull/120) add missing deps for example notebooks. 
+* [#117:](https://github.com/pysal/tobler/pull/117) maintenance/admin for setup/README/etc. 
+* [#111:](https://github.com/pysal/tobler/pull/111) add hexify function 
+* [#116:](https://github.com/pysal/tobler/pull/116) Update & enhance syntax/options in GitHub Actions 
+* [#115:](https://github.com/pysal/tobler/pull/115) move dasymetric test back into test folder 
+* [#114:](https://github.com/pysal/tobler/pull/114) GHA for docs 
+* [#113:](https://github.com/pysal/tobler/pull/113) add h3fy to docs 
+* [#110:](https://github.com/pysal/tobler/pull/110) REF: use STRtree.query_bulk in _area_tables_binning 
+* [#109:](https://github.com/pysal/tobler/pull/109) fix path in release workflow 
+* [#108:](https://github.com/pysal/tobler/pull/108) increment version 
+* [#107:](https://github.com/pysal/tobler/pull/107) increment version number 
+* [#106:](https://github.com/pysal/tobler/pull/106) update gitcount notebook 
+* [#105:](https://github.com/pysal/tobler/pull/105) prepare 0.5.0 release 
+* [#103:](https://github.com/pysal/tobler/pull/103) dont hardcode geometry name 
+* [#102:](https://github.com/pysal/tobler/issues/102) BUG: area_interpolate fails in geometry column not named "geometry" 
+* [#98:](https://github.com/pysal/tobler/pull/98) update setup-miniconda 
+* [#99:](https://github.com/pysal/tobler/pull/99) Refactor test suite to be more modular for quicker development 
+* [#11:](https://github.com/pysal/tobler/issues/11) enhance readme 
+* [#27:](https://github.com/pysal/tobler/issues/27) Assume Poisson in the XGBoost approach 
+* [#82:](https://github.com/pysal/tobler/issues/82) Reorganize repository 
+* [#83:](https://github.com/pysal/tobler/issues/83) Add a tutorial to the documentation site 
+* [#92:](https://github.com/pysal/tobler/issues/92) area interpolation question 
+* [#91:](https://github.com/pysal/tobler/pull/91) don try to init a df if columns are missing 
+* [#89:](https://github.com/pysal/tobler/pull/89) bumping release version and disambiguation of names 
+* [#90:](https://github.com/pysal/tobler/pull/90) deps to run notebooks added to requirements_docs.txt 
+* [#88:](https://github.com/pysal/tobler/pull/88) fix docs 
+* [#87:](https://github.com/pysal/tobler/pull/87) Tutorial 
+* [#86:](https://github.com/pysal/tobler/pull/86) reorg notebooks 
+* [#85:](https://github.com/pysal/tobler/pull/85) BUG: have to reset_index on geometry after interpolation 
+* [#70:](https://github.com/pysal/tobler/pull/70) Faster raster 
+* [#81:](https://github.com/pysal/tobler/pull/81) DOC: Update notebooks for api change 
+* [#72:](https://github.com/pysal/tobler/issues/72) jupyter example 
+* [#69:](https://github.com/pysal/tobler/issues/69) add tests for intensive, extensive, and both 
+* [#68:](https://github.com/pysal/tobler/issues/68) Problem running area_interpolate with both intensive and extensive vars 
+* [#6:](https://github.com/pysal/tobler/issues/6) Consider usage of data.store_rasters() for examples 
+* [#80:](https://github.com/pysal/tobler/pull/80) fix concatenation issue and copy inputs 
+
+
+<a name="mapclassify"></a>
+### mapclassify
+* [#103:](https://github.com/pysal/mapclassify/pull/103) 2.4.2 prep 
+* [#102:](https://github.com/pysal/mapclassify/pull/102) Update change log and version 
+* [#104:](https://github.com/pysal/mapclassify/pull/104) REGR: invariant array fix 
+* [#99:](https://github.com/pysal/mapclassify/pull/99) BUG: support series in sampled classifiers 
+* [#98:](https://github.com/pysal/mapclassify/issues/98) BUG: FisherJenksSampled returns ValueError if Series is passed as y 
+* [#101:](https://github.com/pysal/mapclassify/pull/101) REGR: fix invariant array regression 
+* [#100:](https://github.com/pysal/mapclassify/issues/100) REGR: UserDefined classifier returns ValueError("Minimum and maximum of input data are equal, cannot create bins.") 
+* [#91:](https://github.com/pysal/mapclassify/issues/91) [DOC] add example nb for new classify API 
+* [#97:](https://github.com/pysal/mapclassify/pull/97) 2.4.0 Release 
+* [#96:](https://github.com/pysal/mapclassify/pull/96) Remove timeout on tests. 
+* [#92:](https://github.com/pysal/mapclassify/issues/92) BUG: HeadTailBreaks RecursionError due to floating point issue 
+* [#95:](https://github.com/pysal/mapclassify/pull/95) Handle recursion error for head tails. 
+* [#72:](https://github.com/pysal/mapclassify/issues/72) Add streamlined API 
+* [#90:](https://github.com/pysal/mapclassify/pull/90) [API] add high-level API `mapclassify.classify()` 
+* [#89:](https://github.com/pysal/mapclassify/pull/89) BUG: Fix mapclassify #88 
+* [#94:](https://github.com/pysal/mapclassify/pull/94) exclude Python 3.6 for Windows 
+* [#93:](https://github.com/pysal/mapclassify/pull/93) CI: update conda action 
+* [#88:](https://github.com/pysal/mapclassify/issues/88) EqualInterval unclear error when `max_y - min_y = 0` 
+* [#87:](https://github.com/pysal/mapclassify/pull/87) BUG: fix unordered series in greedy 
+* [#86:](https://github.com/pysal/mapclassify/issues/86) BUG: greedy(strategy='balanced') does not return correct labels 
+
+
+<a name="splot"></a>
+### splot
+
+
+<a name="spopt"></a>
+### spopt
+* [#136:](https://github.com/pysal/spopt/pull/136) bump v0.1.0 
+* [#69:](https://github.com/pysal/spopt/issues/69) Installing for Google Collab  
+* [#119:](https://github.com/pysal/spopt/issues/119) manual release on PYPI 
+* [#132:](https://github.com/pysal/spopt/issues/132) pulp omitted from requirements 
+* [#133:](https://github.com/pysal/spopt/pull/133) pulp to reqs 
+* [#128:](https://github.com/pysal/spopt/issues/128) spopt sub-sub modules not included on PyPI? 
+* [#131:](https://github.com/pysal/spopt/pull/131) Include all packages. 
+* [#129:](https://github.com/pysal/spopt/pull/129) add __token__ user to pypi step 
+* [#126:](https://github.com/pysal/spopt/issues/126) revert to old pysal-styles.ccs 
+* [#127:](https://github.com/pysal/spopt/pull/127) Revert pysal-styles.ccs, etc. 
+* [#125:](https://github.com/pysal/spopt/pull/125) Narrative for notebook and handling a single attribute. 
+* [#124:](https://github.com/pysal/spopt/pull/124) update docs & README 
+* [#115:](https://github.com/pysal/spopt/issues/115) Add Zenodo DOI 
+* [#116:](https://github.com/pysal/spopt/issues/116) pre-releases for workflow testing, etc. 
+* [#123:](https://github.com/pysal/spopt/pull/123) Add Zenodo DOI and citation 
+* [#122:](https://github.com/pysal/spopt/pull/122) update changelog notebook 
+* [#121:](https://github.com/pysal/spopt/issues/121) fix changelog notebook 
+* [#120:](https://github.com/pysal/spopt/pull/120) bump version to v0.0.2 
+* [#117:](https://github.com/pysal/spopt/pull/117) bump initial version down to 0.0.1 
+* [#113:](https://github.com/pysal/spopt/issues/113) extra reqs for binder environment + binder badge 
+* [#114:](https://github.com/pysal/spopt/pull/114) Update notebook env 
+* [#111:](https://github.com/pysal/spopt/pull/111) Polish up and minor docs/reqs fixes 
+* [#110:](https://github.com/pysal/spopt/issues/110) various tasks for package admin/cleanup 
+* [#109:](https://github.com/pysal/spopt/pull/109) Update sphinxcontrib-bibtex requirement from <2.0.0 to <3.0.0 
+* [#107:](https://github.com/pysal/spopt/issues/107) update formatting on Installation 
+* [#108:](https://github.com/pysal/spopt/pull/108) Update installation.rst 
+* [#106:](https://github.com/pysal/spopt/issues/106) corrections for README 
+* [#102:](https://github.com/pysal/spopt/issues/102) README is incomplete 
+* [#105:](https://github.com/pysal/spopt/pull/105) change python version in  installation.rst 
+* [#104:](https://github.com/pysal/spopt/pull/104) add docs badge to README.md 
+* [#103:](https://github.com/pysal/spopt/pull/103) yml-->yaml 
+* [#99:](https://github.com/pysal/spopt/pull/99) updated docs handling 
+* [#51:](https://github.com/pysal/spopt/issues/51) Funding information in README.md 
+* [#56:](https://github.com/pysal/spopt/issues/56) adding Support info. 
+* [#98:](https://github.com/pysal/spopt/pull/98) Adding support information. 
+* [#100:](https://github.com/pysal/spopt/pull/100) add images for funding 
+* [#97:](https://github.com/pysal/spopt/pull/97) remove ortools 
+* [#39:](https://github.com/pysal/spopt/issues/39) Implementation 
+* [#33:](https://github.com/pysal/spopt/issues/33) inventory models for consideration 
+* [#37:](https://github.com/pysal/spopt/issues/37) identify models for implementation in region 
+* [#40:](https://github.com/pysal/spopt/issues/40) Release Polishing 
+* [#54:](https://github.com/pysal/spopt/issues/54) consider moving spenc to spopt 
+* [#73:](https://github.com/pysal/spopt/pull/73) attempt 3.9 testing 
+* [#95:](https://github.com/pysal/spopt/pull/95) update for 39 
+* [#96:](https://github.com/pysal/spopt/issues/96) Why was `ci/` changed to `.ci/`? 
+* [#89:](https://github.com/pysal/spopt/issues/89) replace deleted logos 
+* [#90:](https://github.com/pysal/spopt/pull/90) Add back images that were deleted 
+* [#92:](https://github.com/pysal/spopt/pull/92) revise pictures 
+* [#94:](https://github.com/pysal/spopt/pull/94) handle deprecation of discretize in skl. 
+* [#93:](https://github.com/pysal/spopt/pull/93) Add spenc as a lib rather than using via an import 
+* [#91:](https://github.com/pysal/spopt/pull/91) Environment for development. 
+* [#64:](https://github.com/pysal/spopt/pull/64) change < to == 
+* [#66:](https://github.com/pysal/spopt/pull/66) add ward and test_ward 
+* [#83:](https://github.com/pysal/spopt/pull/83) update .rst files 
+* [#88:](https://github.com/pysal/spopt/pull/88) add description of models 
+* [#86:](https://github.com/pysal/spopt/pull/86) update docs and docscr 
+* [#87:](https://github.com/pysal/spopt/pull/87) Update GitHub Actions 
+* [#76:](https://github.com/pysal/spopt/issues/76) Python error (Ubuntu): Segmentation fault (core dumped) 
+* [#85:](https://github.com/pysal/spopt/pull/85) update methods and notebooks 
+* [#75:](https://github.com/pysal/spopt/pull/75) add azp into spopt 
+* [#84:](https://github.com/pysal/spopt/pull/84) Exclude failing 3.8 on ubuntu due to seg falt. 
+* [#79:](https://github.com/pysal/spopt/issues/79) An issue about "module 'spopt' has no attribute 'version'" 
+* [#81:](https://github.com/pysal/spopt/issues/81) migrate spenc code 
+* [#80:](https://github.com/pysal/spopt/issues/80) add spenc to requirements.txt 
+* [#68:](https://github.com/pysal/spopt/issues/68) rename master branch to main branch 
+* [#74:](https://github.com/pysal/spopt/pull/74) Updating links from `master` branch to `main` branch 
+* [#60:](https://github.com/pysal/spopt/issues/60) Issue with PuLP for Python 3.8 on conda-forge 
+* [#72:](https://github.com/pysal/spopt/issues/72) Request inclusion for GitHub Discussions. 
+* [#71:](https://github.com/pysal/spopt/pull/71) attempt 3.9 testing 
+* [#70:](https://github.com/pysal/spopt/issues/70) Issues caused by GitHub Actions: Deprecating set-env and add-path commands 
+* [#67:](https://github.com/pysal/spopt/pull/67) add spenc and test_spenc 
+* [#65:](https://github.com/pysal/spopt/pull/65) skater 
+* [#62:](https://github.com/pysal/spopt/pull/62) removing python-mip language from REAMDE 
+* [#63:](https://github.com/pysal/spopt/issues/63) an error with the maxp code 
+* [#59:](https://github.com/pysal/spopt/pull/59) adding .github/dependabot.yml 
+* [#58:](https://github.com/pysal/spopt/pull/58) Setup correction 
+* [#55:](https://github.com/pysal/spopt/pull/55) Updating README.md & adding CONTRIBUTING.md 
+
+
+<a name="pysal"></a>
+### pysal
+* [#1203:](https://github.com/pysal/pysal/pull/1203) updating urllib3 to 1.26 minimum 
+* [#1201:](https://github.com/pysal/pysal/issues/1201) Python 3.7 pip install has an error 
+* [#1200:](https://github.com/pysal/pysal/issues/1200) ModuleNotFoundError: No module named 'pysal.model.mgwr.gwr' 
+* [#1185:](https://github.com/pysal/pysal/issues/1185) dependency conflicts on 3.8 
+* [#1060:](https://github.com/pysal/pysal/pull/1060) Handling coincident points 
+* [#678:](https://github.com/pysal/pysal/pull/678) W stitch 
+* [#1146:](https://github.com/pysal/pysal/pull/1146) Improved documentation... 
+* [#1196:](https://github.com/pysal/pysal/issues/1196) GM_Lag 
+* [#1195:](https://github.com/pysal/pysal/issues/1195) splot [seaborn failure](https://gitter.im/pysal/pysal?at=5efee884d65a3b0292c5e72b) 
+* [#1193:](https://github.com/pysal/pysal/issues/1193) Image missing from readme on pypi 
+* [#1194:](https://github.com/pysal/pysal/pull/1194) updating image link in README.md 
+* [#1192:](https://github.com/pysal/pysal/pull/1192) DOCS: 2.3.0 
+* [#1191:](https://github.com/pysal/pysal/pull/1191) 2.3.0 
+* [#1189:](https://github.com/pysal/pysal/pull/1189) Subpackages 
+
+<a name="contributors"></a>
+## Contributors
+
+Many thanks to all of the following individuals who contributed to this release:
+
+
+ - Andrew Annex
+ - Dani Arribas-Bel
+ - Eli Knaap
+ - James Gaboardi
+ - Jcs Laptop
+ - Jeffcsauer
+ - Levi John Wolf
+ - Martin Fleischmann
+ - Mgeeeek
+ - Omar
+ - Pabloestradac
+ - Pedro Amaral
+ - Rwei5
+ - Serge Rey
+ - Stefanie Lumnitz
+ - Taylor Oshan
+ - Wei Kang
+ - Xin Feng
+ - Ziqi Li
+
+
 v<2.3.0>, 2020-07-30
 
 PySAL 2.3.0 represents 6 months of enhancements, bug-fixes, widening of test coverage, and improved documentation. All users are encouraged to upgrade to this version as there are numerous optimizations as well as new features (see below) that have been implemented.

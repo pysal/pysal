@@ -1,6 +1,6 @@
 libpysal>=4.3.5
 access>=1.1.1
-esda>=2.3.5
+esda>=2.3.6
 giddy>=2.3.3
 inequality>=1.0.0
 pointpats>=2.2.0
@@ -11,10 +11,10 @@ spglm>=1.0.8
 spint>=1.0.7
 spreg>=1.2.2
 spvcm>=0.3.0
-tobler>=0.5.4
+tobler>=0.6.0
 mapclassify>=2.4.2
 splot>=1.1.3
-spopt>=0.0.5
+spopt>=0.1.0
 urllib3>=1.26
 python-dateutil<=2.8.0
 pytest
