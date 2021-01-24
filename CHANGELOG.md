@@ -1,4 +1,4 @@
-<v2.4.0rc2>, 2021-01-20
+# <v2.4.0rc2>, 2021-01-20
 
 Overall, there were 1065 commits that closed 309 issues, together with 117 pull requests since our last release on 2020-07-29.
 
@@ -423,7 +423,7 @@ Many thanks to all of the following individuals who contributed to this release:
  - Ziqi Li
 
 
-v<2.3.0>, 2020-07-30
+# v<2.3.0>, 2020-07-30
 
 PySAL 2.3.0 represents 6 months of enhancements, bug-fixes, widening of test coverage, and improved documentation. All users are encouraged to upgrade to this version as there are numerous optimizations as well as new features (see below) that have been implemented.
 
@@ -865,7 +865,7 @@ Thanks to all the individuals who have contributed to this release:
 - Wei Kang
 
 
-v<2.2.0>, 2020-01-31
+# v<2.2.0>, 2020-01-31
 
 PySAL 2.2.0represents 6 months of enhancements, bug-fixes, widening of test coverage, and improved documentation. All users are encouraged to upgrade to this version as there are numerous optimizations as well as new features (see below) that have been implemented.
 
@@ -1516,7 +1516,7 @@ Overall, there were 646 commits that closed 163 issues, together with 105 pull r
 
 
 
-v<2.1.0>, 2019-07-29
+# v<2.1.0>, 2019-07-29
 
 PySAL 2.1.0 represents 6 months of enhancements, bug-fixes, widening of test coverage, and improved documentation. All users are encouraged to upgrade to this version as there are numerous optimizations as well as new features (see below) that have been implemented.
 
@@ -2360,7 +2360,7 @@ Overall, there were 992 commits that closed 261 issues, together with 173 pull r
 
 
 
-v<2.0.0>, 2019-01-30
+# v<2.0.0>, 2019-01-30
 
 
 This release represents over 15 months of hard work on PySAL. It brings major transitions in the project together with many new enhancements, improved documentation, and many bug fixes and optimizations.
@@ -3250,7 +3250,7 @@ Overall, there were 1636 commits that closed 368 issues, together with 236 pull 
 
 
 
-v<1.14.3>, 2017-11-2
+# v<1.14.3>, 2017-11-2
 
 
 GitHub stats for 2017/09/23 - 2017/11/02 
@@ -3647,7 +3647,7 @@ Issues (14):
 * :ghissue:`779`: DistanceBand include the point itself as neighbor
 
 
-v<1.11.1>, 2016-04-01
+# v<1.11.1>, 2016-04-01
 
 We closed a total of 62 issues, 20 pull requests and 42 regular issues;
 this is the full list (generated with the script 
@@ -3721,7 +3721,7 @@ Issues (42):
 * :ghissue:`735`: Dev in sync with master for 1.11
 * :ghissue:`734`: Release 1.11
 
-v<1.11.0>, 2016-01-27
+# v<1.11.0>, 2016-01-27
 
 GitHub stats for 2015/07/29 - 2016/01/27
 
@@ -3841,7 +3841,7 @@ Issues (53):
 * :ghissue:`680`: Rel1.10
 
 
-v<1.10.0>, 2015-07-29
+# v<1.10.0>, 2015-07-29
 
 GitHub stats for 2015/01/31 - 2015/07/29
 
@@ -4038,7 +4038,7 @@ Issues (98):
 * :ghissue:`565`: Bsetup
 
 
-v<1.9.1>, 2015-01-31
+# v<1.9.1>, 2015-01-31
 
 GitHub stats for 2015/01/30 - 2015/01/31 
 
@@ -4073,7 +4073,7 @@ Issues (5):
 
 v<1.9.0>, 2015-01-30
 
-GitHub stats for 2014/07/25 - 2015/01/30 
+# GitHub stats for 2014/07/25 - 2015/01/30 
 
 These lists are automatically generated, and may be incomplete or contain duplicates.
 
@@ -4215,7 +4215,7 @@ Issues (69):
 * :ghissue:`503`: Grid for landing page
 
 
-v<1.8.0>, 2014-07-25
+# v<1.8.0>, 2014-07-25
 
 GitHub stats for 2014/01/29 - 2014/07/25 
 
@@ -4403,7 +4403,7 @@ Issues (100):
 * :ghissue:`388`: update testing procedures docs
 * :ghissue:`402`: release changes
 
-v<1.7.0>, 2014-01-29
+# v<1.7.0>, 2014-01-29
 
 36d268f Philip Stephens -Merge pull request #400 from sjsrey/mldoc
 c2c4741 Serge Rey -Formatting ml docs
@@ -4581,7 +4581,7 @@ b1f009f Philip Stephens -Changes to release docs.
 028364a Sergio Rey -Update THANKS.txt
 94f5916 Sergio Rey -Update INSTALL.txt
 
-v<1.6.0>, 2013-07-31
+# v<1.6.0>, 2013-07-31
 
 5fa9d09 darribas -silent_island_warning implemented for w_union
 6526c62 Sergio Rey -Update README.md
@@ -4834,7 +4834,7 @@ ab672c9 Serge Rey -- modified knnW to speed up dict construction
  * migration to github from svn
    svn2git http://pysal.googlecode.com/svn --authors ~/Dropbox/pysal/src/pysal/authors.txt --verbose
 
-v<1.5.0>, 2013-01-31
+# v<1.5.0>, 2013-01-31
 
 2013-01-29 20:36  phil.stphns
 
@@ -5221,7 +5221,7 @@ v<1.5.0>, 2013-01-31
 
 
 
-v<1.4.0>, 2012-07-31
+# v<1.4.0>, 2012-07-31
 
 2013-01-31 
 
@@ -5707,7 +5707,7 @@ v<1.4.0>, 2012-07-31
 	  doc/source/developers/py3k.txt,
 	  doc/source/developers/release.txt: Adding early docs on Python 3 support. Modifying release instructions.
 
-v<1.3.0>, 2012-01-31
+# v<1.3.0>, 2012-01-31
 
     * core/IOHandlers/pyDbfIO.py: Addressing issue #186
 
@@ -5907,7 +5907,7 @@ v<1.3.0>, 2012-01-31
     * esda/mapclassify.py: - more general fix for #166
 
 
-v<1.2.0>, 2011-07-31
+# v<1.2.0>, 2011-07-31
 
     * pysal/spreg/user_output.py: Fix for bug 162
 
@@ -5995,7 +5995,7 @@ v<1.2.0>, 2011-07-31
 
     * doc/source/developers/release.txt: Updated pypi instructions; PySAL available on the Python Package Index via download, easy_install, and pip. 
 
-v<1.1.0>, 2011-01-31
+# v<1.1.0>, 2011-01-31
 
     * pysal/core/FileIO.py, pysal/core/IOHandlers/pyDbfIO.py: Added missing value support to FileIO. Warnings will be issued when missing values are found and the value will be set to pysal.MISSINGVALUE, currently None, but the user can change it as needed.
 
@@ -6030,7 +6030,7 @@ v<1.1.0>, 2011-01-31
 
     * doc/source/developers/release.txt: - updating release cycle - release management
 
-v<1.0.0>, 2010-07-31 -- Initial release.
+# v<1.0.0>, 2010-07-31 -- Initial release.
 The following 13 authors contributed 216 commits.
 
 * Dani Arribas-Bel
@@ -8333,4 +8333,4 @@ v<1.1.0>, 2011-01-31
 
     * doc/source/developers/release.txt: - updating release cycle - release management
 
-v<1.0.0>, 2010-07-31 -- Initial release.
+# v<1.0.0>, 2010-07-31 -- Initial release.
