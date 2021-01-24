@@ -60,6 +60,14 @@ Overall, there were 1065 commits that closed 309 issues, together with 117 pull 
 
 <a name="esda"></a>
 ### esda
+
+- Integration of the work of @jeffcsauer's 2020 GSOC project. This adds tons of new statistical estimators, such as:
+  - the local heteroskedasticity estimator, `esda.LOSH`
+  - local geary and multivariate geary estimators, `esda.Geary_Local` and `esda.Geary_Local_MV`
+  - local join counts in univariate, bivariate, and multivariate flavors, `esda.Join_Counts_Local`, `esda.Join_Counts_Local_BV`, and `esda.Join_Counts_Local_MV`. 
+- "analytical" moments for Moran's I for replication/comparison to R. Forms are provided in [Sokal 1998](https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1538-4632.1998.tb00406.x). 
+
+
 * [#160:](https://github.com/pysal/esda/pull/160) bump version for release 
 * [#157:](https://github.com/pysal/esda/pull/157) Use tags now in gitcount 
 * [#139:](https://github.com/pysal/esda/pull/139) [ENH][DOC] local join count and LOSH statistics 
