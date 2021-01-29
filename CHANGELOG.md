@@ -2,9 +2,25 @@
 
 Overall, there were 1065 commits that closed 309 issues, together with 117 pull requests since our last release on 2020-07-29.
 
+## Entirely New Packages
+In this release, the PySAL family has expanded to include:
+
+
 
 <a name="changes-by-package"></a>
 ## Changes by Package
+[pysal/spopt](https://pysal.org/spopt/)
+
+Providing methods for solving optimization problems with spatial data. Currently, regionalization methods are supported with planned support for facility location and transportation-oriented modeling.
+
+The regionalization models implemented include:
+* Max-p-regions: It involves the aggregation or clustering of a set of small areas into the maximum number of homogeneous and spatially contiguous regions such that the value of a regional attribute is higher than a predefined threshold. The number of regions will be endogenized in order to satisfy the threshold. ([Duque, Anselin, and Rey, 2012](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-9787.2011.00743.x) and [Wei, Rey, and Knaap, 2020](https://www.tandfonline.com/doi/abs/10.1080/13658816.2020.1759806?journalCode=tgis20))
+* Automatic Zoning Procedure (AZP) algorithm: It can work with any type of objective function that is sensitive to the aggregation of data for a larger number of zones into a pre-specified smaller number of regions ([Openshaw, 1977](https://www.jstor.org/stable/622300?casa_token=QITLwNVUPj4AAAAA%3AKXYVQHrdeAtefxZKkvxxUrWA_QCedSJrZwQD36F16Jfqx7Vq47uu1G_vp9I085Iozy_roZ_Dh6qQopZ6yXjfPsy4Y2aBqso-l0wZS2YqNv9pkh1JNXc&seq=1#metadata_info_tab_contents) 
+and [Openshaw and Rao, 1995](https://journals.sagepub.com/doi/abs/10.1068/a270425))
+* Region-K-means: It is K-means clustering for regions with the constraint that each cluster forms a spatially connected component.
+* Skater: It is a constrained spatial regionalization algorithm based on spanning tree pruning. Specifically, the number of edges is prespecified to be cut in a continuous tree to group spatial units into contiguous regions. ([AssunCao et al., 2006](https://www.tandfonline.com/doi/full/10.1080/13658810600665111?casa_token=ovYjEkDDjbAAAAAA%3AjX8FMJWkrJDbSy8nmGiCOUFV6Fl-5KAhDibrQ89qqEpM4HvJ5wyNsrn7_x5qOwLmauKIh-RUdfZm))
+* Spenc: spatially-encouraged spectral clustering is an approach to balance spatial and feature coherence using kernel combination in spectral clustering.([Wolf, 2020] (https://osf.io/yzt2p/))
+* WardSpatial: It is an Agglomerative Clustering using Ward linkage with a spatial connectivity constraint. Basically, it is a "bottom-up" approach: each observation starts in its own cluster, and pairs of clusters are chosen to merge at each step in order to minimize the variance of the clusters. ([sklearn.cluster.AgglomerativeClustering](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.AgglomerativeClustering.html))
 
 
 <a name="libpysal"></a>
