@@ -66,7 +66,15 @@ The highlights of this release include a [bug fix](https://github.com/pysal/spag
 
 #### tobler
 
+- interpolation to hexagons using h3f
+- more efficient unary_union in h3f
 
+#### segregation
+
+- segregation measures on network distances
+
+#### mapclassify
+- streamlined api
 
 ## Detailed Changes by Package
 
