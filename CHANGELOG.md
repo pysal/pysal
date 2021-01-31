@@ -1,17 +1,17 @@
-# <v2.4.0rc2>, 2021-01-20
+# <v2.4.0> 2021-01-31
+PySAL 2.4.0 represents 6 months of enhancements, bug-fixes, widening of test
+coverage, and improved documentation. Three Google Summer of Code projects made
+substantial contributions to this release (see below). All users are encouraged
+to upgrade to this version as there are numerous optimizations as well as new
+features (see below) that have been implemented.
 
-Overall, there were 1065 commits that closed 309 issues, together with 117 pull requests since our last release on 2020-07-29.
+Overall, there were 1155 commits that closed 352 issues, together with 121 pull requests since our last release on 2020-07-29.
 
-## Entirely New Packages
-In this release, the PySAL family has expanded to include:
+## Highlights
 
+### New Package:  [pysal/spopt](https://pysal.org/spopt/)
 
-
-<a name="changes-by-package"></a>
-## Changes by Package
-[pysal/spopt](https://pysal.org/spopt/)
-
-Providing methods for solving optimization problems with spatial data. Currently, regionalization methods are supported with planned support for facility location and transportation-oriented modeling.
+Provides methods for solving optimization problems with spatial data. Currently, regionalization methods are supported with planned support for facility location and transportation-oriented modeling.
 
 The regionalization models implemented include:
 * Max-p-regions: It involves the aggregation or clustering of a set of small areas into the maximum number of homogeneous and spatially contiguous regions such that the value of a regional attribute is higher than a predefined threshold. The number of regions will be endogenized in order to satisfy the threshold. ([Duque, Anselin, and Rey, 2012](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-9787.2011.00743.x) and [Wei, Rey, and Knaap, 2020](https://www.tandfonline.com/doi/abs/10.1080/13658816.2020.1759806?journalCode=tgis20))
@@ -23,8 +23,62 @@ and [Openshaw and Rao, 1995](https://journals.sagepub.com/doi/abs/10.1068/a27042
 * WardSpatial: It is an Agglomerative Clustering using Ward linkage with a spatial connectivity constraint. Basically, it is a "bottom-up" approach: each observation starts in its own cluster, and pairs of clusters are chosen to merge at each step in order to minimize the variance of the clusters. ([sklearn.cluster.AgglomerativeClustering](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.AgglomerativeClustering.html))
 
 
+### Enhancements to existing packages
+
+#### libpysal
+
+Thanks to the Google Summer of Code 2020 led by Mragank Shekhar (@MgeeeeK), we
+have built an interface with xarray that allows you to create spatial weights
+matrices from xarray.DataArray objects. This means it is possible to build a
+weights matrix from raster data. We are using numba and multi-core where
+possible so the implementation is performant and scalable within memory limits.
+Current weights supported include:
+
+- libpysal.weights.Rook.from_xarray
+- libpysal.weights.Queen.from_xarray
+
+In addition, the following methods have been added and are exposed to end users:
+
+- [RECOMMENDED] da2WSP, to build a thin weights matrix (WSP) from a xarray.DataArray da2W, to build a weights matrix from a xarray.DataArray
+- [RECOMMENDED] wsp2da, to reconstruct a xarray.DataArray object from a thin weights matrix and a pandas.Series (e.g. with mapclassify or esda.Moran_Local outcomes
+- w2da, to reconstruct a xarray.DataArray object from a weights matrix and a pandas.Series (e.g. with mapclassify or esda.Moran_Local outcomes testDataArray, to generate a toy xarray.DataArray object for testing purposes.
+
+
+#### esda
+
+- Integration of the work of @jeffcsauer's 2020 GSOC project. This adds tons of new statistical estimators, such as:
+  - the local heteroskedasticity estimator, `esda.LOSH`
+  - local geary and multivariate geary estimators, `esda.Geary_Local` and `esda.Geary_Local_MV`
+  - local join counts in univariate, bivariate, and multivariate flavors, `esda.Join_Counts_Local`, `esda.Join_Counts_Local_BV`, and `esda.Join_Counts_Local_MV`. 
+- "analytical" moments for Moran's I for replication/comparison to R. Forms are provided in [Sokal 1998](https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1538-4632.1998.tb00406.x). 
+
+#### spreg
+
+Thanks to the Google Summer of Code 2020 led by [paboloestrada](https://github.com/pabloestradac), we have added the following functionality:
+
+- Panel_RE_Lag: random effects panel estimation with spatial lagged dependent variable.
+- Panel_RE_Error: random effects panel estimation with spatial error interaction.
+- Lagrange Multiplier test: classic and robust version.
+- Hausman test.
+
+#### spaghetti
+The highlights of this release include a [bug fix](https://github.com/pysal/spaghetti/pull/535) for how network segments were being split (raised in [#526](https://github.com/pysal/spaghetti/issues/526)) and additions to several notebooks ([spatial network segmentation](https://pysal.org/spaghetti/notebooks/network-segmentation.html#Large-synthetic-clusters), [caveats](https://pysal.org/spaghetti/tutorials.html), and [network-constrained spatial autocorrelation](https://pysal.org/spaghetti/notebooks/network-spatial-autocorrelation.html#A-highly-clustered-synthetic-example)). Also, `spaghetti` is now tested against Python 3.9.
+
+#### tobler
+
+
+
+## Detailed Changes by Package
+
 <a name="libpysal"></a>
 ### libpysal
+* [#385:](https://github.com/pysal/libpysal/pull/385) Adding raster interface to docs API + notebooks 
+* [#384:](https://github.com/pysal/libpysal/pull/384) [Doc]: Update raster example notebook and docstrings 
+* [#383:](https://github.com/pysal/libpysal/pull/383) [WIP]: id_order as a property of WSP class 
+* [#343:](https://github.com/pysal/libpysal/pull/343) [WIP]: Optimized raster-based weights builder 
+* [#382:](https://github.com/pysal/libpysal/pull/382) remove dup matplotlib in environment.yml 
+* [#366:](https://github.com/pysal/libpysal/pull/366) fix typo 
+* [#376:](https://github.com/pysal/libpysal/issues/376) Bump PYPI version to 4.3.1 
 * [#381:](https://github.com/pysal/libpysal/pull/381) adjust duplicated rst link in README 
 * [#380:](https://github.com/pysal/libpysal/issues/380) rst link & syntax issue in README 
 * [#379:](https://github.com/pysal/libpysal/pull/379) Correct readme.rst 
@@ -72,18 +126,18 @@ and [Openshaw and Rao, 1995](https://journals.sagepub.com/doi/abs/10.1068/a27042
 
 <a name="access"></a>
 ### access
+* [#10:](https://github.com/pysal/access/issues/10) capitalize `Access` class 
+* [#15:](https://github.com/pysal/access/pull/15) Changes case on Access and Datasets classess 
+* [#2:](https://github.com/pysal/access/issues/2) Ensure that the meta import for access exposes intended classes and functions 
+* [#3:](https://github.com/pysal/access/issues/3) Confirm access version to freeze in meta 
+* [#11:](https://github.com/pysal/access/issues/11) `sphinx` enforced to install w/ packages 
+* [#12:](https://github.com/pysal/access/issues/12) The package does not depend on scipy 
+* [#13:](https://github.com/pysal/access/pull/13) Adjust dependenies 
+* [#1:](https://github.com/pysal/access/issues/1) Release on conda-forge 
 
 
 <a name="esda"></a>
 ### esda
-
-- Integration of the work of @jeffcsauer's 2020 GSOC project. This adds tons of new statistical estimators, such as:
-  - the local heteroskedasticity estimator, `esda.LOSH`
-  - local geary and multivariate geary estimators, `esda.Geary_Local` and `esda.Geary_Local_MV`
-  - local join counts in univariate, bivariate, and multivariate flavors, `esda.Join_Counts_Local`, `esda.Join_Counts_Local_BV`, and `esda.Join_Counts_Local_MV`. 
-- "analytical" moments for Moran's I for replication/comparison to R. Forms are provided in [Sokal 1998](https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1538-4632.1998.tb00406.x). 
-
-
 * [#160:](https://github.com/pysal/esda/pull/160) bump version for release 
 * [#157:](https://github.com/pysal/esda/pull/157) Use tags now in gitcount 
 * [#139:](https://github.com/pysal/esda/pull/139) [ENH][DOC] local join count and LOSH statistics 
@@ -137,7 +191,6 @@ and [Openshaw and Rao, 1995](https://journals.sagepub.com/doi/abs/10.1068/a27042
 
 <a name="spaghetti"></a>
 ### spaghetti
-The highlights of this release include a [bug fix](https://github.com/pysal/spaghetti/pull/535) for how network segments were being split (raised in [#526](https://github.com/pysal/spaghetti/issues/526)) and additions to several notebooks ([spatial network segmentation](https://pysal.org/spaghetti/notebooks/network-segmentation.html#Large-synthetic-clusters), [caveats](https://pysal.org/spaghetti/tutorials.html), and [network-constrained spatial autocorrelation](https://pysal.org/spaghetti/notebooks/network-spatial-autocorrelation.html#A-highly-clustered-synthetic-example)). Also, `spaghetti` is now tested against Python 3.9.
 * [#572:](https://github.com/pysal/spaghetti/pull/572) bump 1.5.5 --> v1.5.6 after syntax error 
 * [#571:](https://github.com/pysal/spaghetti/pull/571) Prep 1.5.4 rel 
 * [#569:](https://github.com/pysal/spaghetti/pull/569) new documentation build GHA schema 
@@ -316,6 +369,12 @@ The highlights of this release include a [bug fix](https://github.com/pysal/spag
 
 <a name="spopt"></a>
 ### spopt
+* [#138:](https://github.com/pysal/spopt/issues/138) fresh cut release? 
+* [#139:](https://github.com/pysal/spopt/pull/139) bump version 0.1.0 -> 0.1.1 
+* [#135:](https://github.com/pysal/spopt/issues/135) High level description of spopt needed for meta release change log 
+* [#137:](https://github.com/pysal/spopt/pull/137) Fixing import structure 
+* [#118:](https://github.com/pysal/spopt/issues/118) availability on conda-forge 
+* [#134:](https://github.com/pysal/spopt/issues/134) spopt is now on conda-forge 
 * [#136:](https://github.com/pysal/spopt/pull/136) bump v0.1.0 
 * [#69:](https://github.com/pysal/spopt/issues/69) Installing for Google Collab  
 * [#119:](https://github.com/pysal/spopt/issues/119) manual release on PYPI 
@@ -397,6 +456,28 @@ The highlights of this release include a [bug fix](https://github.com/pysal/spag
 
 <a name="pysal"></a>
 ### pysal
+* [#1217:](https://github.com/pysal/pysal/pull/1217) add spopt description in changelog 
+* [#1215:](https://github.com/pysal/pysal/pull/1215) 2.4.0rc2 
+* [#1214:](https://github.com/pysal/pysal/pull/1214) 2.4.0rc2 
+* [#1211:](https://github.com/pysal/pysal/issues/1211) AttributeError: module 'pysal' has no attribute 'common' 
+* [#1213:](https://github.com/pysal/pysal/pull/1213) Update changelog instructions 
+* [#1212:](https://github.com/pysal/pysal/pull/1212) 2.4.0rc1 
+* [#1169:](https://github.com/pysal/pysal/issues/1169) Import problem in Google Colab 
+* [#1137:](https://github.com/pysal/pysal/issues/1137) conda install does not install plus requirements 
+* [#1139:](https://github.com/pysal/pysal/issues/1139) Raise warnings on use, not import 
+* [#1133:](https://github.com/pysal/pysal/issues/1133) AttributeError: module 'pysal' has no attribute 'open' -- Python3 on Fedora 
+* [#1092:](https://github.com/pysal/pysal/issues/1092) integrate/incorporate geodacenter/spatial_access 
+* [#1179:](https://github.com/pysal/pysal/issues/1179) Migrate CI to GHA and pytest 
+* [#1186:](https://github.com/pysal/pysal/issues/1186) draft rc1 release notes 
+* [#1154:](https://github.com/pysal/pysal/issues/1154) multiplatform testing 
+* [#1208:](https://github.com/pysal/pysal/issues/1208) spopt now on conda-forge 
+* [#1209:](https://github.com/pysal/pysal/pull/1209) Update changelog building and grab spopt from conda-forge not pip 
+* [#1210:](https://github.com/pysal/pysal/issues/1210) wrong link to access in v2.3.0 Release Notes 
+* [#1207:](https://github.com/pysal/pysal/pull/1207) removing codecov action & streamlining CI 
+* [#1205:](https://github.com/pysal/pysal/issues/1205) remove codecov 
+* [#1206:](https://github.com/pysal/pysal/pull/1206) Update README for spopt and new project homepage 
+* [#1202:](https://github.com/pysal/pysal/issues/1202) Update tooling to handle `master` or `main` branches in ecosystem 
+* [#1204:](https://github.com/pysal/pysal/pull/1204) 2.4.0 
 * [#1203:](https://github.com/pysal/pysal/pull/1203) updating urllib3 to 1.26 minimum 
 * [#1201:](https://github.com/pysal/pysal/issues/1201) Python 3.7 pip install has an error 
 * [#1200:](https://github.com/pysal/pysal/issues/1200) ModuleNotFoundError: No module named 'pysal.model.mgwr.gwr' 
@@ -422,11 +503,13 @@ Many thanks to all of the following individuals who contributed to this release:
  - Dani Arribas-Bel
  - Eli Knaap
  - James Gaboardi
- - Jcs Laptop
+ - Jamie Saxon
  - Jeffcsauer
+ - Jkoschinsky
+ - Knaaptime
  - Levi John Wolf
  - Martin Fleischmann
- - Mgeeeek
+ - Mragank Shekhar
  - Omar
  - Pabloestradac
  - Pedro Amaral
@@ -434,10 +517,10 @@ Many thanks to all of the following individuals who contributed to this release:
  - Serge Rey
  - Stefanie Lumnitz
  - Taylor Oshan
+ - Vidal Anguiano Jr
  - Wei Kang
  - Xin Feng
  - Ziqi Li
-
 
 # v<2.3.0>, 2020-07-30
 
