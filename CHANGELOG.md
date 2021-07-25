@@ -1,3 +1,269 @@
+# <v2.5.0> 2021-07-31
+
+PySAL 2.5.0 represents 6 months of enhancements, bug-fixes, widening of test coverage, and improved documentation. All users are encouraged to upgrade to this version as there are numerous optimizations as well as new features (see below) that have been implemented.
+
+Overall, there were 454 commits that closed 154 issues, together with 28 pull requests since our last release on 2021-01-31.
+
+
+## Package Highlights
+
+### spaghetti
+* The highlights of this release include functionality to [split network arcs by count](https://pysal.org/spaghetti/generated/spaghetti.Network.html#spaghetti.Network.split_arcs), which compliments the previously available distance splitting, and a [paper](https://doi.org/10.21105/joss.02826) in the Journal of Open Source Software. Also, Python 3.6 is no longer supported.
+
+### spopt
+* This release includes another model to add to the suite: RandomRegions. RandomRegions, originally written by David C. Folch (@dfolch) and Serge Rey, builds regions based on an initial random seed while considering user-defined specifications such as: region count, cardinality, contiguity, and compactness (citation?). Also, we have improved the testing coverage for the models inlcuded in the initial release: AZP, Max-*p*-regions, Region-*k*-means, Skater, Spenc, and WardSpatial.
+
+
+<a name="changes-by-package"></a>
+## Detailed Changes by Package
+
+<a name="libpysal"></a>
+### libpysal
+* [#412:](https://github.com/pysal/libpysal/pull/412) Add missing endianness in WK1 reader. 
+* [#413:](https://github.com/pysal/libpysal/pull/413) Update unittests, etc 
+* [#415:](https://github.com/pysal/libpysal/pull/415) classify repo as Python 
+* [#389:](https://github.com/pysal/libpysal/pull/389) add docs action workflow 
+* [#411:](https://github.com/pysal/libpysal/pull/411) Return a dataframe with info on available datasets 
+* [#409:](https://github.com/pysal/libpysal/issues/409) Do not fetch examples on import 
+* [#410:](https://github.com/pysal/libpysal/pull/410) Do not poll remotes on init. 
+* [#400:](https://github.com/pysal/libpysal/pull/400) Fixed `index2da` causing inverted output 
+* [#399:](https://github.com/pysal/libpysal/issues/399) Raster weights `w2da` failing on 3.6 
+* [#408:](https://github.com/pysal/libpysal/issues/408) Correct way to compute spatial weights in libpysal 
+* [#407:](https://github.com/pysal/libpysal/pull/407) Bump actions/upload-release-asset from 1 to 1.0.2 
+* [#405:](https://github.com/pysal/libpysal/pull/405) Bump conda-incubator/setup-miniconda from 2 to 2.1.1 
+* [#404:](https://github.com/pysal/libpysal/pull/404) Bump actions/setup-python from 2 to 2.2.2 
+* [#406:](https://github.com/pysal/libpysal/pull/406) Bump actions/cache from 2 to 2.1.5 
+* [#403:](https://github.com/pysal/libpysal/pull/403) Bump actions/checkout from 2 to 2.3.4 
+* [#401:](https://github.com/pysal/libpysal/issues/401) Dimension issues in DistanceBand weights 
+* [#341:](https://github.com/pysal/libpysal/issues/341) Use a labelled sparse xarray.DataArray as the core representation for weights 
+* [#397:](https://github.com/pysal/libpysal/pull/397) Draft of adjacency table as df 
+* [#398:](https://github.com/pysal/libpysal/pull/398) Expand weights benchmark 
+* [#396:](https://github.com/pysal/libpysal/pull/396) Draft of adjacency table as df 
+* [#395:](https://github.com/pysal/libpysal/pull/395) xarray geograph implementation 
+* [#392:](https://github.com/pysal/libpysal/pull/392) Add start of workbench notebook 
+* [#390:](https://github.com/pysal/libpysal/pull/390) Bump actions/cache from v2 to v2.1.4 
+* [#388:](https://github.com/pysal/libpysal/pull/388) update dev docs link 
+* [#387:](https://github.com/pysal/libpysal/pull/387) make build + make sync @docsrc 
+* [#386:](https://github.com/pysal/libpysal/pull/386) bump version 
+* [#385:](https://github.com/pysal/libpysal/pull/385) Adding raster interface to docs API + notebooks 
+* [#384:](https://github.com/pysal/libpysal/pull/384) [Doc]: Update raster example notebook and docstrings 
+
+
+<a name="access"></a>
+### access
+
+
+<a name="esda"></a>
+### esda
+
+
+<a name="giddy"></a>
+### giddy
+
+
+<a name="inequality"></a>
+### inequality
+
+
+<a name="pointpats"></a>
+### pointpats
+
+
+<a name="segregation"></a>
+### segregation
+* [#166:](https://github.com/pysal/segregation/pull/166) remove mamba reference 
+* [#169:](https://github.com/pysal/segregation/issues/169) error in AbsoluteClustering with geographic coordinate system 
+* [#171:](https://github.com/pysal/segregation/issues/171) add deprecation layer for 2.0 
+* [#104:](https://github.com/pysal/segregation/issues/104) [ENH] extend segregation profile function to accept more spatial indices 
+* [#167:](https://github.com/pysal/segregation/issues/167) Dissimilarity Index API typo 
+* [#165:](https://github.com/pysal/segregation/issues/165) remove travis-ci badge 
+* [#4:](https://github.com/pysal/segregation/issues/4) consider refactor to scikit-style mixins 
+* [#161:](https://github.com/pysal/segregation/pull/161) 2.0 refactor 
+* [#168:](https://github.com/pysal/segregation/issues/168) Segregation measure (aspatial/spatial) with groupby? 
+* [#163:](https://github.com/pysal/segregation/issues/163) Example notebooks missing scaramento2.shp 
+
+
+<a name="spaghetti"></a>
+### spaghetti
+* [#639:](https://github.com/pysal/spaghetti/pull/639) prepare for v1.6.2 release 
+* [#637:](https://github.com/pysal/spaghetti/issues/637) update conf.py link in tutorials 
+* [#617:](https://github.com/pysal/spaghetti/issues/617) update action for GH releases 
+* [#636:](https://github.com/pysal/spaghetti/pull/636) Version bump & rerun notebooks 
+* [#635:](https://github.com/pysal/spaghetti/pull/635) bump to v1.6.0.post5 - another try 
+* [#634:](https://github.com/pysal/spaghetti/pull/634) Try new release action (softprops/action-gh-release) 
+* [#633:](https://github.com/pysal/spaghetti/pull/633) removing descartes requirement 
+* [#632:](https://github.com/pysal/spaghetti/issues/632) remove descartes dependency 
+* [#573:](https://github.com/pysal/spaghetti/issues/573) Blacken code in docs 
+* [#631:](https://github.com/pysal/spaghetti/pull/631) doc updates for v1.6.0 release 
+* [#597:](https://github.com/pysal/spaghetti/issues/597) Update copyright year 
+* [#630:](https://github.com/pysal/spaghetti/pull/630) split arc by count functionality 
+* [#494:](https://github.com/pysal/spaghetti/issues/494) network segmentation by count 
+* [#522:](https://github.com/pysal/spaghetti/issues/522) rtree dependency and value of SMALL 
+* [#629:](https://github.com/pysal/spaghetti/pull/629) Drop support for Python 3.6 
+* [#628:](https://github.com/pysal/spaghetti/issues/628) Drop support for Python 3.6 
+* [#627:](https://github.com/pysal/spaghetti/pull/627) Rebuild docs for version bump 
+* [#440:](https://github.com/pysal/spaghetti/issues/440) release v1.6.0 
+* [#491:](https://github.com/pysal/spaghetti/issues/491) Add type annotations? 
+* [#626:](https://github.com/pysal/spaghetti/pull/626) Minor formatting fixes 
+* [#625:](https://github.com/pysal/spaghetti/pull/625) version bump & rerun notebooks for JOSS paper 
+* [#575:](https://github.com/pysal/spaghetti/issues/575) [JOSS review] Manuscript statement of need 
+* [#624:](https://github.com/pysal/spaghetti/pull/624) trim down Statement of Need section 
+* [#623:](https://github.com/pysal/spaghetti/pull/623) Bump actions/checkout from 2 to 2.3.4 
+* [#622:](https://github.com/pysal/spaghetti/pull/622) Bump actions/setup-python from 2 to 2.2.2 
+* [#621:](https://github.com/pysal/spaghetti/pull/621) Bump actions/upload-release-asset from 1 to 1.0.2 
+* [#620:](https://github.com/pysal/spaghetti/pull/620) Bump actions/create-release from 1 to 1.1.4 
+* [#619:](https://github.com/pysal/spaghetti/pull/619) Bump codecov/codecov-action from 1 to 1.5.0 
+* [#618:](https://github.com/pysal/spaghetti/pull/618) minor cosmetic updates to workflows 
+* [#616:](https://github.com/pysal/spaghetti/pull/616) Prune CI testing matrix 
+* [#615:](https://github.com/pysal/spaghetti/issues/615) reduce testing matrix 
+* [#609:](https://github.com/pysal/spaghetti/pull/609) pin rtree version 
+* [#614:](https://github.com/pysal/spaghetti/pull/614) GitHub Actions CI with micromamba 
+* [#613:](https://github.com/pysal/spaghetti/issues/613) try provision-with-micromamba 
+* [#612:](https://github.com/pysal/spaghetti/pull/612) try mamba + strict again 
+* [#611:](https://github.com/pysal/spaghetti/pull/611) CI work, etc. 
+* [#610:](https://github.com/pysal/spaghetti/pull/610) remove mamba & conda mixture 
+* [#583:](https://github.com/pysal/spaghetti/issues/583) [JOSS review] Manuscript "Current functionality" 
+* [#582:](https://github.com/pysal/spaghetti/issues/582) [JOSS review] Support reading/writing networks from different formats, integration with NetworkX/OSMnx 
+* [#581:](https://github.com/pysal/spaghetti/issues/581) [JOSS review] Methods to assist common tasks (especially plotting) 
+* [#580:](https://github.com/pysal/spaghetti/issues/580) [JOSS review] Network class, key (unique) functionalities of spaghetti, relationship to NetworkX (or the like). 
+* [#578:](https://github.com/pysal/spaghetti/issues/578) [JOSS review] Improve the quickstart notebook 
+* [#577:](https://github.com/pysal/spaghetti/issues/577) [JOSS review] Add more information in the tutorial notebooks 
+* [#576:](https://github.com/pysal/spaghetti/issues/576) [JOSS review] Manuscript Figure 1 (PySAL logo) 
+* [#574:](https://github.com/pysal/spaghetti/issues/574) [JOSS review] Manuscript summary 
+* [#608:](https://github.com/pysal/spaghetti/pull/608) update JOSS paper cite and figure size 
+* [#607:](https://github.com/pysal/spaghetti/pull/607) update JOSS paper text 
+* [#605:](https://github.com/pysal/spaghetti/pull/605) [WIP] Add paper references, etc. 
+* [#586:](https://github.com/pysal/spaghetti/issues/586) additional functions & methods from tutorials 
+* [#606:](https://github.com/pysal/spaghetti/pull/606) improve point snap / Moran figure for JOSS 
+* [#588:](https://github.com/pysal/spaghetti/pull/588) addressing issue #576 
+* [#603:](https://github.com/pysal/spaghetti/pull/603) add to quick start notebook 
+* [#592:](https://github.com/pysal/spaghetti/pull/592) addressing #582: update spaghetti.Network docstring 
+* [#602:](https://github.com/pysal/spaghetti/pull/602) Bump actions/cache from v2 to v2.1.4 
+* [#601:](https://github.com/pysal/spaghetti/pull/601) update docs only on release 
+
+
+<a name="mgwr"></a>
+### mgwr
+
+
+<a name="spglm"></a>
+### spglm
+
+
+<a name="spint"></a>
+### spint
+
+
+<a name="spreg"></a>
+### spreg
+* [#76:](https://github.com/pysal/spreg/pull/76) Update conf and rerelease 
+* [#75:](https://github.com/pysal/spreg/pull/75) Update GHA & CI 
+* [#59:](https://github.com/pysal/spreg/issues/59) Add Python 3.9 testing 
+* [#74:](https://github.com/pysal/spreg/pull/74) Fixing bug with order of variables' names changing randomly in regimes. 
+* [#66:](https://github.com/pysal/spreg/pull/66) Bump actions/setup-python from 2 to 2.2.2 
+* [#67:](https://github.com/pysal/spreg/pull/67) Bump actions/cache from 2 to 2.1.5 
+* [#68:](https://github.com/pysal/spreg/pull/68) Bump codecov/codecov-action from 1 to 1.5.0 
+* [#69:](https://github.com/pysal/spreg/pull/69) Bump actions/upload-release-asset from 1 to 1.0.2 
+* [#70:](https://github.com/pysal/spreg/pull/70) Bump actions/create-release from 1 to 1.1.4 
+* [#65:](https://github.com/pysal/spreg/pull/65) Bump actions/cache from v2 to v2.1.4 
+
+
+<a name="spvcm"></a>
+### spvcm
+
+
+<a name="tobler"></a>
+### tobler
+* [#144:](https://github.com/pysal/tobler/pull/144) add pycno to docs 
+* [#143:](https://github.com/pysal/tobler/pull/143) remove css from docs conf 
+* [#142:](https://github.com/pysal/tobler/pull/142) bump version 0.8 
+* [#141:](https://github.com/pysal/tobler/pull/141) add pycnophylactic interpolation 
+* [#95:](https://github.com/pysal/tobler/issues/95) Add Pycnophylactic Interpolation 
+* [#79:](https://github.com/pysal/tobler/issues/79) sentinel data 
+* [#135:](https://github.com/pysal/tobler/pull/135) ENH: support categorical variables in area_interpolate 
+* [#96:](https://github.com/pysal/tobler/issues/96) vector data as a dasymetric mask 
+* [#132:](https://github.com/pysal/tobler/pull/132) bump version 
+
+
+<a name="mapclassify"></a>
+### mapclassify
+
+
+<a name="splot"></a>
+### splot
+
+
+<a name="spopt"></a>
+### spopt
+* [#180:](https://github.com/pysal/spopt/pull/180) prep for release of version 0.1.2 
+* [#177:](https://github.com/pysal/spopt/pull/177) update notebook links in conf 
+* [#176:](https://github.com/pysal/spopt/pull/176) add trigger to doc_build action 
+* [#175:](https://github.com/pysal/spopt/pull/175) update reg-k-means.ipynb 
+* [#174:](https://github.com/pysal/spopt/pull/174) update release_and_publish.yml 
+* [#169:](https://github.com/pysal/spopt/pull/169) Increase test cases & coverage 
+* [#112:](https://github.com/pysal/spopt/issues/112) Improve testing suite 
+* [#171:](https://github.com/pysal/spopt/pull/171) Classify repo as Python 
+* [#168:](https://github.com/pysal/spopt/pull/168) maintenance for CI 
+* [#167:](https://github.com/pysal/spopt/issues/167) Streamline CI with micromamba 
+* [#166:](https://github.com/pysal/spopt/pull/166) Update reference DOIs and add PySAL GA reference 
+* [#165:](https://github.com/pysal/spopt/pull/165) remove draft PDF action 
+* [#164:](https://github.com/pysal/spopt/issues/164) remove draft_pdf action 
+* [#163:](https://github.com/pysal/spopt/pull/163) Fixes documentation 
+* [#162:](https://github.com/pysal/spopt/issues/162) Import clauses in documentation are wrong throughout the examples 
+* [#161:](https://github.com/pysal/spopt/pull/161) correct paper indent & add JOSS badge 
+* [#160:](https://github.com/pysal/spopt/pull/160) Bump actions/upload-artifact from 1 to 2.2.3 
+* [#159:](https://github.com/pysal/spopt/pull/159) Add paper 
+* [#158:](https://github.com/pysal/spopt/pull/158) include the paper in the git-based repository together with the software 
+* [#153:](https://github.com/pysal/spopt/pull/153) Bump actions/create-release from 1 to 1.1.4 
+* [#156:](https://github.com/pysal/spopt/pull/156) Bump actions/upload-release-asset from 1 to 1.0.2 
+* [#157:](https://github.com/pysal/spopt/pull/157) Bump conda-incubator/setup-miniconda from 2 to 2.1.1 
+* [#155:](https://github.com/pysal/spopt/pull/155) Bump codecov/codecov-action from 1 to 1.5.0 
+* [#154:](https://github.com/pysal/spopt/pull/154) Bump actions/cache from 2 to 2.1.5 
+* [#152:](https://github.com/pysal/spopt/pull/152) Update docs for random region 
+* [#147:](https://github.com/pysal/spopt/issues/147) Support for RandomRegions? 
+* [#150:](https://github.com/pysal/spopt/issues/150) Add support for randomregions 
+* [#151:](https://github.com/pysal/spopt/pull/151) Adding random regions 
+* [#149:](https://github.com/pysal/spopt/pull/149) test 
+* [#148:](https://github.com/pysal/spopt/pull/148) update region-k-means notebook 
+* [#146:](https://github.com/pysal/spopt/pull/146) revise ward in notebooks 
+* [#145:](https://github.com/pysal/spopt/pull/145) revised notebook for azp 
+* [#144:](https://github.com/pysal/spopt/pull/144) Bump actions/cache from v2 to v2.1.4 
+* [#143:](https://github.com/pysal/spopt/pull/143) update dev docs link 
+* [#142:](https://github.com/pysal/spopt/pull/142) revise skater in notebooks 
+* [#140:](https://github.com/pysal/spopt/issues/140) Tutorials link in readme leads to a 404 error 
+* [#141:](https://github.com/pysal/spopt/pull/141) update tutorials link in README 
+* [#138:](https://github.com/pysal/spopt/issues/138) fresh cut release? 
+* [#139:](https://github.com/pysal/spopt/pull/139) bump version 0.1.0 -> 0.1.1 
+
+
+<a name="pysal"></a>
+### pysal
+* [#1223:](https://github.com/pysal/pysal/issues/1223) Spatial Weights issue, Points geometry not allowed 
+* [#1220:](https://github.com/pysal/pysal/issues/1220) Could not load shared object file: llvmlite.dll 
+* [#1218:](https://github.com/pysal/pysal/pull/1218) 2.4.0 
+
+<a name="contributors"></a>
+## Contributors
+
+Many thanks to all of the following individuals who contributed to this release:
+
+
+ - Arfon Smith
+ - Dani Arribas-Bel
+ - Eli Knaap
+ - Elliott Sales De Andrade
+ - James Gaboardi
+ - Jkoschinsky
+ - Martin Fleischmann
+ - Mgeeeek
+ - Pedro Amaral
+ - Pedro Camargo
+ - Serge Rey
+ - Stefanie Lumnitz
+ - Xin (Selena) Feng
+ - Xin Feng
+
+
 # <v2.4.0> 2021-01-31
 PySAL 2.4.0 represents 6 months of enhancements, bug-fixes, widening of test
 coverage, and improved documentation. Three Google Summer of Code projects made
