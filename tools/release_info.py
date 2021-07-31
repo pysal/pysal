@@ -10,7 +10,7 @@ from urllib.request import urlopen
 from datetime import datetime, timedelta
 import requests
 
-PYSALVER = '2.4.0rc1'
+PYSALVER = '2.5.0'
 
 USER = "sjsrey"
 
