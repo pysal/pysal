@@ -54,4 +54,4 @@ viz: geovisualization
 
 """
 from .base import memberships, federation_hierarchy, versions
-__version__ = '2.4.0'
+__version__ = '2.5.0'
