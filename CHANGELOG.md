@@ -2,16 +2,30 @@
 
 PySAL 2.5.0 represents 6 months of enhancements, bug-fixes, widening of test coverage, and improved documentation. All users are encouraged to upgrade to this version as there are numerous optimizations as well as new features (see below) that have been implemented.
 
-Overall, there were 454 commits that closed 154 issues, together with 28 pull requests since our last release on 2021-01-31.
+Overall, there were 543 commits that closed 190 issues, together with 33 pull requests since our last release on 2021-01-31.
 
 
 ## Package Highlights
 
+### esda
+This version merges two large new sets of functionalities:
+
+- map correspondence measures in [`esda.map_comparison`](https://github.com/pysal/esda/blob/master/esda/map_comparison.py)
+- shape statistics in [`esda.shape`](https://github.com/pysal/esda/blob/master/esda/shape.py)
+
+### segregation
+Version 2.0 of the `segregation` package brings a new API, a massive code restructuring, and dozens of new features, enhancements, and bug fixes. For a complete overview of the new API, please see the documentation page at <https://pysal.org/segregation/api>. The new version does away with the distinction between spatial and aspatial segregation indices and instead partitions the functions based on single-group and multi-group measures. The spatial/aspatial distinction is echewed in version 2.0 because *all* aspatial indices can be generalized into spatial versions, following the logic of Reardon and O'Sullivan (see a description in [this example notebook](https://nbviewer.jupyter.org/github/knaaptime/segregation/blob/2.0/notebooks/01_singlegroup_indices.ipynb)). Furthermore, "space" can be incorporated into the index calculation using either Euclidean distance or the shortest path along a travel network. With this logic, the package now offers multiscalar segregation profiles for 23 different segregation indices (a first in any software package).
+
+### tobler
+Added [pychnophylactic interpolation](https://www.tandfonline.com/doi/abs/10.1080/01621459.1979.10481647).
+
+
 ### spaghetti
-* The highlights of this release include functionality to [split network arcs by count](https://pysal.org/spaghetti/generated/spaghetti.Network.html#spaghetti.Network.split_arcs), which compliments the previously available distance splitting, and a [paper](https://doi.org/10.21105/joss.02826) in the Journal of Open Source Software. Also, Python 3.6 is no longer supported.
+ The highlights of this release include functionality to [split network arcs by count](https://pysal.org/spaghetti/generated/spaghetti.Network.html#spaghetti.Network.split_arcs), which compliments the previously available distance splitting, and a [paper](https://doi.org/10.21105/joss.02826) in the Journal of Open Source Software. Also, Python 3.6 is no longer supported.
+
 
 ### spopt
-* This release includes another model to add to the suite: RandomRegions. RandomRegions, originally written by David C. Folch (@dfolch) and Serge Rey, builds regions based on an initial random seed while considering user-defined specifications such as: region count, cardinality, contiguity, and compactness (citation?). Also, we have improved the testing coverage for the models inlcuded in the initial release: AZP, Max-*p*-regions, Region-*k*-means, Skater, Spenc, and WardSpatial.
+This release includes another model to add to the suite: RandomRegions. RandomRegions, originally written by David C. Folch (@dfolch) and Serge Rey, builds regions based on an initial random seed while considering user-defined specifications such as: region count, cardinality, contiguity, and compactness (citation?). Also, we have improved the testing coverage for the models inlcuded in the initial release: AZP, Max-*p*-regions, Region-*k*-means, Skater, Spenc, and WardSpatial.
 
 
 <a name="changes-by-package"></a>
@@ -55,6 +69,26 @@ Overall, there were 454 commits that closed 154 issues, together with 28 pull re
 
 <a name="esda"></a>
 ### esda
+* [#188:](https://github.com/pysal/esda/pull/188) add pygeos-tolerant fails for the module 
+* [#133:](https://github.com/pysal/esda/pull/133) add the start on new calculation method for getisord statistics 
+* [#121:](https://github.com/pysal/esda/issues/121) Gi rewrite 
+* [#86:](https://github.com/pysal/esda/issues/86) Incorrect behavior for Moran_Local and self-neighbors 
+* [#186:](https://github.com/pysal/esda/pull/186) update codecov action to v2 
+* [#180:](https://github.com/pysal/esda/pull/180) Add map correspondence measure from Nowosad and Stepinski 
+* [#185:](https://github.com/pysal/esda/pull/185) [PERF] List comprehension to array operation in local multivariate Geary 
+* [#184:](https://github.com/pysal/esda/pull/184) Update Spatial Autocorrelation for Areal Unit Data 
+* [#172:](https://github.com/pysal/esda/pull/172) Merge ljwolf/shapestats into esda 
+* [#182:](https://github.com/pysal/esda/pull/182) adjust setup in conf.py 
+* [#170:](https://github.com/pysal/esda/pull/170) [DOC] Updating read the docs api for local join counts, local geary 
+* [#179:](https://github.com/pysal/esda/pull/179) Bump sphinxcontrib-bibtex from 1.0.0 to 2.3.0 
+* [#178:](https://github.com/pysal/esda/pull/178) Bump sphinxcontrib-bibtex from 1.0.0 to 2.2.1 
+* [#176:](https://github.com/pysal/esda/pull/176) Bump actions/checkout from 2 to 2.3.4 
+* [#175:](https://github.com/pysal/esda/pull/175) Bump codecov/codecov-action from 1 to 1.5.0 
+* [#177:](https://github.com/pysal/esda/pull/177) Bump actions/setup-python from 2 to 2.2.2 
+* [#173:](https://github.com/pysal/esda/pull/173) Bump actions/create-release from 1 to 1.1.4 
+* [#174:](https://github.com/pysal/esda/pull/174) Bump actions/upload-release-asset from 1 to 1.0.2 
+* [#169:](https://github.com/pysal/esda/pull/169) Bump sphinxcontrib-bibtex from 1.0.0 to 2.2.0 
+* [#168:](https://github.com/pysal/esda/pull/168) add tests for parallel crand 
 
 
 <a name="giddy"></a>
@@ -187,10 +221,25 @@ Overall, there were 454 commits that closed 154 issues, together with 28 pull re
 
 <a name="mapclassify"></a>
 ### mapclassify
+* [#114:](https://github.com/pysal/mapclassify/pull/114) Add min arg to UserDefined 
+* [#110:](https://github.com/pysal/mapclassify/pull/110) Enable python 2 install 
+* [#109:](https://github.com/pysal/mapclassify/issues/109) Inconsistent UserDefined Scale With Multiple Axes 
+* [#107:](https://github.com/pysal/mapclassify/pull/107) Turn off 3.6 testing on ubuntu 
+* [#108:](https://github.com/pysal/mapclassify/pull/108) 3.9 
+* [#106:](https://github.com/pysal/mapclassify/issues/106) about the classification method's output interval's precision 
 
 
 <a name="splot"></a>
 ### splot
+* [#136:](https://github.com/pysal/splot/pull/136) [REL] add new version number and release notes for 1.1.4 
+* [#135:](https://github.com/pysal/splot/pull/135) Streamline & upgrade CI 
+* [#134:](https://github.com/pysal/splot/issues/134) update conf.py 
+* [#124:](https://github.com/pysal/splot/issues/124) Migrating testing & coverage services 
+* [#121:](https://github.com/pysal/splot/issues/121) [MAINT] rename 'master' to 'main' 
+* [#130:](https://github.com/pysal/splot/issues/130) ipywidgets dependency 
+* [#132:](https://github.com/pysal/splot/pull/132) REF: make ipywidgets optional dependency 
+* [#133:](https://github.com/pysal/splot/pull/133) [WIP] update testing procedure with new datasets 
+* [#115:](https://github.com/pysal/splot/issues/115) MatplotlibDeprecationWarning from ax.spines[label].set_smart_bounds() 
 
 
 <a name="spopt"></a>
@@ -238,6 +287,7 @@ Overall, there were 454 commits that closed 154 issues, together with 28 pull re
 
 <a name="pysal"></a>
 ### pysal
+* [#1199:](https://github.com/pysal/pysal/issues/1199) Bump access version in meta release 
 * [#1223:](https://github.com/pysal/pysal/issues/1223) Spatial Weights issue, Points geometry not allowed 
 * [#1220:](https://github.com/pysal/pysal/issues/1220) Could not load shared object file: llvmlite.dll 
 * [#1218:](https://github.com/pysal/pysal/pull/1218) 2.4.0 
@@ -253,14 +303,18 @@ Many thanks to all of the following individuals who contributed to this release:
  - Eli Knaap
  - Elliott Sales De Andrade
  - James Gaboardi
+ - Jeffcsauer
  - Jkoschinsky
+ - Justin Pihony
+ - Leo Morales
+ - Levi John Wolf
  - Martin Fleischmann
  - Mgeeeek
  - Pedro Amaral
  - Pedro Camargo
  - Serge Rey
  - Stefanie Lumnitz
- - Xin (Selena) Feng
+ - Tlouf
  - Xin Feng
 
 
