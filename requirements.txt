@@ -7,7 +7,7 @@ pointpats>=2.2.0
 segregation>=2.0.0
 spaghetti>=1.6.2
 mgwr>=2.1.2
-momepy>-0.5.0
+momepy>=0.5.0
 spglm>=1.0.8
 spint>=1.0.7
 spreg>=1.2.4
