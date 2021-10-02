@@ -51,6 +51,7 @@ dependencies:
   - seaborn
   - descartes
   - numba
+  - momepy
   - inequality
   - access
   - splot
