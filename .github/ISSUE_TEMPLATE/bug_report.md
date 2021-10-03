@@ -1,30 +1,38 @@
-Thank you for filing this issue! To help troubleshoot this issue, please follow
-the following directions to the best of your ability before submitting an issue.
-Feel free to delete this text once you've filled out the relevant requests. 
+---
+name: Bug report
+about: Create a report to help us improve
+title: ''
+labels: ''
+assignees: ''
 
-Please include the output of the following in your issue submission. If you don't know how to provide the information, commands to get the relevant information from the Python interpreter will follow each bullet point.
+---
 
-Feel free to delete the commands after you've filled out each bullet. 
+**Describe the bug**
+A clear and concise description of what the bug is.
 
-- Platform information:
-```python
->>> import os; print(os.name, os.sys.platform)
-```
-- Python version: 
-```python
->>> import sys; print(sys.version)
-```
-- SciPy version:
-```python
->>> import scipy; print(scipy.__version__)
-```
-- NumPy version:
-```python
->>> import numpy; print(numpy.__version__)
-```
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to '...'
+2. Click on '....'
+3. Scroll down to '....'
+4. See error
 
-Also, please upload any relevant data as [a file
-attachment](https://help.github.com/articles/file-attachments-on-issues-and-pull-requests/). Please **do not** upload pickled objects, since it's nearly impossible to troubleshoot them without replicating your exact namespace. Instead, provide the minimal subset of the data required to replicate the problem. If it makes you more comfortable submitting the issue, feel free to:
+**Expected behavior**
+A clear and concise description of what you expected to happen.
 
-1. remove personally identifying information from data or code
-2. provide only the required subset of the full data or code 
+**Screenshots**
+If applicable, add screenshots to help explain your problem.
+
+**Desktop (please complete the following information):**
+ - OS: [e.g. iOS]
+ - Browser [e.g. chrome, safari]
+ - Version [e.g. 22]
+
+**Smartphone (please complete the following information):**
+ - Device: [e.g. iPhone6]
+ - OS: [e.g. iOS8.1]
+ - Browser [e.g. stock browser, safari]
+ - Version [e.g. 22]
+
+**Additional context**
+Add any other context about the problem here.
