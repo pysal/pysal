@@ -54,4 +54,6 @@ viz: geovisualization
 
 """
 from .base import memberships, federation_hierarchy, versions
-__version__ = '2.5.0'
+
+from . import _version
+__version__ = _version.get_versions()['version']
