@@ -41,6 +41,8 @@ The `explore` layer includes modules to conduct exploratory analysis of spatial 
 
 -   [inequality](https://inequality.readthedocs.io/en/latest/) : `inequality` provides indices for measuring inequality over space and time. These comprise classic measures such as the Theil *T* information index and the Gini index in mean deviation form; but also spatially-explicit measures that incorporate the location and spatial configuration of observations in the calculation of inequality measures.
 
+-   [momepy](https://docs.momepy.org) : `momepy` is a library for quantitative analysis of urban form - urban morphometrics. It aims to provide a wide range of tools for a systematic and exhaustive analysis of urban form. It can work with a wide range of elements, while focused on building footprints and street networks. momepy stands for Morphological Measuring in Python.
+
 -   [pointpats](https://pointpats.readthedocs.io/en/latest/) : `pointpats` supports the statistical analysis of point data, including methods to characterize the spatial structure of an observed point pattern: a collection of locations where some phenomena of interest have been recorded. This includes measures of centrography which provide overall geometric summaries of the point pattern, including central tendency, dispersion, intensity, and extent.
 
 -   [segregation](https://github.com/pysal/segregation) : `segregation` package calculates over 40 different segregation indices and provides a suite of additional features for measurement, visualization, and hypothesis testing that together represent the state-of-the-art in quantitative segregation analysis.
