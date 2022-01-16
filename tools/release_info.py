@@ -10,7 +10,7 @@ from urllib.request import urlopen
 from datetime import datetime, timedelta
 import requests
 
-PYSALVER = '2.5.0'
+PYSALVER = '2.6.0'
 
 USER = "sjsrey"
 
@@ -31,7 +31,7 @@ gh_session.auth = (USER, token)
 
 
 packages = ["libpysal", "access", "esda", "giddy", "inequality", "pointpats",
-            "segregation", "spaghetti", "mgwr", "spglm", "spint", "spreg", "spvcm",
+            "segregation", "spaghetti", "mgwr", "momepy", "spglm", "spint", "spreg", "spvcm",
             "tobler", "mapclassify", "splot", "spopt"]
 
 
@@ -53,6 +53,7 @@ def get_github_info(packages=packages):
                 no_release.append(package)
             else:
                 print('Something else happened')
+                print(d)
         else:
             tag_name = d['tag_name']
             tarball_url = d['tarball_url']
