@@ -13,3 +13,4 @@ wheel
 pytest
 pytest-mpl
 pytest-cov
+python-dateutil<=2.8.0
