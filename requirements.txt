@@ -1,4 +1,4 @@
-libpysal>=4.5.1.post2
+libpysal>=4.5.1
 access>=1.1.3
 esda>=2.4.1
 giddy>=2.3.3
