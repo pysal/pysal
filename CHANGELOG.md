@@ -195,7 +195,6 @@ Many thanks to all of the following individuals who contributed to this release:
  - Charles Schmidt
  - Eli Knaap
  - Elliott Sales De Andrade
- - Gegen07
  - Germano Barcelos
  - James Gaboardi
  - Levi John Wolf
