@@ -16,8 +16,3 @@ tobler>=0.8.2
 mapclassify>=2.4.3
 splot>=1.1.4
 spopt>=0.2.1
-urllib3>=1.26
-python-dateutil<=2.8.0
-pytest
-pytest-cov
-coverage
