@@ -1,3 +1,207 @@
+# <v2.6.0> 2022-01-31
+PySAL 2.6.0 represents 6 months of enhancements, bug-fixes, widening
+of test coverage, and improved documentation.  All users are
+encouraged to upgrade to this version as there are numerous
+optimizations as well as new features (see below) that have been
+implemented.
+
+## Highlights
+
+### New Package: [pysal/momempy](https://github.com/pysal/momepy)
+
+>Momepy is a library for quantitative analysis of urban form - urban morphometrics
+
+<a name="changes-by-package"></a>
+## Changes by Package
+
+Overall, there were 181 commits that closed 99 issues since our last release on 2021-07-31.
+
+<a name="libpysal"></a>
+### libpysal
+* [#450:](https://github.com/pysal/libpysal/pull/450) DOCS: Gabriel and related enhancements 
+* [#449:](https://github.com/pysal/libpysal/pull/449) DOC: Update docs for Gabriel and related enhancements 
+* [#448:](https://github.com/pysal/libpysal/pull/448) Gabriel docs 
+* [#438:](https://github.com/pysal/libpysal/pull/438) add gabriel weights and more performant voronoi generation 
+* [#442:](https://github.com/pysal/libpysal/pull/442) ENH: Moving to appdirs for example storage 
+* [#443:](https://github.com/pysal/libpysal/pull/443) MAINT: replace LooseVersion with packaging 
+* [#349:](https://github.com/pysal/libpysal/pull/349) Format UserWarning string in W.to_adjlist 
+* [#285:](https://github.com/pysal/libpysal/pull/285) remove non-coincident points correctly from knn weights 
+* [#439:](https://github.com/pysal/libpysal/pull/439) Bug fix for parallel execution environments 
+* [#429:](https://github.com/pysal/libpysal/pull/429) Use versioneer to manage __version__ 
+* [#437:](https://github.com/pysal/libpysal/pull/437) REF: update for shapely 2.0 
+* [#434:](https://github.com/pysal/libpysal/issues/434) tools/gitcount with versioneer 
+* [#435:](https://github.com/pysal/libpysal/pull/435) update version import in gitcount 
+* [#321:](https://github.com/pysal/libpysal/pull/321) represent islands as self-joins with zero weight in adjacency lists 
+* [#431:](https://github.com/pysal/libpysal/pull/431) DOC: Fix several warnings during the build 
+* [#430:](https://github.com/pysal/libpysal/pull/430) Fix test_voronoi on other architectures. 
+* [#420:](https://github.com/pysal/libpysal/issues/420) Testraster failures without numba: 'dia_matrix' object is not subscriptable 
+* [#232:](https://github.com/pysal/libpysal/pull/232) add neighbor_equality and write_gal to the imports from util 
+* [#428:](https://github.com/pysal/libpysal/pull/428) Fix failure of "dia_matrix object is not subscriptable" 
+* [#402:](https://github.com/pysal/libpysal/pull/402) Edgelist-based contiguity constructor 
+* [#419:](https://github.com/pysal/libpysal/issues/419) scipy 1.7.0 breaking test_lat2SW 
+* [#423:](https://github.com/pysal/libpysal/pull/423) use toarray in `W.full()` 
+* [#426:](https://github.com/pysal/libpysal/pull/426) cast sw to csc and eliminate zeros 
+* [#425:](https://github.com/pysal/libpysal/pull/425) skip scipy 1.7.1 for in test_lat2SW 
+* [#422:](https://github.com/pysal/libpysal/pull/422) dense 
+
+
+<a name="access"></a>
+### access
+
+
+<a name="esda"></a>
+### esda
+
+
+<a name="giddy"></a>
+### giddy
+
+
+<a name="inequality"></a>
+### inequality
+
+
+<a name="pointpats"></a>
+### pointpats
+
+
+<a name="segregation"></a>
+### segregation
+* [#184:](https://github.com/pysal/segregation/pull/184) prepare v2.1.0 
+* [#35:](https://github.com/pysal/segregation/issues/35) parallelization simulation based indexes and inference wrappers 
+* [#180:](https://github.com/pysal/segregation/issues/180) use rvlib for densitycorrecteddissim 
+* [#183:](https://github.com/pysal/segregation/pull/183) performance enhancements 
+
+
+<a name="spaghetti"></a>
+### spaghetti
+* [#657:](https://github.com/pysal/spaghetti/pull/657) attempt Python 3.10 in CI 
+* [#638:](https://github.com/pysal/spaghetti/issues/638) Update changelog tooling to report contributors 
+* [#655:](https://github.com/pysal/spaghetti/pull/655) Try automated release notes action 
+* [#653:](https://github.com/pysal/spaghetti/issues/653) update gitcount notebook for versioneer? 
+* [#654:](https://github.com/pysal/spaghetti/pull/654) access version from pacakge in gitcount 
+* [#652:](https://github.com/pysal/spaghetti/pull/652) add manual triggers for workflows 
+* [#650:](https://github.com/pysal/spaghetti/issues/650) omit new versioner files from code coverage 
+* [#651:](https://github.com/pysal/spaghetti/pull/651) ignore versioneer files for code coverage reporting 
+* [#649:](https://github.com/pysal/spaghetti/pull/649) add deprecation warning for libpysal geometries 
+* [#647:](https://github.com/pysal/spaghetti/issues/647) versioneer for version management 
+* [#648:](https://github.com/pysal/spaghetti/pull/648) Versioneer  
+* [#373:](https://github.com/pysal/spaghetti/issues/373) [ENH] Explore a "two workflows" style format 
+
+
+<a name="mgwr"></a>
+### mgwr
+
+
+<a name="momepy"></a>
+### momepy
+* [#331:](https://github.com/pysal/momepy/pull/331) RLS: add 0.5.2 changelog 
+* [#330:](https://github.com/pysal/momepy/pull/330) BUG: fix FormFactor 
+* [#329:](https://github.com/pysal/momepy/issues/329) BUG: FormFactor uses incorrect formula 
+* [#320:](https://github.com/pysal/momepy/pull/320) REF: simplify calculation of Simpson diversity 
+* [#319:](https://github.com/pysal/momepy/pull/319) TST: redo CI matrix 
+* [#327:](https://github.com/pysal/momepy/issues/327) Summary at the custom-zone level 
+* [#325:](https://github.com/pysal/momepy/issues/325) QST: input data type for momepy  
+* [#321:](https://github.com/pysal/momepy/issues/321) QST: mm.Blocks emits CRS mismatch warnings 
+* [#323:](https://github.com/pysal/momepy/issues/323) QST: how to save graph to Shapefile? 
+* [#318:](https://github.com/pysal/momepy/pull/318) TST: use mambaforge in CI 
+* [#315:](https://github.com/pysal/momepy/pull/315) BUG: non-default index dropped in Blocks id series 
+* [#316:](https://github.com/pysal/momepy/issues/316) 0.5.1 release 
+* [#311:](https://github.com/pysal/momepy/issues/311) BUG: incorrect index in `Blocks.*_id` Series for non-default index 
+* [#314:](https://github.com/pysal/momepy/issues/314) TST: CI failure due to geopandas regression 
+* [#313:](https://github.com/pysal/momepy/pull/313) relicense under BSD 
+* [#305:](https://github.com/pysal/momepy/issues/305) copyright and license 
+* [#312:](https://github.com/pysal/momepy/pull/312) REF/TST: minimise warnings 
+* [#309:](https://github.com/pysal/momepy/issues/309) Silence warnings from geopandas 0.10 
+* [#306:](https://github.com/pysal/momepy/pull/306) update README.md 
+* [#303:](https://github.com/pysal/momepy/pull/303) Fix links after the transfer under pysal org 
+* [#301:](https://github.com/pysal/momepy/issues/301) Finish transfer under PySAL org 
+* [#299:](https://github.com/pysal/momepy/pull/299) ENH: support shapely polygon as enclosures limit 
+* [#254:](https://github.com/pysal/momepy/issues/254) ENH: allow limit of enclosures to be shapely polygon 
+* [#293:](https://github.com/pysal/momepy/issues/293) Import causes ImportError 
+* [#298:](https://github.com/pysal/momepy/pull/298) ENH: catch geographic CRS in Tessellation 
+* [#297:](https://github.com/pysal/momepy/issues/297) Tesselation fails at Generating input point array... with ValueError: need at least one array to concatenate 
+* [#286:](https://github.com/pysal/momepy/issues/286) momepy.Tessellation returns empty rows when buildings are outside of enclosures 
+* [#296:](https://github.com/pysal/momepy/pull/296) PERF: use dask.bag in Tessellation 
+* [#295:](https://github.com/pysal/momepy/issues/295) `momepy.Tessellation` doesn't appear to run faster on a machine with many more cores 
+* [#292:](https://github.com/pysal/momepy/pull/292) DOC: edit/proof street network analysis notebooks 
+* [#288:](https://github.com/pysal/momepy/pull/288) BUG: properly clip enclosures by limit 
+* [#287:](https://github.com/pysal/momepy/issues/287) momepy.enclosures doesn't appear to observe limit parameter 
+* [#270:](https://github.com/pysal/momepy/issues/270) Enclosure has problems with rivers 
+* [#291:](https://github.com/pysal/momepy/pull/291) BUG: Tessellation error on non-standard enclosures 
+* [#289:](https://github.com/pysal/momepy/issues/289) BUG: momepy.Tessellation fails with IndexError 
+* [#290:](https://github.com/pysal/momepy/pull/290) small typo in gdf_to_nx 
+
+
+<a name="spglm"></a>
+### spglm
+
+
+<a name="spint"></a>
+### spint
+
+
+<a name="spreg"></a>
+### spreg
+
+
+<a name="spvcm"></a>
+### spvcm
+
+
+<a name="tobler"></a>
+### tobler
+
+
+<a name="mapclassify"></a>
+### mapclassify
+
+
+<a name="splot"></a>
+### splot
+
+
+<a name="spopt"></a>
+### spopt
+* [#205:](https://github.com/pysal/spopt/pull/205) install pulp for docs build 
+* [#196:](https://github.com/pysal/spopt/issues/196) rework JOSS manuscript 
+* [#200:](https://github.com/pysal/spopt/pull/200) [WIP] JOSS paper revisions work 
+* [#203:](https://github.com/pysal/spopt/issues/203) update the real-world facility location notebook. 
+* [#204:](https://github.com/pysal/spopt/pull/204) Update fac-loc real world notebook 
+* [#201:](https://github.com/pysal/spopt/issues/201) region_k_means not handling candidate move updates 
+* [#202:](https://github.com/pysal/spopt/pull/202) Update candidates list after making a move 
+* [#179:](https://github.com/pysal/spopt/issues/179) Update changelog tooling to report contributors 
+* [#199:](https://github.com/pysal/spopt/pull/199) Generate Changelog notes automatically on release 
+* [#197:](https://github.com/pysal/spopt/pull/197) access package version in tools/gitcount 
+* [#198:](https://github.com/pysal/spopt/pull/198) Add examples section to locate module 
+* [#190:](https://github.com/pysal/spopt/issues/190) update locate docs 
+* [#194:](https://github.com/pysal/spopt/pull/194) switch to versioneer 
+* [#193:](https://github.com/pysal/spopt/pull/193) Update locate docs 
+* [#192:](https://github.com/pysal/spopt/issues/192) Reference error for Church and Murray book 
+* [#2:](https://github.com/pysal/spopt/issues/2) facility location models in a class 
+* [#189:](https://github.com/pysal/spopt/issues/189) Facility Location modeling solutions & CI 
+* [#186:](https://github.com/pysal/spopt/pull/186) Add Locate Module 
+* [#3:](https://github.com/pysal/spopt/issues/3) bug: maxp implementation is not using contiguity 
+* [#49:](https://github.com/pysal/spopt/issues/49) spopt as solver agnostic? 
+* [#61:](https://github.com/pysal/spopt/issues/61) solvers and solver APIs 
+* [#18:](https://github.com/pysal/spopt/issues/18) new alternative to pulp 
+
+<a name="contributors"></a>
+## Contributors
+
+Many thanks to all of the following individuals who contributed to this release:
+
+
+ - Charles Schmidt
+ - Eli Knaap
+ - Elliott Sales De Andrade
+ - Germano Barcelos
+ - James Gaboardi
+ - Levi John Wolf
+ - Martin Fleischmann
+ - Serge Rey
+
+
 # <v2.5.0> 2021-07-31
 
 PySAL 2.5.0 represents 6 months of enhancements, bug-fixes, widening of test coverage, and improved documentation. All users are encouraged to upgrade to this version as there are numerous optimizations as well as new features (see below) that have been implemented.

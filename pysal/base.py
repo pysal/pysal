@@ -13,24 +13,11 @@ federation_hierarchy = {
     'lib': ['libpysal']
 }
 
-memberships = {'libpysal': 'lib',
-               'esda': 'explore',
-               'giddy': 'explore',
-               'segregation': 'explore',
-               'pointpats': 'explore',
-               'inequality': 'explore',
-               'spaghetti': 'explore',
-               'momepy': 'explore',
-               'access': 'model',
-               'spreg': 'model',
-               'spopt': 'model',
-               'spglm': 'model',
-               'spint': 'model',
-               'tobler': 'model',
-               'spvcm': 'model',
-               'splot': 'viz',
-               'mapclassify': 'viz'
-}
+memberships = {}
+for key in federation_hierarchy:
+    for package in federation_hierarchy[key]:
+        memberships[package] = key
+
 
 
 class cached_property(object):
