@@ -227,6 +227,11 @@ def report(issues, show_urls=False):
     else:
         for i in issues:
             print('* %d: %s' % (i['number'], i['title'].encode('utf-8')))
+            
+            
+def get_meta_releases():
+    url = "https://api.github.com/repos/pysal/pysal/releases"
+    return get_url(url)
 
 
 
