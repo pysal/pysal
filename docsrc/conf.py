@@ -161,6 +161,7 @@ html_theme_options = {
         ("Installation", "installation"),
         ("API", "api"),
         ("References", "references"),
+        ("Release Notes", "releases")
     ],
 }
 
@@ -245,5 +246,4 @@ plot_include_source = True
 
 
 def setup(app):
-    app.add_stylesheet("pysal-styles.css")
-
+    app.add_css_file("pysal-styles.css")
