@@ -18,6 +18,7 @@ API Reference
 * `esda: Spatial Autocorrelation Analysis <https://pysal.org/esda/api.html>`_
 * `giddy: Geospatial Distribution Dynamics <https://pysal.org/giddy/api.html>`_
 * `inequality: Spatial Inequality Analysis <https://inequality.readthedocs.io/en/latest/api.html>`_
+* `momepy: Urban Morphology Measuring Toolkit <http://docs.momepy.org/en/stable/api.html>`_
 * `pointpats: Planar Point Pattern Analysis <https://pointpats.readthedocs.io/en/latest/api.html>`_
 * `segregation: Segregation Analysis <https://segregation.readthedocs.io/en/latest/api.html>`_
 * `spaghetti: Spatial Analysis on Networks <https://pysal.org/spaghetti/api.html>`_
