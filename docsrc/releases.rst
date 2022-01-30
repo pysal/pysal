@@ -3,6 +3,7 @@ PySAL Release Notes
 
 This is the list of changes to PySAL for each release.
 
+- `PySAL 2.6.0 <https://github.com/pysal/pysal/releases/tag/v2.6.0>`_
 - `PySAL 2.5.0 <https://github.com/pysal/pysal/releases/tag/v2.5.0>`_
 - `PySAL 2.4.0 <https://github.com/pysal/pysal/releases/tag/v2.4.0>`_
 - `PySAL 2.3.0 <https://github.com/pysal/pysal/releases/tag/v2.3.0>`_
