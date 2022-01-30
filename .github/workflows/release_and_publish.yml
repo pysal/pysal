@@ -1,0 +1,53 @@
+ # Release package on GitHub and publish to PyPI
+ 
+ # Important: In order to trigger this workflow for the organization
+ # repo (organzation-name/repo-name vs. user-name/repo-name), a tagged
+ # commit must be made to *organzation-name/repo-name*. If the tagged
+ # commit is made to *user-name/repo-name*, a release will be published
+ # under the user's name, not the organzation.
+ 
+ #--------------------------------------------------
+ name: Release & Publish
+ 
+ on:
+   push:
+     # Sequence of patterns matched against refs/tags
+     tags:
+       - "v*" # Push events to matching v*, i.e. v1.0, v20.15.10
+ 
+ jobs:
+   build:
+     name: Create release & publish to PyPI
+     runs-on: ubuntu-latest
+     steps:
+       - name: Checkout repo
+         uses: actions/checkout@v2
+ 
+       - name: Set up python
+         uses: actions/setup-python@v2
+         with:
+           python-version: "3.x"
+ 
+       - name: Install Dependencies
+         run: |
+           python -m pip install --upgrade pip
+           pip install setuptools wheel twine jupyter urllib3 pandas pyyaml
+           python setup.py sdist bdist_wheel
+ 
+       - name: Get the tag name
+         run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+ 
+       - name: Release
+         uses: softprops/action-gh-release@v1
+         with:
+           body: ${{ steps.changetxt.outputs.text }}
+           body_path: ${{ steps.changetxt.outputs.path }}
+           name: Release ${{ env.TAG }}
+         env:
+           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+ 
+       - name: Publish distribution 📦 to PyPI
+         uses: pypa/gh-action-pypi-publish@master
+         with:
+           user: __token__
+           password: ${{ secrets.PYPI_PASSWORD }}
