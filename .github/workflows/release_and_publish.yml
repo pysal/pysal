@@ -15,8 +15,13 @@
      tags:
        - "v*" # Push events to matching v*, i.e. v1.0, v20.15.10
  
+ permissions:
+   contents: read
+
  jobs:
    build:
+     permissions:
+       contents: write  # for softprops/action-gh-release to create GitHub release
      name: Create release & publish to PyPI
      runs-on: ubuntu-latest
      steps:
