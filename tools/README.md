@@ -10,9 +10,7 @@
 
 ### Updating package information
 - If any new packages have been added to the ecosystem update the `packages` list
-in `release_info.py`
-- Change `USER` in `release_info.py`
-- Change `PYSALVER` in `release_info.py`
+in `release.yaml` update relevant data on start_date (day after last release), release_date (day of this release), version, user
 
 ### Notebooks to run in sequence
 - frozen.ipynb creates `frozen.txt` in this dir that can be hand edited if needed before integrating those versions into to `pysal/requirements.txt`. It also generates `pysal/pysal/frozen.py` which defines the package versions going into this release
@@ -20,7 +18,6 @@ in `release_info.py`
   - gets git release information
   - clones releases
 - 110-gitcount-tables.ipynb
-  - update the the release dates for this (cell 2) and the last (cell 6) meta release
   - builds change log for meta package
 
 ### Updating meta packages
