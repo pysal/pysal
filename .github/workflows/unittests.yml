@@ -27,13 +27,11 @@
        - uses: actions/checkout@v2
        - uses: conda-incubator/setup-miniconda@v2
          with:
-            miniconda-version: 'latest'
-            channels: conda-forge
-            channel-priority: true
-            auto-update-conda: false
-            auto-activate-base: false
-            environment-file: ${{ matrix.environment-file }}
-            activate-environment: test
+           environment-file: ${{ matrix.environment-file }}
+           miniforge-version: latest
+           miniforge-variant: Mambaforge
+           use-mamba: true
+           activate-environment: test
        - run: conda info --all
        - run: conda list
        - run: conda config --show-sources
