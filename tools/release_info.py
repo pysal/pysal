@@ -6,13 +6,20 @@ import os
 import json
 import urllib
 import re
+import yaml
 from urllib.request import urlopen
 from datetime import datetime, timedelta
 import requests
 
-PYSALVER = '2.6.0'
 
-USER = "sjsrey"
+with open('release.yaml', 'r') as stream:
+    info = yaml.safe_load(stream)
+
+release_date = info['release_date']
+PYSALVER = info['version']
+start_date = info['start_date']
+USER = info['user']
+
 
 ISO8601 = "%Y-%m-%dT%H:%M:%SZ"
 PER_PAGE = 100
