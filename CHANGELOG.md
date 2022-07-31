@@ -1,4 +1,147 @@
-# <v2.6.0> 2022-01-31
+# PySAL 2.7.0, 2022-07-31 
+
+Overall, there were 212 commits that closed 81 issues, together with 14 pull requests since our last release on 2022-02-01.
+
+
+## Highlights
+
+- The `segregation` package added a new set of measures, the global and local Distortion indices, based on [Bezenac et al](https://onlinelibrary.wiley.com/doi/10.1111/gean.12271) thanks to an excellent GSoC project by [Noah Bouchier](https://github.com/noahbouchier)
+- The `spreg` package added functionalities to estimate endogenous spatial regimes models based on [Anselin & Amaral (2021)](http://dx.doi.org/10.13140/RG.2.2.20310.78401)
+- A [paper](https://joss.theoj.org/papers/10.21105/joss.03330) highlighting the `spopt` package was published in the Journal of Open Source Software.
+
+
+<a name="changes-by-package"></a>
+## Changes by Package
+
+
+<a name="libpysal"></a>
+### libpysal
+* [#454:](https://github.com/pysal/libpysal/pull/454) revert shapely hard dependecy 
+* [#453:](https://github.com/pysal/libpysal/issues/453) Shapely Dependancy Added 
+* [#457:](https://github.com/pysal/libpysal/pull/457) [WIP] Filter holes from alpha shape returns 
+* [#461:](https://github.com/pysal/libpysal/pull/461) Bump actions/checkout from 2 to 3 
+* [#460:](https://github.com/pysal/libpysal/pull/460) Update release_and_publish.yml 
+* [#458:](https://github.com/pysal/libpysal/issues/458) Is 10.yaml missing in ci? 
+* [#459:](https://github.com/pysal/libpysal/pull/459) Update build_docs.yml 
+
+
+<a name="access"></a>
+### access
+* [#36:](https://github.com/pysal/access/pull/36) key error from #34 
+* [#28:](https://github.com/pysal/access/issues/28) Raam outputs 
+* [#31:](https://github.com/pysal/access/issues/31) release + upload workflow failure 
+* [#33:](https://github.com/pysal/access/pull/33) bump to v1.1.7 
+* [#32:](https://github.com/pysal/access/pull/32) update gitcount tool for access 
+* [#30:](https://github.com/pysal/access/pull/30) Update setup.py 
+* [#29:](https://github.com/pysal/access/issues/29) generate pypi token for Secret in GH 
+* [#26:](https://github.com/pysal/access/pull/26) Partial solution to #18 
+* [#18:](https://github.com/pysal/access/issues/18) [BUG]: demand estimation is incorrect with asymmetric travel matrices 
+
+
+
+<a name="segregation"></a>
+### segregation
+* [#199:](https://github.com/pysal/segregation/pull/199) move pandana into function-level import inside reproject_network 
+* [#198:](https://github.com/pysal/segregation/pull/198) pyproj pin 
+* [#197:](https://github.com/pysal/segregation/pull/197) add pin for minimum pyproj 
+* [#196:](https://github.com/pysal/segregation/pull/196) Sjr/docs 
+* [#192:](https://github.com/pysal/segregation/pull/192) add KLDivergence class 
+* [#195:](https://github.com/pysal/segregation/pull/195) feat: memory efficient and performant gini 
+* [#170:](https://github.com/pysal/segregation/pull/170) Memory efficient Gini 
+* [#194:](https://github.com/pysal/segregation/pull/194) add black to docs reqs 
+* [#193:](https://github.com/pysal/segregation/pull/193) remove deprecated modules 
+* [#185:](https://github.com/pysal/segregation/pull/185) Commit of `kl_divergence_profile` function and walkthrough notebook - following Google Summer of Code 2021 
+
+
+
+<a name="momepy"></a>
+### momepy
+* [#352:](https://github.com/pysal/momepy/pull/352) CI updates 
+* [#353:](https://github.com/pysal/momepy/pull/353) RLS: 0.5.3 changelog 
+* [#351:](https://github.com/pysal/momepy/pull/351) BUG: fix issue with blocks within another blocks 
+* [#350:](https://github.com/pysal/momepy/pull/350) TST: skip to avoid geopandas regression 
+* [#349:](https://github.com/pysal/momepy/pull/349) REF: simplify orientation calculation 
+* [#347:](https://github.com/pysal/momepy/pull/347) BUG: Fix angle computation in graph creation with dual approach 
+* [#346:](https://github.com/pysal/momepy/issues/346) BUG?: angular betweenness is returning strange results 
+* [#345:](https://github.com/pysal/momepy/pull/345) Update actions versions in tests.yaml 
+* [#344:](https://github.com/pysal/momepy/pull/344) Update release_to_pypi.yml 
+
+
+
+
+
+<a name="splot"></a>
+### splot
+* [#156:](https://github.com/pysal/splot/pull/156) [RLS] changelog for 1.1.5 
+* [#155:](https://github.com/pysal/splot/pull/155) add GHA for release 
+* [#154:](https://github.com/pysal/splot/issues/154) release GHA workflow 
+* [#153:](https://github.com/pysal/splot/pull/153) Streamlining Unittest CI workflow 
+* [#127:](https://github.com/pysal/splot/pull/127) [DOC] Add Codecov coverage testing 
+* [#152:](https://github.com/pysal/splot/pull/152) DOC: update docs for bibtex>1 
+* [#142:](https://github.com/pysal/splot/issues/142) Usage of tags in splot 
+* [#143:](https://github.com/pysal/splot/pull/143) Use versioneer 
+* [#151:](https://github.com/pysal/splot/pull/151) Drop Python 3.7 support 
+* [#150:](https://github.com/pysal/splot/pull/150) Import ABC from collections.abc for Python 3.10 compatibility. 
+* [#148:](https://github.com/pysal/splot/pull/148) DOC: change links from master to main 
+
+
+<a name="spopt"></a>
+### spopt
+* [#252:](https://github.com/pysal/spopt/pull/252) a 'final' proofing for JOSS manuscript 
+* [#248:](https://github.com/pysal/spopt/issues/248) JOSS manuscript clean up [2] 
+* [#250:](https://github.com/pysal/spopt/pull/250) clean out code block and add preexisting facility text 
+* [#213:](https://github.com/pysal/spopt/issues/213) K means heuristic test failure (3.10) 
+* [#249:](https://github.com/pysal/spopt/pull/249) address reference concerns, etc. [2] 
+* [#246:](https://github.com/pysal/spopt/issues/246) JOSS manuscript clean up [1] 
+* [#247:](https://github.com/pysal/spopt/pull/247) cleaning up JOSS manuscript -- references & links 
+* [#245:](https://github.com/pysal/spopt/pull/245) add spopt ref to JOSS paper 
+* [#242:](https://github.com/pysal/spopt/issues/242) General usability issues when working with coverage models 
+* [#240:](https://github.com/pysal/spopt/issues/240) Consider documenting class properties 
+* [#243:](https://github.com/pysal/spopt/pull/243) Document locate class properties 
+* [#244:](https://github.com/pysal/spopt/pull/244) build(deps): bump actions/setup-python from 3 to 4 
+* [#233:](https://github.com/pysal/spopt/issues/233) PuLP: cannot execute glpsol.exe when 
+* [#241:](https://github.com/pysal/spopt/issues/241) Consider documenting units for the `max_coverage` parameter of MCLP/LSCP.from_geodataframe 
+* [#237:](https://github.com/pysal/spopt/issues/237) issue with predefined facilities results? 
+* [#239:](https://github.com/pysal/spopt/pull/239) Check feasibility following solution attempt 
+* [#238:](https://github.com/pysal/spopt/issues/238) checking for model feasibility following solve 
+* [#235:](https://github.com/pysal/spopt/pull/235) UBDC acknowledgement 
+* [#232:](https://github.com/pysal/spopt/issues/232) ERROR: Package 'spopt' requires a different Python: 3.6.9 not in '>=3.7' 
+* [#231:](https://github.com/pysal/spopt/pull/231) Add predefined locations to coverage models 
+* [#229:](https://github.com/pysal/spopt/pull/229) build(deps): bump codecov/codecov-action from 2 to 3 
+* [#228:](https://github.com/pysal/spopt/pull/228) Components 
+* [#227:](https://github.com/pysal/spopt/pull/227) Components fix 
+* [#226:](https://github.com/pysal/spopt/pull/226) doc: update policy options for maxp 
+* [#224:](https://github.com/pysal/spopt/issues/224) islands argument ignored in skater 
+* [#223:](https://github.com/pysal/spopt/pull/223) policy for multiple components in maxp 
+* [#225:](https://github.com/pysal/spopt/pull/225) Fix skater islands kwarg being ignored 
+* [#221:](https://github.com/pysal/spopt/pull/221) mclp and lscp jupyter notebooks using osrm routing 
+* [#222:](https://github.com/pysal/spopt/issues/222) MCLP with optional Capacity of Facilities Constraint 
+* [#220:](https://github.com/pysal/spopt/pull/220) Bump actions/checkout from 2 to 3 
+* [#219:](https://github.com/pysal/spopt/pull/219) bump actions/setup-python from 2 to 3 
+* [#209:](https://github.com/pysal/spopt/issues/209) Cut release for meta 
+* [#217:](https://github.com/pysal/spopt/issues/217) Factoring in existing facilities 
+* [#216:](https://github.com/pysal/spopt/pull/216) build(deps): bump actions/github-script from 5 to 6 
+* [#214:](https://github.com/pysal/spopt/pull/214) Region docs 
+
+<a name="contributors"></a>
+## Contributors
+
+Many thanks to all of the following individuals who contributed to this release:
+
+
+ - Eli Knaap
+ - Germano Barcelos
+ - James Gaboardi
+ - Jamie Saxon
+ - Karthikeyan Singaravelan
+ - Levi John Wolf
+ - Martin Fleischmann
+ - Serge Rey
+ - Stefanie Lumnitz
+ - Timothy Ellersiek
+
+
+# PySAL v2.6.0, 2022-01-31
 PySAL 2.6.0 represents 6 months of enhancements, bug-fixes, widening
 of test coverage, and improved documentation.  All users are
 encouraged to upgrade to this version as there are numerous
@@ -202,7 +345,7 @@ Many thanks to all of the following individuals who contributed to this release:
  - Serge Rey
 
 
-# <v2.5.0> 2021-07-31
+# PySAL v2.5.0, 2021-07-31
 
 PySAL 2.5.0 represents 6 months of enhancements, bug-fixes, widening of test coverage, and improved documentation. All users are encouraged to upgrade to this version as there are numerous optimizations as well as new features (see below) that have been implemented.
 
@@ -522,7 +665,7 @@ Many thanks to all of the following individuals who contributed to this release:
  - Xin Feng
 
 
-# <v2.4.0> 2021-01-31
+# PySAL v2.4.0, 2021-01-31
 PySAL 2.4.0 represents 6 months of enhancements, bug-fixes, widening of test
 coverage, and improved documentation. Three Google Summer of Code projects made
 substantial contributions to this release (see below). All users are encouraged
@@ -1054,7 +1197,7 @@ Many thanks to all of the following individuals who contributed to this release:
  - Xin Feng
  - Ziqi Li
 
-# v<2.3.0>, 2020-07-30
+# PySAL 2.3.0, 2020-07-30
 
 PySAL 2.3.0 represents 6 months of enhancements, bug-fixes, widening of test coverage, and improved documentation. All users are encouraged to upgrade to this version as there are numerous optimizations as well as new features (see below) that have been implemented.
 
@@ -1496,9 +1639,9 @@ Thanks to all the individuals who have contributed to this release:
 - Wei Kang
 
 
-# v<2.2.0>, 2020-01-31
+# PySAL 2.2.0, 2020-01-31
 
-PySAL 2.2.0represents 6 months of enhancements, bug-fixes, widening of test coverage, and improved documentation. All users are encouraged to upgrade to this version as there are numerous optimizations as well as new features (see below) that have been implemented.
+PySAL 2.2.0 represents 6 months of enhancements, bug-fixes, widening of test coverage, and improved documentation. All users are encouraged to upgrade to this version as there are numerous optimizations as well as new features (see below) that have been implemented.
 
 ## Major Highlights of PySAL 2.2.0
 
@@ -2146,8 +2289,7 @@ Overall, there were 646 commits that closed 163 issues, together with 105 pull r
 </table>
 
 
-
-# v<2.1.0>, 2019-07-29
+# PySAL 2.1.0, 2019-07-29
 
 PySAL 2.1.0 represents 6 months of enhancements, bug-fixes, widening of test coverage, and improved documentation. All users are encouraged to upgrade to this version as there are numerous optimizations as well as new features (see below) that have been implemented.
 
@@ -2991,7 +3133,7 @@ Overall, there were 992 commits that closed 261 issues, together with 173 pull r
 
 
 
-# v<2.0.0>, 2019-01-30
+# PySAL 2.0.0, 2019-01-30
 
 
 This release represents over 15 months of hard work on PySAL. It brings major transitions in the project together with many new enhancements, improved documentation, and many bug fixes and optimizations.
@@ -3881,7 +4023,7 @@ Overall, there were 1636 commits that closed 368 issues, together with 236 pull 
 
 
 
-# v<1.14.3>, 2017-11-2
+# PySAL 1.14.3, 2017-11-2
 
 
 GitHub stats for 2017/09/23 - 2017/11/02 
@@ -4278,7 +4420,7 @@ Issues (14):
 * :ghissue:`779`: DistanceBand include the point itself as neighbor
 
 
-# v<1.11.1>, 2016-04-01
+# PySAL 1.11.1, 2016-04-01
 
 We closed a total of 62 issues, 20 pull requests and 42 regular issues;
 this is the full list (generated with the script 
@@ -4352,7 +4494,7 @@ Issues (42):
 * :ghissue:`735`: Dev in sync with master for 1.11
 * :ghissue:`734`: Release 1.11
 
-# v<1.11.0>, 2016-01-27
+# PySAL 1.11.0, 2016-01-27
 
 GitHub stats for 2015/07/29 - 2016/01/27
 
@@ -4472,7 +4614,7 @@ Issues (53):
 * :ghissue:`680`: Rel1.10
 
 
-# v<1.10.0>, 2015-07-29
+# PySAL 1.10.0, 2015-07-29
 
 GitHub stats for 2015/01/31 - 2015/07/29
 
@@ -4669,7 +4811,7 @@ Issues (98):
 * :ghissue:`565`: Bsetup
 
 
-# v<1.9.1>, 2015-01-31
+# PySAL 1.9.1, 2015-01-31
 
 GitHub stats for 2015/01/30 - 2015/01/31 
 
@@ -4702,9 +4844,9 @@ Issues (5):
 * :ghissue:`561`: Rolling over to 1.10
 
 
-v<1.9.0>, 2015-01-30
+# PySAL 1.9.0, 2015-01-30
 
-# GitHub stats for 2014/07/25 - 2015/01/30 
+## GitHub stats for 2014/07/25 - 2015/01/30 
 
 These lists are automatically generated, and may be incomplete or contain duplicates.
 
@@ -4846,7 +4988,7 @@ Issues (69):
 * :ghissue:`503`: Grid for landing page
 
 
-# v<1.8.0>, 2014-07-25
+# PySAL 1.8.0, 2014-07-25
 
 GitHub stats for 2014/01/29 - 2014/07/25 
 
@@ -5034,7 +5176,7 @@ Issues (100):
 * :ghissue:`388`: update testing procedures docs
 * :ghissue:`402`: release changes
 
-# v<1.7.0>, 2014-01-29
+# PySAL 1.7.0, 2014-01-29
 
 36d268f Philip Stephens -Merge pull request #400 from sjsrey/mldoc
 c2c4741 Serge Rey -Formatting ml docs
@@ -5212,7 +5354,7 @@ b1f009f Philip Stephens -Changes to release docs.
 028364a Sergio Rey -Update THANKS.txt
 94f5916 Sergio Rey -Update INSTALL.txt
 
-# v<1.6.0>, 2013-07-31
+# PySAL 1.6.0, 2013-07-31
 
 5fa9d09 darribas -silent_island_warning implemented for w_union
 6526c62 Sergio Rey -Update README.md
@@ -5465,7 +5607,7 @@ ab672c9 Serge Rey -- modified knnW to speed up dict construction
  * migration to github from svn
    svn2git http://pysal.googlecode.com/svn --authors ~/Dropbox/pysal/src/pysal/authors.txt --verbose
 
-# v<1.5.0>, 2013-01-31
+# PySAL 1.5.0, 2013-01-31
 
 2013-01-29 20:36  phil.stphns
 
@@ -5851,8 +5993,7 @@ ab672c9 Serge Rey -- modified knnW to speed up dict construction
 
 
 
-
-# v<1.4.0>, 2012-07-31
+# PySAL 1.4.0, 2012-07-31
 
 2013-01-31 
 
@@ -6338,7 +6479,7 @@ ab672c9 Serge Rey -- modified knnW to speed up dict construction
 	  doc/source/developers/py3k.txt,
 	  doc/source/developers/release.txt: Adding early docs on Python 3 support. Modifying release instructions.
 
-# v<1.3.0>, 2012-01-31
+# PySAL 1.3.0, 2012-01-31
 
     * core/IOHandlers/pyDbfIO.py: Addressing issue #186
 
@@ -6538,7 +6679,7 @@ ab672c9 Serge Rey -- modified knnW to speed up dict construction
     * esda/mapclassify.py: - more general fix for #166
 
 
-# v<1.2.0>, 2011-07-31
+# PySAL 1.2.0, 2011-07-31
 
     * pysal/spreg/user_output.py: Fix for bug 162
 
@@ -6626,7 +6767,7 @@ ab672c9 Serge Rey -- modified knnW to speed up dict construction
 
     * doc/source/developers/release.txt: Updated pypi instructions; PySAL available on the Python Package Index via download, easy_install, and pip. 
 
-# v<1.1.0>, 2011-01-31
+# PySAL 1.1.0, 2011-01-31
 
     * pysal/core/FileIO.py, pysal/core/IOHandlers/pyDbfIO.py: Added missing value support to FileIO. Warnings will be issued when missing values are found and the value will be set to pysal.MISSINGVALUE, currently None, but the user can change it as needed.
 
@@ -6661,23 +6802,17 @@ ab672c9 Serge Rey -- modified knnW to speed up dict construction
 
     * doc/source/developers/release.txt: - updating release cycle - release management
 
-# v<1.0.0>, 2010-07-31 -- Initial release.
+# PySAL 1.0.0, 2010-07-31 -- Initial release.
 The following 13 authors contributed 216 commits.
 
 * Dani Arribas-Bel
 * David Folch
-* Levi John Wolf
-* Levi Wolf
 * Philip Stephens
 * Serge Rey
-* Sergio Rey
 * Wei Kang
 * jlaura
 * levi.john.wolf@gmail.com
-* ljw
-* ljwolf
 * pedrovma
-
 
 We closed a total of 86 issues, 33 pull requests and 53 regular issues;
 this is the full list (generated with the script 
