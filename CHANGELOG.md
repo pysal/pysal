@@ -1,3 +1,292 @@
+# PySAL 23.01.0rc1 2023-01-23
+
+Overall, there were 479 commits that closed 205 issues, together with 19 pull requests since our last release on 2022-07-31.
+
+## Highlights
+
+- Version numbering has switched to YR.MO for the pysal meta-package release.
+- The `spopt` package added a LSCP-B formulation and the P-Dispersion model through the excellent GSoC project by [Erin Olson](https://erinrolson.github.io/2022/09/08/GSOC-fifth-blog.html)
+- `momepy` added enhanced approaches to network simplification through the GSoC project by [Greg Maya](https://github.com/gregmaya/gsoc2022_network_simpl) 
+
+
+## Changes by Package
+
+
+### libpysal
+* [#488:](https://github.com/pysal/libpysal/pull/488) type vs. geom_type with shapely 
+* [#487:](https://github.com/pysal/libpysal/issues/487) address ShapelyDeprecationWarning The 'type' attribute is... 
+* [#485:](https://github.com/pysal/libpysal/issues/485) allow for individual downloads and access to  remote urls in examples 
+* [#486:](https://github.com/pysal/libpysal/pull/486) ENH: more granularity in example handling 
+* [#482:](https://github.com/pysal/libpysal/pull/482) test against shapely prerelease 
+* [#479:](https://github.com/pysal/libpysal/issues/479) Creating Weights  from dataframe: IndexError: index 0 is out of bounds for axis 0 with size 0 
+* [#483:](https://github.com/pysal/libpysal/pull/483) Networkx3.0 
+* [#481:](https://github.com/pysal/libpysal/pull/481) Platformdirs 
+* [#478:](https://github.com/pysal/libpysal/pull/478) Updates warnings, etc. 
+* [#391:](https://github.com/pysal/libpysal/issues/391) Test failures with GEOS 3.9.0 
+
+
+### access
+
+
+### esda
+
+
+### giddy
+
+
+### inequality
+
+
+### pointpats
+
+
+### segregation
+
+
+### spaghetti
+* [#701:](https://github.com/pysal/spaghetti/issues/701) another `release_and_publish.yml` failures (due to `pyproject.toml`) 
+* [#703:](https://github.com/pysal/spaghetti/pull/703) Update Versioneer 
+* [#700:](https://github.com/pysal/spaghetti/pull/700) Update Versioneer 
+* [#702:](https://github.com/pysal/spaghetti/pull/702) add formatting exclusions properly in toml 
+* [#699:](https://github.com/pysal/spaghetti/pull/699) Update Versioneer 
+* [#698:](https://github.com/pysal/spaghetti/pull/698) Update Versioneer 
+* [#697:](https://github.com/pysal/spaghetti/pull/697) try versioneer action 
+* [#696:](https://github.com/pysal/spaghetti/pull/696) remove pygeos from environments 
+* [#680:](https://github.com/pysal/spaghetti/issues/680) remove `pygeos` 
+* [#695:](https://github.com/pysal/spaghetti/pull/695) supplement `setup.py` with a `name` kwarg for dep graph 
+* [#694:](https://github.com/pysal/spaghetti/issues/694) add `name` keyword in `setup.py` 
+* [#693:](https://github.com/pysal/spaghetti/pull/693) [pre-commit.ci] pre-commit autoupdate 
+* [#692:](https://github.com/pysal/spaghetti/pull/692) [pre-commit.ci] pre-commit autoupdate 
+* [#690:](https://github.com/pysal/spaghetti/pull/690) try pyproject.toml; remove setup.cfg 
+* [#691:](https://github.com/pysal/spaghetti/pull/691) [pre-commit.ci] pre-commit autoupdate 
+* [#689:](https://github.com/pysal/spaghetti/pull/689) [pre-commit.ci] pre-commit autoupdate 
+* [#688:](https://github.com/pysal/spaghetti/pull/688) adjust css for doc references 
+* [#687:](https://github.com/pysal/spaghetti/pull/687) esda master -> main 
+* [#686:](https://github.com/pysal/spaghetti/pull/686) update sphinx tooling, etc. 
+* [#685:](https://github.com/pysal/spaghetti/pull/685) 1st attempt for Python 3.11 testing 
+* [#684:](https://github.com/pysal/spaghetti/pull/684) [pre-commit.ci] pre-commit autoupdate 
+* [#683:](https://github.com/pysal/spaghetti/pull/683) Bump actions/setup-python from 3 to 4 
+* [#682:](https://github.com/pysal/spaghetti/pull/682) add linting in CI 
+* [#681:](https://github.com/pysal/spaghetti/issues/681) Try out pre-commit.ci 
+* [#679:](https://github.com/pysal/spaghetti/pull/679) Test against shapely pre-release 
+* [#678:](https://github.com/pysal/spaghetti/issues/678) test against `shapely==2.0b1` 
+* [#677:](https://github.com/pysal/spaghetti/pull/677) rerun notebooks 
+* [#676:](https://github.com/pysal/spaghetti/pull/676) Update warnings, etc. 
+
+
+### mgwr
+
+
+### momepy
+* [#422:](https://github.com/pysal/momepy/pull/422) RLS: add 0.5.4 changelog 
+* [#420:](https://github.com/pysal/momepy/pull/420) Add pyproject.toml file 
+* [#415:](https://github.com/pysal/momepy/issues/415) add a project.toml? 
+* [#419:](https://github.com/pysal/momepy/pull/419) proof README.md 
+* [#416:](https://github.com/pysal/momepy/pull/416) Scour docs for consistency, grammar, etc. 
+* [#414:](https://github.com/pysal/momepy/issues/414) scour docstrings (grammar, punctuation, etc.) 
+* [#418:](https://github.com/pysal/momepy/pull/418) GHA: update PyPI release action 
+* [#413:](https://github.com/pysal/momepy/pull/413) add flake8 and isort to CI 
+* [#412:](https://github.com/pysal/momepy/issues/412) enhance CI with flake8 & isort 
+* [#409:](https://github.com/pysal/momepy/pull/409) BUG: get_network_ratio non-interescting joins fix 
+* [#408:](https://github.com/pysal/momepy/issues/408) BUG: get_network_ratio returns wrong ID for non-intersecting join 
+* [#410:](https://github.com/pysal/momepy/pull/410) minor spelling and punctuation update 
+* [#392:](https://github.com/pysal/momepy/pull/392) ENH: roundabout_simplification() notebook example 
+* [#407:](https://github.com/pysal/momepy/pull/407) CI: test preprocessing part of user guide 
+* [#405:](https://github.com/pysal/momepy/pull/405) Run user guide tests with Python 3.10 
+* [#403:](https://github.com/pysal/momepy/pull/403) remove pygeos duplicate 
+* [#400:](https://github.com/pysal/momepy/pull/400) standardize pytest.approx() in testing files 
+* [#404:](https://github.com/pysal/momepy/pull/404) bump copyright year 
+* [#402:](https://github.com/pysal/momepy/issues/402) pygeos occurs twice in asv.conf.json - matrix 
+* [#401:](https://github.com/pysal/momepy/issues/401) test user guide against Python 3.10? 
+* [#399:](https://github.com/pysal/momepy/issues/399) both pytest.approx() and approx() used in testing 
+* [#398:](https://github.com/pysal/momepy/pull/398) Fix various warnings 
+* [#397:](https://github.com/pysal/momepy/issues/397) Fix thrown warnings in dimension, elements, diversity 
+* [#395:](https://github.com/pysal/momepy/pull/395) handle `All NaN slice` warning 
+* [#394:](https://github.com/pysal/momepy/issues/394) Handle `All-NaN slice encountered` warning in diversity.Percentiles() 
+* [#390:](https://github.com/pysal/momepy/issues/390) limit numpy version evaluations in diversity.Percentiles 
+* [#393:](https://github.com/pysal/momepy/pull/393) DOC: create preprocessing section 
+* [#388:](https://github.com/pysal/momepy/issues/388) suppress warnings in dimensions.StreetProfile() 
+* [#389:](https://github.com/pysal/momepy/pull/389) handle scenarios leading to dimensions.StreetProfile() warnings 
+* [#391:](https://github.com/pysal/momepy/pull/391) Rabs geom 
+* [#386:](https://github.com/pysal/momepy/issues/386) numpy. nanpercentile() has a renamed keyword 
+* [#383:](https://github.com/pysal/momepy/issues/383) update .append method for dataframes 
+* [#382:](https://github.com/pysal/momepy/pull/382) REF: remove deprecated pandas append 
+* [#384:](https://github.com/pysal/momepy/pull/384) REF: replace append with concat 
+* [#387:](https://github.com/pysal/momepy/pull/387) address numpy.nanpercentile warning 
+* [#385:](https://github.com/pysal/momepy/pull/385) DOC: temporarily pin theme 
+* [#371:](https://github.com/pysal/momepy/pull/371) ENH: geometry-based simplification of roundabouts 
+* [#379:](https://github.com/pysal/momepy/pull/379) Added warning for gdp_to_nx if geometries are not LineStrings 
+* [#378:](https://github.com/pysal/momepy/pull/378) BUG: make coins independent of gdf index 
+* [#373:](https://github.com/pysal/momepy/pull/373) DOC: compat with latest sphinx pydata theme 
+* [#362:](https://github.com/pysal/momepy/issues/362) DOC: broken colours with new pydata_sphinx_theme 
+
+
+### spglm
+
+
+### spint
+
+
+### spreg
+* [#108:](https://github.com/pysal/spreg/pull/108) update gitcount and conf.py 
+* [#107:](https://github.com/pysal/spreg/pull/107) update workflows/ci 
+* [#100:](https://github.com/pysal/spreg/pull/100) update tools/gitcount notebook 
+* [#105:](https://github.com/pysal/spreg/pull/105) Fixing failed tests for new release 
+* [#104:](https://github.com/pysal/spreg/pull/104) Version update 
+
+
+### spvcm
+
+
+### tobler
+
+
+### mapclassify
+* [#165:](https://github.com/pysal/mapclassify/pull/165) Update Versioneer 
+* [#167:](https://github.com/pysal/mapclassify/pull/167) Try skipping certain files with `isort` 
+* [#166:](https://github.com/pysal/mapclassify/pull/166) update master/main link issue 
+* [#164:](https://github.com/pysal/mapclassify/pull/164) Update Versioneer 
+* [#163:](https://github.com/pysal/mapclassify/pull/163) Update infrastructure (actions) 
+* [#162:](https://github.com/pysal/mapclassify/issues/162) GHA for updating `versioneer`  
+* [#161:](https://github.com/pysal/mapclassify/issues/161) update branch of gh-action-pypi-publish 
+* [#37:](https://github.com/pysal/mapclassify/issues/37) Add VBA functionality 
+* [#159:](https://github.com/pysal/mapclassify/pull/159) [pre-commit.ci] pre-commit autoupdate 
+* [#158:](https://github.com/pysal/mapclassify/pull/158) [pre-commit.ci] pre-commit autoupdate 
+* [#157:](https://github.com/pysal/mapclassify/pull/157) [pre-commit.ci] pre-commit autoupdate 
+* [#156:](https://github.com/pysal/mapclassify/pull/156) [pre-commit.ci] pre-commit autoupdate 
+* [#142:](https://github.com/pysal/mapclassify/issues/142) `MaxP.update()` – bins used by not defined 
+* [#155:](https://github.com/pysal/mapclassify/pull/155) Remove `update` method from `MaxP` 
+* [#154:](https://github.com/pysal/mapclassify/pull/154) Use `libpysal.fuzzy_contiguity()` in `greedy` 
+* [#148:](https://github.com/pysal/mapclassify/issues/148) swap greedy. _geos_sw() for libpysal.fuzzy_contiguity 
+* [#135:](https://github.com/pysal/mapclassify/pull/135) Thorough scouring of docs + doc build infrastructure 
+* [#141:](https://github.com/pysal/mapclassify/issues/141) love and care for docstrings, etc. 
+* [#152:](https://github.com/pysal/mapclassify/pull/152) ENH: addressing #145 
+* [#153:](https://github.com/pysal/mapclassify/pull/153) remove spaces after table string title 
+* [#145:](https://github.com/pysal/mapclassify/issues/145) remove spaces from title of classifier table string 
+* [#150:](https://github.com/pysal/mapclassify/pull/150) Switch to pytest 
+* [#146:](https://github.com/pysal/mapclassify/issues/146) convert from `unittest` to `pytest` 
+* [#147:](https://github.com/pysal/mapclassify/pull/147) improve warnings and exceptions 
+* [#140:](https://github.com/pysal/mapclassify/issues/140) warn or raise vs. print statements for unexpected behavior 
+* [#151:](https://github.com/pysal/mapclassify/pull/151) [pre-commit.ci] pre-commit autoupdate 
+* [#149:](https://github.com/pysal/mapclassify/issues/149) silence warnings option when `k` classes not possible? 
+* [#144:](https://github.com/pysal/mapclassify/pull/144) update GHA for CI 
+* [#143:](https://github.com/pysal/mapclassify/pull/143) remove _table_string() method 
+* [#139:](https://github.com/pysal/mapclassify/issues/139) remove old/redundant MapClassifier._table_string() method 
+* [#138:](https://github.com/pysal/mapclassify/pull/138) Bump actions/checkout from 2 to 3 
+* [#137:](https://github.com/pysal/mapclassify/pull/137) Bump codecov/codecov-action from 2 to 3 
+* [#136:](https://github.com/pysal/mapclassify/pull/136) update release action, etc. 
+* [#105:](https://github.com/pysal/mapclassify/issues/105) Fix changelog builder to give proper attribution 
+* [#134:](https://github.com/pysal/mapclassify/pull/134) updating branch in badges on README 
+* [#133:](https://github.com/pysal/mapclassify/pull/133) resolves #132 
+* [#132:](https://github.com/pysal/mapclassify/issues/132) update binder environment 
+* [#129:](https://github.com/pysal/mapclassify/issues/129) ``RuntimeWarning: invalid value encountered in double_scalars`` 
+* [#131:](https://github.com/pysal/mapclassify/pull/131) ENH: handle invariant arrays 
+* [#112:](https://github.com/pysal/mapclassify/issues/112) `plot` doesn't work for pooled classifications 
+* [#130:](https://github.com/pysal/mapclassify/issues/130) change default branch from master to main 
+* [#128:](https://github.com/pysal/mapclassify/pull/128) [MAINT] lint & format repo; update CI; handle DeprWarns, etc. 
+
+
+### splot
+
+
+### spopt
+* [#344:](https://github.com/pysal/spopt/pull/344) Add `requirements_notebooks.txt` to MANIFEST 
+* [#343:](https://github.com/pysal/spopt/issues/343) The requirementes notebook is missing from the MANIFEST.in 
+* [#342:](https://github.com/pysal/spopt/pull/342) Update Versioneer 
+* [#340:](https://github.com/pysal/spopt/pull/340) add versioneer action 
+* [#339:](https://github.com/pysal/spopt/issues/339) add a GHA for updating `versioneer`  
+* [#338:](https://github.com/pysal/spopt/pull/338) Update `release_and_publish.yml` 
+* [#337:](https://github.com/pysal/spopt/issues/337) update branch of `gh-action-pypi-publish` 
+* [#336:](https://github.com/pysal/spopt/pull/336) [BUG] bounds for client assignment variables 
+* [#328:](https://github.com/pysal/spopt/issues/328) [BUG] client assignment variable bounds for CLSCP-SO 
+* [#329:](https://github.com/pysal/spopt/pull/329) Clean up the implementation of the capacitated LSCP 
+* [#320:](https://github.com/pysal/spopt/issues/320) clean up CLSCP-SO implementation 
+* [#335:](https://github.com/pysal/spopt/pull/335) polish up docstrings, etc. in skater.py 
+* [#333:](https://github.com/pysal/spopt/pull/333) [BUG] `affinity` in Skater spanning forest 
+* [#332:](https://github.com/pysal/spopt/issues/332) customize tqdm progress bar in Skater 
+* [#321:](https://github.com/pysal/spopt/issues/321) [BUG] using `affinity` in `skater.SpanningForest` 
+* [#334:](https://github.com/pysal/spopt/pull/334) doc build env correction 
+* [#330:](https://github.com/pysal/spopt/pull/330) Update sphinx requirement from <=4.5.0 to <6.2.0 
+* [#309:](https://github.com/pysal/spopt/pull/309) workaround for cascading references in docs 
+* [#327:](https://github.com/pysal/spopt/pull/327) Update sphinx requirement from <=4.5.0 to <6.1.0 
+* [#324:](https://github.com/pysal/spopt/pull/324) individual `locate` test, tqdm, & bare minimal testing env 
+* [#323:](https://github.com/pysal/spopt/issues/323) test against a minimal / bare bones environment  
+* [#322:](https://github.com/pysal/spopt/issues/322) add `tqdm` as on optional req 
+* [#318:](https://github.com/pysal/spopt/issues/318) break out `test_locate.py` 
+* [#234:](https://github.com/pysal/spopt/issues/234) Factoring in Facility Capacities 
+* [#319:](https://github.com/pysal/spopt/pull/319) Streamline redundant parameter passing in constraint constructors 
+* [#317:](https://github.com/pysal/spopt/issues/317) streamline variable and constraint creation 
+* [#7:](https://github.com/pysal/spopt/issues/7) input is not sanitised before it is used 
+* [#316:](https://github.com/pysal/spopt/pull/316) Fix CLSCP-SO bugs and add tests 
+* [#315:](https://github.com/pysal/spopt/issues/315) raise if demand > capacity in CLSCP-SO 
+* [#314:](https://github.com/pysal/spopt/issues/314) [BUG] service radius threshold not respected in CLSCP-SO 
+* [#273:](https://github.com/pysal/spopt/pull/273) Facility capacity for LSCP 
+* [#313:](https://github.com/pysal/spopt/pull/313) [pre-commit.ci] pre-commit autoupdate 
+* [#307:](https://github.com/pysal/spopt/pull/307) doc work and formatting continued (random_region, util, ward) 
+* [#312:](https://github.com/pysal/spopt/pull/312) expose SPENC kwargs 
+* [#310:](https://github.com/pysal/spopt/issues/310) remove external `spenc` from CI envs 
+* [#172:](https://github.com/pysal/spopt/issues/172) Allow passing all keywords into Spenc 
+* [#305:](https://github.com/pysal/spopt/pull/305) utilize `BaseSpOptExactSolver` 
+* [#306:](https://github.com/pysal/spopt/pull/306) Update sphinx requirement from <=4.5.0 to <5.4.0 
+* [#302:](https://github.com/pysal/spopt/pull/302) start of doc work – focusing on `locate` docs 
+* [#304:](https://github.com/pysal/spopt/issues/304) update locate images & add tutorial links 
+* [#300:](https://github.com/pysal/spopt/issues/300) doc work and cleanup -- add locate formulations to docstrings 
+* [#296:](https://github.com/pysal/spopt/pull/296) New attributes & functionality for `locate` models 
+* [#287:](https://github.com/pysal/spopt/issues/287) calculate `get_percentage()` within ``MCLP.solve(results=True)`` 
+* [#286:](https://github.com/pysal/spopt/issues/286) calculate `get_mean_distance()` within ``PMedian.solve(results=True)`` 
+* [#285:](https://github.com/pysal/spopt/issues/285) remove BaseOutputMixin from PDispersion 
+* [#283:](https://github.com/pysal/spopt/issues/283) get_backup_percentage method for LSCP-B 
+* [#282:](https://github.com/pysal/spopt/issues/282) maybe set solver as attribute in LSCPB? 
+* [#267:](https://github.com/pysal/spopt/issues/267) pre-defined facilities for all location models? 
+* [#301:](https://github.com/pysal/spopt/pull/301) [pre-commit.ci] pre-commit autoupdate 
+* [#294:](https://github.com/pysal/spopt/pull/294) Region-k-means seed 
+* [#213:](https://github.com/pysal/spopt/issues/213) K means heuristic test failure 
+* [#297:](https://github.com/pysal/spopt/issues/297) keep or remove RegionMixin 
+* [#215:](https://github.com/pysal/spopt/issues/215) maximum-coverage-location package 
+* [#293:](https://github.com/pysal/spopt/pull/293) remove pip install in notebooks 
+* [#290:](https://github.com/pysal/spopt/issues/290) more issues with binder for locate notebooks 
+* [#292:](https://github.com/pysal/spopt/pull/292) Drop Py37, update binders, & test future shapely dev 
+* [#291:](https://github.com/pysal/spopt/issues/291) update shapely_dev testing 
+* [#284:](https://github.com/pysal/spopt/issues/284) drop testing/support for Python 3.7 
+* [#288:](https://github.com/pysal/spopt/pull/288) Update/cleanup/standardize notebooks 
+* [#289:](https://github.com/pysal/spopt/issues/289) test `spopt` against the `shapely==2.0b1` 
+* [#276:](https://github.com/pysal/spopt/issues/276) P-Median Problem Tutorial Binder example 
+* [#269:](https://github.com/pysal/spopt/issues/269) update docs for new location models 
+* [#57:](https://github.com/pysal/spopt/issues/57) Throws an error when silhoutte coefficients for two clusters are the same 
+* [#187:](https://github.com/pysal/spopt/issues/187) The dissimilarity parameter should be able to accept a distance/dissimilarity matrix as an alternative to a callable distance function 
+* [#188:](https://github.com/pysal/spopt/pull/188) [WIP] allow for precomputed distance matrices 
+* [#263:](https://github.com/pysal/spopt/issues/263) LSCP  Notebook Plots  
+* [#21:](https://github.com/pysal/spopt/issues/21) differentiating spatial clusterers 
+* [#281:](https://github.com/pysal/spopt/issues/281) comparing the LSCP and LSCP-B results 
+* [#278:](https://github.com/pysal/spopt/issues/278) AttributeError: type object 'FacilityModelBuilder' has no attribute 'add_maximized_min_variable' 
+* [#279:](https://github.com/pysal/spopt/pull/279) testing overhaul, etc 
+* [#260:](https://github.com/pysal/spopt/issues/260) GSoC 2022 Interfaces for Consistent API Design 
+* [#277:](https://github.com/pysal/spopt/pull/277) .coverage in .gitignore 
+* [#265:](https://github.com/pysal/spopt/issues/265) Add .coverage to .gitignore 
+* [#268:](https://github.com/pysal/spopt/pull/268) P dispersion 
+* [#275:](https://github.com/pysal/spopt/pull/275) Update typo in p-median example 
+* [#259:](https://github.com/pysal/spopt/pull/259) LSCP-B 
+* [#271:](https://github.com/pysal/spopt/pull/271) Lscpb formulation 
+* [#270:](https://github.com/pysal/spopt/issues/270) LSCP-B formulation? 
+* [#272:](https://github.com/pysal/spopt/pull/272) Rewrite LSCPB formulation 
+
+## Contributors
+
+Many thanks to all of the following individuals who contributed to this release:
+
+
+ - Andres Morfin Veytia
+ - Erin Olson
+ - Germano Barcelos
+ - Greg Maya
+ - James Gaboardi
+ - Levi John Wolf
+ - Martin Fleischmann
+ - Nick Bearman
+ - Pedro Amaral
+ - Serge Rey
+
+
 # PySAL 2.7.0, 2022-07-31 
 
 Overall, there were 212 commits that closed 81 issues, together with 14 pull requests since our last release on 2022-02-01.
