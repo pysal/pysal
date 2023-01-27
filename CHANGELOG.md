@@ -6,11 +6,9 @@ Overall, there were 479 commits that closed 205 issues, together with 19 pull re
 
 - Version numbering has switched to YR.MO for the pysal meta-package release.
 - The `spopt` package added a LSCP-B formulation and the P-Dispersion model through the excellent GSoC project by [Erin Olson](https://erinrolson.github.io/2022/09/08/GSOC-fifth-blog.html)
-- `momepy` added enhanced approaches to network simplification through the GSoC project by [Greg Maya](https://github.com/gregmaya/gsoc2022_network_simpl) 
 
 
 ## Changes by Package
-
 
 ### libpysal
 * [#488:](https://github.com/pysal/libpysal/pull/488) type vs. geom_type with shapely 
