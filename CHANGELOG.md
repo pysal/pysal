@@ -1,4 +1,4 @@
-# PySAL 23.01.0rc1 2023-01-23
+# PySAL 23.01, 2023-01-30
 
 Overall, there were 479 commits that closed 205 issues, together with 19 pull requests since our last release on 2022-07-31.
 
@@ -6,11 +6,10 @@ Overall, there were 479 commits that closed 205 issues, together with 19 pull re
 
 - Version numbering has switched to YR.MO for the pysal meta-package release.
 - The `spopt` package added a LSCP-B formulation and the P-Dispersion model through the excellent GSoC project by [Erin Olson](https://erinrolson.github.io/2022/09/08/GSOC-fifth-blog.html)
-- `momepy` added enhanced approaches to network simplification through the GSoC project by [Greg Maya](https://github.com/gregmaya/gsoc2022_network_simpl) 
+
 
 
 ## Changes by Package
-
 
 ### libpysal
 * [#488:](https://github.com/pysal/libpysal/pull/488) type vs. geom_type with shapely 
@@ -190,6 +189,7 @@ Overall, there were 479 commits that closed 205 issues, together with 19 pull re
 
 
 ### spopt
+* [#276:](https://github.com/pysal/spopt/issues/276) P-Median Problem Tutorial Binder example 
 * [#344:](https://github.com/pysal/spopt/pull/344) Add `requirements_notebooks.txt` to MANIFEST 
 * [#343:](https://github.com/pysal/spopt/issues/343) The requirementes notebook is missing from the MANIFEST.in 
 * [#342:](https://github.com/pysal/spopt/pull/342) Update Versioneer 
@@ -250,7 +250,6 @@ Overall, there were 479 commits that closed 205 issues, together with 19 pull re
 * [#284:](https://github.com/pysal/spopt/issues/284) drop testing/support for Python 3.7 
 * [#288:](https://github.com/pysal/spopt/pull/288) Update/cleanup/standardize notebooks 
 * [#289:](https://github.com/pysal/spopt/issues/289) test `spopt` against the `shapely==2.0b1` 
-* [#276:](https://github.com/pysal/spopt/issues/276) P-Median Problem Tutorial Binder example 
 * [#269:](https://github.com/pysal/spopt/issues/269) update docs for new location models 
 * [#57:](https://github.com/pysal/spopt/issues/57) Throws an error when silhoutte coefficients for two clusters are the same 
 * [#187:](https://github.com/pysal/spopt/issues/187) The dissimilarity parameter should be able to accept a distance/dissimilarity matrix as an alternative to a callable distance function 
@@ -268,7 +267,7 @@ Overall, there were 479 commits that closed 205 issues, together with 19 pull re
 * [#259:](https://github.com/pysal/spopt/pull/259) LSCP-B 
 * [#271:](https://github.com/pysal/spopt/pull/271) Lscpb formulation 
 * [#270:](https://github.com/pysal/spopt/issues/270) LSCP-B formulation? 
-* [#272:](https://github.com/pysal/spopt/pull/272) Rewrite LSCPB formulation 
+* [#272:](https://github.com/pysal/spopt/pull/272) Rewrite LSCPB formulation
 
 ## Contributors
 
@@ -299,11 +298,9 @@ Overall, there were 212 commits that closed 81 issues, together with 14 pull req
 - A [paper](https://joss.theoj.org/papers/10.21105/joss.03330) highlighting the `spopt` package was published in the Journal of Open Source Software.
 
 
-<a name="changes-by-package"></a>
 ## Changes by Package
 
 
-<a name="libpysal"></a>
 ### libpysal
 * [#454:](https://github.com/pysal/libpysal/pull/454) revert shapely hard dependecy 
 * [#453:](https://github.com/pysal/libpysal/issues/453) Shapely Dependancy Added 
@@ -314,7 +311,6 @@ Overall, there were 212 commits that closed 81 issues, together with 14 pull req
 * [#459:](https://github.com/pysal/libpysal/pull/459) Update build_docs.yml 
 
 
-<a name="access"></a>
 ### access
 * [#36:](https://github.com/pysal/access/pull/36) key error from #34 
 * [#28:](https://github.com/pysal/access/issues/28) Raam outputs 
@@ -328,7 +324,6 @@ Overall, there were 212 commits that closed 81 issues, together with 14 pull req
 
 
 
-<a name="segregation"></a>
 ### segregation
 * [#199:](https://github.com/pysal/segregation/pull/199) move pandana into function-level import inside reproject_network 
 * [#198:](https://github.com/pysal/segregation/pull/198) pyproj pin 
@@ -343,7 +338,6 @@ Overall, there were 212 commits that closed 81 issues, together with 14 pull req
 
 
 
-<a name="momepy"></a>
 ### momepy
 * [#352:](https://github.com/pysal/momepy/pull/352) CI updates 
 * [#353:](https://github.com/pysal/momepy/pull/353) RLS: 0.5.3 changelog 
@@ -359,7 +353,6 @@ Overall, there were 212 commits that closed 81 issues, together with 14 pull req
 
 
 
-<a name="splot"></a>
 ### splot
 * [#156:](https://github.com/pysal/splot/pull/156) [RLS] changelog for 1.1.5 
 * [#155:](https://github.com/pysal/splot/pull/155) add GHA for release 
@@ -374,7 +367,6 @@ Overall, there were 212 commits that closed 81 issues, together with 14 pull req
 * [#148:](https://github.com/pysal/splot/pull/148) DOC: change links from master to main 
 
 
-<a name="spopt"></a>
 ### spopt
 * [#252:](https://github.com/pysal/spopt/pull/252) a 'final' proofing for JOSS manuscript 
 * [#248:](https://github.com/pysal/spopt/issues/248) JOSS manuscript clean up [2] 
@@ -412,7 +404,6 @@ Overall, there were 212 commits that closed 81 issues, together with 14 pull req
 * [#216:](https://github.com/pysal/spopt/pull/216) build(deps): bump actions/github-script from 5 to 6 
 * [#214:](https://github.com/pysal/spopt/pull/214) Region docs 
 
-<a name="contributors"></a>
 ## Contributors
 
 Many thanks to all of the following individuals who contributed to this release:
@@ -443,12 +434,10 @@ implemented.
 
 >Momepy is a library for quantitative analysis of urban form - urban morphometrics
 
-<a name="changes-by-package"></a>
 ## Changes by Package
 
 Overall, there were 181 commits that closed 99 issues since our last release on 2021-07-31.
 
-<a name="libpysal"></a>
 ### libpysal
 * [#450:](https://github.com/pysal/libpysal/pull/450) DOCS: Gabriel and related enhancements 
 * [#449:](https://github.com/pysal/libpysal/pull/449) DOC: Update docs for Gabriel and related enhancements 
@@ -477,27 +466,21 @@ Overall, there were 181 commits that closed 99 issues since our last release on 
 * [#422:](https://github.com/pysal/libpysal/pull/422) dense 
 
 
-<a name="access"></a>
 ### access
 
 
-<a name="esda"></a>
 ### esda
 
 
-<a name="giddy"></a>
 ### giddy
 
 
-<a name="inequality"></a>
 ### inequality
 
 
-<a name="pointpats"></a>
 ### pointpats
 
 
-<a name="segregation"></a>
 ### segregation
 * [#184:](https://github.com/pysal/segregation/pull/184) prepare v2.1.0 
 * [#35:](https://github.com/pysal/segregation/issues/35) parallelization simulation based indexes and inference wrappers 
@@ -505,7 +488,6 @@ Overall, there were 181 commits that closed 99 issues since our last release on 
 * [#183:](https://github.com/pysal/segregation/pull/183) performance enhancements 
 
 
-<a name="spaghetti"></a>
 ### spaghetti
 * [#657:](https://github.com/pysal/spaghetti/pull/657) attempt Python 3.10 in CI 
 * [#638:](https://github.com/pysal/spaghetti/issues/638) Update changelog tooling to report contributors 
@@ -521,11 +503,9 @@ Overall, there were 181 commits that closed 99 issues since our last release on 
 * [#373:](https://github.com/pysal/spaghetti/issues/373) [ENH] Explore a "two workflows" style format 
 
 
-<a name="mgwr"></a>
 ### mgwr
 
 
-<a name="momepy"></a>
 ### momepy
 * [#331:](https://github.com/pysal/momepy/pull/331) RLS: add 0.5.2 changelog 
 * [#330:](https://github.com/pysal/momepy/pull/330) BUG: fix FormFactor 
@@ -565,35 +545,27 @@ Overall, there were 181 commits that closed 99 issues since our last release on 
 * [#290:](https://github.com/pysal/momepy/pull/290) small typo in gdf_to_nx 
 
 
-<a name="spglm"></a>
 ### spglm
 
 
-<a name="spint"></a>
 ### spint
 
 
-<a name="spreg"></a>
 ### spreg
 
 
-<a name="spvcm"></a>
 ### spvcm
 
 
-<a name="tobler"></a>
 ### tobler
 
 
-<a name="mapclassify"></a>
 ### mapclassify
 
 
-<a name="splot"></a>
 ### splot
 
 
-<a name="spopt"></a>
 ### spopt
 * [#205:](https://github.com/pysal/spopt/pull/205) install pulp for docs build 
 * [#196:](https://github.com/pysal/spopt/issues/196) rework JOSS manuscript 
@@ -618,7 +590,6 @@ Overall, there were 181 commits that closed 99 issues since our last release on 
 * [#61:](https://github.com/pysal/spopt/issues/61) solvers and solver APIs 
 * [#18:](https://github.com/pysal/spopt/issues/18) new alternative to pulp 
 
-<a name="contributors"></a>
 ## Contributors
 
 Many thanks to all of the following individuals who contributed to this release:
