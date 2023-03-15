@@ -133,7 +133,7 @@ Citing PySAL
 
 If you use PySAL in a scientific publication, we would appreciate citations to the following paper:
 
-  `PySAL: A Python Library of Spatial Analytical Methods <http://journal.srsa.org/ojs/index.php/RRS/article/view/134/85>`_, *Rey, S.J. and L. Anselin*, Review of Regional Studies 37, 5-27 2007.
+  `PySAL: A Python Library of Spatial Analytical Methods <https://doi.org/10.52324/001c.8285>`_, *Rey, S.J. and L. Anselin*, Review of Regional Studies 37, 5-27 2007.
 
   Bibtex entry::
 
