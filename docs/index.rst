@@ -106,9 +106,9 @@ PySAL development is hosted on github_.
 
 Discussions of development occurs on the
 `developer list <http://groups.google.com/group/pysal-dev>`_
-as well as gitter_.
+as well as discord_.
 
-.. _gitter : https://gitter.im/pysal/pysal?
+.. _discord : https://discord.gg/BxFTEPFFZn
 
 ****************
 Getting Involved
