@@ -3,7 +3,7 @@
 Tests](https://github.com/pysal/pysal/workflows/Unit%20Tests/badge.svg?branch=master)](https://github.com/pysal/pysal/actions?query=workflow%3A%22Unit+Tests%22)
 [![PyPI version](https://badge.fury.io/py/pysal.svg)](https://badge.fury.io/py/pysal)
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/pysal/badges/version.svg)](https://anaconda.org/conda-forge/pysal)
-[![Gitter](https://img.shields.io/gitter/room/pysal/pysal)](https://gitter.im/pysal/pysal)
+[![Discord](https://img.shields.io/badge/Discord-join%20chat-7289da?style=flat&logo=discord&logoColor=cccccc&link=https://discord.gg/BxFTEPFFZn)](https://discord.gg/BxFTEPFFZn)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![DOI](https://zenodo.org/badge/8295380.svg)](https://zenodo.org/badge/latestdoi/8295380)
 
@@ -117,7 +117,7 @@ As of version 2.0.0, PySAL is now a collection of affiliated geographic data sci
 
 Development is hosted on [github](https://github.com/pysal/pysal).
 
-Discussions of development as well as help for users occurs on the [developer list](http://groups.google.com/group/pysal-dev) as well as [gitter](https://gitter.im/pysal/pysal?).
+Discussions of development as well as help for users occurs on the [developer list](http://groups.google.com/group/pysal-dev) as well as in [PySAL's Discord channel](https://discord.gg/BxFTEPFFZn).
 
 # Getting Involved
 
