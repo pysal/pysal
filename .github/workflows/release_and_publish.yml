@@ -43,7 +43,7 @@
          run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
  
        - name: Release
-         uses: softprops/action-gh-release@v1
+         uses: softprops/action-gh-release@v2
          with:
            body: ${{ steps.changetxt.outputs.text }}
            body_path: ${{ steps.changetxt.outputs.path }}
