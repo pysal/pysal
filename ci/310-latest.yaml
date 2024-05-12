@@ -24,6 +24,8 @@ dependencies:
   - rasterio
   - rasterstats
   - pytest
+  - pytest-cov
+  - pytest-xdist
   - coverage
   - coveralls
   - ipywidgets

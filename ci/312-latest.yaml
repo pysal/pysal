@@ -11,6 +11,7 @@ dependencies:
   - matplotlib
   - pytest
   - pytest-cov
+  - pytest-xdist
   - coverage
   - codecov
   # optional
