@@ -32,7 +32,7 @@ dependencies:
     - git+https://github.com/pysal/esda.git
     - git+https://github.com/pysal/giddy.git
     - git+https://github.com/pysal/inequality.git
-    - git+https://github.com/pysal/momempy.git
+    - git+https://github.com/pysal/momepy.git
     - git+https://github.com/pysal/pointpats.git
     - git+https://github.com/pysal/segregation.git
     - git+https://github.com/pysal/spaghetti.git
