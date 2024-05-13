@@ -56,12 +56,6 @@
            environment-file: ${{ matrix.environment-file }}
            micromamba-version: 'latest'
         
-       ##############################################################################
-       #- name: install pulp via pip
-       #  run: |
-       #    pip install pulp
-       #    pulptest
-       ##############################################################################
        
        - name: environment info
          run: |
@@ -70,6 +64,10 @@
        
        - name: spatial versions
          run: 'python -c "import geopandas; geopandas.show_versions();"'
+       
+       - name: install pysal
+         run: |
+           pip install -e .
        
        - name: run tests
          run: |
