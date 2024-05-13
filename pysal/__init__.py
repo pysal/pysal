@@ -53,7 +53,11 @@ viz: geovisualization
   splot               -- Geovisualization for pysal
 
 """
-from .base import memberships, federation_hierarchy, versions
+from .base import memberships, federation_hierarchy
 
-from . import _version
-__version__ = _version.get_versions()['version']
+import contextlib
+from importlib.metadata import PackageNotFoundError, version
+
+
+with contextlib.suppress(PackageNotFoundError):
+        __version__ = version("libpysal")
