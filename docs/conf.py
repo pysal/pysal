@@ -47,6 +47,8 @@ extensions = [  #'sphinx_gallery.gen_gallery',
     "matplotlib.sphinxext.plot_directive",
 ]
 
+bibtex_bibfiles = ["_static/references.bib"]
+
 intersphinx_mapping = {
     'libpysal': ('https://pysal.org/libpysal/', (None, 'libpysal-inv.txt'))
     }
