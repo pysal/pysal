@@ -19,7 +19,7 @@ jobs:
     strategy:
       matrix:
         os: ['ubuntu-latest']
-        environment-file: [ci/312.yaml]
+        environment-file: [ci/312-latest.yaml]
         experimental: [false]
     defaults:
       run:
