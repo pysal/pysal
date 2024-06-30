@@ -1,0 +1,142 @@
+[build-system]
+requires = ["setuptools>=61.0", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+
+[project]
+name = "pysal"
+dynamic = ["version"]
+authors = [ # in alphabetical order
+    { name = "Serge Rey", email = "sjsrey@gmail.com" },
+    { name = "Levi Wolf", email = "levi.john.wolf@gmail.com" },
+]
+maintainers = [{ name = "PySAL Developers" }]
+license = { text = "BSD 3-Clause" }
+description = "Meta Package for PySAL - A library of spatial analysis functions"
+keywords = ["spatial statistics", "spatial graphs"]
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: GIS",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "beautifulsoup4>=4.10",
+    "geopandas>=0.10.0",
+    "numpy>=1.22",
+    "packaging>=22",
+    "pandas>=1.4",
+    "platformdirs>=2.0.2",
+    "requests>=2.27",
+    "scipy>=1.8",
+    "shapely>=2.0.1",
+    "scikit-learn>=1.1",
+    "libpysal>=4.9.2",
+    "access>=1.1.9",
+    "esda>=2.5.1",
+    "giddy>=2.3.5",
+    "inequality>=1.0.1",
+    "pointpats>=2.4.0",
+    "segregation>=2.5",
+    "spaghetti>=1.7.5.post1",
+    "mgwr>=2.2.1",
+    "momepy>=0.7.0",
+    "spglm>=1.1.0",
+    "spint>=1.0.7",
+    "spreg>=1.4.2",
+    "spvcm>=0.3.0",
+    "tobler>=0.11.2",
+    "mapclassify>=2.6.1",
+    "splot>=1.1.5.post1",
+    "spopt>=0.6.0",
+]
+
+[project.urls]
+Home = "https://github.com/pysal/pysal/"
+Repository = "https://github.com/pysal/pysal"
+
+[project.optional-dependencies]
+plus = [
+    "joblib>=1.2",
+    "networkx>=2.7",
+    "numba>=0.55",
+    "pyarrow>=7.0",
+    "sqlalchemy>=2.0",
+    "xarray>=2022.3",
+    "zstd",
+]
+dev = [
+    "pre-commit",
+    "ruff",
+    "watermark",
+]
+docs = [
+    "mkdocs-jupyter",
+    "myst-parser",
+    "nbsphinx",
+    "numpydoc",
+    "pandoc",
+    "sphinx",
+    "sphinxcontrib-bibtex",
+    "sphinx_bootstrap_theme",
+]
+tests = [
+    "codecov",
+    "geodatasets>=2023.3.0",
+    "matplotlib>=3.6",
+    "pytest",
+    "pytest-mpl",
+    "pytest-cov",
+    "pytest-xdist",
+]
+
+[tool.setuptools.packages.find]
+include = ["pysal", "pysal.*"]
+
+[tool.ruff]
+line-length = 88
+lint.select = ["E", "F", "W", "I", "UP", "N", "B", "A", "C4", "SIM", "ARG"]
+target-version = "py310"
+exclude = ["pysal/tests/*", "docs/*"]
+[tool.ruff.lint.per-file-ignores]
+"*__init__.py" = [
+    "F401",  # imported but unused
+    "F403",  # star import; unable to detect undefined names
+]
+
+
+[tool.coverage.run]
+source = ["./pysal"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "raise NotImplementedError",
+    "except ModuleNotFoundError:",
+    "except ImportError",
+]
+ignore_errors = true
+omit = ["pysal/tests/*", "docs/conf.py"]
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore:The numba package is used",
+    "ignore:numba cannot be imported",
+    "ignore:Numba not imported",
+    "ignore:The weights matrix is not fully connected",
+    "ignore:You are trying to build a full W object from",
+    "ignore:Multiple layers detected. Using first layer as default",
+    "ignore:Geometry is in a geographic CRS",
+    "ignore:`use_index` defaults to False",
+    "ignore:Objects based on the `Geometry` class will deprecated",
+    "ignore:PolygonLocator is deprecated",
+    "ignore:SegmentGrid is deprecated",
+    "ignore:In the next version of pysal, observations with no neighbors",
+    "ignore:divide by zero encountered",
+    "ignore:invalid value encountered",
+    "ignore:Passing a SingleBlockManager", # https://github.com/geopandas/geopandas/issues/3060
+    "ignore:Passing a BlockManager", # https://github.com/geopandas/geopandas/issues/3060
+]

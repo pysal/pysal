@@ -2,7 +2,7 @@ name: test
 channels:
   - conda-forge
 dependencies:
-  - python=3.6
+  - python=3.11
   - six
   - pyyaml
   - deprecated
@@ -24,6 +24,8 @@ dependencies:
   - rasterio
   - rasterstats
   - pytest
+  - pytest-cov
+  - pytest-xdist
   - coverage
   - coveralls
   - ipywidgets

@@ -2,30 +2,30 @@ name: test
 channels:
   - conda-forge
 dependencies:
-  - python=3.8
-  - pip
-  - numpy>=1.17.0
-  - rtree
-  - sphinxcontrib-bibtex
-  - sphinx_bootstrap_theme
-  - numpydoc
+  - python=3.10
+  - six
+  - pyyaml
+  - deprecated
+  # required
+  # testing
   - matplotlib
-  - python-dateutil<=2.8.0
-  - scipy
-  - pandas
-  - seaborn
-  - matplotlib
-  - descartes
-  - palettable
-  - statsmodels
+  - pytest
+  - pytest-cov
+  - coverage
+  - codecov
+  # optional
+  - bokeh
   - scikit-learn
-  - geopandas
+  - geopandas=0.12
   - quantecon
   - rtree
   - tqdm
+  - quilt3
   - rasterio
   - rasterstats
   - pytest
+  - pytest-cov
+  - pytest-xdist
   - coverage
   - coveralls
   - ipywidgets
@@ -44,14 +44,18 @@ dependencies:
   - tobler>=0.2.1
   - spint
   - spreg
+  - spvcm
   - mgwr
   - segregation
   - pointpats
   - giddy
   - mapclassify
-  - splot
-  - spvcm
+  - seaborn
+  - descartes
+  - numba
+  - momepy
   - inequality
   - access
+  - splot
   - pip:
-      - doc2dash
+    - spopt
