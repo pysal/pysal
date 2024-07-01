@@ -17,6 +17,7 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import sys, os
+import pysal
 import sphinx_bootstrap_theme
 
 

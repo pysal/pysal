@@ -56,5 +56,11 @@ dependencies:
   - inequality
   - access
   - splot
+  # docs
+  - nbsphinx
+  - numpydoc
+  - sphinx
+  - sphinxcontrib-bibtex
+  - sphinx_bootstrap_theme
   - pip:
     - spopt
