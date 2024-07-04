@@ -3,6 +3,7 @@ Grab most recent releases tagged on Github for PySAL subpackages
 
 """
 import os
+import subprocess
 import json
 import urllib
 import re
@@ -97,25 +98,37 @@ def get_pypi_info():
     return releases
 
 
-
 def clone_masters():
-     clone_releases(tag='master')
- 
+    clone_releases(tag='master')
+
+
 def clone_mains():
     clone_releases(tag='main')
 
-def clone_defaults(packages=packages):
+
+def clone_defaults(packages=packages, cwd=os.getcwd()):
     for package in packages:
-        url = f"https://api.github.com/repos/pysal/{package}"
-        data = json.load(urllib.request.urlopen(url))
-        branch = data['default_branch']
-        pkgstr = (
-            f'git clone --branch {branch}'
-            f' https://github.com/pysal/{package}.git'
-            f' tmp/{package}'
-            )
-        print(pkgstr)
-        os.system(pkgstr)
+        directory_path = f"tmp/{package}"
+
+        # if already cloned, we pull, otherwise clone
+        if os.path.isdir(directory_path):
+            print(f"{directory_path} exists, git pull required")
+            os.chdir(directory_path)
+            result = subprocess.run(["git", "pull"], capture_output=True, text=True)
+            print("Output:\n", result.stdout)
+            print("Errors:\n", result.stderr)
+            os.chdir(cwd)
+        else:
+            url = f"https://api.github.com/repos/pysal/{package}"
+            data = json.load(urllib.request.urlopen(url))
+            branch = data['default_branch']
+            pkgstr = (
+                f'git clone --branch {branch}'
+                f' https://github.com/pysal/{package}.git'
+                f' tmp/{package}'
+                )
+            print(pkgstr)
+            os.system(pkgstr)
 
 
 def clone_releases(tag=None):
