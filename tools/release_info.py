@@ -258,5 +258,3 @@ def get_meta_releases():
     url = "https://api.github.com/repos/pysal/pysal/releases"
     return get_url(url)
 
-
-
