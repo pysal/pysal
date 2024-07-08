@@ -1,0 +1,11 @@
+files: "pysal\/"
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: "v0.5.0"
+    hooks:
+      - id: ruff
+      - id: ruff-format
+
+ci:
+  autofix_prs: false
+  autoupdate_schedule: quarterly
