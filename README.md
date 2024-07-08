@@ -1,13 +1,11 @@
 # Python Spatial Analysis Library
-[![Unit
-Tests](https://github.com/pysal/pysal/workflows/Unit%20Tests/badge.svg?branch=master)](https://github.com/pysal/pysal/actions?query=workflow%3A%22Unit+Tests%22)
+
+[![Continuous Integration](https://github.com/pysal/pysal/actions/workflows/testing.yml/badge.svg)](https://github.com/pysal/pysal/actions/workflows/testing.yml)
 [![PyPI version](https://badge.fury.io/py/pysal.svg)](https://badge.fury.io/py/pysal)
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/pysal/badges/version.svg)](https://anaconda.org/conda-forge/pysal)
 [![Discord](https://img.shields.io/badge/Discord-join%20chat-7289da?style=flat&logo=discord&logoColor=cccccc&link=https://discord.gg/BxFTEPFFZn)](https://discord.gg/BxFTEPFFZn)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![DOI](https://zenodo.org/badge/8295380.svg)](https://zenodo.org/badge/latestdoi/8295380)
-
-
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/8590583/89052459-bad41a00-d323-11ea-9be2-beb7d0d1b7ea.png" width="300" height="300" />
