@@ -36,8 +36,9 @@
        - name: Install Dependencies
          run: |
            python -m pip install --upgrade pip
-           pip install setuptools wheel twine jupyter urllib3 pandas pyyaml
-           python setup.py sdist bdist_wheel
+           pip install build twine jupyter urllib3 pandas pyyaml
+           python -m build
+           twine check --strict dist/*
  
        - name: Get the tag name
          run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
