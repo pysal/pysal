@@ -1,5 +1,0 @@
-exclude rtd.txt
-include *.txt pysal/COPYING
-include README.md
-include versioneer.py
-include pysal/_version.py
