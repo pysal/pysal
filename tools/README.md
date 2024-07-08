@@ -19,6 +19,7 @@
   - clones package repos if new, else git pulls each package
 - 110-gitcount-tables.ipynb
   - builds change log for meta package
+  - updates the pins for the pysal packages in `../pyproject.toml`
 
 ### Updating meta packages
 - edit the file `changes.md` and incorporate into the release notes on github
