@@ -1,6 +1,6 @@
 # Python Spatial Analysis Library
-[![Unit
-Tests](https://github.com/pysal/pysal/workflows/Unit%20Tests/badge.svg?branch=main)](https://github.com/pysal/pysal/actions?query=workflow%3A%22Unit+Tests%22)
+
+[![Continuous Integration](https://github.com/pysal/pysal/actions/workflows/testing.yml/badge.svg)](https://github.com/pysal/pysal/actions/workflows/testing.yml)
 [![PyPI version](https://badge.fury.io/py/pysal.svg)](https://badge.fury.io/py/pysal)
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/pysal/badges/version.svg)](https://anaconda.org/conda-forge/pysal)
 [![Discord](https://img.shields.io/badge/Discord-join%20chat-7289da?style=flat&logo=discord&logoColor=cccccc&link=https://discord.gg/BxFTEPFFZn)](https://discord.gg/BxFTEPFFZn)
