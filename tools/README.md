@@ -13,7 +13,7 @@
   of this release), `version`, and `user` in `release.yaml`
 
 ### Notebooks to run in sequence
-- frozen.ipynb creates `frozen.txt` in this dir that can be hand edited if needed before integrating those versions into to `pysal/requirements.txt`. It also generates `pysal/pysal/frozen.py` which defines the package versions going into this release
+- frozen.ipynb creates `frozen.txt` in this dir that can be hand edited if needed before integrating those versions into to `pysal/pyproject.toml`. It also generates `pysal/pysal/frozen.py` which defines the package versions going into this release
 - 100-gitcount.ipynb
   - gets git release information
   - clones package repos if new, else git pulls each package
