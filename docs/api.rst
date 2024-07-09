@@ -8,10 +8,11 @@ API Reference
 :mod:`pysal.lib`: PySAL Core 
 =============================
 
-* `weights: Spatial Weights <https://pysal.org/libpysal/api.html#spatial-weights>`_
 * `cg: Computational Geometry <https://pysal.org/libpysal/api.html#cg-computational-geometry>`_
-* `io: Input-Output <https://pysal.org/libpysal/api.html#io>`_ 
 * `examples: Example datasets <https://pysal.org/libpysal/api.html#io>`_
+* `graph: Graph class encoding spatial weights matrices <https://pysal.org/libpysal/api.html#graph>`_
+* `io: Input-Output <https://pysal.org/libpysal/api.html#io>`_ 
+* `weights: Spatial Weights <https://pysal.org/libpysal/api.html#spatial-weights>`_
 
 :mod:`pysal.explore`: Exploratory Spatial Data Analysis
 =======================================================
