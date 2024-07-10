@@ -32,7 +32,6 @@ API Reference
 * `spint: Spatial Interaction Modeling <https://spint.readthedocs.io/en/latest/api.html>`_
 * `spopt: Spatial Optimization <https://pysal.org/spopt/api.html>`_
 * `spreg: Spatial Regression and Econometrics <https://spreg.readthedocs.io/en/latest/api.html>`_
-* `spvcm: Spatial Varying Component Models <https://github.com/pysal/spvcm>`_
 * `tobler: Areal Interpolation and Dasymetric Mapping <https://pysal.org/tobler/api.html>`_
 
 :mod:`pysal.viz`: Geovisualization

@@ -43,7 +43,6 @@ dependencies:
   - tobler>=0.2.1
   - spint
   - spreg
-  - spvcm
   - mgwr
   - segregation
   - pointpats
