@@ -12,14 +12,15 @@
 - Update relevant data on `start_date` (day after last release), `release_date` (day
   of this release), `version`, and `user` in `release.yaml`
 
-### Notebooks to run in sequence
-- frozen.ipynb creates `frozen.txt` in this dir that can be hand edited if needed before integrating those versions into to `pysal/pyproject.toml`. It also generates `pysal/pysal/frozen.py` which defines the package versions going into this release
-- 100-gitcount.ipynb
-  - gets git release information
-  - clones package repos if new, else git pulls each package
-- 110-gitcount-tables.ipynb
-  - builds change log for meta package
-  - updates the pins for the pysal packages in `../pyproject.toml`
+### Updating the changelog
+- `make` will run all the steps required to build the new change log
+
+For debugging purposes, the individual steps can be run using:
+- `make frozen` will get information about latest package releases
+- `make gitcount` will get issues and pulls closed for each package
+- `make changelog` will update the change log and write to `changes.md`
+  
+These require `release_info.py`
 
 ### Updating meta packages
 - edit the file `changes.md` and incorporate into the release notes on github
