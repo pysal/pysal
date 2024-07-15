@@ -3,8 +3,6 @@
 Installation
 ============
 
-As of version 2.0.0, PySAL supports python `3.6`_ and `3.7`_. Please make sure that you are
-operating in a python 3 environment.
 
 Installing with conda
 ---------------------
