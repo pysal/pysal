@@ -56,7 +56,6 @@ packages = [
     "spglm",
     "spint",
     "spreg",
-    "spvcm",
     "tobler",
     "mapclassify",
     "splot",
