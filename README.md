@@ -59,7 +59,17 @@ In contrast to `explore`, the `model` layer focuses on confirmatory analysis. In
 
 -   [spreg](https://pysal.org/spreg/) : `spreg` supports the estimation of classic and spatial econometric models. Currently it contains methods for estimating standard Ordinary Least Squares (OLS), Two Stage Least Squares (2SLS) and Seemingly Unrelated Regressions (SUR), in addition to various tests of homokestadicity, normality, spatial randomness, and different types of spatial autocorrelation. It also includes a suite of tests for spatial dependence in models with binary dependent variables.
 
--   [spvcm](https://github.com/pysal/spvcm) : `spvcm` provides a general framework for estimating spatially-correlated variance components models. This class of models allows for spatial dependence in the variance components, so that nearby groups may affect one another. It also also provides a general-purpose framework for estimating models using Gibbs sampling in Python, accelerated by the `numba` package.
+-   [spvcm](https://github.com/pysal/spvcm) : `spvcm` provides a general
+    framework for estimating spatially-correlated variance components
+    models. This class of models allows for spatial dependence in the variance
+    components, so that nearby groups may affect one another. It also also
+    provides a general-purpose framework for estimating models using Gibbs
+    sampling in Python, accelerated by the `numba` package. 
+
+	> ⚠️ **Warning:**
+	> spvcm has been archived and is planned for deprecation and removal in pysal 25.01.
+
+
 
 -   [tobler](http://pysal.org/tobler/) : `tobler` provides functionality for for areal interpolation and dasymetric mapping. Its name is an homage to the legendary geographer Waldo Tobler a pioneer of dozens of spatial analytical methods. `tobler` includes functionality for interpolating data using area-weighted approaches, regression model-based approaches that leverage remotely-sensed raster data as auxiliary information, and hybrid approaches.
 
