@@ -85,7 +85,7 @@ PySAL Components
 
 Details are available in the `PySAL api <api.html>`_.
 
-For background information see :cite:`pysal2007, rey2014PythonSpatial, anselin2014ModernSpatial, rey2019pysal, fotheringham2017multiscale, fleischmann_2019, cortes2019OpensourceFramework,  rey2020VisualAnalytics, Lumnitz2020, saxon2021OpenSoftware, rey_2021a, Gaboardi2021,rey2022PySALEcosystem,  spopt2022, rey2023GeographicData`.
+For background information see :cite:`pysal2007, rey2014PythonSpatial, anselin2014ModernSpatial, rey2019pysal, fotheringham2017multiscale, fleischmann_2019, cortes2019OpensourceFramework,  yu:2019, rey2020VisualAnalytics, Lumnitz2020, saxon2021OpenSoftware, rey_2021a, Gaboardi2021,rey2022PySALEcosystem,  spopt2022, rey2023GeographicData`.
 
 ***********
 Development
