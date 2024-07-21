@@ -61,7 +61,6 @@ dependencies:
   - numpydoc
   - sphinx
   - sphinxcontrib-bibtex
-  - sphinx_pydata_theme
-  - sphinx_design
   - pip:
     - spopt
+    - sphinx_design
