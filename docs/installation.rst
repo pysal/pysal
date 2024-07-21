@@ -3,40 +3,39 @@
 Installation
 ============
 
-As of version 2.0.0, PySAL supports python `3.6`_ and `3.7`_. Please make sure that you are
-operating in a python 3 environment.
+You can install the meta package `pysal` which results in all the packages in
+the `pysal` ecosystem being installed.
 
-Installing with conda
----------------------
-
-To install PySAL and all its dependencies, we recommend using the `conda`_ package
-manager. This can be obtained by installing the `Anaconda Distribution`_ (a free
-Python distribution for data science), or through miniconda (minimal
-distribution only containing Python and the conda package manager). 
-
-Using conda, PySAL can be installed as follows::
-
-  conda install --channel conda-forge pysal
+Alternatively, individual packages can be installed ala carte.
 
 
-Installing with pip
--------------------
+Installing the pysal meta package
+---------------------------------
+.. tab-set-code::
 
-PySAL is available on the `Python Package Index`_. Therefore, you can either
-install directly with `pip` from the command line::
+    .. code-block:: pip
 
-  pip install -U pysal
+        pip install pysal
 
+    .. code-block:: conda
 
-or download the source distribution (.tar.gz) and decompress it to your selected
-destination. Open a command shell and navigate to the decompressed folder.
-Type::
+	conda install --channel conda-forge pysal
 
-  pip install .
+Installing individual pysal packages
+------------------------------------
+A similar approach can be used to select one, or a subset, of pysal packages
+without having to install the entire ecosystem. For example, to install `esda`
+and `mapclassify`
 
-.. warning::
-   When installing with pip, you have to ensure that the required dependencies
-   for PySAL are installed on your operating system. Details on how to install these packages can be found in :ref:`dependencies`. Using conda (above) would avoid having to install the dependencies separately. 
+.. tab-set-code::
+
+    .. code-block:: pip
+
+        pip install esda mapclassify
+
+    .. code-block:: conda
+
+	conda install --channel conda-forge esda mapclassify
 
    
 
@@ -115,6 +114,3 @@ Note that this version is only receiving bug fixes. All new enhancements (post 2
 .. _numba: https://numba.pydata.org/numba-doc/dev/user/installing.html
 .. _numexpr: https://pypi.org/project/numexpr/
 .. _bokeh: https://bokeh.pydata.org/en/latest/docs/installation.html
-
-
-
