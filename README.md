@@ -70,6 +70,7 @@ In contrast to `explore`, the `model` layer focuses on confirmatory analysis. In
 	> spvcm has been archived and is planned for deprecation and removal in pysal 25.01.
 
 
+
 -   [tobler](http://pysal.org/tobler/) : `tobler` provides functionality for for areal interpolation and dasymetric mapping. Its name is an homage to the legendary geographer Waldo Tobler a pioneer of dozens of spatial analytical methods. `tobler` includes functionality for interpolating data using area-weighted approaches, regression model-based approaches that leverage remotely-sensed raster data as auxiliary information, and hybrid approaches.
 
 -   [access](https://pysal.org/access/) : `access` aims to make it easy for analysis to calculate measures of spatial accessibility. This work has traditionally had two challenges: [1] to calculate accurate travel time matrices at scale and [2] to derive measures of access using the travel times and supply and demand locations. `access` implements classic spatial access models, allowing easy comparison of methodologies and assumptions.

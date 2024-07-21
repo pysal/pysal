@@ -81,8 +81,9 @@ docs = [
     "numpydoc",
     "pandoc",
     "sphinx",
+    'sphinx_design',
     "sphinxcontrib-bibtex",
-    "sphinx_bootstrap_theme",
+    "sphinx_pydata_theme",
 ]
 tests = [
     "codecov",
