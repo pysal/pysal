@@ -2,7 +2,9 @@
 
 PySAL: Python Spatial Analysis Library
 ======================================
-
+PySAL is an open source
+cross-platform library for geospatial data science with an emphasis on
+geospatial vector data written in Python. 
 
 .. raw:: html
 
@@ -41,9 +43,7 @@ PySAL: Python Spatial Analysis Library
       </div>
     </div>
 
-PySAL is an open source
-cross-platform library for geospatial data science with an emphasis on
-geospatial vector data written in Python. It supports the development of
+PySAL supports the development of
 high level applications for spatial analysis, such as
 
 -   detection of spatial clusters, hot-spots, and outliers

@@ -18,7 +18,7 @@
 #
 import sys, os
 import pysal
-import sphinx_bootstrap_theme
+from datetime import datetime
 
 
 sys.path.insert(0, os.path.abspath("../"))
@@ -68,7 +68,9 @@ master_doc = "index"
 
 # General information about the project.
 project = "pysal"  # string of your project name, for example, 'giddy'
-copyright = "2018-, pysal developers"
+
+copyright = f"2007 - {datetime.now().year}, pysal developers (BSD License)"
+
 author = "pysal developers"
 
 # The version info for the project you're documenting, acts as replacement for
@@ -103,8 +105,7 @@ todo_include_todos = False
 # a list of builtin themes.
 #
 # html_theme = 'alabaster'
-html_theme = "bootstrap"
-html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
+html_theme = "pydata_sphinx_theme"
 html_title = "%s v%s Manual" % (project, version)
 
 # (Optional) Logo of your package. Should be small enough to fit the navbar (ideally 24x24).
@@ -113,8 +114,8 @@ html_title = "%s v%s Manual" % (project, version)
 
 # (Optional) PySAL favicon
 html_favicon = "_static/images/pysal_favicon.ico"
-
-
+html_logo = '_static/images/pysal_logo.png'
+icon_links_label = 'pysal'
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
@@ -166,6 +167,11 @@ html_theme_options = {
         ("References", "references"),
         ("Release Notes", "releases")
     ],
+    "logo": {
+                    "text": "PySAL",
+                    "image_light": "_static/images/pysal_logo_light.png",
+                    "image_dark": "_static/images/pysal_logo.png",
+    }
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
