@@ -39,8 +39,8 @@ jobs:
 
       - name: Install
         run: |
-	 pip install -e . --no-deps --force-reinstall
-         pip install sphinx_design
+	  pip install -e . --no-deps --force-reinstall
+          pip install sphinx_design
 
       - name: Make Docs
         run: cd docs; make html
