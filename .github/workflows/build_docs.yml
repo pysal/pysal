@@ -39,7 +39,7 @@ jobs:
 
       - name: Install
         run: |
-	  pip install -e . --no-deps --force-reinstall
+          pip install -e . --no-deps --force-reinstall
           pip install sphinx_design
 
       - name: Make Docs
