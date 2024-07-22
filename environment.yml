@@ -16,7 +16,6 @@ dependencies:
   - spglm>=1.0.8
   - spint>=1.0.7
   - spreg>=1.2.2
-  - spvcm>=0.3.0
   - tobler>=0.5.4
   - mapclassify>=2.4.2
   - splot>=.1.1.3
