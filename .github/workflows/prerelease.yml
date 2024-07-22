@@ -1,0 +1,48 @@
+name: Create Pre-release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  create-pre-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Check if the tag contains 'rc'
+        id: check_tag
+        run: |
+          if [[ "${GITHUB_REF##*/}" == *rc* ]]; then
+            echo "Tag contains rc"
+            echo "::set-output name=contains_rc::true"
+          else
+            echo "Tag does not contain rc"
+            echo "::set-output name=contains_rc::false"
+          fi
+
+      - name: Create pre-release
+        if: steps.check_tag.outputs.contains_rc == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG_NAME=${GITHUB_REF##*/}
+          RESPONSE=$(curl -X POST \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${GITHUB_REPOSITORY}/releases \
+            -d @- << EOF
+          {
+            "tag_name": "${TAG_NAME}",
+            "name": "${TAG_NAME}",
+            "body": "Pre-release ${TAG_NAME}",
+            "draft": false,
+            "prerelease": true
+          }
+          EOF
+          )
+
+          echo "$RESPONSE"
