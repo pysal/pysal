@@ -35,9 +35,9 @@ dependencies = [
     "scipy>=1.8",
     "shapely>=2.0.1",
     "scikit-learn>=1.1",
-    "libpysal>=4.11.0",
+    "libpysal>=4.12.0",
     "access>=1.1.9",
-    "esda>=2.5.1",
+    "esda>=2.6.0",
     "giddy>=2.3.5",
     "inequality>=1.0.1",
     "pointpats>=2.5.0",
@@ -80,8 +80,9 @@ docs = [
     "numpydoc",
     "pandoc",
     "sphinx",
+    'sphinx_design',
     "sphinxcontrib-bibtex",
-    "sphinx_bootstrap_theme",
+    "sphinx_pydata_theme",
 ]
 tests = [
     "codecov",
