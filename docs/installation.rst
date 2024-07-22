@@ -7,7 +7,7 @@ Installation
 You can install the meta package `pysal` which results in all the packages in
 the `pysal` ecosystem being installed.
 
-Alternatively, individual packages can be installed ala carte.
+Alternatively, individual packages can be installed a la carte.
 
 
 Installing the pysal meta package
