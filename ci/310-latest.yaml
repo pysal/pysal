@@ -25,7 +25,6 @@ dependencies:
   - bokeh
   - deprecated
   - dill
-  - fiona
   - geopandas
   - ipywidgets
   - matplotlib
