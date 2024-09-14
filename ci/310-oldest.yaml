@@ -17,6 +17,7 @@ dependencies:
   - spaghetti
   - splot
   - spint
+  - spopt
   - spreg
   - spvcm
   - tobler>=0.2.1
@@ -50,5 +51,3 @@ dependencies:
   - pytest-cov
   - pytest-xdist
   - pip:
-    # ecosystem
-    - spopt
