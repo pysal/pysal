@@ -32,7 +32,7 @@ jobs:
           fetch-depth: 0 # Fetch all history for all branches and tags.
 
       - name: Setup micromamba
-        uses: mamba-org/setup-micromamba@v1
+        uses: mamba-org/setup-micromamba@v2
         with:
           environment-file: ${{ matrix.environment-file }}
           micromamba-version: 'latest'
