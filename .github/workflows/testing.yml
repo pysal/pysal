@@ -82,4 +82,4 @@
            --cov-report xml .
        
        - name: codecov
-         uses: codecov/codecov-action@v4
+         uses: codecov/codecov-action@v5
