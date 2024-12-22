@@ -1,23 +1,25 @@
 name: pysal
 channels:
   - conda-forge
-  - defaults
 dependencies:
-  - python >=3.6
-  - libpysal>=4.3.5
-  - access>=1.1.1
+  - python>=3.10
+  # ecosystem
+  - access>=1.1.9
   - esda>=2.3.5
-  - giddy>=2.3.3
-  - inequality>=1.0.0
-  - pointpats>=2.2.0
-  - segregation>=1.5.0
-  - spaghetti>=1.5.6
-  - mgwr>=2.1.2
-  - spglm>=1.0.8
+  - giddy>=2.3.5
+  - inequality>=1.0.1
+  - libpysal>=4.12.0
+  - mapclassify>=2.7.0
+  - mgwr>=2.2.1
+  - momepy>=0.8.0
+  - pointpats>=2.5.0
+  - segregation>=2.5
+  - spaghetti>=1.7.6
+  - spglm>=1.1.0
   - spint>=1.0.7
-  - spreg>=1.2.2
-  - tobler>=0.5.4
-  - mapclassify>=2.4.2
-  - splot>=.1.1.3
-  - spopt>=0.0.5
+  - splot>=1.1.5.post1
+  - spopt>=0.6.1
+  - spreg>=1.5.0
+  - tobler>=0.11.3
+  # externel
   - urllib3 >=1.26
