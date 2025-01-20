@@ -115,4 +115,3 @@ Note that this version is only receiving bug fixes. All new enhancements (post 2
 .. _numba: https://numba.pydata.org/numba-doc/dev/user/installing.html
 .. _numexpr: https://pypi.org/project/numexpr/
 .. _bokeh: https://bokeh.pydata.org/en/latest/docs/installation.html
-.. _graph_installation: https://pysal.org/libpysal/installation.html
