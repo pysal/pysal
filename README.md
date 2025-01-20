@@ -88,6 +88,11 @@ The `viz` layer provides functionality to support the creation of geovisualisati
 
 -   [splot](https://splot.readthedocs.io/en/latest/) : `splot` provides statistical visualizations for spatial analysis. It methods for visualizing global and local spatial autocorrelation (through Moran scatterplots and cluster maps), temporal analysis of cluster dynamics (through heatmaps and rose diagrams), and multivariate choropleth mapping (through value-by-alpha maps. A high level API supports the creation of publication-ready visualizations
 
+-   [graph](https://pysal.org/libpysal/generated/libpysal.graph.Graph.html) : `graph` provides tools for creating, analyzing, and manipulating graph structures. It allows users to work with spatial networks, perform graph-based computations, and leverage graph algorithms to understand spatial relationships and patterns. This module enhances the capability of PySAL to handle complex spatial network analysis and supports various graph operations for spatial data.
+
+
+
+
 # Installation
 
 PySAL is available through [Anaconda](https://www.continuum.io/downloads) (in the defaults or conda-forge channel) We recommend installing PySAL from conda-forge:
