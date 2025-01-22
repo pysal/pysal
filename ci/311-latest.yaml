@@ -3,59 +3,49 @@ channels:
   - conda-forge
 dependencies:
   - python=3.11
-  - six
-  - pyyaml
-  - deprecated
-  # required
-  # testing
-  - matplotlib
-  - pytest
-  - pytest-cov
-  - coverage
-  - codecov
-  # optional
+  # ecosystem
+  - access
+  - esda
+  - giddy
+  - inequality
+  - libpysal
+  - mapclassify
+  - mgwr
+  - momepy
+  - pointpats
+  - segregation
+  - spaghetti
+  - splot
+  - spint
+  - spopt
+  - spreg
+  - spvcm
+  - tobler>=0.2.1
+  # external & optiopnal
   - bokeh
-  - scikit-learn
+  - deprecated
+  - dill
   - geopandas
+  - ipywidgets
+  - matplotlib
+  - numba
+  - pyyaml
   - quantecon
-  - rtree
-  - tqdm
   - quilt3
   - rasterio
   - rasterstats
-  - pytest
-  - pytest-cov
-  - pytest-xdist
-  - coverage
-  - coveralls
-  - ipywidgets
+  - rtree
+  - scikit-learn
+  - seaborn
+  - six
+  - tqdm
   - twine
   - urbanaccess
   - urllib3>=1.26
   - wheel
-  - dill
+  # testing
+  - codecov
+  - coverage
   - pytest
   - pytest-cov
-  - codecov
-  - bokeh
-  - libpysal
-  - esda
-  - spaghetti
-  - tobler>=0.2.1
-  - spint
-  - spreg
-  - spvcm
-  - mgwr
-  - segregation
-  - pointpats
-  - giddy
-  - mapclassify
-  - seaborn
-  - descartes
-  - numba
-  - momepy
-  - inequality
-  - access
-  - splot
-  - pip:
-    - spopt
+  - pytest-xdist

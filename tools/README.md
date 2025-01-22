@@ -12,6 +12,15 @@
 - Update relevant data on `start_date` (day after last release), `release_date` (day
   of this release), `version`, and `user` in `release.yaml`
 
+  If this is a release candidate, do not start the `version` string with `v` but
+  do add `rcX` ad the end of the string, where `X` is the number for the current
+  release candidate.
+  
+  If this a production release, the first character in `version` needs to b `v`
+  to ensure the publish and release workflow is run in the CI.
+  
+ 
+
 ### Updating the changelog
 - `make` will run all the steps required to build the new change log
 
@@ -22,9 +31,16 @@ For debugging purposes, the individual steps can be run using:
   
 These require `release_info.py`
 
-### Updating meta packages
+### Add and Commit
+- `git add ../pyproject.toml`
+- `git add release.yaml`
+- `git commit -m "REL: <version>"`
+
+ 
+### Create a tag and push upstream
+- `git tag <version>`
+- `git push upstream <version>`
+  
+
+### Updating meta package release notes
 - edit the file `changes.md` and incorporate into the release notes on github
-- solicit input from devs on highlights for the release notes (on github)
-- tag the release
-- push the tag
-- release on github
