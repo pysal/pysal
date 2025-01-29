@@ -8,7 +8,7 @@ federation_hierarchy = {
                 'pointpats', 'inequality',
                  'spaghetti', 'access', 'momepy'],
     'model': ['spreg', 'spglm', 'tobler', 'spint',
-              'mgwr', 'spvcm', 'access', 'spopt'],
+              'mgwr', 'access', 'spopt'],
     'viz': ['splot', 'mapclassify'],
     'lib': ['libpysal']
 }

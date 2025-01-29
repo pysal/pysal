@@ -18,6 +18,7 @@ lib: core algorithms, weights, and spatial data structures
 
   cg                  -- Computational Geometry
   examples            -- Example data sets
+  graph               -– Graph class encoding spatial weights matrices
   io                  -- Input/Output
   weights             -- Spatial Weights
 
@@ -41,7 +42,6 @@ model: spatial statistical models
   spint               -- Spatial interaction modeling
   spglm               -- Spatial general linear modeling
   spopt               -- Spatial optimization
-  spvcm               -- Spatial variance component models
   spreg               -- Spatial econometrics
   tobler              -- Spatial areal interpolation models
 
