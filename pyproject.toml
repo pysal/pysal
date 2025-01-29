@@ -48,7 +48,6 @@ dependencies = [
     "spglm>=1.1.0",
     "spint>=1.0.7",
     "spreg>=1.8.1",
-    "spvcm>=0.3.0",
     "tobler>=0.12.0",
     "mapclassify>=2.8.1",
     "splot>=1.1.7",
