@@ -16,7 +16,7 @@
   do add `rcX` ad the end of the string, where `X` is the number for the current
   release candidate.
   
-  If this a production release, the first charachter in `version` needs to b `v`
+  If this a production release, the first character in `version` needs to b `v`
   to ensure the publish and release workflow is run in the CI.
   
  
