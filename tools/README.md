@@ -43,4 +43,4 @@ These require `release_info.py`
   
 
 ### Updating meta package release notes
-- edit the file `changes.md` and incorporate into the release notes on github
+- edit the file `changelog.md` and incorporate into the release notes on github
