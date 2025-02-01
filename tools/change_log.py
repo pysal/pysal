@@ -275,7 +275,7 @@ line = ('Overall, there were {n_commits} commits that closed {n_issues} issues'
                                      since_date=start_date))
 
 
-with open('changes.md', 'w') as fout:
+with open('changelog.md', 'w') as fout:
     fout.write(line)
     fout.write("\n".join(lines))
     fout.write(get_tag("Contributors"))
