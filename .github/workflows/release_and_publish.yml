@@ -8,7 +8,7 @@ on:
   workflow_dispatch:  # Enables manual triggering from GH UI
     inputs:
       version:
-        description: Manual Unittest Run
+        description: Manual Release & Publish
         default: release+publish
         required: false
 
