@@ -9,7 +9,7 @@ on:
     inputs:
       version:
         description: Manual Unittest Run
-        default: test
+        default: release+publish
         required: false
 
 permissions:
