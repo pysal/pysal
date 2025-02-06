@@ -49,3 +49,10 @@ dependencies:
   - pytest
   - pytest-cov
   - pytest-xdist
+  # docs
+  - nbsphinx
+  - numpydoc
+  - sphinx
+  - sphinxcontrib-bibtex
+  - pydata-sphinx-theme
+  - sphinx-design
