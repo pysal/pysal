@@ -31,7 +31,7 @@ jobs:
       - name: Build the package
         run: python -m build
 
-      - name: Publish distribution � to PyPI
+      - name: Publish distribution to PyPI
         uses: pypa/gh-action-pypi-publish@master
         with:
           user: __token__
