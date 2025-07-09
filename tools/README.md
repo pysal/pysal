@@ -2,10 +2,10 @@
 
 ## Dependencies
 
-- [personal github token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line
-): store it in the file `token`
+- [personal github token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line): store it in the file `token`
 
 ## Instructions
+
 
 ### Updating package information
 - If any new packages have been added to the ecosystem update the `packages` list in `release.yaml` 
