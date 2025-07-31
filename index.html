@@ -1,110 +1,545 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+
+<html lang="en" data-content_root="./" >
+
   <head>
     <meta charset="utf-8" />
-    <title>Welcome to No Errors Test Project’s documentation! &#8212; No Errors Test Project  documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>PySAL: Python Spatial Analysis Library &#8212; pysal v25.7 Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/plot_directive.css?v=7f9a90b1" />
+    <link rel="stylesheet" type="text/css" href="_static/pysal-styles.css?v=f8dcc4ae" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=177ce5b8"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
+    <link rel="icon" href="_static/pysal_favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    <link rel="next" title="Installation" href="installation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="25.7" />
+  </head>
   
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-  </head><body>
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
   
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+<a class="navbar-brand logo" href="#">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/pysal_logo_light.png" class="logo__image only-light" alt=""/>
+    <img src="_static/pysal_logo.png" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">PySAL</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="references.html">
+    References
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
           
 
-          <div class="body" role="main">
-            
-  <div class="section" id="welcome-to-no-errors-test-project-s-documentation">
-<h1>Welcome to No Errors Test Project’s documentation!<a class="headerlink" href="#welcome-to-no-errors-test-project-s-documentation" title="Permalink to this headline">¶</a></h1>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="references.html">
+    References
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="pysal-python-spatial-analysis-library">
+<h1>PySAL: Python Spatial Analysis Library<a class="headerlink" href="#pysal-python-spatial-analysis-library" title="Link to this heading">#</a></h1>
+<p>PySAL is an open source
+cross-platform library for geospatial data science with an emphasis on
+geospatial vector data written in Python.</p>
+   <div class="container-fluid">
+     <div class="row equal-height">
+       <div class="col-sm-1 col-xs-hidden">
+       </div>
+       <div class="col-md-3 col-xs-12">
+           <a href="https://pysal.org/esda/notebooks/spatial_autocorrelation_for_areal_unit_data.html" class="thumbnail">
+               <img src="_static/images/prices.png" class="img-responsive center-block">
+               <div class="caption text-center">
+               <h6>Housing Prices Berlin</h6>
+               </div>
+           </a>
+       </div>
+       <div class="col-sm-3 col-xs-12">
+        <a href="http://nbviewer.jupyter.org/github/pysal/giddy/blob/main/notebooks/DirectionalLISA.ipynb" class="thumbnail">
+       <img src="_static/images/rose_conditional.png" class="img-responsive center-block">
+               <div class="caption text-center">
+               <h6>Rose diagram (directional LISAs)</h6>
+               </div>
+           </a>
+       </div>
+       <div class="col-sm-3 col-xs-12">
+<a href="https://nbviewer.org/github/pysal/libpysal/blob/main/docs/user-guide/weights/weights.ipynb" class="thumbnail">
+               <img src="_static/images/nonplanar.png"
+               class="img-responsive center-block">
+               <div class="caption text-center">
+               <h6>Visualizing Non Planar Neighbours
+               </h6>
+               </div>
+     </a>
+       </div>
+       <div class="col-sm-2 col-xs-hidden">
+       </div>
+     </div>
+   </div><p>PySAL supports the development of
+high level applications for spatial analysis, such as</p>
+<ul class="simple">
+<li><p>detection of spatial clusters, hot-spots, and outliers</p></li>
+<li><p>construction of graphs from spatial data</p></li>
+<li><p>spatial regression and statistical modeling on geographically
+embedded networks</p></li>
+<li><p>spatial econometrics</p></li>
+<li><p>exploratory spatio-temporal data analysis</p></li>
+</ul>
+</section>
+<section id="pysal-components">
+<h1>PySAL Components<a class="headerlink" href="#pysal-components" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p><strong>explore</strong> - modules to conduct exploratory analysis of spatial and spatio-temporal data, including statistical testing on points, networks, and
+polygonal lattices.  Also includes methods for spatial inequality,  distributional dynamics, and segregation.</p></li>
+<li><p><strong>viz</strong> - visualize patterns in spatial data to detect clusters,
+outliers, and hot-spots.</p></li>
+<li><p><strong>model</strong> - model spatial relationships in data with a variety of
+linear, generalized-linear, generalized-additive, and nonlinear
+models.</p></li>
+<li><p><strong>lib</strong> - solve a wide variety of computational geometry problems:</p>
+<ul>
+<li><p>graph construction from polygonal lattices, lines, and points.</p></li>
+<li><p>construction and interactive editing of spatial weights matrices
+&amp; graphs</p></li>
+<li><p>computation of alpha shapes, spatial indices, and
+spatial-topological relationships</p></li>
+<li><p>reading and writing of sparse graph data, as well as pure python
+readers of spatial vector data.</p></li>
+</ul>
+</li>
+</ul>
 <div class="toctree-wrapper compound">
 </div>
+<p>Details are available in the <a class="reference external" href="api.html">PySAL api</a>.</p>
+<p>For background information see <span id="id1">[<a class="reference internal" href="references.html#id64" title="Luc Anselin and Sergio J. Rey. Modern Spatial Econometrics in Practice: A Guide to GeoDa, GeoDaSpace and PySAL. GeoDa Press, 2014.">AR14</a>, <a class="reference internal" href="references.html#id5" title="Renan Xavier Cortes, Sergio Rey, Elijah Knaap, and Levi John Wolf. An open-source framework for non-spatial and spatial segregation measures: the PySAL segregation module. Journal of Computational Social Science, November 2019. doi:10.1007/s42001-019-00059-3.">CRKW19</a>, <a class="reference internal" href="references.html#id17" title="Xin Feng, Germano Barcelos, James D. Gaboardi, Elijah Knaap, Ran Wei, Levi J. Wolf, Qunshan Zhao, and Sergio J. Rey. Spopt: a python package for solving spatial optimization problems in pysal. Journal of Open Source Software, 7(74):3330, 2022. URL: https://doi.org/10.21105/joss.03330, doi:10.21105/joss.03330.">FBG+22</a>, <a class="reference internal" href="references.html#id72" title="Martin Fleischmann. Momepy: urban morphology measuring toolkit. Journal of Open Source Software, 4(43):1807, 2019. doi:10.21105/joss.01807.">Fle19</a>, <a class="reference internal" href="references.html#id4" title="A. Stewart Fotheringham, Wenbai Yang, and Wei Kang. Multiscale geographically weighted regression (MGWR). Annals of the American Association of Geographers, pages 1247–1265, 2017. doi:10.1080/24694452.2017.1352480.">FYK17</a>, <a class="reference internal" href="references.html#id14" title="James D. Gaboardi, Sergio Rey, and Stefanie Lumnitz. Spaghetti: spatial network analysis in pysal. Journal of Open Source Software, 6(62):2826, 2021. URL: https://doi.org/10.21105/joss.02826, doi:10.21105/joss.02826.">GRL21</a>, <a class="reference internal" href="references.html#id15" title="Stefanie Lumnitz, Dani Arribas-Bell, Renan X. Cortes, James D. Gaboardi, Verena Griess, Wei Kang, Taylor M. Oshan, Levi Wolf, and Sergio Rey. `splot` - visual analytics for spatial statistics. Journal of Open Source Software, 5(47):1882, 2020. URL: https://doi.org/10.21105/joss.01882, doi:10.21105/joss.01882.">LABC+20</a>, <a class="reference internal" href="references.html#id7" title="Sergio Rey, Su Yeon Han, Wei Kang, Elijah Knaap, and Renan Xavier Cortes. A Visual Analytics System for Space–Time Dynamics of Regional Income Distributions Utilizing Animated Flow Maps and Rank-based Markov Chains. Geographical Analysis, 52(4):537–557, 2020. doi:10.1111/gean.12239.">RHK+20</a>, <a class="reference internal" href="references.html#id90" title="Sergio J. Rey. Python Spatial Analysis Library (PySAL): An update and illustration. In C. Brunsdon and A. SIngleton, editors, Geocomputation. Sage, London, 2014.">Rey14</a>, <a class="reference internal" href="references.html#id91" title="Sergio J. Rey. PySAL: The first 10 years. Spatial Economic Analysis, 14(3):273–282, July 2019. doi:10.1080/17421772.2019.1593495.">Rey19</a>, <a class="reference internal" href="references.html#id86" title="Sergio J. Rey and Luc Anselin. PySAL: A Python Library of Spatial Analytical Methods. The Review of Regional Studies, 37(1):5-27, 2007.">RA07</a>, <a class="reference internal" href="references.html#id92" title="Sergio J. Rey, Luc Anselin, Pedro Amaral, Dani Arribas-Bel, Renan Xavier Cortes, James David Gaboardi, Wei Kang, Elijah Knaap, Ziqi Li, Stefanie Lumnitz, Taylor M. Oshan, Hu Shao, and Levi John Wolf. The PySAL Ecosystem: Philosophy and Implementation. Geographical Analysis, 54(3):467–487, 2022. doi:10.1111/gean.12276.">RAA+22</a>, <a class="reference internal" href="references.html#id6" title="Sergio J. Rey, Renan Cortes, and Elijah Knaap. Comparative spatial segregation analytics. Spatial Demography, 9:31–56, January 2021. doi:10.1007/s40980-021-00075-w.">RCK21</a>, <a class="reference internal" href="references.html#id8" title="Sergio J. Rey, Dani Arribas-Bel, and Levi John Wolf. Geographic Data Science with Python. Chapman &amp; Hall/CRC Texts in Statistical Science. CRC Press, Boca Raton, 2023. ISBN 978-0-367-26311-9 978-1-03-244595-3.">RArribasBelW23</a>, <a class="reference internal" href="references.html#id3" title="James Saxon, Julia Koschinsky, Karina Acosta, Vidal Anguiano, Luc Anselin, and Sergio Rey. An open software environment to make spatial access metrics more accessible. Journal of Computational Social Science, June 2021. doi:10.1007/s42001-021-00126-8.">SKA+21</a>, <a class="reference internal" href="references.html#id2" title="Levi J. Wolf, Elijah Knaap, and Sergio Rey. Geosilhouettes: Geographical measures of cluster fit. Environment and Planning B: Urban Analytics and City Science, 2019. doi:10.1177/2399808319875752.">WKR19</a>, <a class="reference internal" href="references.html#id102" title="Hanchen Yu, Alexander Stewart Fotheringham, Ziqi Li, Taylor Oshan, Wei Kang, and Levi John Wolf. Inference in multiscale geographically weighted regression. Geographical Analysis, 2019. URL: https://onlinelibrary.wiley.com/doi/abs/10.1111/gean.12189, arXiv:https://onlinelibrary.wiley.com/doi/pdf/10.1111/gean.12189, doi:10.1111/gean.12189.">YFL+19</a>]</span>.</p>
+<section id="development">
+<h2>Development<a class="headerlink" href="#development" title="Link to this heading">#</a></h2>
+<p>As of version 2.0.0, PySAL is now a collection of affiliated geographic
+data science packages. Changes to the code for any of the subpackages
+should be directed at the respective <a class="reference external" href="https://github.com/pysal/help">upstream repositories</a> and not made
+here. Infrastructural changes for the meta-package, like those for
+tooling, building the package, and code standards, will be considered.</p>
+<p>PySAL development is hosted on <a class="reference external" href="https://github.com/pysal/PySAL">github</a>.</p>
+<p>Discussions of development occurs on the
+<a class="reference external" href="http://groups.google.com/group/pysal-dev">developer list</a>
+as well as <a class="reference external" href="https://discord.gg/BxFTEPFFZn">discord</a>.</p>
+</section>
+<section id="getting-involved">
+<h2>Getting Involved<a class="headerlink" href="#getting-involved" title="Link to this heading">#</a></h2>
+<p>If you are interested in contributing to PySAL please see our
+<a class="reference external" href="https://github.com/pysal/pysal/wiki">development guidelines</a>.</p>
+</section>
+<section id="bug-reports">
+<h2>Bug reports<a class="headerlink" href="#bug-reports" title="Link to this heading">#</a></h2>
+<p>To search for or report bugs, please see PySAL’s <a class="reference external" href="http://github.com/pysal/pysal/issues">issues</a>.</p>
+</section>
+<section id="citing-pysal">
+<h2>Citing PySAL<a class="headerlink" href="#citing-pysal" title="Link to this heading">#</a></h2>
+<p>If you use PySAL in a scientific publication, we would appreciate citations to the following paper:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://doi.org/10.52324/001c.8285">PySAL: A Python Library of Spatial Analytical Methods</a>, <em>Rey, S.J. and L. Anselin</em>, Review of Regional Studies 37, 5-27 2007.</p>
+<p>Bibtex entry:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Article</span><span class="p">{</span><span class="n">pysal2007</span><span class="p">,</span>
+  <span class="n">author</span><span class="o">=</span><span class="p">{</span><span class="n">Rey</span><span class="p">,</span> <span class="n">Sergio</span> <span class="n">J</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Anselin</span><span class="p">,</span> <span class="n">Luc</span><span class="p">},</span>
+  <span class="n">title</span><span class="o">=</span><span class="p">{{</span><span class="n">PySAL</span><span class="p">:</span> <span class="n">A</span> <span class="n">Python</span> <span class="n">Library</span> <span class="n">of</span> <span class="n">Spatial</span> <span class="n">Analytical</span> <span class="n">Methods</span><span class="p">}},</span>
+  <span class="n">journal</span><span class="o">=</span><span class="p">{</span><span class="n">The</span> <span class="n">Review</span> <span class="n">of</span> <span class="n">Regional</span> <span class="n">Studies</span><span class="p">},</span>
+  <span class="n">year</span><span class="o">=</span><span class="mi">2007</span><span class="p">,</span>
+  <span class="n">volume</span><span class="o">=</span><span class="p">{</span><span class="mi">37</span><span class="p">},</span>
+  <span class="n">number</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">},</span>
+  <span class="n">pages</span><span class="o">=</span><span class="p">{</span><span class="mi">5</span><span class="o">-</span><span class="mi">27</span><span class="p">},</span>
+  <span class="n">keywords</span><span class="o">=</span><span class="p">{</span><span class="n">Open</span> <span class="n">Source</span><span class="p">;</span> <span class="n">Software</span><span class="p">;</span> <span class="n">Spatial</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 </div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</div></blockquote>
+</section>
+<section id="license-information">
+<h2>License information<a class="headerlink" href="#license-information" title="Link to this heading">#</a></h2>
+<p>See the file “LICENSE.txt” for information on the history of this
+software, terms &amp; conditions for usage, and a DISCLAIMER OF ALL
+WARRANTIES.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="right-next"
+       href="installation.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Installation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">PySAL: Python Spatial Analysis Library</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#pysal-components">PySAL Components</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#development">Development</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-involved">Getting Involved</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bug-reports">Bug reports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citing-pysal">Citing PySAL</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#license-information">License information</a></li>
 </ul>
-</div>
+</li>
+</ul>
 
+  </nav></div>
 
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
           </div>
-          
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="#">No Errors Test Project</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="#">Documentation overview</a><ul>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
-
-
-
-
-
-
-
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2019, sphinx-action Test Suite.
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
       
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2007 - 2025, pysal developers (BSD License).
+      <br/>
+    
+  </p>
+</div>
       
-      |
-      <a href="_sources/index.rst.txt"
-          rel="nofollow">Page source</a>
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
     </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
 
-    
-
-    
+  </footer>
   </body>
 </html>
