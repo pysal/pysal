@@ -3,6 +3,7 @@ Base information for pysal meta package
 """
 
 import importlib
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from functools import cached_property
 
 federation_hierarchy = {
@@ -48,9 +49,23 @@ def _installed_version(package):
 
 
 def _installed_versions():
+    packages = list(memberships.keys())
+    max_workers = min(len(packages), 8)
+
     ver = {}
-    for package in memberships:
-        ver[package] = _installed_version(package)
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        future_to_package = {
+            executor.submit(_installed_version, pkg): pkg
+            for pkg in packages
+        }
+
+        for future in as_completed(future_to_package):
+            package = future_to_package[future]
+            try:
+                ver[package] = future.result(timeout=5.0)
+            except Exception:
+                ver[package] = "NA"
+
     return ver
 
 
