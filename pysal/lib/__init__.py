@@ -1,7 +1,5 @@
 __version__ = "4.2.1"
 
-# __version__ has to be define in the first line
-
 """
 pysal.lib: Python Spatial Analysis Library (core)
 ================================================
@@ -25,8 +23,18 @@ weights
     Tools for creating and manipulating weights
 """
 
-from libpysal import cg
-from libpysal import io
-from libpysal import weights
-from libpysal import examples
+_SUBMODULES = {"cg", "io", "weights", "examples"}
+
+
+def __getattr__(name):
+    if name in _SUBMODULES:
+        import importlib
+        module = importlib.import_module(f"libpysal.{name}")
+        globals()[name] = module
+        return module
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
+def __dir__():
+    return sorted(list(globals().keys()) + list(_SUBMODULES))
 
