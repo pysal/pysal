@@ -3,6 +3,7 @@ Base information for pysal meta package
 """
 
 import importlib
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from functools import cached_property
 
 federation_hierarchy = {
@@ -48,9 +49,41 @@ def _installed_version(package):
 
 
 def _installed_versions():
+    packages = list(memberships.keys())
+
+    import os
+    import sys
+    is_pytest_xdist_worker = (
+        'PYTEST_XDIST_WORKER' in os.environ or
+        'pytest_xdist' in sys.modules or
+        hasattr(sys, '_called_from_test')
+    )
+
+    if is_pytest_xdist_worker:
+        ver = {}
+        for package in packages:
+            ver[package] = _installed_version(package)
+        return ver
+
+    max_workers = min(len(packages), 8)
     ver = {}
-    for package in memberships:
-        ver[package] = _installed_version(package)
+    try:
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            future_to_package = {
+                executor.submit(_installed_version, pkg): pkg
+                for pkg in packages
+            }
+
+            for future in as_completed(future_to_package):
+                package = future_to_package[future]
+                try:
+                    ver[package] = future.result(timeout=5.0)
+                except Exception:
+                    ver[package] = "NA"
+    except (RuntimeError, OSError):
+        for package in packages:
+            ver[package] = _installed_version(package)
+
     return ver
 
 
