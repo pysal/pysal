@@ -1,4 +1,4 @@
-_SUBMODULES = {"esda", "giddy", "inequality", "pointpats", "spaghetti", "segregation"}
+_SUBMODULES = {"esda", "giddy", "inequality", "momepy", "pointpats", "spaghetti", "segregation"}
 
 
 def __getattr__(name):
