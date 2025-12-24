@@ -53,18 +53,22 @@ def _installed_versions():
     max_workers = min(len(packages), 8)
 
     ver = {}
-    with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        future_to_package = {
-            executor.submit(_installed_version, pkg): pkg
-            for pkg in packages
-        }
+    try:
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            future_to_package = {
+                executor.submit(_installed_version, pkg): pkg
+                for pkg in packages
+            }
 
-        for future in as_completed(future_to_package):
-            package = future_to_package[future]
-            try:
-                ver[package] = future.result(timeout=5.0)
-            except Exception:
-                ver[package] = "NA"
+            for future in as_completed(future_to_package):
+                package = future_to_package[future]
+                try:
+                    ver[package] = future.result(timeout=5.0)
+                except Exception:
+                    ver[package] = "NA"
+    except (RuntimeError, OSError):
+        for package in packages:
+            ver[package] = _installed_version(package)
 
     return ver
 

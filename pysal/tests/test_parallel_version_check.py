@@ -52,8 +52,9 @@ class TestParallelVersionCheck(unittest.TestCase):
 
     def test_installed_versions_includes_all_packages(self):
         versions = _installed_versions()
-        for pkg in memberships:
-            self.assertIn(pkg, versions)
+        missing = [pkg for pkg in memberships if pkg not in versions]
+        self.assertEqual(missing, [],
+                        f"Missing packages in versions: {missing}")
 
 
 if __name__ == "__main__":
