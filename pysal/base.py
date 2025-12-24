@@ -50,8 +50,22 @@ def _installed_version(package):
 
 def _installed_versions():
     packages = list(memberships.keys())
-    max_workers = min(len(packages), 8)
 
+    import os
+    import sys
+    is_pytest_xdist_worker = (
+        'PYTEST_XDIST_WORKER' in os.environ or
+        'pytest_xdist' in sys.modules or
+        hasattr(sys, '_called_from_test')
+    )
+
+    if is_pytest_xdist_worker:
+        ver = {}
+        for package in packages:
+            ver[package] = _installed_version(package)
+        return ver
+
+    max_workers = min(len(packages), 8)
     ver = {}
     try:
         with ThreadPoolExecutor(max_workers=max_workers) as executor:

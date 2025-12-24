@@ -18,6 +18,10 @@ class TestParallelVersionCheck(unittest.TestCase):
 
     @patch('pysal.base.importlib.import_module')
     def test_parallel_execution_faster_than_sequential(self, mock_import):
+        import os
+        if 'PYTEST_XDIST_WORKER' in os.environ:
+            self.skipTest("Parallel execution disabled in pytest-xdist workers")
+
         def slow_import(_name):
             time.sleep(0.1)
             mock_mod = MagicMock()
