@@ -7,7 +7,8 @@ A federation of packages for spatial data science.
 
 Layers and Subpackages
 ----------------------
-PySAL is organized into four layers (lib, explore, model, and viz), each of which contains subpackages for a particular type of spatial data analysis.
+PySAL is organized into four layers (lib, explore, model, and viz), each of
+which contains subpackages for a particular type of spatial data analysis.
 
 
 Use of any of these layers requires an explicit import. For example,
@@ -56,22 +57,15 @@ viz: geovisualization
 import contextlib
 from importlib.metadata import PackageNotFoundError, version
 
+import lazy_loader as lazy
+
 from .base import federation_hierarchy, memberships
 
 with contextlib.suppress(PackageNotFoundError):
-        __version__ = version("pysal")
+    __version__ = version("pysal")
 
-_SUBMODULES = {"lib", "explore", "model", "viz"}
+__getattr__, __dir__, __all__ = lazy.attach(
+    __name__,
+    submodules=["lib", "explore", "model", "viz"],
+)
 
-
-def __getattr__(name):
-    if name in _SUBMODULES:
-        import importlib
-        module = importlib.import_module(f".{name}", __name__)
-        globals()[name] = module
-        return module
-    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
-
-
-def __dir__():
-    return sorted(list(globals().keys()) + list(_SUBMODULES))
