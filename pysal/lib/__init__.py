@@ -1,3 +1,7 @@
+__version__ = "4.2.1"
+
+# __version__ has to be define in the first line
+
 """
 pysal.lib: Python Spatial Analysis Library (core)
 ================================================
@@ -5,8 +9,8 @@ pysal.lib: Python Spatial Analysis Library (core)
 
 Documentation
 -------------
-PySAL documentation is available in two forms: python docstrings and an html
-webpage at http://pysal.org/
+PySAL documentation is available in two forms: python docstrings and an html \
+        webpage at http://pysal.org/
 
 Available sub-packages
 ----------------------
@@ -21,9 +25,7 @@ weights
     Tools for creating and manipulating weights
 """
 
-import lazy_loader as lazy
-
-__version__ = "4.2.1"
+import lazy_loader as lazy  # noqa: E402
 
 __getattr__, __dir__, __all__ = lazy.attach(
     __name__,
@@ -31,6 +33,7 @@ __getattr__, __dir__, __all__ = lazy.attach(
         "libpysal": ["cg", "io", "weights", "examples"],
     },
 )
+
 
 
 
