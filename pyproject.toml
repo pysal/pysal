@@ -25,6 +25,7 @@ classifiers = [
 ]
 requires-python = ">=3.10"
 dependencies = [
+    "lazy_loader>=0.3",
     "beautifulsoup4>=4.10",
     "geopandas>=0.10.0",
     "numpy>=1.22",
