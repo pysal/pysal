@@ -1,7 +1,16 @@
-import access
-import mgwr
-import spglm
-import spint
-import spreg
-import tobler
-import spopt
+import lazy_loader as lazy
+
+__getattr__, __dir__, __all__ = lazy.attach(
+    __name__,
+    submodules=[
+        "access",
+        "mgwr",
+        "spglm",
+        "spint",
+        "spopt",
+        "spreg",
+        "tobler",
+    ],
+)
+
+

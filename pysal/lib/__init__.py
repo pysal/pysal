@@ -25,8 +25,15 @@ weights
     Tools for creating and manipulating weights
 """
 
-from libpysal import cg
-from libpysal import io
-from libpysal import weights
-from libpysal import examples
+import lazy_loader as lazy  # noqa: E402
+
+__getattr__, __dir__, __all__ = lazy.attach(
+    __name__,
+    submod_attrs={
+        "libpysal": ["cg", "io", "weights", "examples"],
+    },
+)
+
+
+
 
