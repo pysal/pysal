@@ -66,6 +66,13 @@ In contrast to `explore`, the `model` layer focuses on confirmatory analysis. In
 -   [spopt](https://pysal.org/spopt/): `spopt`  is an open-source Python library for solving optimization problems with spatial data. Originating
     from the original `region` module in PySAL, it is under active development for the inclusion of newly proposed models and methods for regionalization, facility location, and transportation-oriented solutions.
 
+-   [gwlearn](https://pysal.org/gwlearn/) : `gwlearn` provides geographically weighted modeling based on `scikit-learn`.
+    The aim of the package is to provide implementations of spatially-explicit modelling. It combines the familariy of
+    `scikit-learn` estimator API with flexible backend enabling geographical extension of many scikit-learn compatible
+    estimators, alongside with custom spatially-explicit models.
+
+
+
 ### Viz
 
 The `viz` layer provides functionality to support the creation of geovisualisations and visual representations of outputs from a variety of spatial analyses. Visualization plays a central role in modern spatial/geographic data science. Current packages provide classification methods for choropleth mapping and a common API for linking PySAL outputs to visualization tool-kits in the Python ecosystem.

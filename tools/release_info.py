@@ -47,6 +47,7 @@ packages = [
     "access",
     "esda",
     "giddy",
+    "gwlearn",
     "inequality",
     "pointpats",
     "segregation",

@@ -16,7 +16,16 @@ federation_hierarchy = {
         "access",
         "momepy",
     ],
-    "model": ["spreg", "spglm", "tobler", "spint", "mgwr", "access", "spopt"],
+    "model": [
+        "spreg",
+        "spglm",
+        "tobler",
+        "spint",
+        "mgwr",
+        "access",
+        "spopt",
+        "gwlearn",
+    ],
     "viz": ["splot", "mapclassify"],
     "lib": ["libpysal"],
 }
