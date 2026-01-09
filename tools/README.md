@@ -8,7 +8,7 @@
 ## Instructions
 
 ### Updating package information
-- If any new packages have been added to the ecosystem update the `packages` list in `release.yaml` 
+- If any new packages have been added to the ecosystem update the `packages` list in `../pyproject.toml` and `release_info.py`
 - Update relevant data on `start_date` (day after last release), `release_date` (day
   of this release), `version`, and `user` in `release.yaml`
 
