@@ -32,7 +32,6 @@ dependencies:
     - git+https://github.com/pysal/esda.git
     - git+https://github.com/pysal/libpysal.git
     - git+https://github.com/pysal/giddy.git
-    - git+https://github.com/pysal/gwlearn.git
     - git+https://github.com/pysal/inequality.git
     - git+https://github.com/pysal/mapclassify.git
     - git+https://github.com/pysal/mgwr.git
