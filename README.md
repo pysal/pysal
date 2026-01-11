@@ -27,7 +27,7 @@ PySAL is a family of packages for spatial data science and is divided into four 
 
 solve a wide variety of computational geometry problems including graph construction from polygonal lattices, lines, and points, construction and interactive editing of spatial weights matrices & graphs - computation of alpha shapes, spatial indices, and spatial-topological relationships, and reading and writing of sparse graph data, as well as pure python readers of spatial vector data. Unike other PySAL modules, these functions are exposed together as a single package.
 
--   [libpysal](https://pysal.org/libpysal) : `libpysal` provides foundational algorithms and data structures that support the rest of the library. This currently includes the following modules: input/output (`io`), which provides readers and writers for common geospatial file formats; weights (`weights`), which provides the main class to store spatial weights matrices, as well as several utilities to manipulate and operate on them; computational geometry (`cg`), with several algorithms, such as Voronoi tessellations or alpha shapes that efficiently process geometric shapes; and an additional module with example data sets (`examples`).
+-   [libpysal](https://pysal.org/libpysal) : `libpysal` provides foundational algorithms and data structures that support the rest of the library. This currently includes the following modules: input/output (`io`), which provides readers and writers for common geospatial file formats; weights (`weights`), which provides the main class to store spatial weights matrices, as well as several utilities to manipulate and operate on them; computational geometry (`cg`), with several algorithms, such as Voronoi tessellations or alpha shapes that efficiently process geometric shapes; (`graph`), provides tools for creating, analyzing, and manipulating graph structures. It allows users to work with spatial networks, perform graph-based computations, and leverage graph algorithms to understand spatial relationships and patterns; and an additional module with example data sets (`examples`).
 
 ### Explore
 
@@ -82,6 +82,7 @@ The `viz` layer provides functionality to support the creation of geovisualisati
 -   [mapclassify](https://pysal.org/mapclassify) : `mapclassify` provides functionality for Choropleth map classification. Currently, fifteen different classification schemes are available, including a highly-optimized implementation of Fisher-Jenks optimal classification. Each scheme inherits a common structure that ensures computations are scalable and supports applications in streaming contexts.
 
 -   [splot](https://splot.readthedocs.io/en/latest/) : `splot` provides statistical visualizations for spatial analysis. It methods for visualizing global and local spatial autocorrelation (through Moran scatterplots and cluster maps), temporal analysis of cluster dynamics (through heatmaps and rose diagrams), and multivariate choropleth mapping (through value-by-alpha maps. A high level API supports the creation of publication-ready visualizations
+
 
 # Installation
 
