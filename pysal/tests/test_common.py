@@ -87,6 +87,19 @@ class TestSimport:
         assert success is True
         assert module is not None
 
+    def test_simport_empty_string(self):
+        """Test simport with empty string input."""
+        exists, mod = simport("")
+        assert exists is False
+        assert mod is None
+
+    def test_simport_none_input(self):
+        """Test simport with None as input."""
+        exists, mod = simport(None)
+        assert exists is False
+        assert mod is None
+
+
 
 class TestJitDecorator:
     """Tests for the jit decorator (fallback when numba not available)."""
