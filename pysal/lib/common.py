@@ -1,5 +1,6 @@
 import copy
 import importlib
+import warnings
 
 try:
     from patsy import PatsyError
@@ -114,11 +115,19 @@ def requires(*args, **kwargs):
             return function
         else:
 
-            def passer(*args, **kwargs):  # noqa: ARG001
+            def passer(*_args, **_kwargs):  # noqa: ARG001
                 if v:
                     missing = [arg for i, arg in enumerate(wanted) if not available[i]]
+
                     print(f"missing dependencies: {missing}")
                     print(f"not running {function.__name__}")
+
+                    warnings.warn(
+                        f"missing dependencies: {missing}. "
+                        f"Function '{function.__name__}' will not run.",
+                        UserWarning,
+                        stacklevel=2,
+                    )
 
             return passer
 

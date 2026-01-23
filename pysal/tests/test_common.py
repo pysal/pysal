@@ -194,3 +194,20 @@ class TestRequiresDecorator:
 
         captured = capsys.readouterr()
         assert "missing dependencies" in captured.out
+
+    def test_requires_emits_warning(self):
+        """Test that requires emits a warning when dependency is missing."""
+        import warnings
+
+        @requires("nonexistent_fake_module_xyz123", verbose=True)
+        def function_needing_fake():
+            return "should not reach here"
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            function_needing_fake()
+
+            assert any(
+                "missing dependencies" in str(warn.message)
+                for warn in w
+            )
