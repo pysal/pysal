@@ -134,7 +134,7 @@ def clone_defaults(packages=packages, cwd=os.getcwd()):
 
         # if already cloned, we pull, otherwise clone
         if os.path.isdir(directory_path):
-            print(f"{directory_path} exists, git pull required")
+            print(f"{directory_path} exists, git pull called to update")
             os.chdir(directory_path)
             result = subprocess.run(["git", "pull"], capture_output=True, text=True)
             print("Output:\n", result.stdout)
