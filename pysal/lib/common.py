@@ -119,9 +119,6 @@ def requires(*args, **kwargs):
                 if v:
                     missing = [arg for i, arg in enumerate(wanted) if not available[i]]
 
-                    print(f"missing dependencies: {missing}")
-                    print(f"not running {function.__name__}")
-
                     warnings.warn(
                         f"missing dependencies: {missing}. "
                         f"Function '{function.__name__}' will not run.",
