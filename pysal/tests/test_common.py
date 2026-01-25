@@ -154,43 +154,70 @@ class TestRequiresDecorator:
         result = function_needing_multiple()
         assert result == "all available"
 
-    def test_requires_with_unavailable_module(self, capsys):
+    def test_requires_with_unavailable_module(self):
         """Test requires decorator with unavailable module."""
+        import warnings
 
         @requires("nonexistent_fake_module_xyz123", verbose=True)
         def function_needing_fake():
             return "should not reach here"
 
-        # Call the passer function
-        function_needing_fake()
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            function_needing_fake()
 
-        # Check that warning was printed
-        captured = capsys.readouterr()
-        assert "missing dependencies" in captured.out
-        assert "nonexistent_fake_module_xyz123" in captured.out
+            assert any(
+                "missing dependencies" in str(warn.message)
+                and "nonexistent_fake_module_xyz123" in str(warn.message)
+                for warn in w
+            )
 
-    def test_requires_with_verbose_false(self, capsys):
+    def test_requires_with_verbose_false(self):
         """Test requires decorator with verbose=False."""
+        import warnings
 
         @requires("nonexistent_fake_module_xyz123", verbose=False)
         def silent_function():
             return "should not reach here"
 
-        # Call the passer function
-        silent_function()
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            silent_function()
 
-        # Check that no warning was printed
-        captured = capsys.readouterr()
-        assert captured.out == ""
+            # No warnings should be emitted
+            assert len(w) == 0
 
-    def test_requires_mixed_availability(self, capsys):
+    def test_requires_mixed_availability(self):
         """Test requires with mix of available and unavailable modules."""
+        import warnings
 
         @requires("os", "nonexistent_fake_module_xyz123", verbose=True)
         def mixed_function():
             return "should not reach here"
 
-        mixed_function()
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            mixed_function()
 
-        captured = capsys.readouterr()
-        assert "missing dependencies" in captured.out
+            assert any(
+                "missing dependencies" in str(warn.message)
+                for warn in w
+            )
+
+
+    def test_requires_emits_warning(self):
+        """Test that requires emits a warning when dependency is missing."""
+        import warnings
+
+        @requires("nonexistent_fake_module_xyz123", verbose=True)
+        def function_needing_fake():
+            return "should not reach here"
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            function_needing_fake()
+
+            assert any(
+                "missing dependencies" in str(warn.message)
+                for warn in w
+            )
