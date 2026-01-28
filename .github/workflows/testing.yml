@@ -25,8 +25,6 @@
        matrix:
          os: [ubuntu-latest]
          environment-file: [
-            ci/310-oldest.yaml,
-            ci/310-latest.yaml,
             ci/311-latest.yaml,
             ci/312-latest.yaml,
             ci/312-dev.yaml,
