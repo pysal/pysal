@@ -134,12 +134,12 @@ def clone_defaults(packages=packages, cwd=os.getcwd()):
 
         # if already cloned, we pull, otherwise clone
         if os.path.isdir(directory_path):
-            print(f"{directory_path} exists, git pull required")
+            print(f"{directory_path} exists, git pull called to update")
             os.chdir(directory_path)
-            result = subprocess.run(["git", "pull"],
-                                    capture_output=True, text=True)
+            result = subprocess.run(["git", "pull"], capture_output=True, text=True)
             print("Output:\n", result.stdout)
-            print("Errors:\n", result.stderr)
+            if result.stderr:
+                print("Errors:\n", result.stderr)
             os.chdir(cwd)
         else:
             url = f"https://api.github.com/repos/pysal/{package}"
@@ -230,9 +230,7 @@ def is_pull_request(issue):
     return "pull_request_url" in issue
 
 
-def issues_closed_since(
-    period=timedelta(days=365), project="pysal/pysal", pulls=False
-):
+def issues_closed_since(period=timedelta(days=365), project="pysal/pysal", pulls=False):
     """Get all issues closed since a particular point in time. period
     can either be a datetime object, or a timedelta object. In the
     latter case, it is used as a time before the present."""
@@ -244,15 +242,11 @@ def issues_closed_since(
 
     url = (
         "https://api.github.com/repos/{}/{}?state=closed&sort=updated&since={}"
-        "&per_page={}".format(
-            project, which, period.strftime(ISO8601), PER_PAGE
-        )
+        "&per_page={}".format(project, which, period.strftime(ISO8601), PER_PAGE)
     )
 
     allclosed = get_url(url)
-    filtered = [
-        i for i in allclosed if _parse_datetime(i["closed_at"]) > period
-    ]
+    filtered = [i for i in allclosed if _parse_datetime(i["closed_at"]) > period]
 
     # exclude rejected PRs
     if pulls:

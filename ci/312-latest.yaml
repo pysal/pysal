@@ -51,6 +51,7 @@ dependencies:
   - pytest-cov
   - pytest-xdist
   # docs
+  - lazy_loader
   - nbsphinx
   - numpydoc
   - sphinx
