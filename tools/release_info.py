@@ -17,15 +17,23 @@ import yaml
 from urllib.request import urlopen
 from datetime import datetime, timedelta
 import requests
+import toml
 
 
-with open("release.yaml", "r") as stream:
-    info = yaml.safe_load(stream)
+try:
+    with open("release.yaml", "r") as stream:
+        info = yaml.safe_load(stream)
 
-release_date = info["release_date"]
-PYSALVER = info["version"]
-start_date = info["start_date"]
-USER = info["user"]
+    release_date = info["release_date"]
+    PYSALVER = info["version"]
+    start_date = info["start_date"]
+    USER = info["user"]
+
+except FileNotFoundError:
+    release_date = None
+    PYSALVER = None
+    start_date = None
+    USER = None
 
 
 ISO8601 = "%Y-%m-%dT%H:%M:%SZ"
@@ -35,12 +43,15 @@ rel_pat = re.compile(r'rel=[\'"](\w+)[\'"]')
 
 
 # get github token:
-with open("token", "r") as token_file:
-    token = token_file.read().strip()
+try:
+    with open("token", "r") as token_file:
+        token = token_file.read().strip()
+except FileNotFoundError:
+    token = None
 
 gh_session = requests.Session()
-gh_session.auth = (USER, token)
-
+if USER and token:
+    gh_session.auth = (USER, token)
 
 packages = [
     "libpysal",
@@ -277,3 +288,46 @@ def report(issues, show_urls=False):
 def get_meta_releases():
     url = "https://api.github.com/repos/pysal/pysal/releases"
     return get_url(url)
+
+
+def update_pyproject_dependencies(pyproject_path="pyproject.toml"):
+    """
+    Update PySAL subpackage dependency versions in pyproject.toml
+    using latest GitHub release information.
+    """
+    print("Fetching latest release info from GitHub...")
+    github_info = get_github_info()
+
+    if not os.path.exists(pyproject_path):
+        print(f"{pyproject_path} not found.")
+        return
+
+    data = toml.load(pyproject_path)
+
+    if "project" not in data or "dependencies" not in data["project"]:
+        print("No dependencies found in pyproject.toml")
+        return
+
+    dependencies = data["project"]["dependencies"]
+    updated_dependencies = []
+
+    for dep in dependencies:
+        pkg_name = dep.split(">=")[0].strip()
+
+        if pkg_name in github_info:
+            latest_version = github_info[pkg_name]["version"].lstrip("v")
+            new_dep = f"{pkg_name}>={latest_version}"
+            print(f"Updating {pkg_name}: {dep} → {new_dep}")
+            updated_dependencies.append(new_dep)
+        else:
+            updated_dependencies.append(dep)
+
+    data["project"]["dependencies"] = updated_dependencies
+
+    with open(pyproject_path, "w") as f:
+        toml.dump(data, f)
+
+    print("pyproject.toml dependencies updated successfully.")
+    
+if __name__ == "__main__":
+    update_pyproject_dependencies()
