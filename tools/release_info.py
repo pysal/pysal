@@ -8,20 +8,20 @@ pysal packages
 
 """
 
-import os
-import subprocess
 import json
-import urllib
+import os
 import re
-import yaml
-from urllib.request import urlopen
+import subprocess
+import urllib
 from datetime import datetime, timedelta
+from urllib.request import urlopen
+
 import requests
 import toml
-
+import yaml
 
 try:
-    with open("release.yaml", "r") as stream:
+    with open("release.yaml") as stream:
         info = yaml.safe_load(stream)
 
     release_date = info["release_date"]
@@ -44,7 +44,7 @@ rel_pat = re.compile(r'rel=[\'"](\w+)[\'"]')
 
 # get github token:
 try:
-    with open("token", "r") as token_file:
+    with open("token") as token_file:
         token = token_file.read().strip()
 except FileNotFoundError:
     token = None
@@ -139,7 +139,9 @@ def clone_mains():
     clone_releases(tag="main")
 
 
-def clone_defaults(packages=packages, cwd=os.getcwd()):
+def clone_defaults(packages=packages, cwd=None):
+    if cwd is None:
+        cwd = os.getcwd()
     for package in packages:
         directory_path = f"tmp/{package}"
 
@@ -173,10 +175,7 @@ def clone_releases(tag=None):
     os.system("mkdir tmp")
     for package in packages:
         print(package, packages[package])
-        if tag:
-            branch = tag
-        else:
-            branch = packages[package]
+        branch = tag or packages[package]
         pkgstr = (
             f"git clone --branch {branch}"
             f" https://github.com/pysal/{package}.git"
@@ -191,7 +190,7 @@ def parse_link_header(headers):
     urls = element_pat.findall(link_s)
     rels = rel_pat.findall(link_s)
     d = {}
-    for rel, url in zip(rels, urls):
+    for rel, url in zip(rels, urls, strict=False):
         d[rel] = url
     return d
 
@@ -252,8 +251,8 @@ def issues_closed_since(period=timedelta(days=365), project="pysal/pysal", pulls
         period = datetime.now() - period
 
     url = (
-        "https://api.github.com/repos/{}/{}?state=closed&sort=updated&since={}"
-        "&per_page={}".format(project, which, period.strftime(ISO8601), PER_PAGE)
+        f"https://api.github.com/repos/{project}/{which}?state=closed&sort=updated&since={period.strftime(ISO8601)}"
+        f"&per_page={PER_PAGE}"
     )
 
     allclosed = get_url(url)
@@ -328,6 +327,7 @@ def update_pyproject_dependencies(pyproject_path="pyproject.toml"):
         toml.dump(data, f)
 
     print("pyproject.toml dependencies updated successfully.")
-    
+
+
 if __name__ == "__main__":
     update_pyproject_dependencies()
