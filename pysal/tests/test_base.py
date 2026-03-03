@@ -86,6 +86,7 @@ class TestInstalledVersion:
         assert "." in version  # Version should contain dots (e.g., "4.13.0")
 
     def test_installed_version_for_nonexistent_package(self):
+        """Test version detection for a nonexistent package."""
         result = _installed_version("__nonexistent_package_xyz__")
         assert result == "NA"
 
