@@ -68,12 +68,7 @@ class TestMemberships:
         for layer, packages in federation_hierarchy.items():
             for package in packages:
                 assert package in memberships
-                # Note: 'access' appears in both 'explore' and 'model' layers
-                # The last assignment wins, so 'access' maps to 'model'
-                if package == "access":
-                    assert memberships[package] in ("explore", "model")
-                else:
-                    assert memberships[package] == layer
+                assert memberships[package] == layer
 
 
 class TestInstalledVersion:
@@ -90,9 +85,9 @@ class TestInstalledVersion:
         assert version != "NA"
         assert "." in version  # Version should contain dots (e.g., "4.13.0")
 
-    # Note: test for nonexistent package is omitted because the current
-    # implementation has a bug (NameError instead of returning 'NA').
-    # This will be fixed in a separate PR.
+    def test_installed_version_for_nonexistent_package(self):
+        result = _installed_version("__nonexistent_package_xyz__")
+        assert result == "NA"
 
     def test_installed_version_for_numpy(self):
         """Test version detection for numpy (commonly installed)."""

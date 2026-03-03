@@ -13,7 +13,6 @@ federation_hierarchy = {
         "pointpats",
         "inequality",
         "spaghetti",
-        "access",
         "momepy",
     ],
     "model": [
