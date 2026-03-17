@@ -25,7 +25,7 @@ PySAL is a family of packages for spatial data science and is divided into four 
 
 ### Lib
 
-solve a wide variety of computational geometry problems including graph construction from polygonal lattices, lines, and points, construction and interactive editing of spatial weights matrices & graphs - computation of alpha shapes, spatial indices, and spatial-topological relationships, and reading and writing of sparse graph data, as well as pure python readers of spatial vector data. Unike other PySAL modules, these functions are exposed together as a single package.
+solve a wide variety of computational geometry problems including graph construction from polygonal lattices, lines, and points, construction and interactive editing of spatial weights matrices & graphs - computation of alpha shapes, spatial indices, and spatial-topological relationships, and reading and writing of sparse graph data, as well as pure python readers of spatial vector data. Unlike other PySAL modules, these functions are exposed together as a single package.
 
 -   [libpysal](https://pysal.org/libpysal) : `libpysal` provides foundational algorithms and data structures that support the rest of the library. This currently includes the following modules: input/output (`io`), which provides readers and writers for common geospatial file formats; weights (`weights`), which provides the main class to store spatial weights matrices, as well as several utilities to manipulate and operate on them; computational geometry (`cg`), with several algorithms, such as Voronoi tessellations or alpha shapes that efficiently process geometric shapes; and an additional module with example data sets (`examples`).
 
@@ -65,6 +65,13 @@ In contrast to `explore`, the `model` layer focuses on confirmatory analysis. In
 
 -   [spopt](https://pysal.org/spopt/): `spopt`  is an open-source Python library for solving optimization problems with spatial data. Originating
     from the original `region` module in PySAL, it is under active development for the inclusion of newly proposed models and methods for regionalization, facility location, and transportation-oriented solutions.
+
+-   [gwlearn](https://pysal.org/gwlearn/) : `gwlearn` provides geographically weighted modeling based on `scikit-learn`.
+    The aim of the package is to provide implementations of spatially-explicit modelling. It combines the familariy of
+    `scikit-learn` estimator API with flexible backend enabling geographical extension of many scikit-learn compatible
+    estimators, alongside with custom spatially-explicit models.
+
+
 
 ### Viz
 

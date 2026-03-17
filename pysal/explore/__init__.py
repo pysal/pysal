@@ -1,6 +1,14 @@
-import esda
-import giddy
-import inequality
-import pointpats
-import spaghetti
-import segregation
+import lazy_loader as lazy
+
+__getattr__, __dir__, __all__ = lazy.attach(
+    __name__,
+    submodules=[
+        "esda",
+        "giddy",
+        "inequality",
+        "momepy",
+        "pointpats",
+        "segregation",
+        "spaghetti",
+    ],
+)
