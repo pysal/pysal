@@ -1,5 +1,6 @@
 __version__ = "4.2.1"
 
+
 # __version__ has to be define in the first line
 
 """
@@ -25,15 +26,21 @@ weights
     Tools for creating and manipulating weights
 """
 
-import lazy_loader as lazy  # noqa: E402
 
-__getattr__, __dir__, __all__ = lazy.attach(
-    __name__,
-    submod_attrs={
-        "libpysal": ["cg", "io", "weights", "examples"],
-    },
-)
+import importlib
+from typing import List
 
+# Compat re-exports from libpysal
+_SUBMODULES = {"cg", "io", "weights", "examples"}
 
+__all__ = sorted(_SUBMODULES)
 
 
+def __getattr__(name: str):
+    if name in _SUBMODULES:
+        return importlib.import_module(f"libpysal.{name}")
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
+def __dir__() -> List[str]:
+    return sorted(list(globals().keys()) + list(_SUBMODULES))
