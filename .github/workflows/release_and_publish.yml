@@ -17,8 +17,6 @@ permissions:
 
 jobs:
   build:
-    permissions:
-      contents: write  # for softprops/action-gh-release to create GitHub release
     name: Create release & publish to PyPI
     runs-on: ubuntu-latest
     permissions:
