@@ -41,7 +41,6 @@ dependencies:
   - six
   - tqdm
   - twine
-  - urbanaccess
   - urllib3>=1.26
   - wheel
   # testing
