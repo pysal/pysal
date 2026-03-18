@@ -2,10 +2,8 @@ name: test
 channels:
   - conda-forge
 dependencies:
-  - python=3.12
-  - folium # for geopandas.explore()
-  - geos # for shapely
-  - matplotlib # for geopandas.explore()
+  - python=3.14
+  - fiona
   - tqdm
   # testing
   - codecov
@@ -21,20 +19,20 @@ dependencies:
       --index-url https://pypi.anaconda.org/scientific-python-nightly-wheels/simple  \
       --extra-index-url https://pypi.org/simple
     # external
+    - matplotlib
     - numpy
     - pandas
     - pulp
     - scikit-learn
     - scipy
+    - shapely
     - git+https://github.com/geopandas/geopandas.git
-    - git+https://github.com/shapely/shapely.git
     - git+https://github.com/networkx/networkx.git
     # ecosystem
     - git+https://github.com/pysal/access.git
     - git+https://github.com/pysal/esda.git
     - git+https://github.com/pysal/libpysal.git
     - git+https://github.com/pysal/giddy.git
-    - git+https://github.com/pysal/gwlearn.git
     - git+https://github.com/pysal/inequality.git
     - git+https://github.com/pysal/mapclassify.git
     - git+https://github.com/pysal/mgwr.git

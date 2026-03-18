@@ -102,7 +102,6 @@ include = ["pysal", "pysal.*"]
 [tool.ruff]
 line-length = 88
 lint.select = ["E", "F", "W", "I", "UP", "N", "B", "A", "C4", "SIM", "ARG"]
-target-version = "py310"
 exclude = ["pysal/tests/*", "docs/*"]
 [tool.ruff.lint.per-file-ignores]
 "*__init__.py" = [
