@@ -81,4 +81,4 @@ jobs:
           --cov-report xml .
 
       - name: codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
