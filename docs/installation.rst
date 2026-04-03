@@ -38,7 +38,7 @@ and `mapclassify`
 
 	conda install --channel conda-forge esda mapclassify
 
-   
+
 
 Installing the development version
 ----------------------------------
@@ -65,7 +65,6 @@ Required
 ++++++++
 - `geopandas`_
 - `seaborn`_
-- `descartes`_
 - `palettable`_
 - `scikit-learn`_
 - `rtree`_
@@ -76,12 +75,10 @@ Required
 
 Optional
 ++++++++
-- `urbanaccess`_
-- `pandana`_
+- `pandarm`_
 - `numba`_
 - `numexpr`_
 - `bokeh`_
-
 
 
 
@@ -94,8 +91,6 @@ Users requiring Python 2 support can install the legacy version of PySAL: 1.1.14
 
 Note that this version is only receiving bug fixes. All new enhancements (post 2019-01) to PySAL are Python 3+ only, and are not available in 1.14.4.
 
-.. _3.7: https://docs.python.org/3.7/
-.. _3.6: https://docs.python.org/3.6/
 .. _Python Package Index: https://pypi.org/project/PySAL/
 .. _pysal/PySAL: https://github.com/pysal/PySAL
 .. _conda: https://docs.conda.io/en/latest/
@@ -103,15 +98,13 @@ Note that this version is only receiving bug fixes. All new enhancements (post 2
 .. _fork: https://help.github.com/articles/fork-a-repo/
 .. _geopandas: http://geopandas.org/install.html
 .. _seaborn: https://seaborn.pydata.org/installing.html
-.. _descartes: https://pypi.org/project/descartes/
 .. _palettable: https://jiffyclub.github.io/palettable/
 .. _scikit-learn: https://scikit-learn.org/stable/install.html
 .. _rtree: http://toblerity.org/rtree/install.html
 .. _tqdm: https://pypi.org/project/tqdm/
 .. _statsmodels: https://www.statsmodels.org/stable/install.html
 .. _deprecated: https://pypi.org/project/Deprecated/
-.. _urbanaccess: https://github.com/UDST/urbanaccess
-.. _pandana: https://pypi.org/project/pandana/ 
+.. _pandana: https://pypi.org/project/pandarm/
 .. _numba: https://numba.pydata.org/numba-doc/dev/user/installing.html
 .. _numexpr: https://pypi.org/project/numexpr/
 .. _bokeh: https://bokeh.pydata.org/en/latest/docs/installation.html
