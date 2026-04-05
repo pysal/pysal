@@ -4,7 +4,7 @@ PySAL: Python Spatial Analysis Library
 ======================================
 PySAL is an open source
 cross-platform library for geospatial data science with an emphasis on
-geospatial vector data written in Python. 
+geospatial vector data written in Python.
 
 .. raw:: html
 
@@ -73,7 +73,6 @@ PySAL Components
     -   reading and writing of sparse graph data, as well as pure python
         readers of spatial vector data.
 
-        
 .. toctree::
    :hidden:
    :maxdepth: 3
@@ -127,9 +126,9 @@ To search for or report bugs, please see PySAL's issues_.
 .. _issues :  http://github.com/pysal/pysal/issues
 
 
-***************
+************
 Citing PySAL
-***************
+************
 
 If you use PySAL in a scientific publication, we would appreciate citations to the following paper:
 
