@@ -147,3 +147,50 @@ class TestVersionsClass:
         """Test that installed versions include libpysal."""
         v = Versions()
         assert "libpysal" in v.installed
+
+    def test_versions_released_property_does_not_raise(self):
+        """Test that accessing released property does not raise an exception.
+        
+        This test was added to catch the ModuleNotFoundError that occurred
+        when pysal.frozen module was missing.
+        """
+        v = Versions()
+        try:
+            released = v.released
+            assert isinstance(released, dict)
+        except ModuleNotFoundError as e:
+            if "pysal.frozen" in str(e):
+                raise AssertionError(
+                    "Versions.released raised ModuleNotFoundError for pysal.frozen. "
+                    "The frozen module is missing from the package distribution."
+                ) from e
+            raise
+
+    def test_versions_released_is_cached(self):
+        """Test that released property is cached (same object on repeat access)."""
+        v = Versions()
+        released1 = v.released
+        released2 = v.released
+        assert released1 is released2
+
+    def test_versions_check_does_not_raise(self, capsys):
+        """Test that Versions.check() runs without raising exceptions.
+        
+        This test was added to catch the ModuleNotFoundError that occurred
+        when pysal.frozen module was missing.
+        """
+        v = Versions()
+        try:
+            v.check()
+            captured = capsys.readouterr()
+            assert "Package" in captured.out
+            assert "Installed" in captured.out
+            assert "Released" in captured.out
+        except ModuleNotFoundError as e:
+            if "pysal.frozen" in str(e):
+                raise AssertionError(
+                    "Versions.check() raised ModuleNotFoundError for pysal.frozen. "
+                    "The frozen module is missing from the package distribution."
+                ) from e
+            raise
+
