@@ -4,7 +4,7 @@ __getattr__, __dir__, __all__ = lazy.attach(
     __name__,
     submodules=[
         "access",
-        "gwlearn",
+        "spatialml",
         "mgwr",
         "spglm",
         "spint",
@@ -13,5 +13,3 @@ __getattr__, __dir__, __all__ = lazy.attach(
         "tobler",
     ],
 )
-
-

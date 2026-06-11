@@ -53,7 +53,7 @@ dependencies = [
     "mapclassify>=2.10.0",
     "splot>=1.1.7",
     "spopt>=0.7.0",
-    "gwlearn>=0.1.1",
+    "spatialml>=0.1.1",
 ]
 
 [project.urls]

@@ -1,1 +1,1 @@
-from gwlearn import *
+from spatialml import *
