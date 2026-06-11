@@ -65,7 +65,7 @@ In contrast to `explore`, the `model` layer focuses on confirmatory analysis. In
 
 - [spopt](https://pysal.org/spopt/): `spopt`  is an open-source Python library for solving optimization problems with spatial data. Originatingfrom the original `region` module in PySAL, it is under active development for the inclusion of newly proposed models and methods for regionalization, facility location, and transportation-oriented solutions.
 
-- [gwlearn](https://pysal.org/gwlearn/) : `gwlearn` provides geographically weighted modeling based on `scikit-learn`. The aim of the package is to provide implementations of spatially-explicit modelling. It combines the familariy of `scikit-learn` estimator API with flexible backend enabling geographical extension of many scikit-learn compatible estimators, alongside with custom spatially-explicit models.
+- [spatialml](https://pysal.org/spatialml/) : `spatialml` provides geographically weighted modeling based on `scikit-learn`. The aim of the package is to provide implementations of spatially-explicit modelling. It combines the familariy of `scikit-learn` estimator API with flexible backend enabling geographical extension of many scikit-learn compatible estimators, alongside with custom spatially-explicit models.
 
 ### Viz
 
