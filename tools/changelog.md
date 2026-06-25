@@ -90,52 +90,52 @@ Overall, there were 352 commits that closed 192 issues since our last release on
 * [#233:](https://github.com/pysal/giddy/issues/233) add `with: fetch-depth: 0` for checkout in `build_docs.yml`
 
 
-<a name="spatialml-v0.1.1"></a>
-### spatialml v0.1.1
-* [#73:](https://github.com/pysal/spatialml/pull/73) COMPAT: pandas 3 compatibility
-* [#72:](https://github.com/pysal/spatialml/pull/72) DOC: fix docs building
-* [#70:](https://github.com/pysal/spatialml/pull/70) Fix strict type annotation in GWLogisticRegression
-* [#68:](https://github.com/pysal/spatialml/pull/68) Enable internal metadata routing for geometry
-* [#67:](https://github.com/pysal/spatialml/pull/67) GHA: build docs for PRs
-* [#66:](https://github.com/pysal/spatialml/issues/66) Execute notebooks as part of the documentation build
-* [#65:](https://github.com/pysal/spatialml/pull/65) GHA: ignore pre-commit-ci[bot] in release notes
-* [#64:](https://github.com/pysal/spatialml/pull/64) DOC: various documentation enhancements
-* [#63:](https://github.com/pysal/spatialml/pull/63) DOC: make notebooks a bit faster to execute
-* [#62:](https://github.com/pysal/spatialml/pull/62) MAINT: infrastructure enhancements
-* [#61:](https://github.com/pysal/spatialml/pull/61) DOC: automatised release update
-* [#59:](https://github.com/pysal/spatialml/pull/59) DOC: automatically build docs for stable (on version) and latest (on push)
-* [#57:](https://github.com/pysal/spatialml/pull/57) ENH: add GWGradientBoostingRegressor
-* [#48:](https://github.com/pysal/spatialml/issues/48) non-linear regressors
-* [#60:](https://github.com/pysal/spatialml/pull/60) TST: make sure that codecov tracks undersampling
-* [#45:](https://github.com/pysal/spatialml/pull/45) Implement metadata routing and update fit methods
-* [#56:](https://github.com/pysal/spatialml/pull/56) document and test metadata routing
-* [#51:](https://github.com/pysal/spatialml/pull/51) DOC: add comparison with mgwr
-* [#55:](https://github.com/pysal/spatialml/pull/55) API: move geometry back to fit, implement score and backbone for metadata routing
-* [#43:](https://github.com/pysal/spatialml/issues/43) Implement score
-* [#54:](https://github.com/pysal/spatialml/pull/54) ENH: implement fusion with the global model in prediction
-* [#42:](https://github.com/pysal/spatialml/issues/42) Flexibility of prediction
-* [#52:](https://github.com/pysal/spatialml/pull/52) ENH: prediction based on nearest model only or a custom bandwidth
-* [#49:](https://github.com/pysal/spatialml/pull/49) ENH: add GWRandomForestRegressor
-* [#50:](https://github.com/pysal/spatialml/pull/50) [pre-commit.ci] pre-commit autoupdate
-* [#47:](https://github.com/pysal/spatialml/pull/47) ENH: support predict method on regressors
-* [#41:](https://github.com/pysal/spatialml/issues/41) Support predict on regressors
-* [#46:](https://github.com/pysal/spatialml/pull/46) MAINT: eliminate warnings from CI
-* [#44:](https://github.com/pysal/spatialml/pull/44) clean up `n_jobs` warning
-* [#40:](https://github.com/pysal/spatialml/pull/40) minor touch of docs
-* [#39:](https://github.com/pysal/spatialml/pull/39) full type hints (checked by ty)
-* [#38:](https://github.com/pysal/spatialml/pull/38) fix some type hints
-* [#37:](https://github.com/pysal/spatialml/pull/37) beef up docstrings
-* [#36:](https://github.com/pysal/spatialml/pull/36) fix API rendering
-* [#35:](https://github.com/pysal/spatialml/pull/35) use immaterial theme
-* [#34:](https://github.com/pysal/spatialml/pull/34) DOC: Add basic user guide
-* [#33:](https://github.com/pysal/spatialml/pull/33) custom undersampling
-* [#32:](https://github.com/pysal/spatialml/pull/32) API: do not compute performance metrics, return arrays for users
-* [#30:](https://github.com/pysal/spatialml/pull/30) API: try to make sure that API for metrics is not confusing
-* [#31:](https://github.com/pysal/spatialml/pull/31) CI: attempt testing on Python 3.14
-* [#29:](https://github.com/pysal/spatialml/pull/29) CI: replace deprecated macos-13 with macos-15-intel
-* [#28:](https://github.com/pysal/spatialml/pull/28) fix incorrect sorting
-* [#27:](https://github.com/pysal/spatialml/pull/27) compute global metrics only for non-unique focal set
-* [#26:](https://github.com/pysal/spatialml/pull/26) ensure bandwidth can be none with custom graph
+<a name="spml-v0.1.1"></a>
+### spml v0.1.1
+* [#73:](https://github.com/pysal/spml/pull/73) COMPAT: pandas 3 compatibility
+* [#72:](https://github.com/pysal/spml/pull/72) DOC: fix docs building
+* [#70:](https://github.com/pysal/spml/pull/70) Fix strict type annotation in GWLogisticRegression
+* [#68:](https://github.com/pysal/spml/pull/68) Enable internal metadata routing for geometry
+* [#67:](https://github.com/pysal/spml/pull/67) GHA: build docs for PRs
+* [#66:](https://github.com/pysal/spml/issues/66) Execute notebooks as part of the documentation build
+* [#65:](https://github.com/pysal/spml/pull/65) GHA: ignore pre-commit-ci[bot] in release notes
+* [#64:](https://github.com/pysal/spml/pull/64) DOC: various documentation enhancements
+* [#63:](https://github.com/pysal/spml/pull/63) DOC: make notebooks a bit faster to execute
+* [#62:](https://github.com/pysal/spml/pull/62) MAINT: infrastructure enhancements
+* [#61:](https://github.com/pysal/spml/pull/61) DOC: automatised release update
+* [#59:](https://github.com/pysal/spml/pull/59) DOC: automatically build docs for stable (on version) and latest (on push)
+* [#57:](https://github.com/pysal/spml/pull/57) ENH: add GWGradientBoostingRegressor
+* [#48:](https://github.com/pysal/spml/issues/48) non-linear regressors
+* [#60:](https://github.com/pysal/spml/pull/60) TST: make sure that codecov tracks undersampling
+* [#45:](https://github.com/pysal/spml/pull/45) Implement metadata routing and update fit methods
+* [#56:](https://github.com/pysal/spml/pull/56) document and test metadata routing
+* [#51:](https://github.com/pysal/spml/pull/51) DOC: add comparison with mgwr
+* [#55:](https://github.com/pysal/spml/pull/55) API: move geometry back to fit, implement score and backbone for metadata routing
+* [#43:](https://github.com/pysal/spml/issues/43) Implement score
+* [#54:](https://github.com/pysal/spml/pull/54) ENH: implement fusion with the global model in prediction
+* [#42:](https://github.com/pysal/spml/issues/42) Flexibility of prediction
+* [#52:](https://github.com/pysal/spml/pull/52) ENH: prediction based on nearest model only or a custom bandwidth
+* [#49:](https://github.com/pysal/spml/pull/49) ENH: add GWRandomForestRegressor
+* [#50:](https://github.com/pysal/spml/pull/50) [pre-commit.ci] pre-commit autoupdate
+* [#47:](https://github.com/pysal/spml/pull/47) ENH: support predict method on regressors
+* [#41:](https://github.com/pysal/spml/issues/41) Support predict on regressors
+* [#46:](https://github.com/pysal/spml/pull/46) MAINT: eliminate warnings from CI
+* [#44:](https://github.com/pysal/spml/pull/44) clean up `n_jobs` warning
+* [#40:](https://github.com/pysal/spml/pull/40) minor touch of docs
+* [#39:](https://github.com/pysal/spml/pull/39) full type hints (checked by ty)
+* [#38:](https://github.com/pysal/spml/pull/38) fix some type hints
+* [#37:](https://github.com/pysal/spml/pull/37) beef up docstrings
+* [#36:](https://github.com/pysal/spml/pull/36) fix API rendering
+* [#35:](https://github.com/pysal/spml/pull/35) use immaterial theme
+* [#34:](https://github.com/pysal/spml/pull/34) DOC: Add basic user guide
+* [#33:](https://github.com/pysal/spml/pull/33) custom undersampling
+* [#32:](https://github.com/pysal/spml/pull/32) API: do not compute performance metrics, return arrays for users
+* [#30:](https://github.com/pysal/spml/pull/30) API: try to make sure that API for metrics is not confusing
+* [#31:](https://github.com/pysal/spml/pull/31) CI: attempt testing on Python 3.14
+* [#29:](https://github.com/pysal/spml/pull/29) CI: replace deprecated macos-13 with macos-15-intel
+* [#28:](https://github.com/pysal/spml/pull/28) fix incorrect sorting
+* [#27:](https://github.com/pysal/spml/pull/27) compute global metrics only for non-unique focal set
+* [#26:](https://github.com/pysal/spml/pull/26) ensure bandwidth can be none with custom graph
 
 
 <a name="momepy-v0.11.0"></a>
@@ -217,7 +217,7 @@ Overall, there were 352 commits that closed 192 issues since our last release on
 * [#1394:](https://github.com/pysal/pysal/issues/1394) Lazy Subpackage Loading for PySAL (PEP 562)
 * [#1386:](https://github.com/pysal/pysal/issues/1386) Modernize dynamic imports: Replace exec/eval with importlib and use stdlib cached_property
 * [#1399:](https://github.com/pysal/pysal/issues/1399) [Docs] Broken "User Guide" link on libpysal documentation homepage
-* [#1396:](https://github.com/pysal/pysal/pull/1396) add spatialml to meta
+* [#1396:](https://github.com/pysal/pysal/pull/1396) add spml to meta
 * [#1392:](https://github.com/pysal/pysal/issues/1392) Performance Optimization: Parallel Version Checking for 5.5x Import Speedup
 * [#1395:](https://github.com/pysal/pysal/pull/1395) ENH: implement lazy loading for subpackages using SPEC 1
 * [#1393:](https://github.com/pysal/pysal/pull/1393) feat: add parallel version checking for 5.5x speedup

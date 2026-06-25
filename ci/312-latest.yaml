@@ -7,7 +7,7 @@ dependencies:
   - access
   - esda
   - giddy
-  - spatialml
+  - spml
   - inequality
   - libpysal
   - mapclassify

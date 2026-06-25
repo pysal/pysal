@@ -47,7 +47,7 @@ packages = [
     "access",
     "esda",
     "giddy",
-    "spatialml",
+    "spml",
     "inequality",
     "pointpats",
     "segregation",

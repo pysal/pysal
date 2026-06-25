@@ -24,7 +24,7 @@ federation_hierarchy = {
         "mgwr",
         "access",
         "spopt",
-        "spatialml",
+        "spml",
     ],
     "viz": ["splot", "mapclassify"],
     "lib": ["libpysal"],

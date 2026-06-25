@@ -1,1 +1,1 @@
-from spatialml import *
+from spml import *
