@@ -1,1 +1,1 @@
-from gwlearn import *
+from spml import *

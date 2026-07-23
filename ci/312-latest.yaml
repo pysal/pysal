@@ -7,7 +7,7 @@ dependencies:
   - access
   - esda
   - giddy
-  - gwlearn
+  - spml
   - inequality
   - libpysal
   - mapclassify
