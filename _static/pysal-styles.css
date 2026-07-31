@@ -1,0 +1,82 @@
+/* Make thumbnails with equal heights */
+@media only screen and (min-width : 481px) {
+    .row.equal-height {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .row.equal-height > [class*='col-'] {
+        display: flex;
+        flex-direction: column;
+    }
+    .row.equal-height.row:after,
+    .row.equal-height.row:before {
+        display: flex;
+    }
+
+    .row.equal-height > [class*='col-'] > .thumbnail,
+    .row.equal-height > [class*='col-'] > .thumbnail > .caption {
+        display: flex;
+        flex: 1 0 auto;
+        flex-direction: column;
+    }
+    .row.equal-height > [class*='col-'] > .thumbnail > .caption > .flex-text {
+        flex-grow: 1;
+    }
+    .row.equal-height > [class*='col-'] > .thumbnail > img {
+        width: 100%;
+        height: 200px; /* force image's height */
+
+        /* force image fit inside it's "box" */
+        -webkit-object-fit: cover;
+           -moz-object-fit: cover;
+            -ms-object-fit: cover;
+             -o-object-fit: cover;
+                object-fit: cover;
+    }
+}
+
+.row.extra-bottom-padding{
+    margin-bottom: 20px;
+}
+
+
+.topnavicons {
+    margin-left: 10% !important;
+}
+
+.topnavicons li {
+    margin-left: 0px !important;
+    min-width: 100px;
+    text-align: center;
+}
+
+.topnavicons .thumbnail {
+    margin-right: 10px;
+    border: none;
+    box-shadow: none;
+    text-align: center;
+    font-size: 85%;
+    font-weight: bold;
+    line-height: 10px;
+    height: 100px;
+}
+
+.topnavicons .thumbnail img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/* Table with a scrollbar */
+.bodycontainer { max-height: 600px; width: 100%; margin: 0; overflow-y: auto; }
+.table-scrollable { margin: 0; padding: 0; }
+
+.label {
+    color: #ff0000;
+    /*font-size: 100%;*/
+}
+
+div.body {
+    max-width: 1080px;
+}
