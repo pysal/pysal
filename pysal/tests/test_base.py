@@ -90,9 +90,11 @@ class TestInstalledVersion:
         assert version != "NA"
         assert "." in version  # Version should contain dots (e.g., "4.13.0")
 
-    # Note: test for nonexistent package is omitted because the current
-    # implementation has a bug (NameError instead of returning 'NA').
-    # This will be fixed in a separate PR.
+    def test_installed_version_for_nonexistent_package(self):
+        """Test that _installed_version returns 'NA' for nonexistent packages."""
+        version = _installed_version("nonexistent_package_xyz_123")
+        assert version == "NA"
+        assert isinstance(version, str)
 
     def test_installed_version_for_numpy(self):
         """Test version detection for numpy (commonly installed)."""
