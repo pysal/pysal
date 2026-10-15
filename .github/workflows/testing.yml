@@ -32,8 +32,6 @@ jobs:
         ]
         include:
           - environment-file: ci/314-latest.yaml
-            os: macos-15-intel # Intel
-          - environment-file: ci/314-latest.yaml
             os: macos-latest # Apple Silicon
           - environment-file: ci/314-latest.yaml
             os: windows-latest
