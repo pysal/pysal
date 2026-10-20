@@ -42,6 +42,7 @@ dependencies:
     - git+https://github.com/pysal/spaghetti.git
     - git+https://github.com/pysal/spglm.git
     - git+https://github.com/pysal/spint.git
+    - git+https://github.com/pysal/spml.git
     - git+https://github.com/pysal/splot.git
     - git+https://github.com/pysal/spopt.git
     - git+https://github.com/pysal/spreg.git

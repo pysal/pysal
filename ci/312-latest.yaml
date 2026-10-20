@@ -7,7 +7,6 @@ dependencies:
   - access
   - esda
   - giddy
-  - spml
   - inequality
   - libpysal
   - mapclassify
@@ -18,6 +17,7 @@ dependencies:
   - spaghetti
   - splot
   - spint
+  - spml
   - spopt
   - spreg
   - spvcm

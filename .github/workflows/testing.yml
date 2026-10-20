@@ -25,15 +25,12 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         environment-file: [
-           ci/311-latest.yaml,
            ci/312-latest.yaml,
            ci/313-latest.yaml,
            ci/314-latest.yaml,
            ci/314-dev.yaml,
         ]
         include:
-          - environment-file: ci/314-latest.yaml
-            os: macos-15-intel # Intel
           - environment-file: ci/314-latest.yaml
             os: macos-latest # Apple Silicon
           - environment-file: ci/314-latest.yaml
@@ -46,7 +43,7 @@ jobs:
 
     steps:
       - name: checkout repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0 # Fetch all history for all branches and tags.
 

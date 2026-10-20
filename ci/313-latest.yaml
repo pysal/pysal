@@ -17,6 +17,7 @@ dependencies:
   - spaghetti
   - splot
   - spint
+  - spml
   - spopt
   - spreg
   - spvcm

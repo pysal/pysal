@@ -4,8 +4,8 @@ __getattr__, __dir__, __all__ = lazy.attach(
     __name__,
     submodules=[
         "access",
-        "spml",
         "mgwr",
+        "spml",
         "spglm",
         "spint",
         "spopt",

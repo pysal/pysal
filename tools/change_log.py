@@ -283,9 +283,7 @@ with open('changelog.md', 'w') as fout:
         "\n\nMany thanks to all of the following individuals who contributed to this release:\n\n")
 
     totals = contributor_table.sum(axis=0).T
-    contributors = totals.index.values
-    contributors.sort()
-    contributors = contributors.tolist()
+    contributors = sorted(c for c in totals.index.tolist() if '[bot]' not in c.lower())
     contributors = [f'\n - {contributor}' for contributor in contributors]
     fout.write("".join(contributors))
 
@@ -293,24 +291,19 @@ with open('changelog.md', 'w') as fout:
 df.head()
 
 
-# Update ../pyproject.toml for minimum pysal package pinning
-# get version numbers from frozen.txt
+# Update ../pyproject.toml with minimum version pins for PySAL sub-packages
 with open('frozen.txt', 'r') as frozen:
     packages = [line.rstrip() for line in frozen.readlines()]
 
-# search pyproject.toml for lines containing package
 with open('../pyproject.toml', 'r') as project:
     lines = [line.rstrip() for line in project.readlines()]
 
-# split line ->"    package",  ">=",  "version",
-# replace version and rebuild line to update
 for package in packages:
     name, version = package.split(">=")
-    i, match = [(i, line) for i, line in enumerate(lines) if name in line][0]
-    old_name, old_version = match.split(">=")
-    new_line = ">=".join([old_name, version+'",'])
-    lines[i] = new_line
+    matches = [(i, line) for i, line in enumerate(lines) if f'"{name}"' in line]
+    if matches:
+        i, match = matches[0]
+        lines[i] = match.replace(f'"{name}"', f'"{name}>={version}"')
 
-# write out new pyproject.toml file
 with open("../pyproject.toml", 'w') as output:
     output.write("\n".join(lines))

@@ -8,7 +8,24 @@
 ## Instructions
 
 ### Updating package information
-- If any new packages have been added to the ecosystem update the `packages` list in `release.yaml` 
+
+#### Adding a package
+- Add the package name to the `packages` list in `release_info.py`
+- Add the package name (without a version pin) to the `dependencies` list in `../pyproject.toml`
+- Add the package name to the appropriate `federation_hierarchy` layer in `../pysal/base.py`
+- Add the package name to the `submodules` list in the corresponding layer `__init__.py` (e.g. `../pysal/model/__init__.py`)
+- Create a proxy module `../pysal/<layer>/<package>/__init__.py` with `from <package> import *`
+- Add the package to all CI environment files in `../ci/`
+
+#### Removing a package
+- Remove the package name from the `packages` list in `release_info.py`
+- Remove the package from the `dependencies` list in `../pyproject.toml`
+- Remove the package from `federation_hierarchy` in `../pysal/base.py`
+- Remove the package from the `submodules` list in the corresponding layer `__init__.py`
+- Delete the proxy module directory `../pysal/<layer>/<package>/`
+- Remove the package from all CI environment files in `../ci/`
+
+### Update the release information
 - Update relevant data on `start_date` (day after last release), `release_date` (day
   of this release), `version`, and `user` in `release.yaml`
 

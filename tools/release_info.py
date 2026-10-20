@@ -1,11 +1,5 @@
 """
 Grab most recent releases tagged on Github for PySAL subpackages
-
-
-TODO
-- [ ] update dependencies in pyproj.toml for pinning new releases of
-pysal packages
-
 """
 
 import os
@@ -47,7 +41,6 @@ packages = [
     "access",
     "esda",
     "giddy",
-    "spml",
     "inequality",
     "pointpats",
     "segregation",
@@ -56,6 +49,7 @@ packages = [
     "momepy",
     "spglm",
     "spint",
+    "spml",
     "spreg",
     "tobler",
     "mapclassify",
