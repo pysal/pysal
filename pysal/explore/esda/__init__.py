@@ -13,6 +13,9 @@ from esda.join_counts import Join_Counts
 from esda.gamma import Gamma
 from esda.util import fdr
 from esda.smaup import Smaup
-from esda.lee import Spatial_Pearson, Local_Spatial_Pearson
+from esda.lee import Spatial_Pearson, Spatial_Pearson_Local
 from esda.silhouettes import (path_silhouette, boundary_silhouette,
                           silhouette_alist, nearest_label)
+
+# Name used by earlier pysal releases
+Local_Spatial_Pearson = Spatial_Pearson_Local
