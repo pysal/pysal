@@ -10,3 +10,14 @@ def test_imports():
         packages = federation_hierarchy[layer]
         for package in packages:
             assert module_exists(package), f"{package} not installed." 
+
+import pytest
+from pysal.lib.common import simport
+
+def test_simport_empty_string():
+    with pytest.raises(Exception):
+        simport("")
+
+def test_simport_none():
+    with pytest.raises(Exception):
+        simport(None)
